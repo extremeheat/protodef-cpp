@@ -1,0 +1,147 @@
+{
+  "ScoreEntries": [
+    "container",
+    [
+      {
+        "name": "type",
+        "type": [
+          "mapper",
+          {
+            "type": "u8",
+            "mappings": {
+              "0": "change",
+              "1": "remove"
+            }
+          }
+        ]
+      },
+      {
+        "name": "test",
+        "type": [
+          "container",
+          [
+            {
+              "name": "dummy",
+              "type": "void"
+            },
+            {
+              "name": "nested",
+              "type": [
+                "switch",
+                {
+                  "compareTo": "../type",
+                  "fields": {
+                    "change": [
+                      "container",
+                      [{"name": "int", "type": "li32"}]
+                    ],
+                    "remove": [
+                      "container",
+                      [{"name": "int", "type": "li64"}]
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        ]
+      },
+      {
+        "name": "entries",
+        "type": [
+          "array",
+          {
+            "countType": "varint",
+            "type": [
+              "container",
+              [
+                {
+                  "name": "scoreboard_id",
+                  "type": "zigzag64"
+                },
+                {
+                  "name": "objective_name",
+                  "type": "string"
+                },
+                {
+                  "name": "score",
+                  "type": "li32"
+                },
+                {
+                  "anon": true,
+                  "type": [
+                    "switch",
+                    {
+                      "compareTo": "../type",
+                      "fields": {
+                        "remove": [
+                          "container",
+                          [
+                            {
+                              "name": "entry_type",
+                              "type": [
+                                "mapper",
+                                {
+                                  "type": "i8",
+                                  "mappings": {
+                                    "1": "player",
+                                    "2": "entity",
+                                    "3": "fake_player"
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "anon": true,
+                              "type": [
+                                "switch",
+                                {
+                                  "compareTo": "entry_type",
+                                  "fields": {
+                                    "player": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "entity_unique_id",
+                                          "type": "zigzag64"
+                                        }
+                                      ]
+                                    ],
+                                    "entity": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "entity_unique_id",
+                                          "type": "zigzag32"
+                                        }
+                                      ]
+                                    ],
+                                    "fake_player": [
+                                      "container",
+                                      [
+                                        {
+                                          "name": "custom_name",
+                                          "type": "string"
+                                        }
+                                      ]
+                                    ]
+                                  },
+                                  "default": "void"
+                                }
+                              ]
+                            }
+                          ]
+                        ]
+                      },
+                      "default": "void"
+                    }
+                  ]
+                }
+              ]
+            ]
+          }
+        ]
+      }
+    ]
+  ]
+}

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A template repository to make it easy to create new prismarine repo",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "test": "mocha --reporter spec --exit",
     "pretest": "npm run lint",
