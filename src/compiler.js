@@ -66,6 +66,7 @@ function debloatSchema (bloatedSchema) {
       this.vars = {}
       this.typesForKey = {}
       this.uniqueKeys = []
+      this.didSimplify = false
     }
 
     get (name) {
@@ -73,6 +74,7 @@ function debloatSchema (bloatedSchema) {
     }
 
     _set (name, type) {
+      if (this.didSimplify) throw Error('Cannot add to scope after deduplication')
       if (this.uniqueKeys.includes(name)) {
         if (Object.hasOwn(this.vars, name)) {
           // If name is taken, make sure to add a suffix to existing name
@@ -96,65 +98,98 @@ function debloatSchema (bloatedSchema) {
     dedupeAnon () {
       const deleteAllAnonSubTypes = (forKey) => {
         for (const key in this.vars) {
-          if (key.startsWith('?' + forKey + ',')) {
+          if (key.startsWith(forKey + ',') || key === forKey) {
             delete this.vars[key]
           }
         }
       }
 
       for (const key in this.typesForKey) {
-        if (key.includes('block_action')) {
-          console.dir(this.typesForKey, {depth: null})
-          console.dir(this.vars, {depth: null})
-          console.log(JSON.stringify(this.typesForKey['?block_action,array'][0]))
-          console.log(JSON.stringify(this.vars['?block_action,array']))
-          throw Error()
-        }
         if (!key.startsWith('?')) continue
         const types = this.typesForKey[key]
         const first = types[0]
         if (types.every(t => JSON.stringify(t) === JSON.stringify(first))) {
+          // console.log('Deduping all the same', key, types)
           deleteAllAnonSubTypes(key)
-          this._set(key, first)
+          this.vars[key] = first
+          this.typesForKey[key] = [first]
         } else {
+          const found = []
+          const next = []
+          // console.log('Deduping some the same', key)
           const typeGroups = {}
           for (const type of types) {
             const str = JSON.stringify(type)
-            typeGroups[str] ??= []
+            if (!found.includes(str)) { 
+              found.push(str)
+              next.push(type)
+            }
+            typeGroups[str] ??= new Set()
             for (const _key in this.vars) {
-              console.log(_key, key)
+              // console.log(_key, key)
               if (_key.startsWith(key + ',') || _key === key) {
                 const val = this.vars[_key]
-                console.log('val',JSON.stringify(val))
-                console.log('val', str)
-                if (JSON.stringify(val) === str) typeGroups[str].push(_key)
+                // console.log('val',JSON.stringify(val))
+                // console.log('val', str)
+                if (JSON.stringify(val) === str) typeGroups[str].add(_key)
               }
             }
           }
-          console.log('Type Groups', typeGroups, Object.entries(this.vars).map(([k, v]) => [k, JSON.stringify(v)]))
+          // console.log('Type Groups', typeGroups, Object.entries(this.vars).map(([k, v]) => [k, JSON.stringify(v)]))
+          // console.log('Before pruning', Object.entries(this.vars).map(([k, v]) => [k, JSON.stringify(v)]))
+
           for (const group in typeGroups) {
             const [first, ...rest] = typeGroups[group]
             // See if we have a better name for `first`
             let name = first
             const f = JSON.parse(group)
             if (f.length === 1 && typeof f[0] === 'string') {
-              name = '?' + f[0]
+              name = `?${key},${f[0]}`
             }
+            // console.log('First', first, name)
             // this.vars[name] = JSON.parse(group)
-            for (const key of rest) {
-              delete this.vars[key]
+            for (const k of rest) {
+              delete this.vars[k]
             }
           }
+          // console.log('After pruning', Object.entries(this.vars).map(([k, v]) => [k, JSON.stringify(v)]))
+          this.typesForKey[key] = next
+        }
+
+        // if (key.includes('destination')) {
+        //   console.dir(this.typesForKey, {depth: null})
+        //   console.dir(this.vars, {depth: null})
+        //   // console.log(JSON.stringify(this.typesForKey['?block_action,array'][0]))
+        //   // console.log(JSON.stringify(this.vars['?block_action,array']))
+        //   throw Error()
+        // }
+      }
+
+      // Make sure we actually did simplify things
+      for (const key in this.typesForKey) {
+        const set = new Set()
+        const types = this.typesForKey[key]
+        for (const type of types) {
+          const str = JSON.stringify(type)
+          if (set.has(str)) {
+            console.log(this.vars)
+            console.log(this.typesForKey)
+            throw Error('Deduplication failed')
+          }
+          set.add(str)
         }
       }
+
+      this.didSimplify = true
     }
 
     finish () {
-      // this.dedupeAnon()
+      this.dedupeAnon()
     }
 
     toJSON () {
       return this.vars
+      // return { ...this.vars, didSimplify: this.didSimplify }
     }
   }
 
@@ -176,7 +211,7 @@ function debloatSchema (bloatedSchema) {
   // }
 
   function visit (root, simplified, isAnonIteration = false) {
-    console.log('Disambiguating fields...', JSON.stringify(root))
+    console.log('Visiting...', JSON.stringify(root), isAnonIteration ? '(anon)' : '')
 
     function handleSwitch (newName, args, anon, simplified) {
       const next = new Scope()
@@ -209,6 +244,9 @@ function debloatSchema (bloatedSchema) {
               next.add(field, ['array', _args.countType, _args.count, [_args.type]])
               sharedScope.add('array', ['array', _args.countType, _args.count, [_args.type]])
             } else {
+              if (_args.type[0] === 'switch') {
+                throw new Error('Nested switch-array-switch not supported, please rewrite schema')
+              }
               const children = new Scope()
               // visit(_args.type[1], children)
               if (anon) {
@@ -221,6 +259,10 @@ function debloatSchema (bloatedSchema) {
                 sharedScope.add('array', ['array', _args.countType, _args.count, unwrap])
               }
               children.finish()
+              // if (newName.includes('block_action')) {
+              //   console.dir(children, {depth: null})
+              //   throw Error()
+              // }
             }
           }
         }
@@ -232,11 +274,11 @@ function debloatSchema (bloatedSchema) {
         simplified.add(newName + '?', ['switch', args.compareTo, next])
         // simplified[newName] = sharedScope
         for (const key in sharedScope.vars) {
-          simplified.addMaybe(newName + ',' + key, sharedScope.vars[key])
+          simplified.addMaybe(newName, sharedScope.vars[key])
         }
       }
       next.finish()
-      sharedScope.finish()
+      // sharedScope.finish()
     }
 
     function handleType (name, type, anon, simplified) {
@@ -262,11 +304,24 @@ function debloatSchema (bloatedSchema) {
         if (typeof args.type === 'string') {
           addToScope(newName, ['array', args.countType, args.count, [args.type]])
         } else {
-          const children = new Scope()
-          handleType('array', args.type, false, children)
-          const unwrap = children.get('array')
-          addToScope(newName, ['array', args.countType, args.count, unwrap])
-          children.finish()
+          if (args.type[0] === 'switch') {
+            handleSwitch(newName, args.type[1], anon, simplified)
+          } else {
+            const children = new Scope()
+            handleType('array', args.type, false, children)
+            const unwrap = children.get('array') || children.get('?array')
+            if (!unwrap) {
+              console.dir(children, {depth: null})
+              throw new Error('No array in children')
+            }
+            addToScope(newName, ['array', args.countType, args.count, unwrap])
+            children.finish()
+          }
+
+          // if (newName.includes('block_action')) {
+          //   console.dir(children, {depth: null})
+          //   throw Error()
+          // }
         }
       } else {
         console.warn('! Unknown type', actualType, args)
@@ -301,7 +356,7 @@ function debloatSchema (bloatedSchema) {
         // visit() only takes containers, so we have to wrap&unwrap it
         const obj = new Scope()
         visit([{ name, type }], obj)
-        simplified.add(name, obj[name])
+        simplified.add(name, obj.get(name))
         obj.finish()
       }
     } else simplified.add(name, [type])
