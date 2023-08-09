@@ -1,5 +1,5 @@
 const fs = require('fs')
-const basicJSON = require('./sample.json')
+// const basicJSON = require('./sample.json')
 
 // struct ScoreEntries {
 //   enum : int {
@@ -21,160 +21,263 @@ const basicJSON = require('./sample.json')
 //   int entries_count;
 // };
 
-const protodefTypeToCpp = {
-  u8: 'uint8_t',
-  u16: 'uint16_t',
-  u32: 'uint32_t',
-  u64: 'uint64_t',
-  i8: 'int8_t',
-  i16: 'int16_t',
-  i32: 'int32_t',
-  i64: 'int64_t',
-  f32: 'float',
-  f64: 'double',
-  bool: 'bool',
-  varint: 'int',
-  string: 'std::string',
-  buffer: 'std::vector<uint8_t>'
-}
+// const protodefTypeToCpp = {
+//   u8: 'uint8_t',
+//   u16: 'uint16_t',
+//   u32: 'uint32_t',
+//   u64: 'uint64_t',
+//   i8: 'int8_t',
+//   i16: 'int16_t',
+//   i32: 'int32_t',
+//   i64: 'int64_t',
+//   f32: 'float',
+//   f64: 'double',
+//   bool: 'bool',
+//   varint: 'int',
+//   string: 'std::string',
+//   buffer: 'std::vector<uint8_t>'
+// }
 
-const want = {
-  ScoreEntries: {
-    type: ['u8', ['change', 'remove']],
-    entries: ['array', 'varint', {
-      scoreboard_id: ['varint'],
-      objective_name: ['string'],
-      score: ['varint'],
-      _: [
-        'switch', '../type', {
-          remove: ['^entry_type'],
-        }
-      ],
-      '?entry_type': ['u8', ['player', 'entity', 'fake_player']],
-      '?entity_unique_id': ['varint'],
-      '?custom_name': ['string']
-    }]
-  }
-}
+// const want = {
+//   ScoreEntries: {
+//     type: ['u8', ['change', 'remove']],
+//     entries: ['array', 'varint', {
+//       scoreboard_id: ['varint'],
+//       objective_name: ['string'],
+//       score: ['varint'],
+//       _: [
+//         'switch', '../type', {
+//           remove: ['^entry_type']
+//         }
+//       ],
+//       '?entry_type': ['u8', ['player', 'entity', 'fake_player']],
+//       '?entity_unique_id': ['varint'],
+//       '?custom_name': ['string']
+//     }]
+//   }
+// }
 
 // Yes, it's a mess. I'm sorry.
-function debloatSchema(bloatedSchema) {
+function debloatSchema (bloatedSchema) {
   let i = 0
 
   class Scope {
-    constructor() {
+    constructor () {
       this.vars = {}
+      this.typesForKey = {}
+      this.uniqueKeys = []
     }
-  
-    get(name) {
+
+    get (name) {
       return this.vars[name]
     }
-  
-    set(name, type) {
-      if (Object.hasOwn(this.vars, name)) {
-        const old = this.vars[name]
-        this.vars[name + ',']
+
+    _set (name, type) {
+      if (this.uniqueKeys.includes(name)) {
+        if (Object.hasOwn(this.vars, name)) {
+          // If name is taken, make sure to add a suffix to existing name
+          const old = this.vars[name]
+          this.vars[name + ',' + (i++)] = old
+          this.vars[name + ',' + (i++)] = type
+        } else {
+          this.vars[name + ',' + (i++)] = type
+        }
+      } else {
+        this.uniqueKeys.push(name)
+        this.vars[name] = type
       }
-      this.vars[name] = type
+      this.typesForKey[name] ??= []
+      this.typesForKey[name].push(type)
+    }
+
+    add (name, type) { return this._set(name, type) }
+    addMaybe (name, type) { return this._set('?' + name, type) }
+
+    dedupeAnon () {
+      const deleteAllAnonSubTypes = (forKey) => {
+        for (const key in this.vars) {
+          if (key.startsWith('?' + forKey + ',')) {
+            delete this.vars[key]
+          }
+        }
+      }
+
+      for (const key in this.typesForKey) {
+        if (key.includes('block_action')) {
+          console.dir(this.typesForKey, {depth: null})
+          console.dir(this.vars, {depth: null})
+          console.log(JSON.stringify(this.typesForKey['?block_action,array'][0]))
+          console.log(JSON.stringify(this.vars['?block_action,array']))
+          throw Error()
+        }
+        if (!key.startsWith('?')) continue
+        const types = this.typesForKey[key]
+        const first = types[0]
+        if (types.every(t => JSON.stringify(t) === JSON.stringify(first))) {
+          deleteAllAnonSubTypes(key)
+          this._set(key, first)
+        } else {
+          const typeGroups = {}
+          for (const type of types) {
+            const str = JSON.stringify(type)
+            typeGroups[str] ??= []
+            for (const _key in this.vars) {
+              console.log(_key, key)
+              if (_key.startsWith(key + ',') || _key === key) {
+                const val = this.vars[_key]
+                console.log('val',JSON.stringify(val))
+                console.log('val', str)
+                if (JSON.stringify(val) === str) typeGroups[str].push(_key)
+              }
+            }
+          }
+          console.log('Type Groups', typeGroups, Object.entries(this.vars).map(([k, v]) => [k, JSON.stringify(v)]))
+          for (const group in typeGroups) {
+            const [first, ...rest] = typeGroups[group]
+            // See if we have a better name for `first`
+            let name = first
+            const f = JSON.parse(group)
+            if (f.length === 1 && typeof f[0] === 'string') {
+              name = '?' + f[0]
+            }
+            // this.vars[name] = JSON.parse(group)
+            for (const key of rest) {
+              delete this.vars[key]
+            }
+          }
+        }
+      }
+    }
+
+    finish () {
+      // this.dedupeAnon()
+    }
+
+    toJSON () {
+      return this.vars
     }
   }
 
-  function disambiguateField(name, type, inside) {
-    const [n] = name.split(',')
-    for (const key in inside) {
-      if (key.startsWith(n + ',') || key === n) {
-        const v = inside[key]
-        if (v[0] === type) continue // no type conflict
-        // there is a type conflict
-        delete inside[key]
-        if (typeof v[0] === 'string') inside[key + ',' + v[0]] = v
-        else inside[key + ',' + (i++)] = v
-        if (typeof type === 'string') return name + ',' + type
-        else return name + ',' + (i++)
-      }
-    }
-    return name
-  }
+  // function disambiguateField (name, type, inside) {
+  //   const [n] = name.split(',')
+  //   for (const key in inside) {
+  //     if (key.startsWith(n + ',') || key === n) {
+  //       const v = inside[key]
+  //       if (v[0] === type) continue // no type conflict
+  //       // there is a type conflict
+  //       delete inside[key]
+  //       if (typeof v[0] === 'string') inside[key + ',' + v[0]] = v
+  //       else inside[key + ',' + (i++)] = v
+  //       if (typeof type === 'string') return name + ',' + type
+  //       else return name + ',' + (i++)
+  //     }
+  //   }
+  //   return name
+  // }
 
-  function visit(root, simplified = {}, isAnonIteration = false) {
+  function visit (root, simplified, isAnonIteration = false) {
     console.log('Disambiguating fields...', JSON.stringify(root))
 
-    function handleSwitch(newName, args, anon, simplified) {
-      const next = {}
-      const sharedScope = {}
+    function handleSwitch (newName, args, anon, simplified) {
+      const next = new Scope()
+      const sharedScope = new Scope()
       for (const field in args.fields) {
         const val = args.fields[field]
         if (typeof val === 'string') {
-          next[field] = [val]
-          sharedScope[''] = [val]
+          next.add(field, [val])
+          sharedScope.add('', [val])
         } else if (Array.isArray(val)) {
           const [_actualType, _args] = val
           if (_actualType === 'container') {
-            next[field] = {}
-            visit(_args, next[field])
+            const nextField = new Scope()
+            visit(_args, nextField)
             visit(_args, sharedScope)
+            next.add(field, nextField)
             if (anon) visit(_args, simplified, true)
+            nextField.finish()
           } else if (_actualType === 'switch') {
             throw new Error('Nested switch not supported')
           } else if (_actualType === 'mapper') {
-            next[field] = ['mapper', _args.type, _args.mappings]
-            if (anon) simplified['?' + field] = ['mapper', _args.type, _args.mappings]
-            sharedScope['mapper,' + (i++)] = ['mapper', _args.type, _args.mappings]
+            // This is adding to the nested scope of the switch:
+            next.add(field, ['mapper', _args.type, _args.mappings])
+            // This is added to the parent for each type combo of the switch:
+            sharedScope.add('mapper', ['mapper', _args.type, _args.mappings])
+            // This just adds all the children of the switch to the parent, without any wrapper:
+            if (anon) simplified.addMaybe(field, ['mapper', _args.type, _args.mappings])
           } else if (_actualType === 'array') {
-            const children = {}
-            next[field] = ['array', _args.countType, _args.count, children]
-            visit(_args.type[1], children)
-            if (anon) simplified['?' + field] = ['array', _args.countType, _args.count, children]
-            sharedScope['array,' + (i++)] = ['array', _args.countType, _args.count, children]
+            if (typeof _args.type === 'string') {
+              next.add(field, ['array', _args.countType, _args.count, [_args.type]])
+              sharedScope.add('array', ['array', _args.countType, _args.count, [_args.type]])
+            } else {
+              const children = new Scope()
+              // visit(_args.type[1], children)
+              if (anon) {
+                simplified.addMaybe(field, ['array', _args.countType, _args.count, children])
+                throw new Error('Anon switch cannot have an arrays as child : would have an undefined name')
+              } else {
+                handleType(field, _args.type, false, children)
+                const unwrap = children.get(field)
+                next.add(field, ['array', _args.countType, _args.count, unwrap])
+                sharedScope.add('array', ['array', _args.countType, _args.count, unwrap])
+              }
+              children.finish()
+            }
           }
         }
       }
       if (anon) {
-        simplified[newName] = ['switch', args.compareTo, next]
+        simplified.add(newName, ['switch', args.compareTo, next])
+        // anon is handled above
       } else {
-        simplified[newName + '?'] = ['switch', args.compareTo, next]
+        simplified.add(newName + '?', ['switch', args.compareTo, next])
         // simplified[newName] = sharedScope
-        for (const key in sharedScope) {
-          simplified['?' + newName + ',' + key] = sharedScope[key]
+        for (const key in sharedScope.vars) {
+          simplified.addMaybe(newName + ',' + key, sharedScope.vars[key])
         }
       }
+      next.finish()
+      sharedScope.finish()
     }
 
-    function handleType(name, type, anon, simplified) {
+    function handleType (name, type, anon, simplified) {
       if (typeof type === 'string') type = [type]
-      let newName = anon ? ('_' + i++) : name
-      newName = isAnonIteration ? ('?' + newName) : newName
-      newName = disambiguateField(newName, type, simplified)
+      const newName = anon ? ('_' + i++) : name
+      const addToScope = (...a) => isAnonIteration ? simplified.addMaybe(...a) : simplified.add(...a)
+      // this is handled inside Scope:
+      // newName = isAnonIteration ? ('?' + newName) : newName
+      // newName = disambiguateField(newName, type, simplified)
       const [actualType, args] = type
       if (actualType === 'container') {
-        simplified[newName] = {}
-        visit(args, simplified[newName])
+        const scope = new Scope()
+        visit(args, scope)
+        addToScope(newName, scope)
         if (anon) visit(args, simplified, true)
+        scope.finish()
       } else if (actualType === 'switch') {
         handleSwitch(newName, args, anon, simplified)
       } else if (actualType === 'mapper') {
-        simplified[newName] = ['mapper', args.type, args.mappings]
+        addToScope(newName, ['mapper', args.type, args.mappings])
       } else if (actualType === 'array') {
         // visit(args.type[1], children)
         if (typeof args.type === 'string') {
-          simplified[newName] = ['array', args.countType, args.count, [args.type]]
+          addToScope(newName, ['array', args.countType, args.count, [args.type]])
         } else {
-          const children = {}
-          simplified[newName] = ['array', args.countType, args.count, children]
-          handleType(null, args.type, true, children)
+          const children = new Scope()
+          handleType('array', args.type, false, children)
+          const unwrap = children.get('array')
+          addToScope(newName, ['array', args.countType, args.count, unwrap])
+          children.finish()
         }
       } else {
         console.warn('! Unknown type', actualType, args)
-        simplified[newName] = [actualType, args]
+        addToScope(newName, [actualType, args])
       }
     }
 
     function handleContainer () {
       for (const { name, type, anon } of root) {
         if (typeof type === 'string') {
-          let newName = isAnonIteration ? ('?' + name) : name
-          newName = disambiguateField(newName, type, simplified)
-          simplified[newName] = [type]
+          isAnonIteration ? simplified.addMaybe(name, [type]) : simplified.add(name, [type])
           continue
         } else if (Array.isArray(type)) {
           handleType(name, type, anon, simplified)
@@ -185,22 +288,25 @@ function debloatSchema(bloatedSchema) {
     handleContainer()
   }
 
-  const simplified = {}
+  const simplified = new Scope()
   for (const name in bloatedSchema) {
-    simplified[name] = {}
     const type = bloatedSchema[name]
     if (Array.isArray(type)) {
       if (type[0] === 'container') {
-        visit(bloatedSchema[name][1], simplified[name])
+        const nextScope = new Scope()
+        visit(bloatedSchema[name][1], nextScope)
+        simplified.add(name, nextScope)
+        nextScope.finish()
       } else {
         // visit() only takes containers, so we have to wrap&unwrap it
-        const obj = {}
+        const obj = new Scope()
         visit([{ name, type }], obj)
-        simplified[name] = obj[name]
+        simplified.add(name, obj[name])
+        obj.finish()
       }
-    }
-    else simplified[name] = [type]
+    } else simplified.add(name, [type])
   }
+  simplified.finish()
   // console.dir(simplified, { depth: null })
   return simplified
 }
