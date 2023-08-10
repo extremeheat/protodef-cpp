@@ -21,23 +21,6 @@ const fs = require('fs')
 //   int entries_count;
 // };
 
-// const protodefTypeToCpp = {
-//   u8: 'uint8_t',
-//   u16: 'uint16_t',
-//   u32: 'uint32_t',
-//   u64: 'uint64_t',
-//   i8: 'int8_t',
-//   i16: 'int16_t',
-//   i32: 'int32_t',
-//   i64: 'int64_t',
-//   f32: 'float',
-//   f64: 'double',
-//   bool: 'bool',
-//   varint: 'int',
-//   string: 'std::string',
-//   buffer: 'std::vector<uint8_t>'
-// }
-
 // const want = {
 //   ScoreEntries: {
 //     type: ['u8', ['change', 'remove']],
@@ -88,8 +71,9 @@ function debloatSchema (bloatedSchema) {
         this.uniqueKeys.push(name)
         this.vars[name] = type
       }
-      this.typesForKey[name] ??= []
-      this.typesForKey[name].push(type)
+      const [n] = name.split(',')
+      this.typesForKey[n] ??= []
+      this.typesForKey[n].push(type)
     }
 
     add (name, type) { return this._set(name, type) }
@@ -139,6 +123,13 @@ function debloatSchema (bloatedSchema) {
           // console.log('Before pruning', Object.entries(this.vars).map(([k, v]) => [k, JSON.stringify(v)]))
 
           for (const group in typeGroups) {
+            if (group === '["void"]') {
+              // delete everything
+              for (const k of typeGroups[group]) {
+                delete this.vars[k]
+              }
+              continue
+            }
             const [first, ...rest] = typeGroups[group]
             // See if we have a better name for `first`
             let name = first
@@ -207,6 +198,7 @@ function debloatSchema (bloatedSchema) {
       for (const field in args.fields) {
         const val = args.fields[field]
         if (typeof val === 'string') {
+          if (val === 'void') continue
           next.add(field, [val])
           sharedScope.add('', [val])
         } else if (Array.isArray(val)) {
@@ -278,12 +270,12 @@ function debloatSchema (bloatedSchema) {
       simplified.add(newName + '?', ['switch', args.compareTo, next])
       // simplified[newName] = sharedScope
       for (const key in sharedScope.vars) {
-        simplified.addMaybe(newName, sharedScope.vars[key])
+        simplified.addMaybe(anon ? key : newName, sharedScope.vars[key])
       }
 
       // if (args.fields[0] === 'void')  {
-      //   console.log(sharedScope)
-      //   console.log(simplified)
+      //   console.log('Shared Scope', sharedScope)
+      //   console.log('Result', simplified)
       // }
 
       // if (anon) {
@@ -390,5 +382,6 @@ module.exports = {
 if (!module.parent) {
 // debloatSchema(basicJSON)
   const redone = debloatSchema(require('./protocol.json').types)
+  // const redone = debloatSchema(require('./proto2.json').types)
   fs.writeFileSync('./redone.json', JSON.stringify(redone, null, 2))
 }
