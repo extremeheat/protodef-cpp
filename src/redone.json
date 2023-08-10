@@ -178,17 +178,23 @@
         ],
         "float": [
           "lf32"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
-    "?value": [
+    "?value,bool": [
       "bool"
     ],
-    "?value,7": [
+    "?value,zigzag32": [
       "zigzag32"
     ],
-    "?value,11": [
+    "?value,lf32": [
       "lf32"
+    ],
+    "?value,void": [
+      "void"
     ]
   },
   "GameRules": [
@@ -256,15 +262,20 @@
           "nbt": [
             "lnbt"
           ]
-        }
+        },
+        "default": [
+          "void"
+        ]
       }
     ],
-    "?nbt": [
-      "u8"
-    ],
-    "?nbt,13": [
-      "lnbt"
-    ],
+    "?nbt": {
+      "version": [
+        "u8"
+      ],
+      "nbt": [
+        "lnbt"
+      ]
+    },
     "can_place_on": [
       "array",
       "li32",
@@ -283,6 +294,9 @@
     ],
     "blocking_tick": [
       "li64"
+    ],
+    "?nbt,void": [
+      "void"
     ]
   },
   "ItemExtraDataWithoutBlockingTick": {
@@ -305,15 +319,20 @@
           "nbt": [
             "lnbt"
           ]
-        }
+        },
+        "default": [
+          "void"
+        ]
       }
     ],
-    "?nbt": [
-      "u8"
-    ],
-    "?nbt,15": [
-      "lnbt"
-    ],
+    "?nbt": {
+      "version": [
+        "u8"
+      ],
+      "nbt": [
+        "lnbt"
+      ]
+    },
     "can_place_on": [
       "array",
       "li32",
@@ -329,34 +348,139 @@
       [
         "ShortString"
       ]
+    ],
+    "?nbt,void": [
+      "void"
     ]
   },
   "ItemLegacy": {
     "network_id": [
       "zigzag32"
     ],
-    "_16": [
+    "_22?": [
       "switch",
       "network_id",
       {
         "0": [
           "void"
-        ]
+        ],
+        "default": {
+          "count": [
+            "lu16"
+          ],
+          "metadata": [
+            "varint"
+          ],
+          "block_runtime_id": [
+            "zigzag32"
+          ],
+          "extra?": [
+            "switch",
+            "network_id",
+            {}
+          ]
+        }
       }
+    ],
+    "?_22,30": [
+      "switch",
+      "network_id",
+      {}
+    ],
+    "?_22,void": [
+      "void"
+    ],
+    "?_22,lu16": [
+      "lu16"
+    ],
+    "?_22,varint": [
+      "varint"
+    ],
+    "?_22,zigzag32": [
+      "zigzag32"
     ]
   },
   "Item": {
     "network_id": [
       "zigzag32"
     ],
-    "_17": [
+    "_31?": [
       "switch",
       "network_id",
       {
         "0": [
           "void"
+        ],
+        "default": {
+          "count": [
+            "lu16"
+          ],
+          "metadata": [
+            "varint"
+          ],
+          "has_stack_id": [
+            "u8"
+          ],
+          "stack_id?": [
+            "switch",
+            "has_stack_id",
+            {
+              "0": [
+                "void"
+              ],
+              "default": [
+                "zigzag32"
+              ]
+            }
+          ],
+          "block_runtime_id": [
+            "zigzag32"
+          ],
+          "extra?": [
+            "switch",
+            "network_id",
+            {}
+          ],
+          "?stack_id,void": [
+            "void"
+          ],
+          "?stack_id,zigzag32": [
+            "zigzag32"
+          ]
+        }
+      }
+    ],
+    "?_31,51": [
+      "switch",
+      "has_stack_id",
+      {
+        "0": [
+          "void"
+        ],
+        "default": [
+          "zigzag32"
         ]
       }
+    ],
+    "?_31,65": [
+      "switch",
+      "network_id",
+      {}
+    ],
+    "?_31,void": [
+      "void"
+    ],
+    "?_31,lu16": [
+      "lu16"
+    ],
+    "?_31,varint": [
+      "varint"
+    ],
+    "?_31,u8": [
+      "u8"
+    ],
+    "?_31,zigzag32": [
+      "zigzag32"
     ]
   },
   "vec3i": {
@@ -561,14 +685,80 @@
           ],
           "flags_extended": [
             "MetadataFlags2"
+          ],
+          "default": [
+            "switch",
+            "type",
+            {
+              "byte": [
+                "i8"
+              ],
+              "short": [
+                "li16"
+              ],
+              "int": [
+                "zigzag32"
+              ],
+              "float": [
+                "lf32"
+              ],
+              "string": [
+                "string"
+              ],
+              "compound": [
+                "nbt"
+              ],
+              "vec3i": [
+                "vec3i"
+              ],
+              "long": [
+                "zigzag64"
+              ],
+              "vec3f": [
+                "vec3f"
+              ],
+              "default": [
+                "void"
+              ]
+            }
           ]
         }
       ],
-      "?value": [
+      "?value,MetadataFlags1": [
         "MetadataFlags1"
       ],
-      "?value,23": [
+      "?value,MetadataFlags2": [
         "MetadataFlags2"
+      ],
+      "?value,i8": [
+        "i8"
+      ],
+      "?value,li16": [
+        "li16"
+      ],
+      "?value,zigzag32": [
+        "zigzag32"
+      ],
+      "?value,lf32": [
+        "lf32"
+      ],
+      "?value,string": [
+        "string"
+      ],
+      "?value,nbt": [
+        "nbt"
+      ],
+      "?value,vec3i": [
+        "vec3i"
+      ],
+      "?value,zigzag64": [
+        "zigzag64"
+      ],
+      "?value,vec3f": [
+        "vec3f"
+      ],
+      "?value,void": [
+        "void"
       ]
     }
   ],
@@ -709,7 +899,7 @@
           "99999": "craft"
         }
       ],
-      "_24": [
+      "_344?": [
         "switch",
         "source_type",
         {
@@ -732,7 +922,10 @@
             "action": [
               "varint"
             ]
-          }
+          },
+          "default": [
+            "void"
+          ]
         }
       ],
       "slot": [
@@ -744,14 +937,14 @@
       "new_item": [
         "Item"
       ],
-      "?inventory_id": [
+      "?_344,WindowIDVarint": [
         "WindowIDVarint"
       ],
-      "?action": [
+      "?_344,varint": [
         "varint"
       ],
-      "?flags": [
-        "varint"
+      "?_344,void": [
+        "void"
       ]
     }
   ],
@@ -765,10 +958,50 @@
       {
         "0": [
           "void"
+        ],
+        "default": [
+          "array",
+          "varint",
+          null,
+          {
+            "container_id": [
+              "u8"
+            ],
+            "changed_slots": [
+              "array",
+              "varint",
+              null,
+              {
+                "slot_id": [
+                  "u8"
+                ]
+              }
+            ]
+          }
         ]
       }
     ],
-    "?legacy_transactions": [
+    "?legacy_transactions,358": [
+      "array",
+      "varint",
+      null,
+      {
+        "container_id": [
+          "u8"
+        ],
+        "changed_slots": [
+          "array",
+          "varint",
+          null,
+          {
+            "slot_id": [
+              "u8"
+            ]
+          }
+        ]
+      }
+    ],
+    "?legacy_transactions,void": [
       "void"
     ]
   },
@@ -846,42 +1079,61 @@
           "head_pos": [
             "vec3f"
           ]
-        }
+        },
+        "default": [
+          "void"
+        ]
       }
     ],
-    "?transaction_data": [
+    "?transaction_data,374": {
+      "entity_runtime_id": [
+        "varint64"
+      ],
+      "action_type": [
+        "mapper",
+        "varint",
+        {
+          "0": "interact",
+          "1": "attack"
+        }
+      ],
+      "hotbar_slot": [
+        "zigzag32"
+      ],
+      "held_item": [
+        "Item"
+      ],
+      "player_pos": [
+        "vec3f"
+      ],
+      "click_pos": [
+        "vec3f"
+      ]
+    },
+    "?transaction_data,376": {
+      "action_type": [
+        "mapper",
+        "varint",
+        {
+          "0": "release",
+          "1": "consume"
+        }
+      ],
+      "hotbar_slot": [
+        "zigzag32"
+      ],
+      "held_item": [
+        "Item"
+      ],
+      "head_pos": [
+        "vec3f"
+      ]
+    },
+    "?transaction_data,void": [
       "void"
     ],
-    "?transaction_data,46": [
+    "?transaction_data,TransactionUseItem": [
       "TransactionUseItem"
-    ],
-    "?transaction_data,48": [
-      "varint64"
-    ],
-    "?transaction_data,50": [
-      "mapper",
-      "varint",
-      {
-        "0": "interact",
-        "1": "attack"
-      }
-    ],
-    "?transaction_data,52": [
-      "zigzag32"
-    ],
-    "?transaction_data,54": [
-      "Item"
-    ],
-    "?transaction_data,56": [
-      "vec3f"
-    ],
-    "?transaction_data,62": [
-      "mapper",
-      "varint",
-      {
-        "0": "release",
-        "1": "consume"
-      }
     ]
   },
   "ItemStacks": [
@@ -896,14 +1148,28 @@
     "network_id": [
       "zigzag32"
     ],
-    "_73": [
+    "_381?": [
       "switch",
       "network_id",
       {
         "0": [
           "void"
-        ]
+        ],
+        "default": {
+          "network_data": [
+            "zigzag32"
+          ],
+          "count": [
+            "zigzag32"
+          ]
+        }
       }
+    ],
+    "?_381,void": [
+      "void"
+    ],
+    "?_381,zigzag32": [
+      "zigzag32"
     ]
   },
   "PotionTypeRecipes": [
@@ -1189,52 +1455,124 @@
             "network_id": [
               "varint"
             ]
-          }
+          },
+          "default": [
+            "void"
+          ]
         }
       ],
-      "?recipe": [
-        "string"
-      ],
-      "?recipe,149": [
-        "array",
-        "varint",
-        null,
-        [
-          "RecipeIngredient"
-        ]
-      ],
-      "?recipe,151": [
-        "array",
-        "varint",
-        null,
-        [
-          "ItemLegacy"
-        ]
-      ],
-      "?recipe,153": [
-        "uuid"
-      ],
-      "?recipe,157": [
-        "zigzag32"
-      ],
-      "?recipe,159": [
-        "varint"
-      ],
-      "?recipe,227": [
-        "array",
-        null,
-        "width",
-        [
+      "?recipe": {
+        "recipe_id": [
+          "string"
+        ],
+        "input": [
           "array",
+          "varint",
           null,
-          "height",
           [
             "RecipeIngredient"
           ]
+        ],
+        "output": [
+          "array",
+          "varint",
+          null,
+          [
+            "ItemLegacy"
+          ]
+        ],
+        "uuid": [
+          "uuid"
+        ],
+        "block": [
+          "string"
+        ],
+        "priority": [
+          "zigzag32"
+        ],
+        "network_id": [
+          "varint"
         ]
-      ],
-      "?recipe,289": [
-        "ItemLegacy"
+      },
+      "?recipe,391": {
+        "recipe_id": [
+          "string"
+        ],
+        "width": [
+          "zigzag32"
+        ],
+        "height": [
+          "zigzag32"
+        ],
+        "input": [
+          "array",
+          null,
+          "width",
+          [
+            "array",
+            null,
+            "height",
+            [
+              "RecipeIngredient"
+            ]
+          ]
+        ],
+        "output": [
+          "array",
+          "varint",
+          null,
+          [
+            "ItemLegacy"
+          ]
+        ],
+        "uuid": [
+          "uuid"
+        ],
+        "block": [
+          "string"
+        ],
+        "priority": [
+          "zigzag32"
+        ],
+        "network_id": [
+          "varint"
+        ]
+      },
+      "?recipe,395": {
+        "input_id": [
+          "zigzag32"
+        ],
+        "output": [
+          "ItemLegacy"
+        ],
+        "block": [
+          "string"
+        ]
+      },
+      "?recipe,397": {
+        "input_id": [
+          "zigzag32"
+        ],
+        "input_meta": [
+          "zigzag32"
+        ],
+        "output": [
+          "ItemLegacy"
+        ],
+        "block": [
+          "string"
+        ]
+      },
+      "?recipe,399": {
+        "uuid": [
+          "uuid"
+        ],
+        "network_id": [
+          "varint"
+        ]
+      },
+      "?recipe,void": [
+        "void"
       ]
     }
   ],
@@ -1407,27 +1745,46 @@
           "uuid": [
             "uuid"
           ]
-        }
+        },
+        "default": [
+          "void"
+        ]
       }
     ],
-    "?records": [
-      "uuid"
-    ],
-    "?records,319": [
-      "zigzag64"
-    ],
-    "?records,321": [
-      "string"
-    ],
-    "?records,327": [
-      "li32"
-    ],
-    "?records,329": [
-      "Skin"
-    ],
-    "?records,331": [
-      "bool"
-    ],
+    "?records": {
+      "uuid": [
+        "uuid"
+      ],
+      "entity_unique_id": [
+        "zigzag64"
+      ],
+      "username": [
+        "string"
+      ],
+      "xbox_user_id": [
+        "string"
+      ],
+      "platform_chat_id": [
+        "string"
+      ],
+      "build_platform": [
+        "li32"
+      ],
+      "skin_data": [
+        "Skin"
+      ],
+      "is_teacher": [
+        "bool"
+      ],
+      "is_host": [
+        "bool"
+      ]
+    },
+    "?records,403": {
+      "uuid": [
+        "uuid"
+      ]
+    },
     "verified?": [
       "switch",
       "type",
@@ -1439,6 +1796,9 @@
           [
             "bool"
           ]
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
@@ -1449,6 +1809,12 @@
       [
         "bool"
       ]
+    ],
+    "?records,void": [
+      "void"
+    ],
+    "?verified,void": [
+      "void"
     ]
   },
   "Enchant": {
@@ -1579,7 +1945,7 @@
             "19": "results_deprecated"
           }
         ],
-        "_338": [
+        "_408?": [
           "switch",
           "type_id",
           {
@@ -1715,55 +2081,13 @@
               "times_crafted": [
                 "u8"
               ]
-            }
+            },
+            "default": [
+              "void"
+            ]
           }
         ],
-        "?count": [
-          "u8"
-        ],
-        "?source": [
-          "StackRequestSlotInfo"
-        ],
-        "?destination": [
-          "StackRequestSlotInfo"
-        ],
-        "?randomly": [
-          "bool"
-        ],
-        "?result_slot_id": [
-          "u8"
-        ],
-        "?primary_effect": [
-          "zigzag32"
-        ],
-        "?secondary_effect": [
-          "zigzag32"
-        ],
-        "?unknown1": [
-          "zigzag32"
-        ],
-        "?predicted_durability": [
-          "zigzag32"
-        ],
-        "?network_id": [
-          "zigzag32"
-        ],
-        "?recipe_network_id": [
-          "varint"
-        ],
-        "?item_id": [
-          "varint"
-        ],
-        "?filtered_string_index": [
-          "li32"
-        ],
-        "?cost": [
-          "varint"
-        ],
-        "?pattern": [
-          "string"
-        ],
-        "?result_items": [
+        "?_408,526": [
           "array",
           "varint",
           null,
@@ -1771,8 +2095,29 @@
             "ItemLegacy"
           ]
         ],
-        "?times_crafted": [
+        "?_408,u8": [
           "u8"
+        ],
+        "?_408,StackRequestSlotInfo": [
+          "StackRequestSlotInfo"
+        ],
+        "?_408,bool": [
+          "bool"
+        ],
+        "?_408,zigzag32": [
+          "zigzag32"
+        ],
+        "?_408,varint": [
+          "varint"
+        ],
+        "?_408,li32": [
+          "li32"
+        ],
+        "?_408,string": [
+          "string"
+        ],
+        "?_408,void": [
+          "void"
         ]
       }
     ],
@@ -1801,7 +2146,7 @@
       "request_id": [
         "varint"
       ],
-      "_395": [
+      "_533?": [
         "switch",
         "status",
         {
@@ -1841,10 +2186,13 @@
                 ]
               }
             ]
-          }
+          },
+          "default": [
+            "void"
+          ]
         }
       ],
-      "?containers": [
+      "?_533": [
         "array",
         "varint",
         null,
@@ -1878,6 +2226,9 @@
             }
           ]
         }
+      ],
+      "?_533,void": [
+        "void"
       ]
     }
   ],
@@ -1936,11 +2287,19 @@
           "player_entity_id": [
             "zigzag64"
           ]
-        }
+        },
+        "default": [
+          "void"
+        ]
       }
     ],
-    "?player_entity_id": [
-      "zigzag64"
+    "?player_entity_id": {
+      "player_entity_id": [
+        "zigzag64"
+      ]
+    },
+    "?player_entity_id,void": [
+      "void"
     ]
   },
   "TrackedObject": {
@@ -1958,6 +2317,9 @@
       {
         "entity": [
           "zigzag64"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
@@ -1967,14 +2329,23 @@
       {
         "block": [
           "BlockCoordinates"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
-    "?entity_unique_id": [
+    "?entity_unique_id,zigzag64": [
       "zigzag64"
     ],
-    "?block_position": [
+    "?entity_unique_id,void": [
+      "void"
+    ],
+    "?block_position,BlockCoordinates": [
       "BlockCoordinates"
+    ],
+    "?block_position,void": [
+      "void"
     ]
   },
   "MapDecoration": {
@@ -3607,551 +3978,557 @@
         ],
         "toast_request": [
           "packet_toast_request"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
-    "?params": [
+    "?params,packet_login": [
       "packet_login"
     ],
-    "?params,765": [
+    "?params,packet_play_status": [
       "packet_play_status"
     ],
-    "?params,769": [
+    "?params,packet_server_to_client_handshake": [
       "packet_server_to_client_handshake"
     ],
-    "?params,773": [
+    "?params,packet_client_to_server_handshake": [
       "packet_client_to_server_handshake"
     ],
-    "?params,777": [
+    "?params,packet_disconnect": [
       "packet_disconnect"
     ],
-    "?params,781": [
+    "?params,packet_resource_packs_info": [
       "packet_resource_packs_info"
     ],
-    "?params,785": [
+    "?params,packet_resource_pack_stack": [
       "packet_resource_pack_stack"
     ],
-    "?params,789": [
+    "?params,packet_resource_pack_client_response": [
       "packet_resource_pack_client_response"
     ],
-    "?params,793": [
+    "?params,packet_text": [
       "packet_text"
     ],
-    "?params,797": [
+    "?params,packet_set_time": [
       "packet_set_time"
     ],
-    "?params,801": [
+    "?params,packet_start_game": [
       "packet_start_game"
     ],
-    "?params,805": [
+    "?params,packet_add_player": [
       "packet_add_player"
     ],
-    "?params,809": [
+    "?params,packet_add_entity": [
       "packet_add_entity"
     ],
-    "?params,813": [
+    "?params,packet_remove_entity": [
       "packet_remove_entity"
     ],
-    "?params,817": [
+    "?params,packet_add_item_entity": [
       "packet_add_item_entity"
     ],
-    "?params,821": [
+    "?params,packet_take_item_entity": [
       "packet_take_item_entity"
     ],
-    "?params,825": [
+    "?params,packet_move_entity": [
       "packet_move_entity"
     ],
-    "?params,829": [
+    "?params,packet_move_player": [
       "packet_move_player"
     ],
-    "?params,833": [
+    "?params,packet_rider_jump": [
       "packet_rider_jump"
     ],
-    "?params,837": [
+    "?params,packet_update_block": [
       "packet_update_block"
     ],
-    "?params,841": [
+    "?params,packet_add_painting": [
       "packet_add_painting"
     ],
-    "?params,845": [
+    "?params,packet_tick_sync": [
       "packet_tick_sync"
     ],
-    "?params,849": [
+    "?params,packet_level_sound_event_old": [
       "packet_level_sound_event_old"
     ],
-    "?params,853": [
+    "?params,packet_level_event": [
       "packet_level_event"
     ],
-    "?params,857": [
+    "?params,packet_block_event": [
       "packet_block_event"
     ],
-    "?params,861": [
+    "?params,packet_entity_event": [
       "packet_entity_event"
     ],
-    "?params,865": [
+    "?params,packet_mob_effect": [
       "packet_mob_effect"
     ],
-    "?params,869": [
+    "?params,packet_update_attributes": [
       "packet_update_attributes"
     ],
-    "?params,873": [
+    "?params,packet_inventory_transaction": [
       "packet_inventory_transaction"
     ],
-    "?params,877": [
+    "?params,packet_mob_equipment": [
       "packet_mob_equipment"
     ],
-    "?params,881": [
+    "?params,packet_mob_armor_equipment": [
       "packet_mob_armor_equipment"
     ],
-    "?params,885": [
+    "?params,packet_interact": [
       "packet_interact"
     ],
-    "?params,889": [
+    "?params,packet_block_pick_request": [
       "packet_block_pick_request"
     ],
-    "?params,893": [
+    "?params,packet_entity_pick_request": [
       "packet_entity_pick_request"
     ],
-    "?params,897": [
+    "?params,packet_player_action": [
       "packet_player_action"
     ],
-    "?params,901": [
+    "?params,packet_hurt_armor": [
       "packet_hurt_armor"
     ],
-    "?params,905": [
+    "?params,packet_set_entity_data": [
       "packet_set_entity_data"
     ],
-    "?params,909": [
+    "?params,packet_set_entity_motion": [
       "packet_set_entity_motion"
     ],
-    "?params,913": [
+    "?params,packet_set_entity_link": [
       "packet_set_entity_link"
     ],
-    "?params,917": [
+    "?params,packet_set_health": [
       "packet_set_health"
     ],
-    "?params,921": [
+    "?params,packet_set_spawn_position": [
       "packet_set_spawn_position"
     ],
-    "?params,925": [
+    "?params,packet_animate": [
       "packet_animate"
     ],
-    "?params,929": [
+    "?params,packet_respawn": [
       "packet_respawn"
     ],
-    "?params,933": [
+    "?params,packet_container_open": [
       "packet_container_open"
     ],
-    "?params,937": [
+    "?params,packet_container_close": [
       "packet_container_close"
     ],
-    "?params,941": [
+    "?params,packet_player_hotbar": [
       "packet_player_hotbar"
     ],
-    "?params,945": [
+    "?params,packet_inventory_content": [
       "packet_inventory_content"
     ],
-    "?params,949": [
+    "?params,packet_inventory_slot": [
       "packet_inventory_slot"
     ],
-    "?params,953": [
+    "?params,packet_container_set_data": [
       "packet_container_set_data"
     ],
-    "?params,957": [
+    "?params,packet_crafting_data": [
       "packet_crafting_data"
     ],
-    "?params,961": [
+    "?params,packet_crafting_event": [
       "packet_crafting_event"
     ],
-    "?params,965": [
+    "?params,packet_gui_data_pick_item": [
       "packet_gui_data_pick_item"
     ],
-    "?params,969": [
+    "?params,packet_adventure_settings": [
       "packet_adventure_settings"
     ],
-    "?params,973": [
+    "?params,packet_block_entity_data": [
       "packet_block_entity_data"
     ],
-    "?params,977": [
+    "?params,packet_player_input": [
       "packet_player_input"
     ],
-    "?params,981": [
+    "?params,packet_level_chunk": [
       "packet_level_chunk"
     ],
-    "?params,985": [
+    "?params,packet_set_commands_enabled": [
       "packet_set_commands_enabled"
     ],
-    "?params,989": [
+    "?params,packet_set_difficulty": [
       "packet_set_difficulty"
     ],
-    "?params,993": [
+    "?params,packet_change_dimension": [
       "packet_change_dimension"
     ],
-    "?params,997": [
+    "?params,packet_set_player_game_type": [
       "packet_set_player_game_type"
     ],
-    "?params,1001": [
+    "?params,packet_player_list": [
       "packet_player_list"
     ],
-    "?params,1005": [
+    "?params,packet_simple_event": [
       "packet_simple_event"
     ],
-    "?params,1009": [
+    "?params,packet_event": [
       "packet_event"
     ],
-    "?params,1013": [
+    "?params,packet_spawn_experience_orb": [
       "packet_spawn_experience_orb"
     ],
-    "?params,1017": [
+    "?params,packet_clientbound_map_item_data": [
       "packet_clientbound_map_item_data"
     ],
-    "?params,1021": [
+    "?params,packet_map_info_request": [
       "packet_map_info_request"
     ],
-    "?params,1025": [
+    "?params,packet_request_chunk_radius": [
       "packet_request_chunk_radius"
     ],
-    "?params,1029": [
+    "?params,packet_chunk_radius_update": [
       "packet_chunk_radius_update"
     ],
-    "?params,1033": [
+    "?params,packet_item_frame_drop_item": [
       "packet_item_frame_drop_item"
     ],
-    "?params,1037": [
+    "?params,packet_game_rules_changed": [
       "packet_game_rules_changed"
     ],
-    "?params,1041": [
+    "?params,packet_camera": [
       "packet_camera"
     ],
-    "?params,1045": [
+    "?params,packet_boss_event": [
       "packet_boss_event"
     ],
-    "?params,1049": [
+    "?params,packet_show_credits": [
       "packet_show_credits"
     ],
-    "?params,1053": [
+    "?params,packet_available_commands": [
       "packet_available_commands"
     ],
-    "?params,1057": [
+    "?params,packet_command_request": [
       "packet_command_request"
     ],
-    "?params,1061": [
+    "?params,packet_command_block_update": [
       "packet_command_block_update"
     ],
-    "?params,1065": [
+    "?params,packet_command_output": [
       "packet_command_output"
     ],
-    "?params,1069": [
+    "?params,packet_update_trade": [
       "packet_update_trade"
     ],
-    "?params,1073": [
+    "?params,packet_update_equipment": [
       "packet_update_equipment"
     ],
-    "?params,1077": [
+    "?params,packet_resource_pack_data_info": [
       "packet_resource_pack_data_info"
     ],
-    "?params,1081": [
+    "?params,packet_resource_pack_chunk_data": [
       "packet_resource_pack_chunk_data"
     ],
-    "?params,1085": [
+    "?params,packet_resource_pack_chunk_request": [
       "packet_resource_pack_chunk_request"
     ],
-    "?params,1089": [
+    "?params,packet_transfer": [
       "packet_transfer"
     ],
-    "?params,1093": [
+    "?params,packet_play_sound": [
       "packet_play_sound"
     ],
-    "?params,1097": [
+    "?params,packet_stop_sound": [
       "packet_stop_sound"
     ],
-    "?params,1101": [
+    "?params,packet_set_title": [
       "packet_set_title"
     ],
-    "?params,1105": [
+    "?params,packet_add_behavior_tree": [
       "packet_add_behavior_tree"
     ],
-    "?params,1109": [
+    "?params,packet_structure_block_update": [
       "packet_structure_block_update"
     ],
-    "?params,1113": [
+    "?params,packet_show_store_offer": [
       "packet_show_store_offer"
     ],
-    "?params,1117": [
+    "?params,packet_purchase_receipt": [
       "packet_purchase_receipt"
     ],
-    "?params,1121": [
+    "?params,packet_player_skin": [
       "packet_player_skin"
     ],
-    "?params,1125": [
+    "?params,packet_sub_client_login": [
       "packet_sub_client_login"
     ],
-    "?params,1129": [
+    "?params,packet_initiate_web_socket_connection": [
       "packet_initiate_web_socket_connection"
     ],
-    "?params,1133": [
+    "?params,packet_set_last_hurt_by": [
       "packet_set_last_hurt_by"
     ],
-    "?params,1137": [
+    "?params,packet_book_edit": [
       "packet_book_edit"
     ],
-    "?params,1141": [
+    "?params,packet_npc_request": [
       "packet_npc_request"
     ],
-    "?params,1145": [
+    "?params,packet_photo_transfer": [
       "packet_photo_transfer"
     ],
-    "?params,1149": [
+    "?params,packet_modal_form_request": [
       "packet_modal_form_request"
     ],
-    "?params,1153": [
+    "?params,packet_modal_form_response": [
       "packet_modal_form_response"
     ],
-    "?params,1157": [
+    "?params,packet_server_settings_request": [
       "packet_server_settings_request"
     ],
-    "?params,1161": [
+    "?params,packet_server_settings_response": [
       "packet_server_settings_response"
     ],
-    "?params,1165": [
+    "?params,packet_show_profile": [
       "packet_show_profile"
     ],
-    "?params,1169": [
+    "?params,packet_set_default_game_type": [
       "packet_set_default_game_type"
     ],
-    "?params,1173": [
+    "?params,packet_remove_objective": [
       "packet_remove_objective"
     ],
-    "?params,1177": [
+    "?params,packet_set_display_objective": [
       "packet_set_display_objective"
     ],
-    "?params,1181": [
+    "?params,packet_set_score": [
       "packet_set_score"
     ],
-    "?params,1185": [
+    "?params,packet_lab_table": [
       "packet_lab_table"
     ],
-    "?params,1189": [
+    "?params,packet_update_block_synced": [
       "packet_update_block_synced"
     ],
-    "?params,1193": [
+    "?params,packet_move_entity_delta": [
       "packet_move_entity_delta"
     ],
-    "?params,1197": [
+    "?params,packet_set_scoreboard_identity": [
       "packet_set_scoreboard_identity"
     ],
-    "?params,1201": [
+    "?params,packet_set_local_player_as_initialized": [
       "packet_set_local_player_as_initialized"
     ],
-    "?params,1205": [
+    "?params,packet_update_soft_enum": [
       "packet_update_soft_enum"
     ],
-    "?params,1209": [
+    "?params,packet_network_stack_latency": [
       "packet_network_stack_latency"
     ],
-    "?params,1213": [
+    "?params,packet_script_custom_event": [
       "packet_script_custom_event"
     ],
-    "?params,1217": [
+    "?params,packet_spawn_particle_effect": [
       "packet_spawn_particle_effect"
     ],
-    "?params,1221": [
+    "?params,packet_available_entity_identifiers": [
       "packet_available_entity_identifiers"
     ],
-    "?params,1225": [
+    "?params,packet_level_sound_event_v2": [
       "packet_level_sound_event_v2"
     ],
-    "?params,1229": [
+    "?params,packet_network_chunk_publisher_update": [
       "packet_network_chunk_publisher_update"
     ],
-    "?params,1233": [
+    "?params,packet_biome_definition_list": [
       "packet_biome_definition_list"
     ],
-    "?params,1237": [
+    "?params,packet_level_sound_event": [
       "packet_level_sound_event"
     ],
-    "?params,1241": [
+    "?params,packet_level_event_generic": [
       "packet_level_event_generic"
     ],
-    "?params,1245": [
+    "?params,packet_lectern_update": [
       "packet_lectern_update"
     ],
-    "?params,1249": [
+    "?params,packet_video_stream_connect": [
       "packet_video_stream_connect"
     ],
-    "?params,1253": [
+    "?params,packet_add_ecs_entity": [
       "packet_add_ecs_entity"
     ],
-    "?params,1257": [
+    "?params,packet_remove_ecs_entity": [
       "packet_remove_ecs_entity"
     ],
-    "?params,1261": [
+    "?params,packet_client_cache_status": [
       "packet_client_cache_status"
     ],
-    "?params,1265": [
+    "?params,packet_on_screen_texture_animation": [
       "packet_on_screen_texture_animation"
     ],
-    "?params,1269": [
+    "?params,packet_map_create_locked_copy": [
       "packet_map_create_locked_copy"
     ],
-    "?params,1273": [
+    "?params,packet_structure_template_data_export_request": [
       "packet_structure_template_data_export_request"
     ],
-    "?params,1277": [
+    "?params,packet_structure_template_data_export_response": [
       "packet_structure_template_data_export_response"
     ],
-    "?params,1281": [
+    "?params,packet_update_block_properties": [
       "packet_update_block_properties"
     ],
-    "?params,1285": [
+    "?params,packet_client_cache_blob_status": [
       "packet_client_cache_blob_status"
     ],
-    "?params,1289": [
+    "?params,packet_client_cache_miss_response": [
       "packet_client_cache_miss_response"
     ],
-    "?params,1293": [
+    "?params,packet_education_settings": [
       "packet_education_settings"
     ],
-    "?params,1297": [
+    "?params,packet_emote": [
       "packet_emote"
     ],
-    "?params,1301": [
+    "?params,packet_multiplayer_settings": [
       "packet_multiplayer_settings"
     ],
-    "?params,1305": [
+    "?params,packet_settings_command": [
       "packet_settings_command"
     ],
-    "?params,1309": [
+    "?params,packet_anvil_damage": [
       "packet_anvil_damage"
     ],
-    "?params,1313": [
+    "?params,packet_completed_using_item": [
       "packet_completed_using_item"
     ],
-    "?params,1317": [
+    "?params,packet_network_settings": [
       "packet_network_settings"
     ],
-    "?params,1321": [
+    "?params,packet_player_auth_input": [
       "packet_player_auth_input"
     ],
-    "?params,1325": [
+    "?params,packet_creative_content": [
       "packet_creative_content"
     ],
-    "?params,1329": [
+    "?params,packet_player_enchant_options": [
       "packet_player_enchant_options"
     ],
-    "?params,1333": [
+    "?params,packet_item_stack_request": [
       "packet_item_stack_request"
     ],
-    "?params,1337": [
+    "?params,packet_item_stack_response": [
       "packet_item_stack_response"
     ],
-    "?params,1341": [
+    "?params,packet_player_armor_damage": [
       "packet_player_armor_damage"
     ],
-    "?params,1345": [
+    "?params,packet_update_player_game_type": [
       "packet_update_player_game_type"
     ],
-    "?params,1349": [
+    "?params,packet_emote_list": [
       "packet_emote_list"
     ],
-    "?params,1353": [
+    "?params,packet_position_tracking_db_request": [
       "packet_position_tracking_db_request"
     ],
-    "?params,1357": [
+    "?params,packet_position_tracking_db_broadcast": [
       "packet_position_tracking_db_broadcast"
     ],
-    "?params,1361": [
+    "?params,packet_packet_violation_warning": [
       "packet_packet_violation_warning"
     ],
-    "?params,1365": [
+    "?params,packet_motion_prediction_hints": [
       "packet_motion_prediction_hints"
     ],
-    "?params,1369": [
+    "?params,packet_animate_entity": [
       "packet_animate_entity"
     ],
-    "?params,1373": [
+    "?params,packet_camera_shake": [
       "packet_camera_shake"
     ],
-    "?params,1377": [
+    "?params,packet_player_fog": [
       "packet_player_fog"
     ],
-    "?params,1381": [
+    "?params,packet_correct_player_move_prediction": [
       "packet_correct_player_move_prediction"
     ],
-    "?params,1385": [
+    "?params,packet_item_component": [
       "packet_item_component"
     ],
-    "?params,1389": [
+    "?params,packet_filter_text_packet": [
       "packet_filter_text_packet"
     ],
-    "?params,1393": [
+    "?params,packet_debug_renderer": [
       "packet_debug_renderer"
     ],
-    "?params,1397": [
+    "?params,packet_sync_entity_property": [
       "packet_sync_entity_property"
     ],
-    "?params,1401": [
+    "?params,packet_add_volume_entity": [
       "packet_add_volume_entity"
     ],
-    "?params,1405": [
+    "?params,packet_remove_volume_entity": [
       "packet_remove_volume_entity"
     ],
-    "?params,1409": [
+    "?params,packet_simulation_type": [
       "packet_simulation_type"
     ],
-    "?params,1413": [
+    "?params,packet_npc_dialogue": [
       "packet_npc_dialogue"
     ],
-    "?params,1417": [
+    "?params,packet_edu_uri_resource_packet": [
       "packet_edu_uri_resource_packet"
     ],
-    "?params,1421": [
+    "?params,packet_create_photo": [
       "packet_create_photo"
     ],
-    "?params,1425": [
+    "?params,packet_update_subchunk_blocks": [
       "packet_update_subchunk_blocks"
     ],
-    "?params,1429": [
+    "?params,packet_photo_info_request": [
       "packet_photo_info_request"
     ],
-    "?params,1433": [
+    "?params,packet_subchunk": [
       "packet_subchunk"
     ],
-    "?params,1437": [
+    "?params,packet_subchunk_request": [
       "packet_subchunk_request"
     ],
-    "?params,1441": [
+    "?params,packet_client_start_item_cooldown": [
       "packet_client_start_item_cooldown"
     ],
-    "?params,1445": [
+    "?params,packet_script_message": [
       "packet_script_message"
     ],
-    "?params,1449": [
+    "?params,packet_code_builder_source": [
       "packet_code_builder_source"
     ],
-    "?params,1453": [
+    "?params,packet_ticking_areas_load_status": [
       "packet_ticking_areas_load_status"
     ],
-    "?params,1457": [
+    "?params,packet_dimension_data": [
       "packet_dimension_data"
     ],
-    "?params,1461": [
+    "?params,packet_agent_action": [
       "packet_agent_action"
     ],
-    "?params,1465": [
+    "?params,packet_change_mob_property": [
       "packet_change_mob_property"
     ],
-    "?params,1469": [
+    "?params,packet_lesson_progress": [
       "packet_lesson_progress"
     ],
-    "?params,1473": [
+    "?params,packet_request_ability": [
       "packet_request_ability"
     ],
-    "?params,1477": [
+    "?params,packet_request_permissions": [
       "packet_request_permissions"
     ],
-    "?params,1481": [
+    "?params,packet_toast_request": [
       "packet_toast_request"
+    ],
+    "?params,void": [
+      "void"
     ]
   },
   "packet_login": {
@@ -4278,7 +4655,7 @@
     "needs_translation": [
       "bool"
     ],
-    "_1482": [
+    "_1638?": [
       "switch",
       "type",
       {
@@ -4369,8 +4746,19 @@
               "string"
             ]
           ]
-        }
+        },
+        "default": [
+          "void"
+        ]
       }
+    ],
+    "?_1638,1710": [
+      "array",
+      "varint",
+      null,
+      [
+        "string"
+      ]
     ],
     "xuid": [
       "string"
@@ -4378,19 +4766,11 @@
     "platform_chat_id": [
       "string"
     ],
-    "?source_name": [
+    "?_1638,string": [
       "string"
     ],
-    "?message": [
-      "string"
-    ],
-    "?parameters": [
-      "array",
-      "varint",
-      null,
-      [
-        "string"
-      ]
+    "?_1638,void": [
+      "void"
     ]
   },
   "packet_set_time": {
@@ -4808,25 +5188,33 @@
           "source_entity_type": [
             "LegacyEntityType"
           ]
+        },
+        "default": [
+          "void"
+        ]
+      }
+    ],
+    "?teleport": {
+      "cause": [
+        "mapper",
+        "li32",
+        {
+          "0": "unknown",
+          "1": "projectile",
+          "2": "chorus_fruit",
+          "3": "command",
+          "4": "behavior"
         }
-      }
-    ],
-    "?teleport": [
-      "mapper",
-      "li32",
-      {
-        "0": "unknown",
-        "1": "projectile",
-        "2": "chorus_fruit",
-        "3": "command",
-        "4": "behavior"
-      }
-    ],
-    "?teleport,1540": [
-      "LegacyEntityType"
-    ],
+      ],
+      "source_entity_type": [
+        "LegacyEntityType"
+      ]
+    },
     "tick": [
       "varint64"
+    ],
+    "?teleport,void": [
+      "void"
     ]
   },
   "packet_rider_jump": {
@@ -5268,11 +5656,17 @@
         ],
         "leave_vehicle": [
           "vec3f"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
-    "?position": [
+    "?position,vec3f": [
       "vec3f"
+    ],
+    "?position,void": [
+      "void"
     ]
   },
   "packet_block_pick_request": {
@@ -5397,7 +5791,7 @@
     "runtime_entity_id": [
       "varint64"
     ],
-    "_1547": [
+    "_1743?": [
       "switch",
       "action_id",
       {
@@ -5410,11 +5804,17 @@
           "boat_rowing_time": [
             "lf32"
           ]
-        }
+        },
+        "default": [
+          "void"
+        ]
       }
     ],
-    "?boat_rowing_time": [
+    "?_1743,lf32": [
       "lf32"
+    ],
+    "?_1743,void": [
+      "void"
     ]
   },
   "packet_respawn": {
@@ -5623,6 +6023,9 @@
       {
         "-2": [
           "lu16"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
@@ -5642,22 +6045,33 @@
               "lu64"
             ]
           ]
-        }
+        },
+        "default": [
+          "void"
+        ]
       }
     ],
+    "?blobs": {
+      "hashes": [
+        "array",
+        "varint",
+        null,
+        [
+          "lu64"
+        ]
+      ]
+    },
     "payload": [
       "ByteArray"
     ],
-    "?highest_subchunk_count": [
+    "?highest_subchunk_count,lu16": [
       "lu16"
     ],
-    "?blobs": [
-      "array",
-      "varint",
-      null,
-      [
-        "lu64"
-      ]
+    "?highest_subchunk_count,void": [
+      "void"
+    ],
+    "?blobs,void": [
+      "void"
     ]
   },
   "packet_set_commands_enabled": {
@@ -5782,8 +6196,19 @@
           [
             "zigzag64"
           ]
+        ],
+        "default": [
+          "void"
         ]
       }
+    ],
+    "?included_in": [
+      "array",
+      "varint",
+      null,
+      [
+        "zigzag64"
+      ]
     ],
     "scale?": [
       "switch",
@@ -5791,6 +6216,9 @@
       {
         "true": [
           "u8"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
@@ -5815,25 +6243,30 @@
               "MapDecoration"
             ]
           ]
-        }
+        },
+        "default": [
+          "void"
+        ]
       }
     ],
-    "?tracked": [
-      "array",
-      "varint",
-      null,
-      [
-        "TrackedObject"
+    "?tracked": {
+      "objects": [
+        "array",
+        "varint",
+        null,
+        [
+          "TrackedObject"
+        ]
+      ],
+      "decorations": [
+        "array",
+        "varint",
+        null,
+        [
+          "MapDecoration"
+        ]
       ]
-    ],
-    "?tracked,1553": [
-      "array",
-      "varint",
-      null,
-      [
-        "MapDecoration"
-      ]
-    ],
+    },
     "texture?": [
       "switch",
       "update_flags.texture",
@@ -5859,30 +6292,48 @@
               "varint"
             ]
           ]
-        }
+        },
+        "default": [
+          "void"
+        ]
       }
     ],
-    "?texture": [
-      "zigzag32"
-    ],
-    "?texture,1561": [
-      "array",
-      "varint",
-      null,
-      [
-        "varint"
+    "?texture": {
+      "width": [
+        "zigzag32"
+      ],
+      "height": [
+        "zigzag32"
+      ],
+      "x_offset": [
+        "zigzag32"
+      ],
+      "y_offset": [
+        "zigzag32"
+      ],
+      "pixels": [
+        "array",
+        "varint",
+        null,
+        [
+          "varint"
+        ]
       ]
+    },
+    "?included_in,void": [
+      "void"
     ],
-    "?included_in": [
-      "array",
-      "varint",
-      null,
-      [
-        "zigzag64"
-      ]
-    ],
-    "?scale": [
+    "?scale,u8": [
       "u8"
+    ],
+    "?scale,void": [
+      "void"
+    ],
+    "?tracked,void": [
+      "void"
+    ],
+    "?texture,void": [
+      "void"
     ]
   },
   "packet_map_info_request": {
@@ -5937,7 +6388,7 @@
         "8": "query"
       }
     ],
-    "_1562": [
+    "_1772?": [
       "switch",
       "type",
       {
@@ -6001,26 +6452,29 @@
           "overlay": [
             "varint"
           ]
-        }
+        },
+        "default": [
+          "void"
+        ]
       }
     ],
-    "?title": [
+    "?_1772,string": [
       "string"
     ],
-    "?progress": [
+    "?_1772,lf32": [
       "lf32"
     ],
-    "?screen_darkening": [
+    "?_1772,li16": [
       "li16"
     ],
-    "?color": [
+    "?_1772,varint": [
       "varint"
     ],
-    "?overlay": [
-      "varint"
-    ],
-    "?player_id": [
+    "?_1772,zigzag64": [
       "zigzag64"
+    ],
+    "?_1772,void": [
+      "void"
     ]
   },
   "packet_show_credits": {
@@ -6075,17 +6529,23 @@
             ],
             "int": [
               "lu32"
+            ],
+            "default": [
+              "void"
             ]
           }
         ],
-        "?values": [
+        "?values,u8": [
           "u8"
         ],
-        "?values,1606": [
+        "?values,lu16": [
           "lu16"
         ],
-        "?values,1610": [
+        "?values,lu32": [
           "lu32"
+        ],
+        "?values,void": [
+          "void"
         ]
       }
     ],
@@ -6232,7 +6692,7 @@
     "is_block": [
       "bool"
     ],
-    "_1611": [
+    "_1857?": [
       "switch",
       "is_block",
       {
@@ -6260,7 +6720,19 @@
           "minecart_entity_runtime_id": [
             "varint64"
           ]
-        }
+        },
+        "default": [
+          "void"
+        ]
+      }
+    ],
+    "?_1857,1859": [
+      "mapper",
+      "varint",
+      {
+        "0": "impulse",
+        "1": "repeat",
+        "2": "chain"
       }
     ],
     "command": [
@@ -6281,26 +6753,17 @@
     "execute_on_first_tick": [
       "bool"
     ],
-    "?position": [
+    "?_1857,BlockCoordinates": [
       "BlockCoordinates"
     ],
-    "?mode": [
-      "mapper",
-      "varint",
-      {
-        "0": "impulse",
-        "1": "repeat",
-        "2": "chain"
-      }
-    ],
-    "?needs_redstone": [
+    "?_1857,bool": [
       "bool"
     ],
-    "?conditional": [
-      "bool"
-    ],
-    "?minecart_entity_runtime_id": [
+    "?_1857,varint64": [
       "varint64"
+    ],
+    "?_1857,void": [
+      "void"
     ]
   },
   "packet_command_output": {
@@ -6347,11 +6810,17 @@
       {
         "data_set": [
           "string"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
-    "?data_set": [
+    "?data_set,string": [
       "string"
+    ],
+    "?data_set,void": [
+      "void"
     ]
   },
   "packet_update_trade": {
@@ -6627,7 +7096,7 @@
     "slot": [
       "u8"
     ],
-    "_1612": [
+    "_1874?": [
       "switch",
       "type",
       {
@@ -6676,32 +7145,20 @@
           "xuid": [
             "string"
           ]
-        }
+        },
+        "default": [
+          "void"
+        ]
       }
     ],
-    "?page_number": [
+    "?_1874,u8": [
       "u8"
     ],
-    "?text": [
+    "?_1874,string": [
       "string"
     ],
-    "?photo_name": [
-      "string"
-    ],
-    "?page1": [
-      "u8"
-    ],
-    "?page2": [
-      "u8"
-    ],
-    "?title": [
-      "string"
-    ],
-    "?author": [
-      "string"
-    ],
-    "?xuid": [
-      "string"
+    "?_1874,void": [
+      "void"
     ]
   },
   "packet_npc_request": {
@@ -6844,28 +7301,7 @@
         "score": [
           "li32"
         ],
-        "entity_unique_id?": [
-          "switch",
-          "entry_type",
-          {
-            "player": [
-              "zigzag64"
-            ],
-            "entity": [
-              "zigzag64"
-            ]
-          }
-        ],
-        "custom_name?": [
-          "switch",
-          "entry_type",
-          {
-            "fake_player": [
-              "string"
-            ]
-          }
-        ],
-        "_1629": [
+        "_1915?": [
           "switch",
           "../action",
           {
@@ -6888,6 +7324,9 @@
                   ],
                   "entity": [
                     "zigzag64"
+                  ],
+                  "default": [
+                    "void"
                   ]
                 }
               ],
@@ -6897,19 +7336,31 @@
                 {
                   "fake_player": [
                     "string"
+                  ],
+                  "default": [
+                    "void"
                   ]
                 }
               ],
-              "?entity_unique_id": [
+              "?entity_unique_id,zigzag64": [
                 "zigzag64"
               ],
-              "?custom_name": [
+              "?entity_unique_id,void": [
+                "void"
+              ],
+              "?custom_name,string": [
                 "string"
+              ],
+              "?custom_name,void": [
+                "void"
               ]
-            }
+            },
+            "default": [
+              "void"
+            ]
           }
         ],
-        "?entry_type": [
+        "?_1915": [
           "mapper",
           "i8",
           {
@@ -6918,10 +7369,40 @@
             "3": "fake_player"
           }
         ],
-        "?entity_unique_id": [
+        "?_1915,1953": [
+          "switch",
+          "entry_type",
+          {
+            "player": [
+              "zigzag64"
+            ],
+            "entity": [
+              "zigzag64"
+            ],
+            "default": [
+              "void"
+            ]
+          }
+        ],
+        "?_1915,1973": [
+          "switch",
+          "entry_type",
+          {
+            "fake_player": [
+              "string"
+            ],
+            "default": [
+              "void"
+            ]
+          }
+        ],
+        "?_1915,zigzag64": [
           "zigzag64"
         ],
-        "?custom_name": [
+        "?_1915,void": [
+          "void"
+        ],
+        "?_1915,string": [
           "string"
         ]
       }
@@ -6983,6 +7464,9 @@
       {
         "true": [
           "lf32"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
@@ -6992,6 +7476,9 @@
       {
         "true": [
           "lf32"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
@@ -7001,6 +7488,9 @@
       {
         "true": [
           "lf32"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
@@ -7010,6 +7500,9 @@
       {
         "true": [
           "u8"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
@@ -7019,6 +7512,9 @@
       {
         "true": [
           "u8"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
@@ -7028,26 +7524,47 @@
       {
         "true": [
           "u8"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
-    "?x": [
+    "?x,lf32": [
       "lf32"
     ],
-    "?y": [
+    "?x,void": [
+      "void"
+    ],
+    "?y,lf32": [
       "lf32"
     ],
-    "?z": [
+    "?y,void": [
+      "void"
+    ],
+    "?z,lf32": [
       "lf32"
     ],
-    "?rot_x": [
+    "?z,void": [
+      "void"
+    ],
+    "?rot_x,u8": [
       "u8"
     ],
-    "?rot_y": [
+    "?rot_x,void": [
+      "void"
+    ],
+    "?rot_y,u8": [
       "u8"
     ],
-    "?rot_z": [
+    "?rot_y,void": [
+      "void"
+    ],
+    "?rot_z,u8": [
       "u8"
+    ],
+    "?rot_z,void": [
+      "void"
     ]
   },
   "packet_set_scoreboard_identity": {
@@ -7073,11 +7590,17 @@
           {
             "register_identity": [
               "zigzag64"
+            ],
+            "default": [
+              "void"
             ]
           }
         ],
-        "?entity_unique_id": [
+        "?entity_unique_id,zigzag64": [
           "zigzag64"
+        ],
+        "?entity_unique_id,void": [
+          "void"
         ]
       }
     ]
@@ -7284,6 +7807,9 @@
       {
         "true": [
           "nbt"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
@@ -7295,8 +7821,11 @@
         "2": "query"
       }
     ],
-    "?nbt": [
+    "?nbt,nbt": [
       "nbt"
+    ],
+    "?nbt,void": [
+      "void"
     ]
   },
   "packet_update_block_properties": {
@@ -7371,9 +7900,20 @@
           "can_modify_blocks": [
             "bool"
           ]
-        }
+        },
+        "default": [
+          "void"
+        ]
       }
     ],
+    "?agent_capabilities": {
+      "has": [
+        "bool"
+      ],
+      "can_modify_blocks": [
+        "bool"
+      ]
+    },
     "HasOverrideURI": [
       "bool"
     ],
@@ -7383,6 +7923,9 @@
       {
         "true": [
           "string"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
@@ -7395,13 +7938,23 @@
     "external_link_settings?": [
       "switch",
       "has_external_link_settings",
-      {}
+      {
+        "default": [
+          "void"
+        ]
+      }
     ],
-    "?agent_capabilities": [
-      "bool"
+    "?agent_capabilities,void": [
+      "void"
     ],
-    "?OverrideURI": [
+    "?OverrideURI,string": [
       "string"
+    ],
+    "?OverrideURI,void": [
+      "void"
+    ],
+    "?external_link_settings": [
+      "void"
     ]
   },
   "packet_emote": {
@@ -7534,6 +8087,9 @@
       {
         "reality": [
           "vec3f"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
@@ -7557,24 +8113,32 @@
           "data": [
             "TransactionUseItem"
           ]
-        }
+        },
+        "default": [
+          "void"
+        ]
       }
     ],
-    "?transaction": [
-      "TransactionLegacy"
-    ],
-    "?transaction,1651": [
-      "TransactionActions"
-    ],
-    "?transaction,1653": [
-      "TransactionUseItem"
-    ],
+    "?transaction": {
+      "legacy": [
+        "TransactionLegacy"
+      ],
+      "actions": [
+        "TransactionActions"
+      ],
+      "data": [
+        "TransactionUseItem"
+      ]
+    },
     "item_stack_request?": [
       "switch",
       "input_data.item_stack_request",
       {
         "true": [
           "ItemStackRequest"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
@@ -7590,7 +8154,7 @@
             "action": [
               "Action"
             ],
-            "_1654": [
+            "_2056?": [
               "switch",
               "action",
               {
@@ -7633,24 +8197,27 @@
                   "face": [
                     "zigzag32"
                   ]
-                }
+                },
+                "default": [
+                  "void"
+                ]
               }
             ],
-            "?position": [
+            "?_2056,vec3i": [
               "vec3i"
             ],
-            "?face": [
+            "?_2056,zigzag32": [
               "zigzag32"
+            ],
+            "?_2056,void": [
+              "void"
             ]
           }
+        ],
+        "default": [
+          "void"
         ]
       }
-    ],
-    "?gaze_direction": [
-      "vec3f"
-    ],
-    "?item_stack_request": [
-      "ItemStackRequest"
     ],
     "?block_action": [
       "array",
@@ -7660,7 +8227,7 @@
         "action": [
           "Action"
         ],
-        "_1654": [
+        "_2056?": [
           "switch",
           "action",
           {
@@ -7703,16 +8270,40 @@
               "face": [
                 "zigzag32"
               ]
-            }
+            },
+            "default": [
+              "void"
+            ]
           }
         ],
-        "?position": [
+        "?_2056,vec3i": [
           "vec3i"
         ],
-        "?face": [
+        "?_2056,zigzag32": [
           "zigzag32"
+        ],
+        "?_2056,void": [
+          "void"
         ]
       }
+    ],
+    "?gaze_direction,vec3f": [
+      "vec3f"
+    ],
+    "?gaze_direction,void": [
+      "void"
+    ],
+    "?transaction,void": [
+      "void"
+    ],
+    "?item_stack_request,ItemStackRequest": [
+      "ItemStackRequest"
+    ],
+    "?item_stack_request,void": [
+      "void"
+    ],
+    "?block_action,void": [
+      "void"
     ]
   },
   "packet_creative_content": {
@@ -7765,6 +8356,9 @@
       {
         "true": [
           "zigzag32"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
@@ -7774,6 +8368,9 @@
       {
         "true": [
           "zigzag32"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
@@ -7783,6 +8380,9 @@
       {
         "true": [
           "zigzag32"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
@@ -7792,20 +8392,35 @@
       {
         "true": [
           "zigzag32"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
-    "?helmet_damage": [
+    "?helmet_damage,zigzag32": [
       "zigzag32"
     ],
-    "?chestplate_damage": [
+    "?helmet_damage,void": [
+      "void"
+    ],
+    "?chestplate_damage,zigzag32": [
       "zigzag32"
     ],
-    "?leggings_damage": [
+    "?chestplate_damage,void": [
+      "void"
+    ],
+    "?leggings_damage,zigzag32": [
       "zigzag32"
     ],
-    "?boots_damage": [
+    "?leggings_damage,void": [
+      "void"
+    ],
+    "?boots_damage,zigzag32": [
       "zigzag32"
+    ],
+    "?boots_damage,void": [
+      "void"
     ]
   },
   "packet_update_player_game_type": {
@@ -7986,7 +8601,7 @@
         "2": "add_cube"
       }
     ],
-    "_1687": [
+    "_2135?": [
       "switch",
       "type",
       {
@@ -8015,28 +8630,25 @@
           "duration": [
             "li64"
           ]
-        }
+        },
+        "default": [
+          "void"
+        ]
       }
     ],
-    "?text": [
+    "?_2135,void": [
+      "void"
+    ],
+    "?_2135,string": [
       "string"
     ],
-    "?position": [
+    "?_2135,vec3f": [
       "vec3f"
     ],
-    "?red": [
+    "?_2135,lf32": [
       "lf32"
     ],
-    "?green": [
-      "lf32"
-    ],
-    "?blue": [
-      "lf32"
-    ],
-    "?alpha": [
-      "lf32"
-    ],
-    "?duration": [
+    "?_2135,li64": [
       "li64"
     ]
   },
@@ -8206,7 +8818,14 @@
       "heightmap?": [
         "switch",
         "heightmap_type",
-        {}
+        {
+          "default": [
+            "void"
+          ]
+        }
+      ],
+      "?heightmap": [
+        "void"
       ]
     }
   ],
@@ -8243,6 +8862,9 @@
         {
           "success_all_air": [
             "void"
+          ],
+          "default": [
+            "ByteArray"
           ]
         }
       ],
@@ -8259,12 +8881,22 @@
       "heightmap?": [
         "switch",
         "heightmap_type",
-        {}
+        {
+          "default": [
+            "void"
+          ]
+        }
       ],
       "blob_id": [
         "lu64"
       ],
-      "?payload": [
+      "?payload,void": [
+        "void"
+      ],
+      "?payload,ByteArray": [
+        "ByteArray"
+      ],
+      "?heightmap": [
         "void"
       ]
     }
@@ -8288,14 +8920,20 @@
         ],
         "false": [
           "SubChunkEntryWithoutCaching"
+        ],
+        "default": [
+          "void"
         ]
       }
     ],
-    "?entries": [
+    "?entries,SubChunkEntryWithCaching": [
       "SubChunkEntryWithCaching"
     ],
-    "?entries,1693": [
+    "?entries,SubChunkEntryWithoutCaching": [
       "SubChunkEntryWithoutCaching"
+    ],
+    "?entries,void": [
+      "void"
     ]
   },
   "packet_subchunk_request": {

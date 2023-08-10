@@ -120,7 +120,7 @@ function debloatSchema (bloatedSchema) {
           const typeGroups = {}
           for (const type of types) {
             const str = JSON.stringify(type)
-            if (!found.includes(str)) { 
+            if (!found.includes(str)) {
               found.push(str)
               next.push(type)
             }
@@ -144,7 +144,10 @@ function debloatSchema (bloatedSchema) {
             let name = first
             const f = JSON.parse(group)
             if (f.length === 1 && typeof f[0] === 'string') {
-              name = `?${key},${f[0]}`
+              name = `${key},${f[0]}`
+              const old = this.vars[first]
+              delete this.vars[first]
+              this.vars[name] = old
             }
             // console.log('First', first, name)
             // this.vars[name] = JSON.parse(group)
@@ -193,29 +196,14 @@ function debloatSchema (bloatedSchema) {
     }
   }
 
-  // function disambiguateField (name, type, inside) {
-  //   const [n] = name.split(',')
-  //   for (const key in inside) {
-  //     if (key.startsWith(n + ',') || key === n) {
-  //       const v = inside[key]
-  //       if (v[0] === type) continue // no type conflict
-  //       // there is a type conflict
-  //       delete inside[key]
-  //       if (typeof v[0] === 'string') inside[key + ',' + v[0]] = v
-  //       else inside[key + ',' + (i++)] = v
-  //       if (typeof type === 'string') return name + ',' + type
-  //       else return name + ',' + (i++)
-  //     }
-  //   }
-  //   return name
-  // }
-
   function visit (root, simplified, isAnonIteration = false) {
-    console.log('Visiting...', JSON.stringify(root), isAnonIteration ? '(anon)' : '')
+    // console.log('Visiting...', JSON.stringify(root), isAnonIteration ? '(anon)' : '')
 
     function handleSwitch (newName, args, anon, simplified) {
       const next = new Scope()
       const sharedScope = new Scope()
+      if (args.fields.default && (args.default !== args.fields.default)) throw new Error('`default` is a reserved field in switch, please rename')
+      if (args.default) args.fields.default = args.default
       for (const field in args.fields) {
         const val = args.fields[field]
         if (typeof val === 'string') {
@@ -226,19 +214,38 @@ function debloatSchema (bloatedSchema) {
           if (_actualType === 'container') {
             const nextField = new Scope()
             visit(_args, nextField)
-            visit(_args, sharedScope)
+            if (anon) {
+              visit(_args, sharedScope)
+            } else {
+              sharedScope.add(field, nextField)
+            }
             next.add(field, nextField)
-            if (anon) visit(_args, simplified, true)
+            // if (anon) visit(_args, simplified, true)
             nextField.finish()
           } else if (_actualType === 'switch') {
-            throw new Error('Nested switch not supported')
+            // throw new Error('Nested switch not supported')
+            const nextField = new Scope()
+            handleSwitch(field, _args, false, nextField)
+            // console.log('NextScope for switch')
+            // console.dir(nextField, { depth: null })
+            for (const f in nextField.vars) {
+              if (f.endsWith('?')) {
+                next.add(field, nextField.vars[f])
+              } else {
+                sharedScope.add(field, nextField.vars[f])
+              }
+            }
+            // handleSwitch(field, _args, false, sharedScope)
+            // next.add(field, nextField/*.get('default?')*/)
+            // if (anon) handleSwitch(field, _args, true, simplified)
+            nextField.finish()
           } else if (_actualType === 'mapper') {
             // This is adding to the nested scope of the switch:
             next.add(field, ['mapper', _args.type, _args.mappings])
             // This is added to the parent for each type combo of the switch:
             sharedScope.add('mapper', ['mapper', _args.type, _args.mappings])
             // This just adds all the children of the switch to the parent, without any wrapper:
-            if (anon) simplified.addMaybe(field, ['mapper', _args.type, _args.mappings])
+            // if (anon) simplified.addMaybe(field, ['mapper', _args.type, _args.mappings])
           } else if (_actualType === 'array') {
             if (typeof _args.type === 'string') {
               next.add(field, ['array', _args.countType, _args.count, [_args.type]])
@@ -267,16 +274,24 @@ function debloatSchema (bloatedSchema) {
           }
         }
       }
-      if (anon) {
-        simplified.add(newName, ['switch', args.compareTo, next])
-        // anon is handled above
-      } else {
-        simplified.add(newName + '?', ['switch', args.compareTo, next])
-        // simplified[newName] = sharedScope
-        for (const key in sharedScope.vars) {
-          simplified.addMaybe(newName, sharedScope.vars[key])
-        }
+
+      simplified.add(newName + '?', ['switch', args.compareTo, next])
+      // simplified[newName] = sharedScope
+      for (const key in sharedScope.vars) {
+        simplified.addMaybe(newName, sharedScope.vars[key])
       }
+
+      // if (args.fields[0] === 'void')  {
+      //   console.log(sharedScope)
+      //   console.log(simplified)
+      // }
+
+      // if (anon) {
+      //   simplified.add(newName, ['switch', args.compareTo, next])
+      //   // anon is handled above
+      // } else {
+
+      // }
       next.finish()
       // sharedScope.finish()
     }
@@ -311,7 +326,7 @@ function debloatSchema (bloatedSchema) {
             handleType('array', args.type, false, children)
             const unwrap = children.get('array') || children.get('?array')
             if (!unwrap) {
-              console.dir(children, {depth: null})
+              console.dir(children, { depth: null })
               throw new Error('No array in children')
             }
             addToScope(newName, ['array', args.countType, args.count, unwrap])
@@ -324,7 +339,7 @@ function debloatSchema (bloatedSchema) {
           // }
         }
       } else {
-        console.warn('! Unknown type', actualType, args)
+        // console.warn('! Unknown type', actualType, args)
         addToScope(newName, [actualType, args])
       }
     }
@@ -366,6 +381,14 @@ function debloatSchema (bloatedSchema) {
   return simplified
 }
 
+module.exports = {
+  generate (from) {
+    return debloatSchema(from)
+  }
+}
+
+if (!module.parent) {
 // debloatSchema(basicJSON)
-const redone = debloatSchema(require('./protocol.json').types)
-fs.writeFileSync('./redone.json', JSON.stringify(redone, null, 2))
+  const redone = debloatSchema(require('./protocol.json').types)
+  fs.writeFileSync('./redone.json', JSON.stringify(redone, null, 2))
+}
