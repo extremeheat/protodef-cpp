@@ -1,9 +1,9 @@
 const fs = require('fs')
 let ir = require('./redone.json')
-// ir = {
-//   // packet_available_commands: ir.packet_available_commands,
-//   packet_education_settings: ir.packet_education_settings,
-// }
+ir = {
+  packet_available_commands: ir.packet_available_commands,
+  // packet_education_settings: ir.packet_education_settings,
+}
 
 const protodefTypeToCpp = {
   u8: 'uint8_t',
@@ -29,6 +29,37 @@ const protodefTypeToCpp = {
   string: 'std::string',
   buffer: 'std::vector<uint8_t>'
 }
+const protodefTypeToCppEncode = {
+  u8: 'writeByte',
+  u16: 'writeUShortBE',
+  u32: 'writeUIntBE',
+  u64: 'writeULongBE',
+  i8: 'writeByte',
+  i16: 'writeShortBE',
+  i32: 'writeIntBE',
+  i64: 'writeLongBE',
+  f32: 'writeFloatBE',
+  f64: 'writeDoubleBE',
+  lu16: 'writeUShortLE',
+  lu32: 'writeUIntLE',
+  lu64: 'writeULongLE',
+  li16: 'writeShortLE',
+  li32: 'writeIntLE',
+  li64: 'writeLongLE',
+  lf32: 'writeFloatLE',
+  lf64: 'writeDoubleLE',
+  bool: 'writeBool',
+  string: 'writeString',
+  buffer: 'writeBuffer',
+  varint: 'writeUnsignedVarInt',
+  varint64: 'writeUnsignedVarLong',
+  zigzag32: 'writeZigZagVarInt',
+  zigzag64: 'writeZigZagVarLong',
+}
+const protodefTypeToCppDecode = Object.fromEntries(
+  Object.entries(protodefTypeToCppEncode)
+    .map(([k, v]) => [k, v.replace('write', 'read')])
+)
 
 function unretardify(objOrArr) {
   if (objOrArr == null) return []
@@ -56,14 +87,16 @@ function promoteToPascalOrSuffix(str) {
   }
 }
 
-function visitRoot(root) {
+function visitRoot(root, mode) {
   let structLines = 'namespace pdef::proto {\n'
-  // let encodeLines = 'namespace pdef::proto {\n'
+  let encodeLines = 'namespace pdef::proto::encode {\n'
+  let decodeLines = 'namespace pdef::proto::decode {\n'
 
   function structFromContainer(name, container, structPaddingLevel = 0) {
+    if (mode !== 'struct') return
     const pad = (str) => '  '.repeat(structPaddingLevel) + str
     const push = (str) => { structLines += pad(str) + '\n' }
-    
+
     console.log(`struct ${name} {\n`)
 
     push(`struct ${name} {`)
@@ -109,6 +142,7 @@ function visitRoot(root) {
   }
 
   function structFromMapper(name, mapper, structPaddingLevel) {
+    if (mode !== 'struct') return
     const pad = (str) => '  '.repeat(structPaddingLevel) + str
     let enumLines = []
     const [enumType, enumValues] = mapper
@@ -127,7 +161,54 @@ function visitRoot(root) {
   }
 
   function encodingFromContainer(name, container, structPaddingLevel = 0) {
+    if (mode !== 'encode') return
     const pad = (str) => '  '.repeat(structPaddingLevel) + str
+    const pushEncode = (str) => { encodeLines += pad(str) + '\n' }
+    const pushDecode = (str) => { decodeLines += pad(str) + '\n' }
+
+    pushEncode(`void ${name}(pdef::Stream &stream, const pdef::proto::${name} &obj) {`)
+    for (let [fieldName, fieldType] of Object.entries(container)) {
+      fieldType = unretardify(fieldType)
+      if (fieldName.startsWith('?')) continue
+      
+      if (fieldType.length === 1) {
+        const n = deanonymizeStr(fieldName)
+        const typeName = fieldType[0]
+        const isArray = root[typeName] && root[typeName][0] === 'array'
+        if (typeName === 'void') continue // TODO: remove this in the IR
+        else if (protodefTypeToCppEncode[typeName]) pushEncode(`  stream.${protodefTypeToCppEncode[typeName]}(obj.${n});`)
+        else if (isArray) {
+          const lengthType = root[typeName][1]
+          pushEncode(`  pdef::proto::encode::${lengthType}(stream, obj.${n}.size());`)
+          pushEncode(`  for (const auto &v : obj.${n}) { ${typeName}(stream, v); }`)
+        }
+        else pushEncode(`  pdef::proto::encode::${typeName}(stream, obj.${n});`)
+      } else {
+        switch (fieldType[0]) {
+          case 'container':
+          case 'array':
+          case 'mapper': {
+            // We need 2 separate fields in the struct for this.
+            // One for the enum, and one for the actual value.
+            // For example when writing:
+            // stream->color = Color::red;
+            // We can either use PascalCase for the enum, or add a _t suffix.
+            const newName = promoteToPascalOrSuffix(fieldName)
+            const n = deanonymizeStr(fieldName)
+            visitType(newName, fieldType, structPaddingLevel)
+            if (fieldType[0] === 'array') {
+              const lengthType = fieldType[1]
+              pushEncode(`  pdef::proto::encode::${lengthType}(stream, obj.${n}.size());`)
+              pushEncode(`  for (const auto &v : obj.${n}) { pdef::proto::encode::${newName}(stream, v); }`)
+            } else { 
+              pushEncode(`  ${newName}(stream, obj.${deanonymizeStr(fieldName)});`)
+            }
+            break
+          }
+        }
+      }
+    }
+    pushEncode('}')
   }
 
   function visitType(structName, type, structPaddingLevel = 0) {
@@ -142,6 +223,7 @@ function visitRoot(root) {
       }
     } else if (typeName === 'container') {
       structFromContainer(structName, typeArgs[0], structPaddingLevel + 1)
+      encodingFromContainer(structName, typeArgs[0], structPaddingLevel + 1)
     } else if (typeName === 'mapper') {
       structFromMapper(structName, typeArgs, structPaddingLevel + 1)
     }
@@ -153,11 +235,32 @@ function visitRoot(root) {
   }
 
   structLines += '}\n'
-  // encodeLines += '}\n'
+  encodeLines += '}\n'
+  decodeLines += '}\n'
 
-  return {structLines}
+  return mode === 'struct' ? structLines : encodeLines
 }
 
-let compiled = visitRoot(ir)
-fs.writeFileSync('structs.h', compiled.structLines)
-// console.log(structLines)
+function visit (ir) {
+  const structLines = visitRoot(ir, 'struct')
+  const encodeLines = visitRoot(ir, 'encode')
+  return { structLines, encodeLines, decodeLines: '' }
+}
+
+let compiled = visit(ir)
+fs.writeFileSync('structs.h', compiled.structLines + '\n' + compiled.encodeLines + '\n' + compiled.decodeLines)
+  // console.log(structLines)
+
+x = `
+namespace pdef::proto::encode {
+  void packet_toast_request(pdef::Stream &stream, const pdef::proto::packet_toast_request &value) {
+    stream->writeString(value.title);
+    stream->writeString(value.message);
+  }
+  void packet_request_permissions(pdef::Stream &stream, const pdef::proto::packet_request_permissions &value) {
+    stream->writeInt64(value.entity_unique_id);
+    stream->writeInt32(static_cast<int32_t>(value.permission_level));
+    stream->writeInt32(static_cast<int32_t>(value.requested_permissions));
+  }
+}
+`
