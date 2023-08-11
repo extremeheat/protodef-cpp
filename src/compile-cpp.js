@@ -1,5 +1,9 @@
 const fs = require('fs')
-const ir = require('./redone.json')
+let ir = require('./redone.json')
+// ir = {
+//   // packet_available_commands: ir.packet_available_commands,
+//   packet_education_settings: ir.packet_education_settings,
+// }
 
 const protodefTypeToCpp = {
   u8: 'uint8_t',
@@ -33,6 +37,7 @@ function unretardify(objOrArr) {
   } else if (typeof objOrArr === 'object') {
     return ['container', objOrArr]
   }
+  return objOrArr
 }
 
 function deanonymizeStr(fieldName) {
@@ -40,6 +45,7 @@ function deanonymizeStr(fieldName) {
 }
 
 function promoteToPascalOrSuffix(str) {
+  str = deanonymizeStr(str)
   // Check if field str starts with lowercase
   if (str[0] === str[0].toLowerCase()) {
     // we can promote name to PascalCase from snake_case
@@ -52,24 +58,32 @@ function promoteToPascalOrSuffix(str) {
 
 function visitRoot(root) {
   let structLines = 'namespace pdef::proto {\n'
+  // let encodeLines = 'namespace pdef::proto {\n'
 
   function structFromContainer(name, container, structPaddingLevel = 0) {
     const pad = (str) => '  '.repeat(structPaddingLevel) + str
+    const push = (str) => { structLines += pad(str) + '\n' }
+    
     console.log(`struct ${name} {\n`)
-    structLines += `struct ${name} {\n`
-    for (const [fieldName, fieldType] of Object.entries(container)) {
+
+    push(`struct ${name} {`)
+    for (let [fieldName, fieldType] of Object.entries(container)) {
+      fieldType = unretardify(fieldType)
+      console.log(`  ${fieldName}: ${fieldType}`)
       if (fieldName.endsWith('?')) continue // When generating structs, we ignore switches
       if (fieldType.length === 1) {
         const n = deanonymizeStr(fieldName)
         const typeName = fieldType[0]
         const isArray = root[typeName] && root[typeName][0] === 'array'
         if (typeName === 'void') continue // TODO: remove this in the IR
-        else if (protodefTypeToCpp[typeName]) structLines += `  ${protodefTypeToCpp[typeName]} ${n};\n`
-        else if (isArray) structLines += `  std::vector<${typeName}> ${n};\n`
-        else structLines += `  pdef::proto::${typeName} ${n};\n`
+        else if (protodefTypeToCpp[typeName]) push(`  ${protodefTypeToCpp[typeName]} ${n};`)
+        else if (isArray) push(`  std::vector<pdef::proto::${typeName}> ${n};`)
+        else if (fieldName.startsWith('?')) push(`  std::optional<pdef::proto::${typeName}> ${n};`)
+        else push(`  pdef::proto::${typeName} ${n};`)
       } else {
         switch (fieldType[0]) {
           case 'container':
+          case 'array':
           case 'mapper': {
             // We need 2 separate fields in the struct for this.
             // One for the enum, and one for the actual value.
@@ -78,13 +92,19 @@ function visitRoot(root) {
             // We can either use PascalCase for the enum, or add a _t suffix.
             const newName = promoteToPascalOrSuffix(fieldName)
             visitType(newName, fieldType, structPaddingLevel)
-            structLines += `  ${newName} ${fieldName};\n`
+            if (fieldType[0] === 'array') {
+              push(`  std::vector<pdef::proto::${newName}> ${deanonymizeStr(fieldName)};`)
+            } else if (fieldName.startsWith('?')) {
+              push(`  std::optional<pdef::proto::${newName}> ${deanonymizeStr(fieldName)};`)
+            } else {
+              push(`  ${newName} ${deanonymizeStr(fieldName)};`)
+            }
             break
           }
         }
       }
     }
-    structLines += '};\n'
+    push('};')
     console.log(`{\n`)
   }
 
@@ -106,8 +126,13 @@ function visitRoot(root) {
     console.log(l)
   }
 
+  function encodingFromContainer(name, container, structPaddingLevel = 0) {
+    const pad = (str) => '  '.repeat(structPaddingLevel) + str
+  }
+
   function visitType(structName, type, structPaddingLevel = 0) {
     const [typeName, ...typeArgs] = unretardify(type)
+    console.log(typeName, typeArgs)
     if (typeName === 'native') {
       structLines += `// ${structName} is built in\n`
     } else if (typeName === 'array') {
@@ -116,9 +141,9 @@ function visitRoot(root) {
         structFromContainer(structName, type, structPaddingLevel + 1)
       }
     } else if (typeName === 'container') {
-      structFromContainer(structName, type, structPaddingLevel + 1)
+      structFromContainer(structName, typeArgs[0], structPaddingLevel + 1)
     } else if (typeName === 'mapper') {
-      structFromMapper(structName, typeArgs, structPaddingLevel)
+      structFromMapper(structName, typeArgs, structPaddingLevel + 1)
     }
   }
 
@@ -128,6 +153,7 @@ function visitRoot(root) {
   }
 
   structLines += '}\n'
+  // encodeLines += '}\n'
 
   return {structLines}
 }
