@@ -87,6 +87,13 @@ function promoteToPascalOrSuffix(str) {
   }
 }
 
+function toSafeVar(name) {
+  // add a _ suffix to reserved keywords in C++
+  const illegal = ['byte', 'short', 'int', 'long', 'float', 'double', 'bool']
+  if (illegal.includes(name)) return name + '_'
+  return name
+}
+
 function visitRoot(root, mode) {
   let structLines = 'namespace pdef::proto {\n'
   let encodeLines = 'namespace pdef::proto::encode {\n'
@@ -162,6 +169,82 @@ function visitRoot(root, mode) {
     console.log(l)
   }
 
+  function encodeType (fieldName, fieldType, structPaddingLevel = 0, objName = 'obj') {
+    const pad = (str) => '  '.repeat(structPaddingLevel) + str
+    const pushEncode = (str) => { encodeLines += pad(str) + '\n' }
+    const pushDecode = (str) => { decodeLines += pad(str) + '\n' }
+
+    console.log(`.  ${fieldName}: ${fieldType}`)
+    fieldType = unretardify(fieldType)
+    if (fieldName.startsWith('?')) return
+
+    const typeName = fieldType[0]
+    const n = deanonymizeStr(fieldName)
+    if (fieldName.endsWith('^')) {
+      // Declare as a local variable
+      pushEncode(`  ${typeName} ${n} = obj.${n};`)
+    }
+    const isRootArray = root[typeName] && root[typeName][0] === 'array'
+    if (typeName === 'void') return // TODO: remove this in the IR
+    const builtinEncodeFn = protodefTypeToCppEncode[typeName]
+    if (builtinEncodeFn) pushEncode(`  stream.${builtinEncodeFn}(${objName}.${n});`)
+    else if (isRootArray) {
+      const lengthType = root[typeName][1]
+      pushEncode(`  pdef2::proto::encode::${lengthType}(stream, ${objName}.${n}.size());`)
+      pushEncode(`  for (const auto &v : ${objName}.${n}) { ${typeName}(stream, v); }`)
+    } else {
+      // We need 2 separate fields in the struct for this.
+      // One for the enum, and one for the actual value.
+      // For example when writing:
+      // stream->color = Color::red;
+      // We can either use PascalCase for the enum, or add a _t suffix.
+      if (typeName === 'array') {
+        const newName = promoteToPascalOrSuffix(fieldName)
+        const lengthType = fieldType[1]
+        const lengthVar = fieldType[2]
+        if (lengthVar) {
+          // console.log('lengthVar', fieldType, lengthVar)
+          const [lengthVariable,lengthTyp] = lengthVar
+          if (protodefTypeToCppEncode[lengthTyp]) pushEncode(`  stream.${protodefTypeToCppEncode[lengthTyp]}(${objName}.${lengthVar[0]}.size());`)
+          else pushEncode(`  pdef0::proto::encode::${lengthTyp}(stream, ${objName}.${lengthVar[0]}.size());`)
+        } else {
+          if (protodefTypeToCppEncode[lengthType]) pushEncode(`  stream.${protodefTypeToCppEncode[lengthType]}(${objName}.${n}.size());`)
+          else pushEncode(`  pdef1::proto::encode::${lengthType}(stream, ${objName}.${n}.size());`)
+        }
+        const actualType = unretardify(fieldType[3])
+        if (actualType[0] === 'container') {
+          // inline
+          pushEncode(`  for (const auto &v : ${objName}.${n}) {`)
+          encodingFromContainer(newName, actualType[1], structPaddingLevel + 1, 'v', true)
+          pushEncode('  }')
+        } else {
+          const builtinEncodeFn = protodefTypeToCppEncode[actualType]
+          if (builtinEncodeFn) pushEncode(`  for (const auto &v : ${objName}.${n}) { stream.${builtinEncodeFn}(v); }`)
+          else pushEncode(`  for (const auto &v : ${objName}.${n}) { pdef3::proto::encode::${newName}(stream, v); }`)
+        }
+      } else if (typeName === 'switch') {
+        const compareTo = fieldType[1]
+        const compareToType = fieldType[2].length === 1 ? fieldType[2] : promoteToPascalOrSuffix(compareTo)
+        const cases = fieldType[3]
+        pushEncode(`  switch (${compareTo}) {`)
+        for (const [caseName, caseType] of Object.entries(cases)) {
+          if (compareToType === 'bool')
+            pushEncode(`    case ${caseName}: {`)
+          else
+            pushEncode(`    case ${compareToType}::${toSafeVar(caseName)}: {`)
+          // encodingFromContainer(caseName, caseType, structPaddingLevel + 2, objName)
+          visitType(n, caseType, structPaddingLevel + 2)
+          pushEncode('      break;')
+          pushEncode('    }')
+        }
+        pushEncode('  }')
+      } else {
+        // we'd call into the specific encode function for this type
+        pushEncode(`  pdef4::proto::encode::${fieldType}(stream, ${objName}.${n});`)
+      }
+    }
+  }
+
   function encodingFromContainer(name, container, structPaddingLevel = 0, objName = 'obj', excludeHeaders) {
     if (mode !== 'encode') return
     const pad = (str) => '  '.repeat(structPaddingLevel) + str
@@ -170,84 +253,13 @@ function visitRoot(root, mode) {
 
     if (!excludeHeaders) pushEncode(`void ${name}(pdef::Stream &stream, const pdef::proto::${name} &obj) {`)
     for (let [fieldName, fieldType] of Object.entries(container)) {
-      console.log(`.  ${fieldName}: ${fieldType}`)
-      fieldType = unretardify(fieldType)
-      if (fieldName.startsWith('?')) continue
-
-      const typeName = fieldType[0]
-      const n = deanonymizeStr(fieldName)
-      if (fieldName.endsWith('^')) {
-        // Declare as a local variable
-        pushEncode(`  ${typeName} ${n} = obj.${n};`)
-      }
-      const isRootArray = root[typeName] && root[typeName][0] === 'array'
-      if (typeName === 'void') continue // TODO: remove this in the IR
-      const builtinEncodeFn = protodefTypeToCppEncode[typeName]
-      if (builtinEncodeFn) pushEncode(`  stream.${builtinEncodeFn}(${objName}.${n});`)
-      else if (isRootArray) {
-        const lengthType = root[typeName][1]
-        pushEncode(`  pdef2::proto::encode::${lengthType}(stream, ${objName}.${n}.size());`)
-        pushEncode(`  for (const auto &v : ${objName}.${n}) { ${typeName}(stream, v); }`)
-      } else {
-        // We need 2 separate fields in the struct for this.
-        // One for the enum, and one for the actual value.
-        // For example when writing:
-        // stream->color = Color::red;
-        // We can either use PascalCase for the enum, or add a _t suffix.
-        if (typeName === 'array') {
-          const newName = promoteToPascalOrSuffix(fieldName)
-          const lengthType = fieldType[1]
-          const lengthVar = fieldType[2]
-          if (lengthVar) {
-            console.log('lengthVar', fieldType, lengthVar, container)
-            const lengthTyp = container[lengthVar][0]
-            if (protodefTypeToCppEncode[lengthTyp]) pushEncode(`  stream.${protodefTypeToCppEncode[lengthTyp]}(${objName}.${lengthVar}.size());`)
-            else pushEncode(`  pdef0::proto::encode::${lengthTyp}(stream, ${objName}.${lengthVar}.size());`)
-          } else {
-            if (protodefTypeToCppEncode[lengthType]) pushEncode(`  stream.${protodefTypeToCppEncode[lengthType]}(${objName}.${n}.size());`)
-            else pushEncode(`  pdef1::proto::encode::${lengthType}(stream, ${objName}.${n}.size());`)
-          }
-          const actualType = unretardify(fieldType[3])
-          if (actualType[0] === 'container') {
-            // inline
-            pushEncode(`  for (const auto &v : ${objName}.${n}) {`)
-            encodingFromContainer(newName, actualType[1], structPaddingLevel + 1, 'v', true)
-            pushEncode('  }')
-          } else {
-            const builtinEncodeFn = protodefTypeToCppEncode[actualType]
-            if (builtinEncodeFn) pushEncode(`  for (const auto &v : ${objName}.${n}) { stream.${builtinEncodeFn}(v); }`)
-            else pushEncode(`  for (const auto &v : ${objName}.${n}) { pdef3::proto::encode::${newName}(stream, v); }`)
-          }
-        } else if (typeName === 'switch') {
-          const compareTo = fieldType[1]
-          const compareToType = fieldType[2].length === 1 ? fieldType[2] : promoteToPascalOrSuffix(compareTo)
-          const cases = fieldType[3]
-          pushEncode(`  switch (${compareTo}) {`)
-          for (const [caseName, caseType] of Object.entries(cases)) {
-            if (compareToType === 'bool')
-              pushEncode(`    case ${caseName}: {`)
-            else
-              pushEncode(`    case ${compareToType}::${caseName}: {`)
-            // encodingFromContainer(caseName, caseType, structPaddingLevel + 2, objName)
-            visitType(caseName, caseType, structPaddingLevel + 2)
-            pushEncode('      break;')
-            pushEncode('    }')
-          }
-          pushEncode('  }')
-        } else {
-          // we'd call into the specific encode function for this type
-          pushEncode(`  pdef4::proto::encode::${fieldType}(stream, ${objName}.${n});`)
-        }
-      }
+      encodeType(fieldName, fieldType, structPaddingLevel, objName)
     }
     if (!excludeHeaders) pushEncode('}')
   }
 
   function visitType(structName, type, structPaddingLevel = 0, objName = 'obj') {
     const pad = (str) => '  '.repeat(structPaddingLevel) + str
-    const pushEncode = (str) => { encodeLines += pad(str) + '\n' }
-    const pushDecode = (str) => { decodeLines += pad(str) + '\n' }
-
     const [typeName, ...typeArgs] = unretardify(type)
     console.log(typeName, typeArgs)
     if (typeName === 'native') {
@@ -263,7 +275,8 @@ function visitRoot(root, mode) {
     } else if (typeName === 'mapper') {
       structFromMapper(structName, typeArgs, structPaddingLevel + 1)
     } else {
-      pushEncode(`  pdef6::proto::encode::${typeName}(stream, ${objName}.${structName});`)
+      encodeType(structName, typeName, structPaddingLevel, objName)
+      // pushEncode(`  pdef6::proto::encode::${typeName}(stream, ${objName}.${structName});`)
     }
   }
 

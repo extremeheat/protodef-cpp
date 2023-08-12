@@ -99,6 +99,13 @@ function preprocess (schema) {
           visitType(caseType, parent)
         }
       } else if (name === 'array') {
+        if (typeof args[0].count === 'string') {
+          console.log('Injecting array count', args)
+          const injectedObj = walkBackwardAndInject(args[0].count, parent, { counted: true })
+          if (injectedObj) {
+            args[0].countVarType = injectedObj.type
+          } else throw Error('Could not find count variable: ' + args[0].count)
+        }
         visitType(args[0].type, parent)
       }
     }
@@ -320,9 +327,10 @@ function debloatSchema (bloatedSchema) {
             // This just adds all the children of the switch to the parent, without any wrapper:
             // if (anon) simplified.addMaybe(field, ['mapper', _args.type, _args.mappings])
           } else if (_actualType === 'array') {
+            const count = _args.count ? [_args.count, _args.countVarType] : null
             if (typeof _args.type === 'string') {
-              next.add(field, ['array', _args.countType, _args.count, [_args.type]])
-              sharedScope.add('array', ['array', _args.countType, _args.count, [_args.type]])
+              next.add(field, ['array', _args.countType, count, [_args.type]])
+              sharedScope.add('array', ['array', _args.countType, count, [_args.type]])
             } else {
               if (_args.type[0] === 'switch') {
                 throw new Error('Nested switch-array-switch not supported, please rewrite schema')
@@ -330,13 +338,13 @@ function debloatSchema (bloatedSchema) {
               const children = new Scope()
               // visit(_args.type[1], children)
               if (anon) {
-                simplified.addMaybe(field, ['array', _args.countType, _args.count, children])
+                simplified.addMaybe(field, ['array', _args.countType, count, children])
                 throw new Error('Anon switch cannot have an arrays as child : would have an undefined name')
               } else {
                 handleType(field, _args.type, false, children)
                 const unwrap = children.get(field)
-                next.add(field, ['array', _args.countType, _args.count, unwrap])
-                sharedScope.add('array', ['array', _args.countType, _args.count, unwrap])
+                next.add(field, ['array', _args.countType, count, unwrap])
+                sharedScope.add('array', ['array', _args.countType, count, unwrap])
               }
               children.finish()
               // if (newName.includes('block_action')) {
@@ -389,8 +397,9 @@ function debloatSchema (bloatedSchema) {
         addToScope(newName, ['mapper', args.type, args.mappings])
       } else if (actualType === 'array') {
         // visit(args.type[1], children)
+        const count = args.count ? [args.count, args.countVarType] : null
         if (typeof args.type === 'string') {
-          addToScope(newName, ['array', args.countType, args.count, [args.type]])
+          addToScope(newName, ['array', args.countType, count, [args.type]])
         } else {
           if (args.type[0] === 'switch') {
             handleSwitch(newName, args.type[1], anon, simplified)
@@ -402,7 +411,7 @@ function debloatSchema (bloatedSchema) {
               console.dir(children, { depth: null })
               throw new Error('No array in children')
             }
-            addToScope(newName, ['array', args.countType, args.count, unwrap])
+            addToScope(newName, ['array', args.countType, count, unwrap])
             children.finish()
           }
 
@@ -468,3 +477,6 @@ if (!module.parent) {
   // const redone = debloatSchema(require('./proto2.json').types)
   fs.writeFileSync('./redone.json', JSON.stringify(redone, null, 2))
 }
+
+
+// Broken: Shaped recipes with array-array nesting and input=width*height
