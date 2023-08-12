@@ -40,6 +40,75 @@ const fs = require('fs')
 //   }
 // }
 
+
+// Resolve switch statements' compareTo's
+function preprocess (schema) {
+  function fixCompareToType (type) {
+    let fix = type.replaceAll('../', '')
+    if (fix.startsWith('/')) return type
+    return fix.split('.')[0]
+  }
+
+  function walkBackwardAndInject (untilMatch, parent, injectable) {
+    let current = parent
+    while (current) {
+      for (const _current of current) {
+        if (_current.name === untilMatch) {
+          Object.assign(_current, injectable)
+          console.log('Injected', injectable, 'into', _current)
+          return _current
+        }
+      }
+      if (!current.parent) {
+        console.log('Top most', current)
+      }
+      current = current.parent
+    }
+  }
+
+  function visitContainer (container, parent) {
+    container.parent = parent
+    for (const { name, type } of container) {
+      visitType(type, container)
+    }
+  }
+
+  function visitType (type, parent) {
+    if (typeof type === 'string') {
+      return
+    } else if (Array.isArray(type)) {
+      type.parent = parent
+      const [name, ...args] = type
+      if (name === 'container') {
+        visitContainer(args[0], parent)
+      } else if (name === 'switch') {
+        const cases = args[0].fields
+        let compareTo = fixCompareToType(args[0].compareTo);
+        if (compareTo.startsWith('/')) {
+          // Special case, ignore for now
+        } else {
+          console.log('Injecting compareTo', compareTo)
+          const injectedObj = walkBackwardAndInject(compareTo, parent, { comparedTo: true })
+          if (injectedObj) {
+            // TODO: handle more than just mapper
+            if (injectedObj.type[0] === 'mapper') args[0].compareToType = 'mapper'
+            else args[0].compareToType = injectedObj.type
+          } else throw Error('Could not find compareTo ' + compareTo)
+        }
+        for (const [caseName, caseType] of Object.entries(cases)) {
+          visitType(caseType, parent)
+        }
+      } else if (name === 'array') {
+        visitType(args[0].type, parent)
+      }
+    }
+  }
+
+  for (const typeName in schema) {
+    visitType(schema[typeName], schema)
+  }
+}
+
 // Yes, it's a mess. I'm sorry.
 function debloatSchema (bloatedSchema) {
   let i = 0
@@ -187,6 +256,18 @@ function debloatSchema (bloatedSchema) {
     }
   }
 
+  function fixCompareToType (type) {
+    let fix = type.replaceAll('../', '')
+    if (fix.startsWith('/')) return type
+    if (fix.includes('.') || fix.includes('||')) {
+      // update_flags.initialisation || update_flags.decoration || update_flags.texture
+      // -> [update_flags, [initialisation, decoration, texture]]
+      const n = fix.includes('.') ? fix.split('.')[0] : fix.split('||')[0]
+      return [n, fix.split('||').map(e => e.split('.')[1]), type, type.includes('||') ? 'bool' : null]
+    }
+    return fix
+  }
+
   function visit (root, simplified, isAnonIteration = false) {
     // console.log('Visiting...', JSON.stringify(root), isAnonIteration ? '(anon)' : '')
 
@@ -267,7 +348,7 @@ function debloatSchema (bloatedSchema) {
         }
       }
 
-      simplified.add(newName + '?', ['switch', args.compareTo, next])
+      simplified.add(newName + '?', ['switch', fixCompareToType(args.compareTo), args.compareToType, next])
       // simplified[newName] = sharedScope
       for (const key in sharedScope.vars) {
         simplified.addMaybe(anon ? key : newName, sharedScope.vars[key])
@@ -337,7 +418,8 @@ function debloatSchema (bloatedSchema) {
     }
 
     function handleContainer () {
-      for (const { name, type, anon } of root) {
+      for (let { name, type, anon, comparedTo } of root) {
+        if (comparedTo) name += '^'
         if (typeof type === 'string') {
           isAnonIteration ? simplified.addMaybe(name, [type]) : simplified.add(name, [type])
           continue
@@ -381,6 +463,7 @@ module.exports = {
 
 if (!module.parent) {
 // debloatSchema(basicJSON)
+  const pp = preprocess(require('./protocol.json').types)
   const redone = debloatSchema(require('./protocol.json').types)
   // const redone = debloatSchema(require('./proto2.json').types)
   fs.writeFileSync('./redone.json', JSON.stringify(redone, null, 2))
