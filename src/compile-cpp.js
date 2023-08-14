@@ -49,13 +49,68 @@ const protodefTypeToCppEncode = {
   lf32: 'writeFloatLE',
   lf64: 'writeDoubleLE',
   bool: 'writeBool',
-  string: 'writeString',
+  cstring: 'writeCString',
   buffer: 'writeBuffer',
   varint: 'writeUnsignedVarInt',
   varint64: 'writeUnsignedVarLong',
   zigzag32: 'writeZigZagVarInt',
   zigzag64: 'writeZigZagVarLong',
 }
+const protodefTypeSizes = {
+  u8: 1,
+  u16: 2,
+  u32: 4,
+  u64: 8,
+  i8: 1,
+  i16: 2,
+  i32: 4,
+  i64: 8,
+  f32: 4,
+  f64: 8,
+  lu16: 2,
+  lu32: 4,
+  lu64: 8,
+  li16: 2,
+  li32: 4,
+  li64: 8,
+  lf32: 4,
+  lf64: 8,
+  bool: 1,
+  cstring (args, varName) {
+    return `${varName}.length() + 1`
+  },
+  varint: 'sizeOfVarInt',
+  varint64: 'sizeOfVarInt64',
+  varlong: 'sizeOfVarInt64',
+  zigzag32: 'sizeOfZigZagVarInt',
+  zigzag64: 'sizeOfZigZagVarLong',
+}
+const customTypes = {
+  pstring: {
+    read (args, name, makeCallingCode) {
+      return `
+int ${name}_strlen = ${makeCallingCode(args.countType)};
+obj->${name} = stream->readString(${name}_strlen);
+`.trim()
+    },
+    write (args, name, makeCallingCode) {
+      return `
+${makeCallingCode(args.countType, 'obj->' + name + '.length()')};
+stream->writeString(obj->${name}, 'obj->${name}.length()');
+`.trim()
+    },
+    size (args, name, makeCallingCode) {
+      return `
+${makeCallingCode(args.countType, 'obj->' + name + '.length()')};
+size += obj->${name}.length();
+`.trim()
+    },
+    struct (args, name, makeCallingCode) {
+      return `std::string ${name};`.trim()
+    }
+  },
+}
+
 const protodefTypeToCppDecode = Object.fromEntries(
   Object.entries(protodefTypeToCppEncode)
     .map(([k, v]) => [k, v.replace('write', 'read')])
@@ -238,9 +293,12 @@ function visitRoot(root, mode) {
           pushEncode('    }')
         }
         pushEncode('  }')
+      } else if (typeName === 'mapper')  {
+        const actualType = fieldType[1]
+        pushEncode(`  pdef4::proto::encode::${actualType}(stream, ${objName}.${n});`)
       } else {
         // we'd call into the specific encode function for this type
-        pushEncode(`  pdef4::proto::encode::${fieldType}(stream, ${objName}.${n});`)
+        pushEncode(`  pdef4::proto::encode::${Array.isArray(fieldType)?fieldType[0]:fieldType}(stream, ${objName}.${n});`)
       }
     }
   }
