@@ -158,6 +158,7 @@ const footer = `
 
 function visitRoot(root, mode) {
   let structLines = headers + 'namespace pdef::proto {\n'
+  let sizeLines = 'namespace pdef::proto::size {\n'
   let encodeLines = 'namespace pdef::proto::encode {\n'
   let decodeLines = 'namespace pdef::proto::decode {\n'
 
@@ -233,11 +234,20 @@ function visitRoot(root, mode) {
 
   function encodeType (fieldName, fieldType, structPaddingLevel = 0, objName = 'obj') {
     const pad = (str) => '  '.repeat(structPaddingLevel) + str
+    const pushSize = (str) => { sizeLines += pad(str) + '\n' }
     const pushEncode = (str) => { encodeLines += pad(str) + '\n' }
+    const pushSizeEncode = (str) => (pushSize(str), pushEncode(str))
     const pushDecode = (str) => { decodeLines += pad(str) + '\n' }
+    function makeSizeStr (type, varName) {
+      const s = protodefTypeSizes[type]
+      if (typeof s === 'number') return `len += ${s}`
+      else if (typeof s === 'string') return `len += stream.${protodefTypeSizes[type]}(${Array.isArray(varName) ? varName.join('.') : varName})`
+      return `len += pdef::proto::size::${type}(${Array.isArray(varName) ? varName.join('.') : varName})`
+    }
     const makeEncodeStr = (type, varName) => protodefTypeToCppEncode[type] 
       ? `WRITE_OR_BAIL(${protodefTypeToCppEncode[type]}, ${Array.isArray(varName) ? varName.join('.') : varName})`
       : `pdef::proto::encode::${type}(stream, ${Array.isArray(varName) ? varName.join('.') : varName})`
+
 
     console.log(`.  ${fieldName}: ${fieldType}`)
     fieldType = unretardify(fieldType)
@@ -247,16 +257,21 @@ function visitRoot(root, mode) {
     const n = deanonymizeStr(fieldName)
     if (fieldName.endsWith('^')) {
       // Declare as a local variable
-      pushEncode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::'+typeName)} ${n} = obj.${n};`)
-    }
+      pushSizeEncode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::'+typeName)} ${n} = obj.${n}; /*0*/`)
+    } else if (protodefTypeSizes[typeName]) pushSize(`  ${makeSizeStr(typeName)}; /*${fieldName}: ${typeName}*/ /*0*/`)
     const isRootArray = root[typeName] && root[typeName][0] === 'array'
     if (typeName === 'void') return // TODO: remove this in the IR
+
+
+
     const builtinEncodeFn = protodefTypeToCppEncode[typeName]
     if (builtinEncodeFn) pushEncode('  ' + makeEncodeStr(typeName, [objName, n]) + '; /*0*/')
     else if (isRootArray) {
       const lengthType = root[typeName][1]
       pushEncode(`  ${makeEncodeStr(lengthType, [objName, n, 'size()'])}; /*2*/`)
       pushEncode(`  for (const auto &v : ${objName}.${n}) { ${makeEncodeStr(typeName, 'v')}; } /*6*/`)
+      pushSize(`  len += ${makeSizeStr(lengthType, [objName, n, 'size()'])}; /*2*/`)
+      pushSize(`  for (const auto &v : ${objName}.${n}) { len += ${makeSizeStr(typeName, 'v')}; } /*6*/`)
     } else {
       // We need 2 separate fields in the struct for this.
       // One for the enum, and one for the actual value.
@@ -270,16 +285,18 @@ function visitRoot(root, mode) {
         if (lengthVar) {
           // console.log('lengthVar', fieldType, lengthVar)
           const [lengthVariable,lengthTyp] = lengthVar
+          pushSize(`  ${makeSizeStr(lengthTyp, [lengthVariable, 'size()'])}; /*1*/`)
           pushEncode(`  ${makeEncodeStr(lengthTyp, [lengthVariable, 'size()'])}; /*1*/`)
         } else {
+          pushSize(`  ${makeSizeStr(lengthType, [objName, n, 'size()'])}; /*1*/`)
           pushEncode(`  ${makeEncodeStr(lengthType, [objName, n, 'size()'])}; /*1*/`)
         }
         const actualType = unretardify(fieldType[3])
         if (actualType[0] === 'container') {
           // inline
-          pushEncode(`  for (const auto &v : ${objName}.${n}) {`)
+          pushSizeEncode(`  for (const auto &v : ${objName}.${n}) { /*5*/`)
           encodingFromContainer(newName, actualType[1], structPaddingLevel + 1, 'v', true)
-          pushEncode('  }')
+          pushSizeEncode('  }')
         } else {
           pushEncode(`  for (const auto &v : ${objName}.${n}) { ${makeEncodeStr(actualType, 'v')}; /*3*/ }`)
         }
@@ -287,39 +304,55 @@ function visitRoot(root, mode) {
         const compareTo = fieldType[1]
         const compareToType = fieldType[2].length === 1 ? fieldType[2] : promoteToPascalOrSuffix(compareTo)
         const cases = fieldType[3]
-        pushEncode(`  switch (${compareTo}) {`)
+        pushSizeEncode(`  switch (${compareTo}) {`)
         for (const [caseName, caseType] of Object.entries(cases)) {
           if (compareToType === 'bool')
-            pushEncode(`    case ${caseName}: {`)
+            pushSizeEncode(`    case ${caseName}: {`)
           else
-            pushEncode(`    case ${compareToType}::${toSafeVar(caseName)}: {`)
+            pushSizeEncode(`    case ${compareToType}::${toSafeVar(caseName)}: {`)
           // encodingFromContainer(caseName, caseType, structPaddingLevel + 2, objName)
           visitType(n, caseType, structPaddingLevel + 2)
-          pushEncode('      break;')
-          pushEncode('    }')
+          pushSizeEncode('      break;')
+          pushSizeEncode('    }')
         }
         pushEncode('  }')
       } else if (typeName === 'mapper')  {
         const actualType = fieldType[1]
-        pushEncode(`  ${makeEncodeStr(actualType, [objName, n])}; /*4*/`)
+        pushSize(`  ${makeSizeStr(actualType, [objName, n])}; /*${fieldName}: ${actualType}*/ /*7*/`)
+        pushEncode(`  ${makeEncodeStr(actualType, [objName, n])}; /*7*/`)
       } else {
         // we'd call into the specific encode function for this type
+        pushSize(`  ${makeSizeStr(Array.isArray(fieldType)?fieldType[0]:fieldType, [objName, n])}; /*${fieldName}*/ /*4*/`)
         pushEncode(`  ${makeEncodeStr(Array.isArray(fieldType)?fieldType[0]:fieldType, [objName, n])}; /*4*/`)
       }
     }
   }
 
   function encodingFromContainer(name, container, structPaddingLevel = 0, objName = 'obj', excludeHeaders) {
-    if (mode !== 'encode') return
+    if (mode === 'struct') return
     const pad = (str) => '  '.repeat(structPaddingLevel) + str
+    const pushSize = (str) => { sizeLines += pad(str) + '\n' }
     const pushEncode = (str) => { encodeLines += pad(str) + '\n' }
     const pushDecode = (str) => { decodeLines += pad(str) + '\n' }
 
-    if (!excludeHeaders) pushEncode(`void ${name}(pdef::Stream &stream, const pdef::proto::${name} &obj) {`)
+    if (!excludeHeaders) {
+      pushEncode(`bool ${name}(pdef::Stream &stream, const pdef::proto::${name} &obj, bool allocate = true) {`)
+      pushEncode(`  if (allocate) stream.reserve(stream, pdef::proto::size::${name}(obj));`)
+      pushDecode(`bool ${name}(pdef::Stream &stream, pdef::proto::${name} &obj) {`)
+      pushSize(`size_t ${name}(pdef::Stream &stream, const pdef::proto::${name} &obj) {`)
+      pushSize(`  size_t len = 0;`)
+    }
     for (let [fieldName, fieldType] of Object.entries(container)) {
       encodeType(fieldName, fieldType, structPaddingLevel, objName)
     }
-    if (!excludeHeaders) pushEncode('}')
+    if (!excludeHeaders) {
+      pushSize('  return len;')
+      pushSize('}')
+      pushEncode('  return true;')
+      pushEncode('}')
+      pushDecode('  return true;')
+      pushDecode('}')
+    }
   }
 
   function visitType(structName, type, structPaddingLevel = 0, objName = 'obj') {
@@ -350,20 +383,22 @@ function visitRoot(root, mode) {
   }
 
   structLines += '}\n'
+  sizeLines += '}\n'
   encodeLines += '}\n'
   decodeLines += '}\n'
 
-  return mode === 'struct' ? structLines : encodeLines
+  return { structLines, sizeLines, encodeLines, decodeLines }
 }
 
 function visit(ir) {
-  const structLines = visitRoot(ir, 'struct')
-  const encodeLines = visitRoot(ir, 'encode')
-  return { structLines, encodeLines, decodeLines: '' }
+  const {structLines} = visitRoot(ir, 'struct')
+  const {sizeLines} = visitRoot(ir, 'size')
+  const {encodeLines} = visitRoot(ir, 'encode')
+  return { structLines, sizeLines, encodeLines, decodeLines: '' }
 }
 
 let compiled = visit(ir)
-fs.writeFileSync('structs.h', compiled.structLines + '\n' + compiled.encodeLines + '\n' + compiled.decodeLines)
+fs.writeFileSync('structs.h', compiled.structLines + '\n' + compiled.sizeLines + '\n' + compiled.encodeLines + '\n' + compiled.decodeLines)
 // console.log(structLines)
 
 x = `
@@ -378,4 +413,24 @@ namespace pdef::proto::encode {
     stream->writeInt32(static_cast<int32_t>(value.requested_permissions));
   }
 }
+
+pdef::Stream stream;
+pdef::proto::packet_available_commands commands_packet {
+  .values_len = 0,
+  .enum_values = {},
+  .suffixes = {},
+  .enums = {},
+  .command_data = {},
+  .dynamic_enums = {},
+  .enum_constraints = {},
+};
+pdef::proto::encode::packet_available_commands(stream, commands_packet);
+char *data = stream->data();
+size_t size = stream->size();
+
+pdef::Stream stream2;
+stream2.readFromBuffer(data, size);
+mcpe_packet packet;
+pdef::proto::decode::mcpe_packet(stream2, packet);
+if (packet.entity_metadata)
 `

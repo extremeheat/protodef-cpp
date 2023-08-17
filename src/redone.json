@@ -157,7 +157,7 @@
     "editable": [
       "bool"
     ],
-    "type": [
+    "type^": [
       "mapper",
       "varint",
       {
@@ -169,6 +169,7 @@
     "value?": [
       "switch",
       "type",
+      "mapper",
       {
         "bool": [
           "bool"
@@ -178,9 +179,6 @@
         ],
         "float": [
           "lf32"
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
@@ -192,9 +190,6 @@
     ],
     "?value,lf32": [
       "lf32"
-    ],
-    "?value,void": [
-      "void"
     ]
   },
   "GameRules": [
@@ -243,7 +238,7 @@
     }
   ],
   "ItemExtraDataWithBlockingTick": {
-    "has_nbt": [
+    "has_nbt^": [
       "mapper",
       "lu16",
       {
@@ -254,6 +249,7 @@
     "nbt?": [
       "switch",
       "has_nbt",
+      "mapper",
       {
         "true": {
           "version": [
@@ -262,20 +258,9 @@
           "nbt": [
             "lnbt"
           ]
-        },
-        "default": [
-          "void"
-        ]
+        }
       }
     ],
-    "?nbt": {
-      "version": [
-        "u8"
-      ],
-      "nbt": [
-        "lnbt"
-      ]
-    },
     "can_place_on": [
       "array",
       "li32",
@@ -295,12 +280,17 @@
     "blocking_tick": [
       "li64"
     ],
-    "?nbt,void": [
-      "void"
-    ]
+    "?nbt": {
+      "version": [
+        "u8"
+      ],
+      "nbt": [
+        "lnbt"
+      ]
+    }
   },
   "ItemExtraDataWithoutBlockingTick": {
-    "has_nbt": [
+    "has_nbt^": [
       "mapper",
       "lu16",
       {
@@ -311,6 +301,7 @@
     "nbt?": [
       "switch",
       "has_nbt",
+      "mapper",
       {
         "true": {
           "version": [
@@ -319,20 +310,9 @@
           "nbt": [
             "lnbt"
           ]
-        },
-        "default": [
-          "void"
-        ]
+        }
       }
     ],
-    "?nbt": {
-      "version": [
-        "u8"
-      ],
-      "nbt": [
-        "lnbt"
-      ]
-    },
     "can_place_on": [
       "array",
       "li32",
@@ -349,21 +329,24 @@
         "ShortString"
       ]
     ],
-    "?nbt,void": [
-      "void"
-    ]
+    "?nbt": {
+      "version": [
+        "u8"
+      ],
+      "nbt": [
+        "lnbt"
+      ]
+    }
   },
   "ItemLegacy": {
-    "network_id": [
+    "network_id^": [
       "zigzag32"
     ],
-    "_22?": [
+    "_12?": [
       "switch",
       "network_id",
+      "zigzag32",
       {
-        "0": [
-          "void"
-        ],
         "default": {
           "count": [
             "lu16"
@@ -377,40 +360,37 @@
           "extra?": [
             "switch",
             "network_id",
+            null,
             {}
           ]
         }
       }
     ],
-    "?_22,30": [
-      "switch",
-      "network_id",
-      {}
-    ],
-    "?_22,void": [
-      "void"
-    ],
-    "?_22,lu16": [
+    "?count": [
       "lu16"
     ],
-    "?_22,varint": [
+    "?metadata": [
       "varint"
     ],
-    "?_22,zigzag32": [
+    "?block_runtime_id": [
       "zigzag32"
+    ],
+    "?extra?": [
+      "switch",
+      "network_id",
+      null,
+      {}
     ]
   },
   "Item": {
-    "network_id": [
+    "network_id^": [
       "zigzag32"
     ],
-    "_31?": [
+    "_13?": [
       "switch",
       "network_id",
+      "zigzag32",
       {
-        "0": [
-          "void"
-        ],
         "default": {
           "count": [
             "lu16"
@@ -424,10 +404,8 @@
           "stack_id?": [
             "switch",
             "has_stack_id",
+            null,
             {
-              "0": [
-                "void"
-              ],
               "default": [
                 "zigzag32"
               ]
@@ -439,48 +417,45 @@
           "extra?": [
             "switch",
             "network_id",
+            null,
             {}
           ],
-          "?stack_id,void": [
-            "void"
-          ],
-          "?stack_id,zigzag32": [
+          "?stack_id": [
             "zigzag32"
           ]
         }
       }
     ],
-    "?_31,51": [
+    "?count": [
+      "lu16"
+    ],
+    "?metadata": [
+      "varint"
+    ],
+    "?has_stack_id": [
+      "u8"
+    ],
+    "?stack_id?": [
       "switch",
       "has_stack_id",
+      null,
       {
-        "0": [
-          "void"
-        ],
         "default": [
           "zigzag32"
         ]
       }
     ],
-    "?_31,65": [
+    "??stack_id": [
+      "zigzag32"
+    ],
+    "?block_runtime_id": [
+      "zigzag32"
+    ],
+    "?extra?": [
       "switch",
       "network_id",
+      null,
       {}
-    ],
-    "?_31,void": [
-      "void"
-    ],
-    "?_31,lu16": [
-      "lu16"
-    ],
-    "?_31,varint": [
-      "varint"
-    ],
-    "?_31,u8": [
-      "u8"
-    ],
-    "?_31,zigzag32": [
-      "zigzag32"
     ]
   },
   "vec3i": {
@@ -529,7 +504,7 @@
     "varint",
     null,
     {
-      "key": [
+      "key^": [
         "mapper",
         "varint",
         {
@@ -679,6 +654,7 @@
       "value?": [
         "switch",
         "key",
+        "mapper",
         {
           "flags": [
             "MetadataFlags1"
@@ -689,6 +665,7 @@
           "default": [
             "switch",
             "type",
+            null,
             {
               "byte": [
                 "i8"
@@ -716,9 +693,6 @@
               ],
               "vec3f": [
                 "vec3f"
-              ],
-              "default": [
-                "void"
               ]
             }
           ]
@@ -756,9 +730,6 @@
       ],
       "?value,vec3f": [
         "vec3f"
-      ],
-      "?value,void": [
-        "void"
       ]
     }
   ],
@@ -887,7 +858,7 @@
     "varint",
     null,
     {
-      "source_type": [
+      "source_type^": [
         "mapper",
         "varint",
         {
@@ -899,9 +870,10 @@
           "99999": "craft"
         }
       ],
-      "_344?": [
+      "_262?": [
         "switch",
         "source_type",
+        "mapper",
         {
           "container": {
             "inventory_id": [
@@ -922,10 +894,7 @@
             "action": [
               "varint"
             ]
-          },
-          "default": [
-            "void"
-          ]
+          }
         }
       ],
       "slot": [
@@ -937,28 +906,26 @@
       "new_item": [
         "Item"
       ],
-      "?_344,WindowIDVarint": [
+      "?inventory_id": [
         "WindowIDVarint"
       ],
-      "?_344,varint": [
+      "?action": [
         "varint"
       ],
-      "?_344,void": [
-        "void"
+      "?flags": [
+        "varint"
       ]
     }
   ],
   "TransactionLegacy": {
-    "legacy_request_id": [
+    "legacy_request_id^": [
       "zigzag32"
     ],
     "legacy_transactions?": [
       "switch",
       "legacy_request_id",
+      "zigzag32",
       {
-        "0": [
-          "void"
-        ],
         "default": [
           "array",
           "varint",
@@ -981,7 +948,7 @@
         ]
       }
     ],
-    "?legacy_transactions,358": [
+    "?legacy_transactions": [
       "array",
       "varint",
       null,
@@ -1000,16 +967,13 @@
           }
         ]
       }
-    ],
-    "?legacy_transactions,void": [
-      "void"
     ]
   },
   "Transaction": {
     "legacy": [
       "TransactionLegacy"
     ],
-    "transaction_type": [
+    "transaction_type^": [
       "mapper",
       "varint",
       {
@@ -1026,13 +990,8 @@
     "transaction_data?": [
       "switch",
       "transaction_type",
+      "mapper",
       {
-        "normal": [
-          "void"
-        ],
-        "inventory_mismatch": [
-          "void"
-        ],
         "item_use": [
           "TransactionUseItem"
         ],
@@ -1079,13 +1038,10 @@
           "head_pos": [
             "vec3f"
           ]
-        },
-        "default": [
-          "void"
-        ]
+        }
       }
     ],
-    "?transaction_data,374": {
+    "?transaction_data,266": {
       "entity_runtime_id": [
         "varint64"
       ],
@@ -1110,7 +1066,7 @@
         "vec3f"
       ]
     },
-    "?transaction_data,376": {
+    "?transaction_data,268": {
       "action_type": [
         "mapper",
         "varint",
@@ -1129,9 +1085,6 @@
         "vec3f"
       ]
     },
-    "?transaction_data,void": [
-      "void"
-    ],
     "?transaction_data,TransactionUseItem": [
       "TransactionUseItem"
     ]
@@ -1145,16 +1098,14 @@
     ]
   ],
   "RecipeIngredient": {
-    "network_id": [
+    "network_id^": [
       "zigzag32"
     ],
-    "_381?": [
+    "_269?": [
       "switch",
       "network_id",
+      "zigzag32",
       {
-        "0": [
-          "void"
-        ],
         "default": {
           "network_data": [
             "zigzag32"
@@ -1165,10 +1116,10 @@
         }
       }
     ],
-    "?_381,void": [
-      "void"
+    "?network_data": [
+      "zigzag32"
     ],
-    "?_381,zigzag32": [
+    "?count": [
       "zigzag32"
     ]
   },
@@ -1218,7 +1169,7 @@
     "varint",
     null,
     {
-      "type": [
+      "type^": [
         "mapper",
         "zigzag32",
         {
@@ -1235,6 +1186,7 @@
       "recipe?": [
         "switch",
         "type",
+        "mapper",
         {
           "shapeless": {
             "recipe_id": [
@@ -1339,20 +1291,26 @@
             "recipe_id": [
               "string"
             ],
-            "width": [
+            "width^": [
               "zigzag32"
             ],
-            "height": [
+            "height^": [
               "zigzag32"
             ],
             "input": [
               "array",
               null,
-              "width",
+              [
+                "width",
+                "zigzag32"
+              ],
               [
                 "array",
                 null,
-                "height",
+                [
+                  "height",
+                  "zigzag32"
+                ],
                 [
                   "RecipeIngredient"
                 ]
@@ -1383,20 +1341,26 @@
             "recipe_id": [
               "string"
             ],
-            "width": [
+            "width^": [
               "zigzag32"
             ],
-            "height": [
+            "height^": [
               "zigzag32"
             ],
             "input": [
               "array",
               null,
-              "width",
+              [
+                "width",
+                "zigzag32"
+              ],
               [
                 "array",
                 null,
-                "height",
+                [
+                  "height",
+                  "zigzag32"
+                ],
                 [
                   "RecipeIngredient"
                 ]
@@ -1455,10 +1419,7 @@
             "network_id": [
               "varint"
             ]
-          },
-          "default": [
-            "void"
-          ]
+          }
         }
       ],
       "?recipe": {
@@ -1494,24 +1455,30 @@
           "varint"
         ]
       },
-      "?recipe,391": {
+      "?recipe,275": {
         "recipe_id": [
           "string"
         ],
-        "width": [
+        "width^": [
           "zigzag32"
         ],
-        "height": [
+        "height^": [
           "zigzag32"
         ],
         "input": [
           "array",
           null,
-          "width",
+          [
+            "width",
+            "zigzag32"
+          ],
           [
             "array",
             null,
-            "height",
+            [
+              "height",
+              "zigzag32"
+            ],
             [
               "RecipeIngredient"
             ]
@@ -1538,7 +1505,7 @@
           "varint"
         ]
       },
-      "?recipe,395": {
+      "?recipe,279": {
         "input_id": [
           "zigzag32"
         ],
@@ -1549,7 +1516,7 @@
           "string"
         ]
       },
-      "?recipe,397": {
+      "?recipe,281": {
         "input_id": [
           "zigzag32"
         ],
@@ -1563,17 +1530,14 @@
           "string"
         ]
       },
-      "?recipe,399": {
+      "?recipe,283": {
         "uuid": [
           "uuid"
         ],
         "network_id": [
           "varint"
         ]
-      },
-      "?recipe,void": [
-        "void"
-      ]
+      }
     }
   ],
   "SkinImage": {
@@ -1697,7 +1661,7 @@
     ]
   },
   "PlayerRecords": {
-    "type": [
+    "type^": [
       "mapper",
       "u8",
       {
@@ -1705,12 +1669,13 @@
         "1": "remove"
       }
     ],
-    "records_count": [
+    "records_count^": [
       "varint"
     ],
     "records?": [
       "switch",
       "type",
+      "mapper",
       {
         "add": {
           "uuid": [
@@ -1745,10 +1710,7 @@
           "uuid": [
             "uuid"
           ]
-        },
-        "default": [
-          "void"
-        ]
+        }
       }
     ],
     "?records": {
@@ -1780,7 +1742,7 @@
         "bool"
       ]
     },
-    "?records,403": {
+    "?records,285": {
       "uuid": [
         "uuid"
       ]
@@ -1788,33 +1750,31 @@
     "verified?": [
       "switch",
       "type",
+      "mapper",
       {
         "add": [
           "array",
           null,
-          "records_count",
+          [
+            "records_count",
+            "varint"
+          ],
           [
             "bool"
           ]
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
     "?verified": [
       "array",
       null,
-      "records_count",
+      [
+        "records_count",
+        "varint"
+      ],
       [
         "bool"
       ]
-    ],
-    "?records,void": [
-      "void"
-    ],
-    "?verified,void": [
-      "void"
     ]
   },
   "Enchant": {
@@ -1919,7 +1879,7 @@
       "varint",
       null,
       {
-        "type_id": [
+        "type_id^": [
           "mapper",
           "u8",
           {
@@ -1945,9 +1905,10 @@
             "19": "results_deprecated"
           }
         ],
-        "_408?": [
+        "_286?": [
           "switch",
           "type_id",
+          "mapper",
           {
             "take": {
               "count": [
@@ -2066,9 +2027,6 @@
                 "string"
               ]
             },
-            "non_implemented": [
-              "void"
-            ],
             "results_deprecated": {
               "result_items": [
                 "array",
@@ -2081,13 +2039,55 @@
               "times_crafted": [
                 "u8"
               ]
-            },
-            "default": [
-              "void"
-            ]
+            }
           }
         ],
-        "?_408,526": [
+        "?count": [
+          "u8"
+        ],
+        "?source": [
+          "StackRequestSlotInfo"
+        ],
+        "?destination": [
+          "StackRequestSlotInfo"
+        ],
+        "?randomly": [
+          "bool"
+        ],
+        "?result_slot_id": [
+          "u8"
+        ],
+        "?primary_effect": [
+          "zigzag32"
+        ],
+        "?secondary_effect": [
+          "zigzag32"
+        ],
+        "?unknown1": [
+          "zigzag32"
+        ],
+        "?predicted_durability": [
+          "zigzag32"
+        ],
+        "?network_id": [
+          "zigzag32"
+        ],
+        "?recipe_network_id": [
+          "varint"
+        ],
+        "?item_id": [
+          "varint"
+        ],
+        "?filtered_string_index": [
+          "li32"
+        ],
+        "?cost": [
+          "varint"
+        ],
+        "?pattern": [
+          "string"
+        ],
+        "?result_items": [
           "array",
           "varint",
           null,
@@ -2095,29 +2095,8 @@
             "ItemLegacy"
           ]
         ],
-        "?_408,u8": [
+        "?times_crafted": [
           "u8"
-        ],
-        "?_408,StackRequestSlotInfo": [
-          "StackRequestSlotInfo"
-        ],
-        "?_408,bool": [
-          "bool"
-        ],
-        "?_408,zigzag32": [
-          "zigzag32"
-        ],
-        "?_408,varint": [
-          "varint"
-        ],
-        "?_408,li32": [
-          "li32"
-        ],
-        "?_408,string": [
-          "string"
-        ],
-        "?_408,void": [
-          "void"
         ]
       }
     ],
@@ -2135,7 +2114,7 @@
     "varint",
     null,
     {
-      "status": [
+      "status^": [
         "mapper",
         "u8",
         {
@@ -2146,9 +2125,10 @@
       "request_id": [
         "varint"
       ],
-      "_533?": [
+      "_315?": [
         "switch",
         "status",
+        "mapper",
         {
           "ok": {
             "containers": [
@@ -2186,13 +2166,10 @@
                 ]
               }
             ]
-          },
-          "default": [
-            "void"
-          ]
+          }
         }
       ],
-      "?_533": [
+      "?containers": [
         "array",
         "varint",
         null,
@@ -2226,9 +2203,6 @@
             }
           ]
         }
-      ],
-      "?_533,void": [
-        "void"
       ]
     }
   ],
@@ -2246,7 +2220,7 @@
     }
   ],
   "CommandOrigin": {
-    "type": [
+    "type^": [
       "mapper",
       "varint",
       {
@@ -2277,6 +2251,7 @@
     "player_entity_id?": [
       "switch",
       "type",
+      "mapper",
       {
         "dev_console": {
           "player_entity_id": [
@@ -2287,23 +2262,17 @@
           "player_entity_id": [
             "zigzag64"
           ]
-        },
-        "default": [
-          "void"
-        ]
+        }
       }
     ],
     "?player_entity_id": {
       "player_entity_id": [
         "zigzag64"
       ]
-    },
-    "?player_entity_id,void": [
-      "void"
-    ]
+    }
   },
   "TrackedObject": {
-    "type": [
+    "type^": [
       "mapper",
       "li32",
       {
@@ -2314,38 +2283,28 @@
     "entity_unique_id?": [
       "switch",
       "type",
+      "mapper",
       {
         "entity": [
           "zigzag64"
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
     "block_position?": [
       "switch",
       "type",
+      "mapper",
       {
         "block": [
           "BlockCoordinates"
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
-    "?entity_unique_id,zigzag64": [
+    "?entity_unique_id": [
       "zigzag64"
     ],
-    "?entity_unique_id,void": [
-      "void"
-    ],
-    "?block_position,BlockCoordinates": [
+    "?block_position": [
       "BlockCoordinates"
-    ],
-    "?block_position,void": [
-      "void"
     ]
   },
   "MapDecoration": {
@@ -3245,7 +3204,7 @@
     }
   ],
   "mcpe_packet": {
-    "name": [
+    "name^": [
       "mapper",
       "varint",
       {
@@ -3435,6 +3394,7 @@
     "params?": [
       "switch",
       "name",
+      "mapper",
       {
         "login": [
           "packet_login"
@@ -3978,9 +3938,6 @@
         ],
         "toast_request": [
           "packet_toast_request"
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
@@ -4526,9 +4483,6 @@
     ],
     "?params,packet_toast_request": [
       "packet_toast_request"
-    ],
-    "?params,void": [
-      "void"
     ]
   },
   "packet_login": {
@@ -4635,7 +4589,7 @@
     ]
   },
   "packet_text": {
-    "type": [
+    "type^": [
       "mapper",
       "u8",
       {
@@ -4655,9 +4609,10 @@
     "needs_translation": [
       "bool"
     ],
-    "_1638?": [
+    "_1398?": [
       "switch",
       "type",
+      "mapper",
       {
         "chat": {
           "source_name": [
@@ -4746,19 +4701,8 @@
               "string"
             ]
           ]
-        },
-        "default": [
-          "void"
-        ]
+        }
       }
-    ],
-    "?_1638,1710": [
-      "array",
-      "varint",
-      null,
-      [
-        "string"
-      ]
     ],
     "xuid": [
       "string"
@@ -4766,11 +4710,19 @@
     "platform_chat_id": [
       "string"
     ],
-    "?_1638,string": [
+    "?source_name": [
       "string"
     ],
-    "?_1638,void": [
-      "void"
+    "?message": [
+      "string"
+    ],
+    "?parameters": [
+      "array",
+      "varint",
+      null,
+      [
+        "string"
+      ]
     ]
   },
   "packet_set_time": {
@@ -5153,7 +5105,7 @@
     "head_yaw": [
       "lf32"
     ],
-    "mode": [
+    "mode^": [
       "mapper",
       "u8",
       {
@@ -5172,6 +5124,7 @@
     "teleport?": [
       "switch",
       "mode",
+      "mapper",
       {
         "teleport": {
           "cause": [
@@ -5188,11 +5141,11 @@
           "source_entity_type": [
             "LegacyEntityType"
           ]
-        },
-        "default": [
-          "void"
-        ]
+        }
       }
+    ],
+    "tick": [
+      "varint64"
     ],
     "?teleport": {
       "cause": [
@@ -5209,13 +5162,7 @@
       "source_entity_type": [
         "LegacyEntityType"
       ]
-    },
-    "tick": [
-      "varint64"
-    ],
-    "?teleport,void": [
-      "void"
-    ]
+    }
   },
   "packet_rider_jump": {
     "jump_strength": [
@@ -5634,7 +5581,7 @@
     ]
   },
   "packet_interact": {
-    "action_id": [
+    "action_id^": [
       "mapper",
       "u8",
       {
@@ -5650,23 +5597,18 @@
     "position?": [
       "switch",
       "action_id",
+      "mapper",
       {
         "mouse_over_entity": [
           "vec3f"
         ],
         "leave_vehicle": [
           "vec3f"
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
-    "?position,vec3f": [
+    "?position": [
       "vec3f"
-    ],
-    "?position,void": [
-      "void"
     ]
   },
   "packet_block_pick_request": {
@@ -5774,7 +5716,7 @@
     ]
   },
   "packet_animate": {
-    "action_id": [
+    "action_id^": [
       "mapper",
       "zigzag32",
       {
@@ -5791,9 +5733,10 @@
     "runtime_entity_id": [
       "varint64"
     ],
-    "_1743?": [
+    "_1433?": [
       "switch",
       "action_id",
+      "mapper",
       {
         "row_right": {
           "boat_rowing_time": [
@@ -5804,17 +5747,11 @@
           "boat_rowing_time": [
             "lf32"
           ]
-        },
-        "default": [
-          "void"
-        ]
+        }
       }
     ],
-    "?_1743,lf32": [
+    "?boat_rowing_time": [
       "lf32"
-    ],
-    "?_1743,void": [
-      "void"
     ]
   },
   "packet_respawn": {
@@ -6014,27 +5951,26 @@
     "z": [
       "zigzag32"
     ],
-    "sub_chunk_count": [
+    "sub_chunk_count^": [
       "varint"
     ],
     "highest_subchunk_count?": [
       "switch",
       "sub_chunk_count",
+      "varint",
       {
         "-2": [
           "lu16"
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
-    "cache_enabled": [
+    "cache_enabled^": [
       "bool"
     ],
     "blobs?": [
       "switch",
       "cache_enabled",
+      "bool",
       {
         "true": {
           "hashes": [
@@ -6045,11 +5981,14 @@
               "lu64"
             ]
           ]
-        },
-        "default": [
-          "void"
-        ]
+        }
       }
+    ],
+    "payload": [
+      "ByteArray"
+    ],
+    "?highest_subchunk_count": [
+      "lu16"
     ],
     "?blobs": {
       "hashes": [
@@ -6060,19 +5999,7 @@
           "lu64"
         ]
       ]
-    },
-    "payload": [
-      "ByteArray"
-    ],
-    "?highest_subchunk_count,lu16": [
-      "lu16"
-    ],
-    "?highest_subchunk_count,void": [
-      "void"
-    ],
-    "?blobs,void": [
-      "void"
-    ]
+    }
   },
   "packet_set_commands_enabled": {
     "enabled": [
@@ -6176,7 +6103,7 @@
     "map_id": [
       "zigzag64"
     ],
-    "update_flags": [
+    "update_flags^": [
       "UpdateMapFlags"
     ],
     "dimension": [
@@ -6187,7 +6114,15 @@
     ],
     "included_in?": [
       "switch",
-      "update_flags.initialisation",
+      [
+        "update_flags",
+        [
+          "initialisation"
+        ],
+        "update_flags.initialisation",
+        null
+      ],
+      "UpdateMapFlags",
       {
         "true": [
           "array",
@@ -6196,35 +6131,39 @@
           [
             "zigzag64"
           ]
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
-    "?included_in": [
-      "array",
-      "varint",
-      null,
-      [
-        "zigzag64"
-      ]
-    ],
     "scale?": [
       "switch",
-      "update_flags.initialisation || update_flags.decoration || update_flags.texture",
+      [
+        "update_flags",
+        [
+          "initialisation ",
+          "decoration ",
+          "texture"
+        ],
+        "update_flags.initialisation || update_flags.decoration || update_flags.texture",
+        "bool"
+      ],
+      "UpdateMapFlags",
       {
         "true": [
           "u8"
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
     "tracked?": [
       "switch",
-      "update_flags.decoration",
+      [
+        "update_flags",
+        [
+          "decoration"
+        ],
+        "update_flags.decoration",
+        null
+      ],
+      "UpdateMapFlags",
       {
         "true": {
           "objects": [
@@ -6243,33 +6182,20 @@
               "MapDecoration"
             ]
           ]
-        },
-        "default": [
-          "void"
-        ]
+        }
       }
     ],
-    "?tracked": {
-      "objects": [
-        "array",
-        "varint",
-        null,
-        [
-          "TrackedObject"
-        ]
-      ],
-      "decorations": [
-        "array",
-        "varint",
-        null,
-        [
-          "MapDecoration"
-        ]
-      ]
-    },
     "texture?": [
       "switch",
-      "update_flags.texture",
+      [
+        "update_flags",
+        [
+          "texture"
+        ],
+        "update_flags.texture",
+        null
+      ],
+      "UpdateMapFlags",
       {
         "true": {
           "width": [
@@ -6292,12 +6218,38 @@
               "varint"
             ]
           ]
-        },
-        "default": [
-          "void"
-        ]
+        }
       }
     ],
+    "?included_in": [
+      "array",
+      "varint",
+      null,
+      [
+        "zigzag64"
+      ]
+    ],
+    "?scale": [
+      "u8"
+    ],
+    "?tracked": {
+      "objects": [
+        "array",
+        "varint",
+        null,
+        [
+          "TrackedObject"
+        ]
+      ],
+      "decorations": [
+        "array",
+        "varint",
+        null,
+        [
+          "MapDecoration"
+        ]
+      ]
+    },
     "?texture": {
       "width": [
         "zigzag32"
@@ -6319,22 +6271,7 @@
           "varint"
         ]
       ]
-    },
-    "?included_in,void": [
-      "void"
-    ],
-    "?scale,u8": [
-      "u8"
-    ],
-    "?scale,void": [
-      "void"
-    ],
-    "?tracked,void": [
-      "void"
-    ],
-    "?texture,void": [
-      "void"
-    ]
+    }
   },
   "packet_map_info_request": {
     "map_id": [
@@ -6373,7 +6310,7 @@
     "boss_entity_id": [
       "zigzag64"
     ],
-    "type": [
+    "type^": [
       "mapper",
       "varint",
       {
@@ -6388,9 +6325,10 @@
         "8": "query"
       }
     ],
-    "_1772?": [
+    "_1436?": [
       "switch",
       "type",
+      "mapper",
       {
         "show_bar": {
           "title": [
@@ -6452,29 +6390,26 @@
           "overlay": [
             "varint"
           ]
-        },
-        "default": [
-          "void"
-        ]
+        }
       }
     ],
-    "?_1772,string": [
+    "?title": [
       "string"
     ],
-    "?_1772,lf32": [
+    "?progress": [
       "lf32"
     ],
-    "?_1772,li16": [
+    "?screen_darkening": [
       "li16"
     ],
-    "?_1772,varint": [
+    "?color": [
       "varint"
     ],
-    "?_1772,zigzag64": [
-      "zigzag64"
+    "?overlay": [
+      "varint"
     ],
-    "?_1772,void": [
-      "void"
+    "?player_id": [
+      "zigzag64"
     ]
   },
   "packet_show_credits": {
@@ -6486,17 +6421,20 @@
     ]
   },
   "packet_available_commands": {
-    "values_len": [
+    "values_len^": [
       "varint"
     ],
-    "_enum_type": [
+    "_enum_type^": [
       "enum_size_based_on_values_len",
       null
     ],
     "enum_values": [
       "array",
       null,
-      "values_len",
+      [
+        "values_len",
+        "varint"
+      ],
       [
         "string"
       ]
@@ -6519,7 +6457,10 @@
         ],
         "values?": [
           "switch",
-          "../_enum_type",
+          "_enum_type",
+          [
+            "enum_size_based_on_values_len"
+          ],
           {
             "byte": [
               "u8"
@@ -6529,9 +6470,6 @@
             ],
             "int": [
               "lu32"
-            ],
-            "default": [
-              "void"
             ]
           }
         ],
@@ -6543,9 +6481,6 @@
         ],
         "?values,lu32": [
           "lu32"
-        ],
-        "?values,void": [
-          "void"
         ]
       }
     ],
@@ -6689,12 +6624,13 @@
     ]
   },
   "packet_command_block_update": {
-    "is_block": [
+    "is_block^": [
       "bool"
     ],
-    "_1857?": [
+    "_1467?": [
       "switch",
       "is_block",
+      "bool",
       {
         "true": {
           "position": [
@@ -6720,19 +6656,7 @@
           "minecart_entity_runtime_id": [
             "varint64"
           ]
-        },
-        "default": [
-          "void"
-        ]
-      }
-    ],
-    "?_1857,1859": [
-      "mapper",
-      "varint",
-      {
-        "0": "impulse",
-        "1": "repeat",
-        "2": "chain"
+        }
       }
     ],
     "command": [
@@ -6753,24 +6677,33 @@
     "execute_on_first_tick": [
       "bool"
     ],
-    "?_1857,BlockCoordinates": [
+    "?position": [
       "BlockCoordinates"
     ],
-    "?_1857,bool": [
+    "?mode": [
+      "mapper",
+      "varint",
+      {
+        "0": "impulse",
+        "1": "repeat",
+        "2": "chain"
+      }
+    ],
+    "?needs_redstone": [
       "bool"
     ],
-    "?_1857,varint64": [
-      "varint64"
+    "?conditional": [
+      "bool"
     ],
-    "?_1857,void": [
-      "void"
+    "?minecart_entity_runtime_id": [
+      "varint64"
     ]
   },
   "packet_command_output": {
     "origin": [
       "CommandOrigin"
     ],
-    "output_type": [
+    "output_type^": [
       "mapper",
       "i8",
       {
@@ -6807,20 +6740,15 @@
     "data_set?": [
       "switch",
       "output_type",
+      "mapper",
       {
         "data_set": [
           "string"
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
-    "?data_set,string": [
+    "?data_set": [
       "string"
-    ],
-    "?data_set,void": [
-      "void"
     ]
   },
   "packet_update_trade": {
@@ -7082,7 +7010,7 @@
     ]
   },
   "packet_book_edit": {
-    "type": [
+    "type^": [
       "mapper",
       "u8",
       {
@@ -7096,9 +7024,10 @@
     "slot": [
       "u8"
     ],
-    "_1874?": [
+    "_1468?": [
       "switch",
       "type",
+      "mapper",
       {
         "replace_page": {
           "page_number": [
@@ -7145,20 +7074,32 @@
           "xuid": [
             "string"
           ]
-        },
-        "default": [
-          "void"
-        ]
+        }
       }
     ],
-    "?_1874,u8": [
+    "?page_number": [
       "u8"
     ],
-    "?_1874,string": [
+    "?text": [
       "string"
     ],
-    "?_1874,void": [
-      "void"
+    "?photo_name": [
+      "string"
+    ],
+    "?page1": [
+      "u8"
+    ],
+    "?page2": [
+      "u8"
+    ],
+    "?title": [
+      "string"
+    ],
+    "?author": [
+      "string"
+    ],
+    "?xuid": [
+      "string"
     ]
   },
   "packet_npc_request": {
@@ -7279,7 +7220,7 @@
     ]
   },
   "packet_set_score": {
-    "action": [
+    "action^": [
       "mapper",
       "u8",
       {
@@ -7301,12 +7242,13 @@
         "score": [
           "li32"
         ],
-        "_1915?": [
+        "_1477?": [
           "switch",
-          "../action",
+          "action",
+          "mapper",
           {
             "change": {
-              "entry_type": [
+              "entry_type^": [
                 "mapper",
                 "i8",
                 {
@@ -7318,49 +7260,36 @@
               "entity_unique_id?": [
                 "switch",
                 "entry_type",
+                "mapper",
                 {
                   "player": [
                     "zigzag64"
                   ],
                   "entity": [
                     "zigzag64"
-                  ],
-                  "default": [
-                    "void"
                   ]
                 }
               ],
               "custom_name?": [
                 "switch",
                 "entry_type",
+                "mapper",
                 {
                   "fake_player": [
                     "string"
-                  ],
-                  "default": [
-                    "void"
                   ]
                 }
               ],
-              "?entity_unique_id,zigzag64": [
+              "?entity_unique_id": [
                 "zigzag64"
               ],
-              "?entity_unique_id,void": [
-                "void"
-              ],
-              "?custom_name,string": [
+              "?custom_name": [
                 "string"
-              ],
-              "?custom_name,void": [
-                "void"
               ]
-            },
-            "default": [
-              "void"
-            ]
+            }
           }
         ],
-        "?_1915": [
+        "?entry_type^": [
           "mapper",
           "i8",
           {
@@ -7369,40 +7298,33 @@
             "3": "fake_player"
           }
         ],
-        "?_1915,1953": [
+        "?entity_unique_id?": [
           "switch",
           "entry_type",
+          "mapper",
           {
             "player": [
               "zigzag64"
             ],
             "entity": [
               "zigzag64"
-            ],
-            "default": [
-              "void"
             ]
           }
         ],
-        "?_1915,1973": [
+        "??entity_unique_id": [
+          "zigzag64"
+        ],
+        "?custom_name?": [
           "switch",
           "entry_type",
+          "mapper",
           {
             "fake_player": [
               "string"
-            ],
-            "default": [
-              "void"
             ]
           }
         ],
-        "?_1915,zigzag64": [
-          "zigzag64"
-        ],
-        "?_1915,void": [
-          "void"
-        ],
-        "?_1915,string": [
+        "??custom_name": [
           "string"
         ]
       }
@@ -7455,120 +7377,132 @@
     "runtime_entity_id": [
       "varint64"
     ],
-    "flags": [
+    "flags^": [
       "DeltaMoveFlags"
     ],
     "x?": [
       "switch",
-      "flags.has_x",
+      [
+        "flags",
+        [
+          "has_x"
+        ],
+        "flags.has_x",
+        null
+      ],
+      "DeltaMoveFlags",
       {
         "true": [
           "lf32"
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
     "y?": [
       "switch",
-      "flags.has_y",
+      [
+        "flags",
+        [
+          "has_y"
+        ],
+        "flags.has_y",
+        null
+      ],
+      "DeltaMoveFlags",
       {
         "true": [
           "lf32"
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
     "z?": [
       "switch",
-      "flags.has_z",
+      [
+        "flags",
+        [
+          "has_z"
+        ],
+        "flags.has_z",
+        null
+      ],
+      "DeltaMoveFlags",
       {
         "true": [
           "lf32"
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
     "rot_x?": [
       "switch",
-      "flags.has_rot_x",
+      [
+        "flags",
+        [
+          "has_rot_x"
+        ],
+        "flags.has_rot_x",
+        null
+      ],
+      "DeltaMoveFlags",
       {
         "true": [
           "u8"
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
     "rot_y?": [
       "switch",
-      "flags.has_rot_y",
+      [
+        "flags",
+        [
+          "has_rot_y"
+        ],
+        "flags.has_rot_y",
+        null
+      ],
+      "DeltaMoveFlags",
       {
         "true": [
           "u8"
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
     "rot_z?": [
       "switch",
-      "flags.has_rot_z",
+      [
+        "flags",
+        [
+          "has_rot_z"
+        ],
+        "flags.has_rot_z",
+        null
+      ],
+      "DeltaMoveFlags",
       {
         "true": [
           "u8"
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
-    "?x,lf32": [
+    "?x": [
       "lf32"
     ],
-    "?x,void": [
-      "void"
-    ],
-    "?y,lf32": [
+    "?y": [
       "lf32"
     ],
-    "?y,void": [
-      "void"
-    ],
-    "?z,lf32": [
+    "?z": [
       "lf32"
     ],
-    "?z,void": [
-      "void"
-    ],
-    "?rot_x,u8": [
+    "?rot_x": [
       "u8"
     ],
-    "?rot_x,void": [
-      "void"
-    ],
-    "?rot_y,u8": [
+    "?rot_y": [
       "u8"
     ],
-    "?rot_y,void": [
-      "void"
-    ],
-    "?rot_z,u8": [
+    "?rot_z": [
       "u8"
-    ],
-    "?rot_z,void": [
-      "void"
     ]
   },
   "packet_set_scoreboard_identity": {
-    "action": [
+    "action^": [
       "mapper",
       "i8",
       {
@@ -7586,21 +7520,16 @@
         ],
         "entity_unique_id?": [
           "switch",
-          "../action",
+          "action",
+          "mapper",
           {
             "register_identity": [
               "zigzag64"
-            ],
-            "default": [
-              "void"
             ]
           }
         ],
-        "?entity_unique_id,zigzag64": [
+        "?entity_unique_id": [
           "zigzag64"
-        ],
-        "?entity_unique_id,void": [
-          "void"
         ]
       }
     ]
@@ -7798,18 +7727,16 @@
     "name": [
       "string"
     ],
-    "success": [
+    "success^": [
       "bool"
     ],
     "nbt?": [
       "switch",
       "success",
+      "bool",
       {
         "true": [
           "nbt"
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
@@ -7821,11 +7748,8 @@
         "2": "query"
       }
     ],
-    "?nbt,nbt": [
+    "?nbt": [
       "nbt"
-    ],
-    "?nbt,void": [
-      "void"
     ]
   },
   "packet_update_block_properties": {
@@ -7834,16 +7758,19 @@
     ]
   },
   "packet_client_cache_blob_status": {
-    "misses": [
+    "misses^": [
       "varint"
     ],
-    "haves": [
+    "haves^": [
       "varint"
     ],
     "missing": [
       "array",
       null,
-      "misses",
+      [
+        "misses",
+        "varint"
+      ],
       [
         "lu64"
       ]
@@ -7851,7 +7778,10 @@
     "have": [
       "array",
       null,
-      "haves",
+      [
+        "haves",
+        "varint"
+      ],
       [
         "lu64"
       ]
@@ -7886,12 +7816,13 @@
     "screenshot_border_path": [
       "string"
     ],
-    "has_agent_capabilities": [
+    "has_agent_capabilities^": [
       "bool"
     ],
     "agent_capabilities?": [
       "switch",
       "has_agent_capabilities",
+      "bool",
       {
         "true": {
           "has": [
@@ -7900,11 +7831,33 @@
           "can_modify_blocks": [
             "bool"
           ]
-        },
-        "default": [
-          "void"
+        }
+      }
+    ],
+    "HasOverrideURI^": [
+      "bool"
+    ],
+    "OverrideURI?": [
+      "switch",
+      "HasOverrideURI",
+      "bool",
+      {
+        "true": [
+          "string"
         ]
       }
+    ],
+    "HasQuiz": [
+      "bool"
+    ],
+    "has_external_link_settings^": [
+      "bool"
+    ],
+    "external_link_settings?": [
+      "switch",
+      "has_external_link_settings",
+      "bool",
+      {}
     ],
     "?agent_capabilities": {
       "has": [
@@ -7914,47 +7867,8 @@
         "bool"
       ]
     },
-    "HasOverrideURI": [
-      "bool"
-    ],
-    "OverrideURI?": [
-      "switch",
-      "HasOverrideURI",
-      {
-        "true": [
-          "string"
-        ],
-        "default": [
-          "void"
-        ]
-      }
-    ],
-    "HasQuiz": [
-      "bool"
-    ],
-    "has_external_link_settings": [
-      "bool"
-    ],
-    "external_link_settings?": [
-      "switch",
-      "has_external_link_settings",
-      {
-        "default": [
-          "void"
-        ]
-      }
-    ],
-    "?agent_capabilities,void": [
-      "void"
-    ],
-    "?OverrideURI,string": [
+    "?OverrideURI": [
       "string"
-    ],
-    "?OverrideURI,void": [
-      "void"
-    ],
-    "?external_link_settings": [
-      "void"
     ]
   },
   "packet_emote": {
@@ -8042,7 +7956,7 @@
     "head_yaw": [
       "lf32"
     ],
-    "input_data": [
+    "input_data^": [
       "InputFlag"
     ],
     "input_mode": [
@@ -8056,7 +7970,7 @@
         "4": "motion_controller"
       }
     ],
-    "play_mode": [
+    "play_mode^": [
       "mapper",
       "varint",
       {
@@ -8084,12 +7998,10 @@
     "gaze_direction?": [
       "switch",
       "play_mode",
+      "mapper",
       {
         "reality": [
           "vec3f"
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
@@ -8101,7 +8013,15 @@
     ],
     "transaction?": [
       "switch",
-      "input_data.item_interact",
+      [
+        "input_data",
+        [
+          "item_interact"
+        ],
+        "input_data.item_interact",
+        null
+      ],
+      "InputFlag",
       {
         "true": {
           "legacy": [
@@ -8113,50 +8033,50 @@
           "data": [
             "TransactionUseItem"
           ]
-        },
-        "default": [
-          "void"
-        ]
+        }
       }
     ],
-    "?transaction": {
-      "legacy": [
-        "TransactionLegacy"
-      ],
-      "actions": [
-        "TransactionActions"
-      ],
-      "data": [
-        "TransactionUseItem"
-      ]
-    },
     "item_stack_request?": [
       "switch",
-      "input_data.item_stack_request",
+      [
+        "input_data",
+        [
+          "item_stack_request"
+        ],
+        "input_data.item_stack_request",
+        null
+      ],
+      "InputFlag",
       {
         "true": [
           "ItemStackRequest"
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
     "block_action?": [
       "switch",
-      "input_data.block_action",
+      [
+        "input_data",
+        [
+          "block_action"
+        ],
+        "input_data.block_action",
+        null
+      ],
+      "InputFlag",
       {
         "true": [
           "array",
           "zigzag32",
           null,
           {
-            "action": [
+            "action^": [
               "Action"
             ],
-            "_2056?": [
+            "_1490?": [
               "switch",
               "action",
+              "Action",
               {
                 "start_break": {
                   "position": [
@@ -8197,39 +8117,48 @@
                   "face": [
                     "zigzag32"
                   ]
-                },
-                "default": [
-                  "void"
-                ]
+                }
               }
             ],
-            "?_2056,vec3i": [
+            "?position": [
               "vec3i"
             ],
-            "?_2056,zigzag32": [
+            "?face": [
               "zigzag32"
-            ],
-            "?_2056,void": [
-              "void"
             ]
           }
-        ],
-        "default": [
-          "void"
         ]
       }
+    ],
+    "?gaze_direction": [
+      "vec3f"
+    ],
+    "?transaction": {
+      "legacy": [
+        "TransactionLegacy"
+      ],
+      "actions": [
+        "TransactionActions"
+      ],
+      "data": [
+        "TransactionUseItem"
+      ]
+    },
+    "?item_stack_request": [
+      "ItemStackRequest"
     ],
     "?block_action": [
       "array",
       "zigzag32",
       null,
       {
-        "action": [
+        "action^": [
           "Action"
         ],
-        "_2056?": [
+        "_1490?": [
           "switch",
           "action",
+          "Action",
           {
             "start_break": {
               "position": [
@@ -8270,40 +8199,16 @@
               "face": [
                 "zigzag32"
               ]
-            },
-            "default": [
-              "void"
-            ]
+            }
           }
         ],
-        "?_2056,vec3i": [
+        "?position": [
           "vec3i"
         ],
-        "?_2056,zigzag32": [
+        "?face": [
           "zigzag32"
-        ],
-        "?_2056,void": [
-          "void"
         ]
       }
-    ],
-    "?gaze_direction,vec3f": [
-      "vec3f"
-    ],
-    "?gaze_direction,void": [
-      "void"
-    ],
-    "?transaction,void": [
-      "void"
-    ],
-    "?item_stack_request,ItemStackRequest": [
-      "ItemStackRequest"
-    ],
-    "?item_stack_request,void": [
-      "void"
-    ],
-    "?block_action,void": [
-      "void"
     ]
   },
   "packet_creative_content": {
@@ -8347,80 +8252,88 @@
     ]
   },
   "packet_player_armor_damage": {
-    "type": [
+    "type^": [
       "ArmorDamageType"
     ],
     "helmet_damage?": [
       "switch",
-      "type.head",
+      [
+        "type",
+        [
+          "head"
+        ],
+        "type.head",
+        null
+      ],
+      "ArmorDamageType",
       {
         "true": [
           "zigzag32"
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
     "chestplate_damage?": [
       "switch",
-      "type.chest",
+      [
+        "type",
+        [
+          "chest"
+        ],
+        "type.chest",
+        null
+      ],
+      "ArmorDamageType",
       {
         "true": [
           "zigzag32"
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
     "leggings_damage?": [
       "switch",
-      "type.legs",
+      [
+        "type",
+        [
+          "legs"
+        ],
+        "type.legs",
+        null
+      ],
+      "ArmorDamageType",
       {
         "true": [
           "zigzag32"
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
     "boots_damage?": [
       "switch",
-      "type.feet",
+      [
+        "type",
+        [
+          "feet"
+        ],
+        "type.feet",
+        null
+      ],
+      "ArmorDamageType",
       {
         "true": [
           "zigzag32"
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
-    "?helmet_damage,zigzag32": [
+    "?helmet_damage": [
       "zigzag32"
     ],
-    "?helmet_damage,void": [
-      "void"
-    ],
-    "?chestplate_damage,zigzag32": [
+    "?chestplate_damage": [
       "zigzag32"
     ],
-    "?chestplate_damage,void": [
-      "void"
-    ],
-    "?leggings_damage,zigzag32": [
+    "?leggings_damage": [
       "zigzag32"
     ],
-    "?leggings_damage,void": [
-      "void"
-    ],
-    "?boots_damage,zigzag32": [
+    "?boots_damage": [
       "zigzag32"
-    ],
-    "?boots_damage,void": [
-      "void"
     ]
   },
   "packet_update_player_game_type": {
@@ -8593,7 +8506,7 @@
     ]
   },
   "packet_debug_renderer": {
-    "type": [
+    "type^": [
       "mapper",
       "li32",
       {
@@ -8601,13 +8514,11 @@
         "2": "add_cube"
       }
     ],
-    "_2135?": [
+    "_1507?": [
       "switch",
       "type",
+      "mapper",
       {
-        "clear": [
-          "void"
-        ],
         "add_cube": {
           "text": [
             "string"
@@ -8630,25 +8541,28 @@
           "duration": [
             "li64"
           ]
-        },
-        "default": [
-          "void"
-        ]
+        }
       }
     ],
-    "?_2135,void": [
-      "void"
-    ],
-    "?_2135,string": [
+    "?text": [
       "string"
     ],
-    "?_2135,vec3f": [
+    "?position": [
       "vec3f"
     ],
-    "?_2135,lf32": [
+    "?red": [
       "lf32"
     ],
-    "?_2135,li64": [
+    "?green": [
+      "lf32"
+    ],
+    "?blue": [
+      "lf32"
+    ],
+    "?alpha": [
+      "lf32"
+    ],
+    "?duration": [
       "li64"
     ]
   },
@@ -8805,7 +8719,7 @@
       "payload": [
         "ByteArray"
       ],
-      "heightmap_type": [
+      "heightmap_type^": [
         "mapper",
         "u8",
         {
@@ -8818,14 +8732,8 @@
       "heightmap?": [
         "switch",
         "heightmap_type",
-        {
-          "default": [
-            "void"
-          ]
-        }
-      ],
-      "?heightmap": [
-        "void"
+        "mapper",
+        {}
       ]
     }
   ],
@@ -8843,7 +8751,7 @@
       "dz": [
         "i8"
       ],
-      "result": [
+      "result^": [
         "mapper",
         "u8",
         {
@@ -8859,16 +8767,14 @@
       "payload?": [
         "switch",
         "result",
+        "mapper",
         {
-          "success_all_air": [
-            "void"
-          ],
           "default": [
             "ByteArray"
           ]
         }
       ],
-      "heightmap_type": [
+      "heightmap_type^": [
         "mapper",
         "u8",
         {
@@ -8881,28 +8787,19 @@
       "heightmap?": [
         "switch",
         "heightmap_type",
-        {
-          "default": [
-            "void"
-          ]
-        }
+        "mapper",
+        {}
       ],
       "blob_id": [
         "lu64"
       ],
-      "?payload,void": [
-        "void"
-      ],
-      "?payload,ByteArray": [
+      "?payload": [
         "ByteArray"
-      ],
-      "?heightmap": [
-        "void"
       ]
     }
   ],
   "packet_subchunk": {
-    "cache_enabled": [
+    "cache_enabled^": [
       "bool"
     ],
     "dimension": [
@@ -8914,15 +8811,13 @@
     "entries?": [
       "switch",
       "cache_enabled",
+      "bool",
       {
         "true": [
           "SubChunkEntryWithCaching"
         ],
         "false": [
           "SubChunkEntryWithoutCaching"
-        ],
-        "default": [
-          "void"
         ]
       }
     ],
@@ -8931,9 +8826,6 @@
     ],
     "?entries,SubChunkEntryWithoutCaching": [
       "SubChunkEntryWithoutCaching"
-    ],
-    "?entries,void": [
-      "void"
     ]
   },
   "packet_subchunk_request": {
