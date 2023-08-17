@@ -149,8 +149,15 @@ function toSafeVar(name) {
   return name
 }
 
+const headers = `
+#define WRITE_OR_BAIL(fn, val) if (!fn(stream, val)) { return false; }
+`
+const footer = `
+#undef WRITE_OR_BAIL
+`
+
 function visitRoot(root, mode) {
-  let structLines = 'namespace pdef::proto {\n'
+  let structLines = headers + 'namespace pdef::proto {\n'
   let encodeLines = 'namespace pdef::proto::encode {\n'
   let decodeLines = 'namespace pdef::proto::decode {\n'
 
@@ -228,6 +235,7 @@ function visitRoot(root, mode) {
     const pad = (str) => '  '.repeat(structPaddingLevel) + str
     const pushEncode = (str) => { encodeLines += pad(str) + '\n' }
     const pushDecode = (str) => { decodeLines += pad(str) + '\n' }
+    const makeEncodeStr = (type, varName) => `WRITE_OR_BAIL(${type}, ${Array.isArray(varName) ? varName.join('.') : varName})`
 
     console.log(`.  ${fieldName}: ${fieldType}`)
     fieldType = unretardify(fieldType)
@@ -242,7 +250,7 @@ function visitRoot(root, mode) {
     const isRootArray = root[typeName] && root[typeName][0] === 'array'
     if (typeName === 'void') return // TODO: remove this in the IR
     const builtinEncodeFn = protodefTypeToCppEncode[typeName]
-    if (builtinEncodeFn) pushEncode(`  stream.${builtinEncodeFn}(${objName}.${n});`)
+    if (builtinEncodeFn) pushEncode('  ' + makeEncodeStr(builtinEncodeFn, [objName, n]) + ';')
     else if (isRootArray) {
       const lengthType = root[typeName][1]
       pushEncode(`  pdef2::proto::encode::${lengthType}(stream, ${objName}.${n}.size());`)
@@ -260,11 +268,11 @@ function visitRoot(root, mode) {
         if (lengthVar) {
           // console.log('lengthVar', fieldType, lengthVar)
           const [lengthVariable,lengthTyp] = lengthVar
-          if (protodefTypeToCppEncode[lengthTyp]) pushEncode(`  stream.${protodefTypeToCppEncode[lengthTyp]}(${objName}.${lengthVar[0]}.size());`)
-          else pushEncode(`  pdef0::proto::encode::${lengthTyp}(stream, ${objName}.${lengthVar[0]}.size());`)
+          if (protodefTypeToCppEncode[lengthTyp]) pushEncode(`  ${makeEncodeStr(protodefTypeToCppEncode[lengthTyp], [objName, lengthVar[0], 'size()'])};`)
+          else pushEncode(`  pdef::proto::encode::${lengthTyp}(stream, ${objName}.${lengthVar[0]}.size()); /*0*/`)
         } else {
-          if (protodefTypeToCppEncode[lengthType]) pushEncode(`  stream.${protodefTypeToCppEncode[lengthType]}(${objName}.${n}.size());`)
-          else pushEncode(`  pdef1::proto::encode::${lengthType}(stream, ${objName}.${n}.size());`)
+          if (protodefTypeToCppEncode[lengthType]) pushEncode(`  ${makeEncodeStr(protodefTypeToCppEncode[lengthType], [objName, n, 'size()'])};`)
+          else pushEncode(`  pdef::proto::encode::${lengthType}(stream, ${objName}.${n}.size()); /*1*/`)
         }
         const actualType = unretardify(fieldType[3])
         if (actualType[0] === 'container') {
@@ -274,8 +282,8 @@ function visitRoot(root, mode) {
           pushEncode('  }')
         } else {
           const builtinEncodeFn = protodefTypeToCppEncode[actualType]
-          if (builtinEncodeFn) pushEncode(`  for (const auto &v : ${objName}.${n}) { stream.${builtinEncodeFn}(v); }`)
-          else pushEncode(`  for (const auto &v : ${objName}.${n}) { pdef3::proto::encode::${newName}(stream, v); }`)
+          if (builtinEncodeFn) pushEncode(`  for (const auto &v : ${objName}.${n}) { ${makeEncodeStr(builtinEncodeFn, 'v')}; }`)
+          else pushEncode(`  for (const auto &v : ${objName}.${n}) { pdef::proto::encode::${newName}(stream, v); /*3*/ }`)
         }
       } else if (typeName === 'switch') {
         const compareTo = fieldType[1]
@@ -295,10 +303,10 @@ function visitRoot(root, mode) {
         pushEncode('  }')
       } else if (typeName === 'mapper')  {
         const actualType = fieldType[1]
-        pushEncode(`  pdef4::proto::encode::${actualType}(stream, ${objName}.${n});`)
+        pushEncode(`  pdef::proto::encode::${actualType}(stream, ${objName}.${n}); /*4*/`)
       } else {
         // we'd call into the specific encode function for this type
-        pushEncode(`  pdef4::proto::encode::${Array.isArray(fieldType)?fieldType[0]:fieldType}(stream, ${objName}.${n});`)
+        pushEncode(`  pdef::proto::encode::${Array.isArray(fieldType)?fieldType[0]:fieldType}(stream, ${objName}.${n}); /*4*/`)
       }
     }
   }
