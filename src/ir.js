@@ -55,7 +55,7 @@ function preprocess (schema) {
       for (const _current of current) {
         if (_current.name === untilMatch) {
           Object.assign(_current, injectable)
-          console.log('Injected', injectable, 'into', _current)
+          // console.log('Injected', injectable, 'into', _current)
           return _current
         }
       }
@@ -87,7 +87,7 @@ function preprocess (schema) {
         if (compareTo.startsWith('/')) {
           // Special case, ignore for now
         } else {
-          console.log('Injecting compareTo', compareTo)
+          // console.log('Injecting compareTo', compareTo)
           const injectedObj = walkBackwardAndInject(compareTo, parent, { comparedTo: true })
           if (injectedObj) {
             // TODO: handle more than just mapper
@@ -427,8 +427,8 @@ function debloatSchema (bloatedSchema) {
     }
 
     function handleContainer () {
-      for (let { name, type, anon, comparedTo } of root) {
-        if (comparedTo) name += '^'
+      for (let { name, type, anon, comparedTo, counted } of root) {
+        if (comparedTo || counted) name += '^'
         if (typeof type === 'string') {
           isAnonIteration ? simplified.addMaybe(name, [type]) : simplified.add(name, [type])
           continue
