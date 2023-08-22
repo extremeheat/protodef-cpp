@@ -40,11 +40,10 @@ const fs = require('fs')
 //   }
 // }
 
-
 // Resolve switch statements' compareTo's
 function preprocess (schema) {
   function fixCompareToType (type) {
-    let fix = type.replaceAll('../', '')
+    const fix = type.replaceAll('../', '')
     if (fix.startsWith('/')) return type
     return fix.split('.')[0]
   }
@@ -60,7 +59,7 @@ function preprocess (schema) {
         }
       }
       if (!current.parent) {
-        console.log('Top most', current)
+        // console.log('Top most', current)
       }
       current = current.parent
     }
@@ -75,7 +74,7 @@ function preprocess (schema) {
 
   function visitType (type, parent) {
     if (typeof type === 'string') {
-      return
+
     } else if (Array.isArray(type)) {
       type.parent = parent
       const [name, ...args] = type
@@ -83,16 +82,19 @@ function preprocess (schema) {
         visitContainer(args[0], parent)
       } else if (name === 'switch') {
         const cases = args[0].fields
-        let compareTo = fixCompareToType(args[0].compareTo);
+        cases.default = args[0].default
+        const compareTo = fixCompareToType(args[0].compareTo)
         if (compareTo.startsWith('/')) {
           // Special case, ignore for now
         } else {
-          // console.log('Injecting compareTo', compareTo)
+          console.log('Injecting compareTo', compareTo)
           const injectedObj = walkBackwardAndInject(compareTo, parent, { comparedTo: true })
           if (injectedObj) {
             // TODO: handle more than just mapper
             if (injectedObj.type[0] === 'mapper') args[0].compareToType = 'mapper'
             else args[0].compareToType = injectedObj.type
+            if (!args[0].compareToType) throw Error('Could not find compareTo ' + compareTo)
+            // else console.log('Found compareTo', compareTo, '->', args[0].compareToType)
           } else throw Error('Could not find compareTo ' + compareTo)
         }
         for (const [caseName, caseType] of Object.entries(cases)) {
@@ -100,7 +102,7 @@ function preprocess (schema) {
         }
       } else if (name === 'array') {
         if (typeof args[0].count === 'string') {
-          console.log('Injecting array count', args)
+          // console.log('Injecting array count', args)
           const injectedObj = walkBackwardAndInject(args[0].count, parent, { counted: true })
           if (injectedObj) {
             args[0].countVarType = injectedObj.type
@@ -114,9 +116,10 @@ function preprocess (schema) {
   for (const typeName in schema) {
     visitType(schema[typeName], schema)
   }
+  return schema
 }
 
-// Yes, it's a mess. I'm sorry.
+// Yes, it's a mess.
 function debloatSchema (bloatedSchema) {
   let i = 0
 
@@ -264,7 +267,7 @@ function debloatSchema (bloatedSchema) {
   }
 
   function fixCompareToType (type) {
-    let fix = type.replaceAll('../', '')
+    const fix = type.replaceAll('../', '')
     if (fix.startsWith('/')) return type
     if (fix.includes('.') || fix.includes('||')) {
       // update_flags.initialisation || update_flags.decoration || update_flags.texture
@@ -352,27 +355,20 @@ function debloatSchema (bloatedSchema) {
               //   throw Error()
               // }
             }
+          } else {
+            console.log('Unknown type', _actualType, _args)
+            sharedScope.add(field, [_actualType, _args])
+            next.add(field, [_actualType, _args])
           }
         }
       }
 
       simplified.add(newName + '?', ['switch', fixCompareToType(args.compareTo), args.compareToType, next])
+      if (!args.compareToType) throw new Error('Missing compareToType ' + JSON.stringify(args))
       // simplified[newName] = sharedScope
       for (const key in sharedScope.vars) {
         simplified.addMaybe(anon ? key : newName, sharedScope.vars[key])
       }
-
-      // if (args.fields[0] === 'void')  {
-      //   console.log('Shared Scope', sharedScope)
-      //   console.log('Result', simplified)
-      // }
-
-      // if (anon) {
-      //   simplified.add(newName, ['switch', args.compareTo, next])
-      //   // anon is handled above
-      // } else {
-
-      // }
       next.finish()
       // sharedScope.finish()
     }
@@ -464,6 +460,100 @@ function debloatSchema (bloatedSchema) {
   return simplified
 }
 
+function postprocess (schema) {
+  const fixType = (v) => Array.isArray(v) ? v : (['container', v])
+  const cleanName = name => name.replaceAll('?', '').replaceAll('^', '').split(',')
+
+  const assignmentQueue = []
+  function queueForAssignment (obj, name, type) {
+    assignmentQueue.push([obj, name, type])
+  }
+
+  function visitContainer (name, container, optionalsInNS) {
+    // console.log('Visiting container', name, container, optionalsInNS)
+    const maybes = name.startsWith('_') ? optionalsInNS : {}
+    // first we collect all the optionals
+    for (const name in container) {
+      const [n] = cleanName(name)
+      const type = fixType(container[name])
+      if (name.startsWith('?')) {
+        maybes[n] ??= {}
+        maybes[n][JSON.stringify(type)] ??= name
+      }
+    }
+    // if (Object.keys(maybes).length > 0) console.log('maybes', maybes)
+    // then we can actually recurse
+    for (const name in container) {
+      const [n] = cleanName(name)
+      const type = fixType(container[name])
+      if (!name.startsWith('?')) {
+        const j = JSON.stringify(type)
+        if (maybes[n]?.[j]) {
+          // console.log('Found maybe', maybes[n][j], name)
+          // container[name][5] = maybes[j]
+          throw Error()
+        }
+      }
+      visitType(name, type, maybes)
+    }
+  }
+  function visitSwitch (name, switchType, optionalsInNS) {
+    const [n] = cleanName(name)
+    // console.log('Visiting switch', name, switchType, optionalsInNS, n)
+    const isAnon = name.startsWith('_')
+    const [compareTo, compareToType, cases] = switchType
+    for (const caseName in cases) {
+      const type = fixType(cases[caseName])
+      if (isAnon) {
+        for (const fieldName in cases[caseName]) {
+          const json = JSON.stringify(cases[caseName][fieldName])
+          const [N] = cleanName(fieldName)
+          if (optionalsInNS[N][json]) {
+            if (Array.isArray(cases[caseName][fieldName])) { queueForAssignment(cases[caseName][fieldName], 5, optionalsInNS[N][json]) } else { queueForAssignment(cases[caseName][fieldName], '*name', optionalsInNS[N][json]) }
+            // console.log('Added!', optionalsInNS[N][json], 'to', cases[caseName][fieldName])
+          } else {
+            // console.log('Optionals so far', optionalsInNS, cases[caseName][fieldName])
+            throw new Error()
+          }
+        }
+      } else {
+        const json = JSON.stringify(type)
+        if (optionalsInNS[n][json]) {
+          if (Array.isArray(cases[caseName])) { queueForAssignment(cases[caseName], 5, optionalsInNS[n][json]) } else { queueForAssignment(cases[caseName], '*name', optionalsInNS[n][json]) }
+          // console.log('Added!')
+        } else {
+          // console.log('Optionals so far', optionalsInNS, cases[caseName])
+          throw new Error()
+        }
+      }
+      // console.log('Would visit', caseName, cases[caseName])
+      visitType(caseName, cases[caseName])
+    }
+    // if (name.includes('_1406')) {
+    //   console.log('dbg', isAnon)
+    //   process.exit()
+    // }
+  }
+  function visitType (name, type, optionalsInNS) {
+    // console.log('Visiting type', name, type, optionalsInNS)
+    const [typeName, ...args] = fixType(type)
+    if (name.startsWith('*')) return // Special handling only applicable to generator
+    if (typeName === 'container') {
+      visitContainer(name, args[0], optionalsInNS)
+    } else if (typeName === 'switch') visitSwitch(name, args, optionalsInNS)
+  }
+  for (const name in schema) {
+    const type = schema[name]
+    visitType(name, type)
+  }
+
+  for (const [obj, name, type] of assignmentQueue) {
+    obj[name] = type
+  }
+
+  return schema
+}
+
 module.exports = {
   generate (from) {
     return debloatSchema(from)
@@ -471,12 +561,23 @@ module.exports = {
 }
 
 if (!module.parent) {
-// debloatSchema(basicJSON)
-  const pp = preprocess(require('./protocol.json').types)
-  const redone = debloatSchema(require('./protocol.json').types)
+  // debloatSchema(basicJSON)
+  const schema = require('./protocol.json').types
+  // schema = {ItemLegacy:schema.ItemLegacy}
+  const pp = preprocess(schema)
+  const redone = debloatSchema(pp)
   // const redone = debloatSchema(require('./proto2.json').types)
+  const json = JSON.stringify(redone, null, 2)
   fs.writeFileSync('./redone.json', JSON.stringify(redone, null, 2))
+  const final = postprocess(JSON.parse(json, null, 2))
+  fs.writeFileSync('./redone.json', JSON.stringify(final, null, 2))
 }
 
-
 // Broken: Shaped recipes with array-array nesting and input=width*height
+
+// IR:
+// Object key with a "?" prefix is promoted field from a switch or anonymous container
+// Object key with a "?" suffix is a switch
+// Object key with a "^" suffix is a variable that will be used later in a switch or array count: it needs to be ready in for a local nested scope
+// Object key with a "_" prefix is an anonymous field.
+// Object key with a "*name" name signifies a key whose value points to the promoted variable name of a switch's case
