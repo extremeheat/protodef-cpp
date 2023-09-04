@@ -1,10 +1,11 @@
 const fs = require('fs')
-const ir = require('./redone.json')
-// ir = {
-//   string: ir.string,
-//   packet_available_commands: ir.packet_available_commands,
-//   // packet_education_settings: ir.packet_education_settings,
-// }
+let ir = require('./redone.json')
+ir = {
+  ItemLegacy: ir.ItemLegacy,
+  // string: ir.string,
+  // packet_available_commands: ir.packet_available_commands,
+  // packet_education_settings: ir.packet_education_settings,
+}
 
 const protodefTypeToCpp = {
   u8: 'uint8_t',
@@ -145,7 +146,7 @@ function promoteToPascalOrSuffix (str) {
 
 function toSafeVar (name) {
   // add a _ suffix to reserved keywords in C++
-  const illegal = ['byte', 'short', 'int', 'long', 'float', 'double', 'bool']
+  const illegal = ['byte', 'short', 'int', 'long', 'float', 'double', 'bool', 'default', 'break']
   if (illegal.includes(name)) return name + '_'
   return name
 }
@@ -190,13 +191,13 @@ function visitRoot (root, mode) {
     console.log(`  ${fieldName}: ${fieldType}`)
     if (fieldName.endsWith('?')) return // When generating structs, we ignore switches
     const typeName = fieldType[0]
-    const n = deanonymizeStr(typeName)
+    const n = deanonymizeStr(fieldName)
 
     const isRootArray = root[typeName] && root[typeName][0] === 'array'
     if (typeName === 'void') return // TODO: remove this in the IR
-    else if (protodefTypeToCpp[typeName]) push(`  ${protodefTypeToCpp[typeName]} ${n};`)
-    else if (isRootArray) push(`  std::vector<pdef::proto::${typeName}> ${n};`)
-    else if (fieldName.startsWith('?')) push(`  std::optional<pdef::proto::${typeName}> ${n};`)
+    else if (protodefTypeToCpp[typeName]) push(`  ${protodefTypeToCpp[typeName]} ${n}; /*0*/`)
+    else if (isRootArray) push(`  std::vector<pdef::proto::${typeName}> ${n}; /*1*/`)
+    else if (fieldName.startsWith('?')) push(`  std::optional<pdef::proto::${typeName}> ${n}; /*2*/`)
     else if (typeName === 'container' || typeName === 'array' || typeName === 'mapper') {
       // We need 2 separate fields in the struct for this.
       // One for the enum, and one for the actual value.
@@ -208,20 +209,21 @@ function visitRoot (root, mode) {
       if (fieldType[0] === 'array') {
         const actualType = fieldType[3][0]
         if (protodefTypeToCpp[actualType]) newName = protodefTypeToCpp[actualType]
-        push(`  std::vector<${newName}> ${deanonymizeStr(fieldName)};`)
+        push(`  std::vector<${newName}> ${deanonymizeStr(fieldName)}; /*3*/`)
       } else if (fieldName.startsWith('?')) {
-        push(`  std::optional<${newName}> ${deanonymizeStr(fieldName)};`)
+        push(`  std::optional<${newName}> ${deanonymizeStr(fieldName)}; /*3*/`)
       } else {
-        push(`  ${newName} ${deanonymizeStr(fieldName)};`)
+        push(`  ${newName} ${deanonymizeStr(fieldName)}; /*3*/`)
       }
     } else if (nativeTypes.includes(typeName) || customTypes[typeName]) {
+      push('/*5*/')
       return// TODO
       const typeImpl = customTypes[typeName]
       if (!typeImpl) throw new Error(`Missing custom type ${typeName}`)
       const structCode = typeImpl.struct(fieldType, fieldName, structPaddingLevel)
       push(`// custom ${typeName} L${structPaddingLevel}`)
       structCode.split('\n').forEach(push)
-    } else push(`  pdef::proto::${typeName} ${n};`)
+    } else push(`  pdef::proto::${typeName} ${n}; /*4*/`)
   }
 
   function structFromMapper (name, mapper, structPaddingLevel) {
@@ -270,10 +272,16 @@ function visitRoot (root, mode) {
     if (fieldName.startsWith('?')) return
 
     const typeName = fieldType[0]
-    const n = deanonymizeStr(fieldName)
+    // In case it's modified
+    const variableName = fieldType[5] || fieldType['*name'] || fieldName
+    const n = deanonymizeStr(variableName) + ((deanonymizeStr(variableName) !== deanonymizeStr(fieldName)) ? `/*~${variableName} < ${fieldName}*/` : '')
     if (fieldName.endsWith('^')) {
       // Declare as a local variable
-      pushSizeEncode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} ${n} = obj.${n}; /*0*/`)
+      pushSizeEncode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} ${n} = ${objName}.${n}; /*0*/`)
+      pushDecode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} *${n}_ptr = &${objName}.${n}; /*0*/`)
+      // Note for above: This ^ refers to a variable that's used inside a switch statement or an array. So we need
+      // to keep a reference to this item in the current scope so it propagates to all sub-scopes, which may use
+      // a different objName, so simple dot access won't work.
     } else if (protodefTypeSizes[typeName]) pushSize(`  ${makeSizeStr(typeName)}; /*${fieldName}: ${typeName}*/ /*0*/`)
     const isRootArray = root[typeName] && root[typeName][0] === 'array'
     if (typeName === 'void') return // TODO: remove this in the IR
@@ -305,7 +313,7 @@ function visitRoot (root, mode) {
           const [lengthVariable, lengthTyp] = lengthVar
           pushSize(`  ${makeSizeStr(lengthTyp, [lengthVariable, 'size()'])}; /*1*/`)
           pushEncode(`  ${makeEncodeStr(lengthTyp, [lengthVariable, 'size()'])}; /*1*/`)
-          pushDecode(`  int ${lengthVariable}_len = ${objName}.${lengthVariable}.length(); /*1*/`)
+          pushDecode(`  int ${lengthVariable}_len = *${lengthVariable}_ptr; /*1*/`)
         } else {
           pushSize(`  ${makeSizeStr(lengthType, [objName, n, 'size()'])}; /*1*/`)
           pushEncode(`  ${makeEncodeStr(lengthType, [objName, n, 'size()'])}; /*1*/`)
@@ -340,9 +348,9 @@ function visitRoot (root, mode) {
           }
           // if(!absName) console.log('no absName', caseType)
           // absName = deanonymizeStr(absName)
-          if (compareToType === 'bool') { pushAll(`    case ${caseName}: {`) } else { pushAll(`    case ${compareToType}::${toSafeVar(caseName)}: {`) }
+          if (compareToType === 'bool') { pushAll(`    case ${caseName}: { /*8*/`) } else { pushAll(`    case ${compareToType}::${toSafeVar(caseName)}: { /*8*/`) }
           // encodingFromContainer(caseName, caseType, structPaddingLevel + 2, objName)
-          visitType(n, caseType, structPaddingLevel + 2, objName)
+          visitType(n, caseType, structPaddingLevel + 1, objName, true)
           pushAll('      break;')
           pushAll('    }')
         }
@@ -368,7 +376,7 @@ function visitRoot (root, mode) {
     const pushEncode = (str) => { encodeLines += pad(str) + '\n' }
     const pushDecode = (str) => { decodeLines += pad(str) + '\n' }
 
-    if (!excludeHeaders) {
+    if (!1) {
       pushEncode(`bool ${name}(pdef::Stream &stream, const pdef::proto::${name} &obj, bool allocate = true) {`)
       pushEncode(`  if (allocate) stream.reserve(stream, pdef::proto::size::${name}(obj));`)
       pushDecode(`bool ${name}(pdef::Stream &stream, pdef::proto::${name} &obj) {`)
@@ -389,7 +397,7 @@ function visitRoot (root, mode) {
     }
   }
 
-  function visitType (structName, type, structPaddingLevel = 0, objName = 'obj') {
+  function visitType (structName, type, structPaddingLevel = 0, objName = 'obj', excludeHeaders) {
     const pad = (str) => '  '.repeat(structPaddingLevel) + str
     const [typeName, ...typeArgs] = unretardify(type)
     console.log(typeName, typeArgs)
@@ -407,7 +415,7 @@ function visitRoot (root, mode) {
       structFromMapper(structName, typeArgs, structPaddingLevel + 1)
     } else {
       structForType(structName, type, structPaddingLevel + 1)
-      encodeType(structName, type, structPaddingLevel, objName)
+      encodeType(structName, type, structPaddingLevel, objName, excludeHeaders)
       // pushEncode(`  pdef6::proto::encode::${typeName}(stream, ${objName}.${structName});`)
     }
   }
