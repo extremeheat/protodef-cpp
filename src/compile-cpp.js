@@ -1,11 +1,11 @@
 const fs = require('fs')
 let ir = require('./redone.json')
-ir = {
-  ItemLegacy: ir.ItemLegacy,
-  // string: ir.string,
-  // packet_available_commands: ir.packet_available_commands,
-  // packet_education_settings: ir.packet_education_settings,
-}
+// ir = {
+//   ItemLegacy: ir.ItemLegacy,
+//   // string: ir.string,
+//   // packet_available_commands: ir.packet_available_commands,
+//   // packet_education_settings: ir.packet_education_settings,
+// }
 
 const protodefTypeToCpp = {
   u8: 'uint8_t',
@@ -195,8 +195,8 @@ function visitRoot (root, mode) {
 
     const isRootArray = root[typeName] && root[typeName][0] === 'array'
     if (typeName === 'void') return // TODO: remove this in the IR
-    else if (protodefTypeToCpp[typeName]) push(`  ${protodefTypeToCpp[typeName]} ${n}; /*0*/`)
-    else if (isRootArray) push(`  std::vector<pdef::proto::${typeName}> ${n}; /*1*/`)
+    else if (protodefTypeToCpp[typeName]) push(`  ${protodefTypeToCpp[typeName]} ${n}; /*0.0*/`)
+    else if (isRootArray) push(`  std::vector<pdef::proto::${typeName}> ${n}; /*1.0*/`)
     else if (fieldName.startsWith('?')) push(`  std::optional<pdef::proto::${typeName}> ${n}; /*2*/`)
     else if (typeName === 'container' || typeName === 'array' || typeName === 'mapper') {
       // We need 2 separate fields in the struct for this.
@@ -245,19 +245,28 @@ function visitRoot (root, mode) {
     console.log(l)
   }
 
-  function makeSizeStr (type, varName) {
+  function makeSizeStr (type, varName, isAnon) {
     const s = protodefTypeSizes[type]
     if (typeof s === 'number') return `len += ${s}`
     else if (typeof s === 'string') return `len += stream.${protodefTypeSizes[type]}(${Array.isArray(varName) ? varName.join('.') : varName})`
-    return `len += pdef::proto::size::${type}(${Array.isArray(varName) ? varName.join('.') : varName})`
+    const name = Array.isArray(varName) ? varName.join('.') : varName
+    return `${isAnon ? `EXPECT_OR_BAIL(${name}); ` : ''}len += pdef::proto::size::${type}(${isAnon ? '*' : ''}${name})`
   }
-  const makeEncodeStr = (type, varName) => protodefTypeToCppEncode[type]
+  const makeEncodeStr = (type, varName, isAnon) => protodefTypeToCppEncode[type]
     ? `WRITE_OR_BAIL(${protodefTypeToCppEncode[type]}, ${Array.isArray(varName) ? varName.join('.') : varName})`
-    : `pdef::proto::encode::${type}(stream, ${Array.isArray(varName) ? varName.join('.') : varName})`
+    : `pdef::proto::encode::${type}(stream, ${isAnon ? '*' : ''}${Array.isArray(varName) ? varName.join('.') : varName})`
 
-  const makeDecodeStr = (type, varName) => protodefTypeToCppDecode[type]
-    ? `READ_OR_BAIL(${protodefTypeToCppDecode[type]}, ${Array.isArray(varName) ? varName.join('.') : varName})`
-    : `pdef::proto::decode::${type}(stream, ${Array.isArray(varName) ? varName.join('.') : varName})`
+  function makeDecodeStr (type, varName, maybe) {
+    const name = Array.isArray(varName) ? varName.join('.') : varName
+    if (protodefTypeToCppDecode[type]) {
+      return `READ_OR_BAIL(${protodefTypeToCppDecode[type]}, ${name})`
+    } else {
+      let s = ''
+      if (maybe) s += `${name} = {}; pdef::proto::decode::${type}(stream, *${name})`
+      else s += `pdef::proto::decode::${type}(stream, ${name})`
+      return s
+    }
+  }
 
   function encodeType (fieldName, fieldType, structPaddingLevel = 0, objName = 'obj') {
     const pad = (str) => '  '.repeat(structPaddingLevel) + str
@@ -274,28 +283,30 @@ function visitRoot (root, mode) {
     const typeName = fieldType[0]
     // In case it's modified
     const variableName = fieldType[5] || fieldType['*name'] || fieldName
+    const isAnon = variableName.startsWith('?')
     const n = deanonymizeStr(variableName) + ((deanonymizeStr(variableName) !== deanonymizeStr(fieldName)) ? `/*~${variableName} < ${fieldName}*/` : '')
     if (fieldName.endsWith('^')) {
       // Declare as a local variable
-      pushSizeEncode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} ${n} = ${objName}.${n}; /*0*/`)
-      pushDecode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} *${n}_ptr = &${objName}.${n}; /*0*/`)
+      pushSizeEncode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} ${n} = ${objName}.${n}; /*0.1*/`)
+      // pushDecode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} *${n}_ptr = &${objName}.${n}; /*0.2*/`)
       // Note for above: This ^ refers to a variable that's used inside a switch statement or an array. So we need
       // to keep a reference to this item in the current scope so it propagates to all sub-scopes, which may use
       // a different objName, so simple dot access won't work.
-    } else if (protodefTypeSizes[typeName]) pushSize(`  ${makeSizeStr(typeName)}; /*${fieldName}: ${typeName}*/ /*0*/`)
+    } else if (protodefTypeSizes[typeName]) pushSize(`  ${makeSizeStr(typeName, [objName, n])}; /*${fieldName}: ${typeName} ${structPaddingLevel}*/ /*0.3*/`)
     const isRootArray = root[typeName] && root[typeName][0] === 'array'
     if (typeName === 'void') return // TODO: remove this in the IR
 
     const builtinEncodeFn = protodefTypeToCppEncode[typeName]
     if (builtinEncodeFn) {
-      pushEncode('  ' + makeEncodeStr(typeName, [objName, n]) + '; /*0*/')
-      pushDecode('  ' + makeDecodeStr(typeName, [objName, n]) + '; /*0*/')
+      pushEncode('  ' + makeEncodeStr(typeName, [objName, n]) + '; /*0.4*/')
+      pushDecode('  ' + makeDecodeStr(typeName, [objName, n], isAnon) + '; /*0.5*/')
+      if (fieldName.endsWith('^')) pushDecode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} &${n} = ${objName}.${n}; /*0.6*/`)
     } else if (isRootArray) {
       const lengthType = root[typeName][1]
       pushEncode(`  ${makeEncodeStr(lengthType, [objName, n, 'size()'])}; /*2*/`)
       pushEncode(`  for (const auto &v : ${objName}.${n}) { ${makeEncodeStr(typeName, 'v')}; } /*6*/`)
-      pushDecode(`  ${makeDecodeStr(lengthType, [objName, n, 'size()'])}; /*2*/`)
-      pushDecode(`  for (auto &v : ${objName}.${n}) { ${makeDecodeStr(typeName, 'v')}; } /*6*/`)
+      pushDecode(`  ${makeDecodeStr(lengthType, [objName, n, 'size()'], isAnon)}; /*2*/`)
+      pushDecode(`  for (auto &v : ${objName}.${n}) { ${makeDecodeStr(typeName, 'v', isAnon)}; } /*6*/`)
       pushSize(`  len += ${makeSizeStr(lengthType, [objName, n, 'size()'])}; /*2*/`)
       pushSize(`  for (const auto &v : ${objName}.${n}) { len += ${makeSizeStr(typeName, 'v')}; } /*6*/`)
     } else {
@@ -311,14 +322,14 @@ function visitRoot (root, mode) {
         if (lengthVar) {
           // console.log('lengthVar', fieldType, lengthVar)
           const [lengthVariable, lengthTyp] = lengthVar
-          pushSize(`  ${makeSizeStr(lengthTyp, [lengthVariable, 'size()'])}; /*1*/`)
-          pushEncode(`  ${makeEncodeStr(lengthTyp, [lengthVariable, 'size()'])}; /*1*/`)
-          pushDecode(`  int ${lengthVariable}_len = *${lengthVariable}_ptr; /*1*/`)
+          pushSize(`  ${makeSizeStr(lengthTyp, [lengthVariable, 'size()'])}; /*1.1*/`)
+          pushEncode(`  ${makeEncodeStr(lengthTyp, [lengthVariable, 'size()'])}; /*1.2*/`)
+          // pushDecode(`  int ${lengthVariable}_len = *${lengthVariable}_ptr; /*1*/`)
         } else {
-          pushSize(`  ${makeSizeStr(lengthType, [objName, n, 'size()'])}; /*1*/`)
-          pushEncode(`  ${makeEncodeStr(lengthType, [objName, n, 'size()'])}; /*1*/`)
+          pushSize(`  ${makeSizeStr(lengthType, [objName, n, 'size()'], isAnon)}; /*1.3*/`)
+          pushEncode(`  ${makeEncodeStr(lengthType, [objName, n, 'size()'], isAnon)}; /*1.4*/`)
           pushDecode(`  int ${n}_len;`)
-          pushDecode(`  ${makeDecodeStr(lengthType, [n + '_len'])}; /*1*/`)
+          pushDecode(`  ${makeDecodeStr(lengthType, [n + '_len'])}; /*1.5*/`)
         }
         const actualType = unretardify(fieldType[3])
         if (actualType[0] === 'container') {
@@ -331,30 +342,33 @@ function visitRoot (root, mode) {
           pushDecode('  }')
         } else {
           pushEncode(`  for (const auto &v : ${objName}.${n}) { ${makeEncodeStr(actualType, 'v')}; /*3*/ }`)
-          if (lengthVar) pushDecode(`  for (int i = 0; i < ${lengthVar[0]}_len; i++) { ${makeDecodeStr(actualType, [objName, n + '[i]'])}; /*3*/ }`)
+          if (lengthVar) pushDecode(`  for (int i = 0; i < ${lengthVar[0]}; i++) { ${makeDecodeStr(actualType, [objName, n + '[i]'])}; /*3*/ }`)
           else pushDecode(`  for (int i = 0; i < ${n}_len; i++) { ${makeDecodeStr(actualType, [objName, n + '[i]'])}; /*3*/ }`)
         }
       } else if (typeName === 'switch') {
         const compareTo = Array.isArray(fieldType[1]) ? fieldType[1][2] : fieldType[1]
-        const compareToType = fieldType[2] ? fieldType[2] : promoteToPascalOrSuffix(compareTo)
+        const compareToType = (fieldType[2] && fieldType[2] !== 'mapper') ? fieldType[2] : promoteToPascalOrSuffix(compareTo)
         const cases = fieldType[3]
-        pushAll(`  switch (${compareTo}) {`)
+        pushAll(`  switch (${compareTo}) { /*8.0*/`)
         for (const [caseName, caseType] of Object.entries(cases)) {
-          let absName
-          if (Array.isArray(caseType)) {
-            absName = caseType[5]
-          } else {
-            absName = caseType['*name']
-          }
+          // let absName
+          // if (Array.isArray(caseType)) {
+          //   absName = caseType[5]
+          // } else {
+          //   absName = caseType['*name']
+          // }
           // if(!absName) console.log('no absName', caseType)
           // absName = deanonymizeStr(absName)
-          if (compareToType === 'bool') { pushAll(`    case ${caseName}: { /*8*/`) } else { pushAll(`    case ${compareToType}::${toSafeVar(caseName)}: { /*8*/`) }
+          if (compareToType === 'bool') { pushAll(`    case ${caseName}: { /*8.0*/`) } 
+          else if (caseName === 'default') { pushAll(`    default: { /*8.1*/`) }
+          else if (caseName.startsWith('/')) { pushAll(`    case pdef::proto::${toSafeVar(caseName).replace('/', '')}: { /*8.2*/`) }
+          else { pushAll(`    case ${compareToType}::${toSafeVar(caseName)}: { /*8.3*/`) }
           // encodingFromContainer(caseName, caseType, structPaddingLevel + 2, objName)
-          visitType(n, caseType, structPaddingLevel + 1, objName, true)
+          visitType(n, caseType, structPaddingLevel + 2, objName, true)
           pushAll('      break;')
-          pushAll('    }')
+          pushAll('    } /*8.7*/')
         }
-        pushEncode('  }')
+        pushAll('  } /*8.8*/')
       } else if (typeName === 'mapper') {
         const actualType = fieldType[1]
         pushSize(`  ${makeSizeStr(actualType, [objName, n])}; /*${fieldName}: ${actualType}*/ /*7*/`)
@@ -362,9 +376,9 @@ function visitRoot (root, mode) {
         pushDecode(`  ${makeDecodeStr(actualType, [objName, n])}; /*7*/`)
       } else {
         // we'd call into the specific encode function for this type
-        pushSize(`  ${makeSizeStr(Array.isArray(fieldType) ? fieldType[0] : fieldType, [objName, n])}; /*${fieldName}*/ /*4*/`)
-        pushEncode(`  ${makeEncodeStr(Array.isArray(fieldType) ? fieldType[0] : fieldType, [objName, n])}; /*4*/`)
-        pushDecode(`  ${makeDecodeStr(Array.isArray(fieldType) ? fieldType[0] : fieldType, [objName, n])}; /*4*/`)
+        pushSize(`  ${makeSizeStr(Array.isArray(fieldType) ? fieldType[0] : fieldType, [objName, n], isAnon)}; /*${fieldName} ${structPaddingLevel}*/ /*4.0*/`)
+        pushEncode(`  ${makeEncodeStr(Array.isArray(fieldType) ? fieldType[0] : fieldType, [objName, n], isAnon)}; /*4.1*/`)
+        pushDecode(`  ${makeDecodeStr(Array.isArray(fieldType) ? fieldType[0] : fieldType, [objName, n], isAnon)}; /*4.2*/`)
       }
     }
   }
@@ -376,9 +390,9 @@ function visitRoot (root, mode) {
     const pushEncode = (str) => { encodeLines += pad(str) + '\n' }
     const pushDecode = (str) => { decodeLines += pad(str) + '\n' }
 
-    if (!1) {
+    if (!excludeHeaders) {
       pushEncode(`bool ${name}(pdef::Stream &stream, const pdef::proto::${name} &obj, bool allocate = true) {`)
-      pushEncode(`  if (allocate) stream.reserve(stream, pdef::proto::size::${name}(obj));`)
+      pushEncode(`  if (allocate) { auto writeSize = pdef::proto::size::${name}(obj); if (!writeSize) return false; stream.reserve(stream, writeSize); }`)
       pushDecode(`bool ${name}(pdef::Stream &stream, pdef::proto::${name} &obj) {`)
       pushSize(`size_t ${name}(pdef::Stream &stream, const pdef::proto::${name} &obj) {`)
       pushSize('  size_t len = 0;')
@@ -410,7 +424,7 @@ function visitRoot (root, mode) {
       }
     } else if (typeName === 'container') {
       structFromContainer(structName, typeArgs[0], structPaddingLevel + 1)
-      encodingFromContainer(structName, typeArgs[0], structPaddingLevel + 1)
+      encodingFromContainer(structName, typeArgs[0], structPaddingLevel + 1, objName, excludeHeaders)
     } else if (typeName === 'mapper') {
       structFromMapper(structName, typeArgs, structPaddingLevel + 1)
     } else {
