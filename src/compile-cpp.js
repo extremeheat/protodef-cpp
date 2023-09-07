@@ -158,9 +158,12 @@ const colonJoin = (...arr) => filterNull(arr).join('::')
 
 const headers = `
 #define WRITE_OR_BAIL(fn, val) if (!fn(stream, val)) { return false; }
+#define READ_OR_BAIL(fn, val) if (!fn(stream, val)) { return false; }
+#define EXPECT_OR_BAIL(val) if (!val) { return false; }
 `
 const footer = `
 #undef WRITE_OR_BAIL
+#undef READ_OR_BAIL
 `
 
 function visitRoot (root, mode) {
@@ -280,12 +283,14 @@ function visitRoot (root, mode) {
     console.log(l)
   }
 
+  let sizeIx = 0
   function makeSizeStr (type, varName, isAnon) {
     const s = protodefTypeSizes[type]
     if (typeof s === 'number') return `len += ${s}`
     else if (typeof s === 'string') return `len += stream.${protodefTypeSizes[type]}(${Array.isArray(varName) ? dotJoin(...varName) : varName})`
     const name = Array.isArray(varName) ? varName.join('.') : varName
-    return `${isAnon ? `EXPECT_OR_BAIL(${name}); ` : ''}len += pdef::proto::size::${type}(${isAnon ? '*' : ''}${name})`
+    const sizeVar = `len_${sizeIx++}`
+    return `${isAnon ? `EXPECT_OR_BAIL(${name}); ` : ''}size_t ${sizeVar} = pdef::proto::size::${type}(${isAnon ? '*' : ''}${name}); EXPECT_OR_BAIL(${sizeVar}); len += ${sizeVar}`
   }
   const makeEncodeStr = (type, varName, isAnon) => protodefTypeToCppEncode[type]
     ? `WRITE_OR_BAIL(${protodefTypeToCppEncode[type]}, ${Array.isArray(varName) ? varName.join('.') : varName})`

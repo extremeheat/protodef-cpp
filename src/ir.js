@@ -126,6 +126,7 @@ function debloatSchema (bloatedSchema) {
   class Scope {
     constructor () {
       this.vars = {}
+      this.varMetadata = {}
       this.typesForKey = {}
       this.uniqueKeys = []
       this.didSimplify = false
@@ -135,28 +136,40 @@ function debloatSchema (bloatedSchema) {
       return this.vars[name]
     }
 
-    _set (name, type) {
+    _set (name, type, metadata) {
       if (this.didSimplify) throw Error('Cannot add to scope after deduplication')
+      function setSafe (obj, key, val) {
+        if (obj[key]) throw Error('Cannot overwrite ' + key)
+        obj[key] = val
+      }
       if (this.uniqueKeys.includes(name)) {
         if (Object.hasOwn(this.vars, name)) {
           // If name is taken, make sure to add a suffix to existing name
           const old = this.vars[name]
-          this.vars[name + ',' + (i++)] = old
-          this.vars[name + ',' + (i++)] = type
+          const oldMeta = this.varMetadata[name]
+          delete this.vars[name]
+          delete this.varMetadata[name]
+          setSafe(this.vars, name + ',' + (oldMeta || i++), old)
+          const n = name + ',' + (metadata || i++)
+          setSafe(this.vars, n, type)
+          this.varMetadata[n] = metadata
         } else {
-          this.vars[name + ',' + (i++)] = type
+          const n = name + ',' + (metadata || i++)
+          setSafe(this.vars, n, type)
+          this.varMetadata[n] = metadata
         }
       } else {
         this.uniqueKeys.push(name)
         this.vars[name] = type
+        this.varMetadata[name] = metadata
       }
       const [n] = name.split(',')
       this.typesForKey[n] ??= []
       this.typesForKey[n].push(type)
     }
 
-    add (name, type) { return this._set(name, type) }
-    addMaybe (name, type) { return this._set('?' + name, type) }
+    add (name, type, metadata) { return this._set(name, type, metadata) }
+    addMaybe (name, type, metadata) { return this._set('?' + name, type, metadata) }
 
     dedupeAnon () {
       const deleteAllAnonSubTypes = (forKey) => {
@@ -169,6 +182,7 @@ function debloatSchema (bloatedSchema) {
 
       for (const key in this.typesForKey) {
         if (!key.startsWith('?')) continue
+        // console.log('With key', key)
         const types = this.typesForKey[key]
         const first = types[0]
         if (types.every(t => JSON.stringify(t) === JSON.stringify(first))) {
@@ -198,7 +212,11 @@ function debloatSchema (bloatedSchema) {
               }
             }
           }
-          // console.log('Type Groups', typeGroups, Object.entries(this.vars).map(([k, v]) => [k, JSON.stringify(v)]))
+          let log = false
+          for (const typeGroup in typeGroups) {
+            if (typeGroups[typeGroup].size > 1) log = true
+          }
+          if (log) console.log('Type Groups with dupes', typeGroups, Object.entries(this.vars).map(([k, v]) => [k, JSON.stringify(v)]))
           // console.log('Before pruning', Object.entries(this.vars).map(([k, v]) => [k, JSON.stringify(v)]))
 
           for (const group in typeGroups) {
@@ -218,6 +236,17 @@ function debloatSchema (bloatedSchema) {
               const old = this.vars[first]
               delete this.vars[first]
               this.vars[name] = old
+            } else if (typeGroups[group].size > 1) {
+              const bodies = []
+              for (const entry of typeGroups[group]) {
+                const [header, body] = entry.split(',')
+                bodies.push(body)
+                delete this.vars[entry]
+              }
+              const body = bodies.join('_or_')
+              const newKey = `${key},${body}`
+              this.vars[newKey] = JSON.parse(group)
+              console.log('Combined ', [...typeGroups[group]], 'into', newKey, 'with', group)
             }
             // console.log('First', first, name)
             // this.vars[name] = JSON.parse(group)
@@ -367,8 +396,9 @@ function debloatSchema (bloatedSchema) {
       if (!args.compareToType) throw new Error('Missing compareToType ' + JSON.stringify(args))
       // simplified[newName] = sharedScope
       for (const key in sharedScope.vars) {
-        simplified.addMaybe(anon ? key : newName, sharedScope.vars[key])
+        simplified.addMaybe(anon ? key : newName, sharedScope.vars[key], key)
       }
+      // console.log('Shared Scope', sharedScope)
       next.finish()
       // sharedScope.finish()
     }
@@ -498,12 +528,18 @@ function postprocess (schema) {
     }
   }
   function visitSwitch (name, switchType, optionalsInNS) {
+    // console.log('visiting switch', name, switchType, optionalsInNS)
     const [n] = cleanName(name)
     // console.log('Visiting switch', name, switchType, optionalsInNS, n)
     const isAnon = name.startsWith('_')
     const [compareTo, compareToType, cases] = switchType
     for (const caseName in cases) {
       const type = fixType(cases[caseName])
+      if (type[0] === 'switch') {
+        // console.log('Visiting nested switch', caseName, type)
+        visitSwitch(n, type.slice(1), optionalsInNS)
+        break
+      }
       if (isAnon) {
         for (const fieldName in cases[caseName]) {
           const json = JSON.stringify(cases[caseName][fieldName])
@@ -513,7 +549,7 @@ function postprocess (schema) {
             // console.log('Added!', optionalsInNS[N][json], 'to', cases[caseName][fieldName])
           } else {
             // console.log('Optionals so far', optionalsInNS, cases[caseName][fieldName])
-            throw new Error()
+            throw new Error('Error in anon switch during postprocess for ' + fieldName)
           }
         }
       } else {
@@ -523,7 +559,7 @@ function postprocess (schema) {
           // console.log('Added!')
         } else {
           // console.log('Optionals so far', optionalsInNS, cases[caseName])
-          throw new Error()
+          throw new Error(`Error in switch during postprocess ${caseName} ${json} ${n}`)
         }
       }
       // console.log('Would visit', caseName, cases[caseName])
@@ -535,18 +571,27 @@ function postprocess (schema) {
     // }
   }
   function visitType (name, type, optionalsInNS) {
-    // console.log('Visiting type', name, type, optionalsInNS)
     const [typeName, ...args] = fixType(type)
+    // console.log('Visiting type', name, typeName, type, optionalsInNS)
     if (name.startsWith('*')) return // Special handling only applicable to generator
     if (typeName === 'container') {
       visitContainer(name, args[0], optionalsInNS)
-    } else if (typeName === 'switch') visitSwitch(name, args, optionalsInNS)
+    } else if (typeName === 'switch') {
+      visitSwitch(name, args, optionalsInNS)
+    } else if (typeName === 'array') {
+      const actualType = fixType(args[2])
+      // console.log('actualType', actualType)
+      if (actualType[0] === 'container') {
+        visitContainer(name, actualType[1], optionalsInNS)
+      }
+    }
   }
   for (const name in schema) {
     const type = schema[name]
     visitType(name, type)
   }
 
+  // console.log('Assignment Q', assignmentQueue)
   for (const [obj, name, type] of assignmentQueue) {
     obj[name] = type
   }
@@ -562,8 +607,12 @@ module.exports = {
 
 if (!module.parent) {
   // debloatSchema(basicJSON)
-  const schema = require('./protocol.json').types
-  // schema = {ItemLegacy:schema.ItemLegacy}
+  let schema = require('./protocol.json').types
+  // schema = {
+  //   // ItemLegacy:schema.ItemLegacy,
+  //   // Recipes:schema.Recipes,
+  //   packet_interact: schema.packet_interact,
+  // }
   const pp = preprocess(schema)
   const redone = debloatSchema(pp)
   // const redone = debloatSchema(require('./proto2.json').types)
