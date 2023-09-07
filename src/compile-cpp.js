@@ -52,7 +52,7 @@ const protodefTypeToCppEncode = {
   lf64: 'writeDoubleLE',
   bool: 'writeBool',
   cstring: 'writeCString',
-  buffer: 'writeBuffer',
+  // buffer: 'writeBuffer',
   varint: 'writeUnsignedVarInt',
   varint64: 'writeUnsignedVarLong',
   zigzag32: 'writeZigZagVarInt',
@@ -310,21 +310,18 @@ function visitRoot (root, mode) {
     const variableName = fieldType[5] || fieldType['*name'] || fieldName
     const isAnon = variableName.startsWith('?')
     const n = deanonymizeStr(variableName) + ((deanonymizeStr(variableName) !== deanonymizeStr(fieldName)) ? `/*~${variableName} < ${fieldName}*/` : '')
-    if (fieldName.endsWith('^')) {
-      // Declare as a local variable
-      pushSizeEncode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} ${n} = ${objName}.${n}; /*0.1*/`)
-      // pushDecode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} *${n}_ptr = &${objName}.${n}; /*0.2*/`)
-      // Note for above: This ^ refers to a variable that's used inside a switch statement or an array. So we need
-      // to keep a reference to this item in the current scope so it propagates to all sub-scopes, which may use
-      // a different objName, so simple dot access won't work.
-    } else if (protodefTypeSizes[typeName]) pushSize(`  ${makeSizeStr(typeName, [objName, n])}; /*${fieldName}: ${typeName} ${structPaddingLevel}*/ /*0.3*/`)
-
     if (typeName === 'void') return // TODO: remove this in the IR
 
     const builtinEncodeFn = protodefTypeToCppEncode[typeName]
     if (builtinEncodeFn) {
+      if (fieldName.endsWith('^')) {
+        pushSizeEncode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} ${n} = ${objName}.${n}; /*0.1*/`)
+      } else {
+        pushSizeEncode(`  ${makeSizeStr(typeName, [objName, n])}; /*0.2*/`)
+      }
       pushEncode('  ' + makeEncodeStr(typeName, [objName, n]) + '; /*0.4*/')
       pushDecode('  ' + makeDecodeStr(typeName, [objName, n], isAnon) + '; /*0.5*/')
+      // .... this ^ needs to be similarly handled in each case below for read/write/size
       if (fieldName.endsWith('^')) pushDecode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} &${n} = ${objName}.${n}; /*0.6*/`)
     } else if (isRootArray && !shouldInlineFromRoot) {
       const lengthType = root[typeName][1]
@@ -391,20 +388,38 @@ function visitRoot (root, mode) {
           else if (caseName.startsWith('/')) { pushAll(`    case pdef::proto::${toSafeVar(caseName).replace('/', '')}: { /*8.2*/`) }
           else { pushAll(`    case pdef::proto::${objPath.join('::')}::${compareToType}::${toSafeVar(caseName)}: { /*8.3*/`) }
           // encodingFromContainer(caseName, caseType, structPaddingLevel + 2, objName)
-          visitType(n, caseType, structPaddingLevel + 2, objPath, true)
+          let realName = isAnon ? null : caseType[5] || caseType['*name']
+          const isScoped = isAnon ? false : !Array.isArray(caseType)
+          if (realName) {
+            realName = deanonymizeStr(realName)
+            // TODO: handle optional fields
+            const structureName = promoteToPascalOrSuffix(realName)
+            if (!Array.isArray(caseType)) {
+              pushDecode(`      pdef::proto::${objPath.join('::')}::${structureName} &v = ${objName}.${realName} = {}; /*8.4*/`)
+              pushEncode(`      pdef::proto::${objPath.join('::')}::${structureName} &v = ${objName}.${realName}; /*8.5*/`)
+              pushSize(`      pdef::proto::${objPath.join('::')}::${structureName} &v = ${objName}.${realName}; /*8.6*/`)
+            }
+          }
+          visitType(n, caseType, structPaddingLevel + 2, (isScoped && realName) ? objPath.concat(promoteToPascalOrSuffix(realName)) : objPath, true)
           pushAll('      break;')
           pushAll('    } /*8.7*/')
         }
         pushAll('  } /*8.8*/')
       } else if (typeName === 'mapper') {
         const actualType = fieldType[1]
+        if (fieldName.endsWith('^')) {
+          pushSizeEncode(`  ${protodefTypeToCpp[actualType] ?? ('pdef::proto::' + actualType)} ${n} = ${objName}.${n}; /*0.3*/`)
+        }
         pushSize(`  ${makeSizeStr(actualType, [objName, n])}; /*${fieldName}: ${actualType}*/ /*7.0*/`)
         pushEncode(`  ${makeEncodeStr(actualType, [objName, n])}; /*7.1*/`)
         pushDecode(`  ${makeDecodeStr(actualType, [objName, n])}; /*7.2*/`)
+        if (fieldName.endsWith('^')) {
+          pushDecode(`  ${protodefTypeToCpp[actualType] ?? ('pdef::proto::' + actualType)} &${n} = ${objName}.${n}; /*0.7*/`)
+        }
       } else if (typeName === 'container') {
         const structureName = promoteToPascalOrSuffix(fieldName)
         const varName = `${objName}.${n}`
-        pushDecode(`  auto v = ${objName}.${n} = {}; /*${JSON.stringify(objPath)}*/ /*7.3*/`)
+        pushDecode(`  pdef::proto::${objPath.join('::')}::${structureName} &v = ${objName}.${n} = {}; /*${JSON.stringify(objPath)}*/ /*7.3*/`)
         pushEncode(`  pdef::proto::${objPath.join('::')}::${structureName} &v = ${isAnon ? `*` : ''}${objName}.${n}; /*${JSON.stringify(objPath)}*/ /*7.4*/`)
         pushSize(`  ${isAnon ? `EXPECT_OR_BAIL(${varName}); ` : ''}pdef::proto::${objPath.join('::')}::${structureName} &v = ${isAnon ? `*` : ''}${objName}.${n}; /*${JSON.stringify(objPath)}*/ /*7.4*/`)
       } else {
@@ -454,18 +469,22 @@ function visitRoot (root, mode) {
     if (typeName === 'native') {
       structLines += `// ${structName} is built in\n`
     } else if (typeName === 'array') {
-      const [countType, count, type] = typeArgs
-      if (!Array.isArray(type) && typeof type === 'object') { // a container
-        structFromContainer(structName, type, structPaddingLevel + 1)
+      const [countType, count, _type] = typeArgs
+      if (!Array.isArray(_type) && typeof _type === 'object') { // a container
+        structFromContainer(structName, _type, structPaddingLevel + 1)
+        // encode type with typeArgs as type
+        encodeType(structName, unretardify(type), structPaddingLevel, objPath, excludeHeaders)
+      } else if (structPaddingLevel) {
+        encodeType(structName, unretardify(type), structPaddingLevel, objPath, excludeHeaders)
       }
     } else if (typeName === 'container') {
       structFromContainer(structName, typeArgs[0], structPaddingLevel + 1)
       encodingFromContainer(structName, typeArgs[0], structPaddingLevel + 1, objPath, excludeHeaders)
     } else if (typeName === 'mapper') {
       structFromMapper(structName, typeArgs, structPaddingLevel + 1)
-    } else {
-      structForType(structName, type, structPaddingLevel + 1)
-      encodeType(structName, type, structPaddingLevel, objPath, excludeHeaders)
+    } else if (structPaddingLevel) {
+        structForType(structName, type, structPaddingLevel + 1)
+        encodeType(structName, type, structPaddingLevel, objPath, excludeHeaders)
       // pushEncode(`  pdef6::proto::encode::${typeName}(stream, ${objName}.${structName});`)
     }
   }
@@ -531,6 +550,3 @@ if (packet.entity_metadata)
 
 
 //TODO: packet_crafting_data size is broken
-// PlayerRecords size is broken because in struct gen we don't handle optional arrays
-// SkinImage size is broken because missing data field
-// TransactionLegacy size is broken, because switch-arrays are broken
