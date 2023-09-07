@@ -134,6 +134,7 @@ function deanonymizeStr (fieldName) {
 
 function promoteToPascalOrSuffix (str) {
   str = deanonymizeStr(str)
+  if (!str) return ''
   // Check if field str starts with lowercase
   if (str[0] === str[0].toLowerCase()) {
     // we can promote name to PascalCase from snake_case
@@ -150,6 +151,10 @@ function toSafeVar (name) {
   if (illegal.includes(name)) return name + '_'
   return name
 }
+
+const filterNull = (arr) => (Array.isArray(arr[0]) ? arr[0] : arr).filter(x => !!x)
+const dotJoin = (...arr) => filterNull(arr).join('.')
+const colonJoin = (...arr) => filterNull(arr).join('::')
 
 const headers = `
 #define WRITE_OR_BAIL(fn, val) if (!fn(stream, val)) { return false; }
@@ -194,12 +199,14 @@ function visitRoot (root, mode) {
     const n = deanonymizeStr(fieldName)
 
     const isAnon = fieldName.startsWith('?')
-    function typeStrForType (typename, varname, isArray, typeInLocalScope) {
+    // TODO: DFS to determine array level
+    function typeStrForType (typename, varname, arrayLevel = 0, typeInLocalScope) {
       let s = ''
-      if (isArray) s += 'std::vector<'
+      if (arrayLevel) for (let i = 0; i < arrayLevel; i++) s += 'std::vector<'
       else if (isAnon) s += 'std::optional<'
       s += typeInLocalScope ? typename : `pdef::proto::${typename}`
-      if (isArray || isAnon) s += '>'
+      if (arrayLevel) for (let i = 0; i < arrayLevel; i++) s += '>'
+      else if (isAnon) s += '>'
       s += ` ${varname}`
       return s
     }
@@ -209,7 +216,7 @@ function visitRoot (root, mode) {
     else if (protodefTypeToCpp[typeName]) push(`  ${protodefTypeToCpp[typeName]} ${n}; /*0.0*/`)
     else if (isRootArray) {
       const rootArrayType = root[typeName][3]
-      push(`  ${typeStrForType(Array.isArray(rootArrayType) ? rootArrayType[0] : typeName, n, true)}; /*1.0*/`)
+      push(`  ${typeStrForType(Array.isArray(rootArrayType) ? rootArrayType[0] : typeName, n, 1)}; /*1.0*/`)
     } else if (typeName === 'container' || typeName === 'array' || typeName === 'mapper') {
       // We need 2 separate fields in the struct for this.
       // One for the enum, and one for the actual value.
@@ -218,10 +225,26 @@ function visitRoot (root, mode) {
       // We can either use PascalCase for the enum, or add a _t suffix.
       let newName = promoteToPascalOrSuffix(fieldName)
       visitType(newName, fieldType, structPaddingLevel)
+      // TODO: per above TODO, we need to use DFS to determine array level
       if (fieldType[0] === 'array') {
-        const actualType = fieldType[3][0]
-        if (protodefTypeToCpp[actualType]) newName = protodefTypeToCpp[actualType]
-        push(`  ${typeStrForType(newName, n, true, true)}; /*3.0*/`)
+        let arrayLevel = 1
+        const actualType = unretardify(fieldType[3])
+        let typename = actualType[0] === 'container' ? newName : actualType[0]
+        if (typename === 'array') {
+          const actualActualType = unretardify(actualType[3])
+          typename = actualActualType[0] === 'container' ? newName : actualActualType[0]
+          arrayLevel++
+          if (typename === 'array') {
+            const actualActualActualType = unretardify(actualActualType[3])
+            typename = actualActualActualType[0] === 'container' ? newName : actualActualActualType[0]
+            arrayLevel++
+            if (typename === 'array') {
+              throw new Error('Only up to 3D arrays are supported')
+            }
+          }
+        }
+        const inLocalScope = actualType[0] === 'container' || protodefTypeToCpp[typename]
+        push(`  ${typeStrForType(protodefTypeToCpp[typename] || typename, n, arrayLevel, inLocalScope)}; /*3.0*/`)
         // push(`  std::vector<${newName}> ${deanonymizeStr(fieldName)}; /*3*/`)
       } else {
         push(`  ${typeStrForType(newName, n, false, true)}; /*3.2*/`)
@@ -260,7 +283,7 @@ function visitRoot (root, mode) {
   function makeSizeStr (type, varName, isAnon) {
     const s = protodefTypeSizes[type]
     if (typeof s === 'number') return `len += ${s}`
-    else if (typeof s === 'string') return `len += stream.${protodefTypeSizes[type]}(${Array.isArray(varName) ? varName.join('.') : varName})`
+    else if (typeof s === 'string') return `len += stream.${protodefTypeSizes[type]}(${Array.isArray(varName) ? dotJoin(...varName) : varName})`
     const name = Array.isArray(varName) ? varName.join('.') : varName
     return `${isAnon ? `EXPECT_OR_BAIL(${name}); ` : ''}len += pdef::proto::size::${type}(${isAnon ? '*' : ''}${name})`
   }
@@ -312,25 +335,27 @@ function visitRoot (root, mode) {
     const n = deanonymizeStr(variableName) + ((deanonymizeStr(variableName) !== deanonymizeStr(fieldName)) ? `/*~${variableName} < ${fieldName}*/` : '')
     if (typeName === 'void') return // TODO: remove this in the IR
 
+    const structPropName = dotJoin(objName, n)
+
     const builtinEncodeFn = protodefTypeToCppEncode[typeName]
     if (builtinEncodeFn) {
       if (fieldName.endsWith('^')) {
-        pushSizeEncode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} ${n} = ${objName}.${n}; /*0.1*/`)
+        pushSizeEncode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} ${n} = ${structPropName}; /*0.1*/`)
       } else {
         pushSizeEncode(`  ${makeSizeStr(typeName, [objName, n])}; /*0.2*/`)
       }
       pushEncode('  ' + makeEncodeStr(typeName, [objName, n]) + '; /*0.4*/')
       pushDecode('  ' + makeDecodeStr(typeName, [objName, n], isAnon) + '; /*0.5*/')
       // .... this ^ needs to be similarly handled in each case below for read/write/size
-      if (fieldName.endsWith('^')) pushDecode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} &${n} = ${objName}.${n}; /*0.6*/`)
+      if (fieldName.endsWith('^')) pushDecode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} &${n} = ${structPropName}; /*0.6*/`)
     } else if (isRootArray && !shouldInlineFromRoot) {
       const lengthType = root[typeName][1]
       pushEncode(`  ${makeEncodeStr(lengthType, [objName, n, 'size()'])}; /*2.1*/`)
-      pushEncode(`  for (const auto &v : ${objName}.${n}) { ${makeEncodeStr(typeName, 'v')}; } /*6*/`)
+      pushEncode(`  for (const auto &v : ${structPropName}) { ${makeEncodeStr(typeName, 'v')}; } /*6*/`)
       pushDecode(`  ${makeDecodeStr(lengthType, [objName, n, 'size()'], isAnon)}; /*2.3*/`)
-      pushDecode(`  for (auto &v : ${objName}.${n}) { ${makeDecodeStr(typeName, 'v', isAnon)}; } /*6*/`)
+      pushDecode(`  for (auto &v : ${structPropName}) { ${makeDecodeStr(typeName, 'v', isAnon)}; } /*6*/`)
       pushSize(`  ${makeSizeStr(lengthType, [objName, n, 'size()'])}; /*2.4*/`)
-      pushSize(`  for (const auto &v : ${objName}.${n}) { ${makeSizeStr(typeName, 'v')}; } /*6*/`)
+      pushSize(`  for (const auto &v : ${structPropName}) { ${makeSizeStr(typeName, 'v')}; } /*6*/`)
     } else {
       // We need 2 separate fields in the struct for this.
       // One for the enum, and one for the actual value.
@@ -356,17 +381,25 @@ function visitRoot (root, mode) {
         const actualType = unretardify(fieldType[3])
         if (actualType[0] === 'container') {
           // inline
-          pushSizeEncode(`  for (const auto &v : ${objName}.${n}) { /*5*/`)
+          pushSizeEncode(`  for (const auto &v : ${[objName, n].join('.')}) { /*5*/`)
           if (lengthVar) pushDecode(`  for (int i = 0; i < ${lengthVar[0]}; i++) { /*5*/`)
           else pushDecode(`  for (int i = 0; i < ${n}_len; i++) { /*5*/`)
-          encodingFromContainer(newName, actualType[1], structPaddingLevel + 1, objPath.concat(promoteToPascalOrSuffix(n)), true)
+          encodingFromContainer(newName, actualType[1], structPaddingLevel + 1, structPaddingLevel === 0 ? objPath.concat('') : objPath.concat(promoteToPascalOrSuffix(n)), true)
+          pushSizeEncode('  }')
+          pushDecode('  }')
+        } else if (actualType[0] === 'array') {
+          pushSizeEncode(`  for (const auto &v : ${structPropName}) { /*5*/`)
+          if (lengthVar) pushDecode(`  for (int i = 0; i < ${lengthVar[0]}; i++) { /*5*/`)
+          else pushDecode(`  for (int i = 0; i < ${n}_len; i++) { /*5*/`)
+          const actualActualType = unretardify(actualType[3])
+          encodeType('', actualType, structPaddingLevel + 1, objPath, true)
           pushSizeEncode('  }')
           pushDecode('  }')
         } else {
-          pushEncode(`  for (const auto &v : ${objName}.${n}) { ${makeEncodeStr(actualType, 'v')}; /*3*/ }`)
-          pushSize(`  for (const auto &v : ${objName}.${n}) { ${makeSizeStr(actualType, 'v')}; /*3*/ }`)
-          if (lengthVar) pushDecode(`  for (int i = 0; i < ${lengthVar[0]}; i++) { ${makeDecodeStr(actualType, [objName, n + '[i]'])}; /*3*/ }`)
-          else pushDecode(`  for (int i = 0; i < ${n}_len; i++) { ${makeDecodeStr(actualType, [objName, n + '[i]'])}; /*3*/ }`)
+          pushEncode(`  for (const auto &v : ${structPropName}) { ${makeEncodeStr(actualType, 'v')}; /*3.1*/ }`)
+          pushSize(`  for (const auto &v : ${structPropName}) { ${makeSizeStr(actualType, 'v')}; /*3.2*/ }`)
+          if (lengthVar) pushDecode(`  for (int i = 0; i < ${lengthVar[0]}; i++) { ${makeDecodeStr(actualType, [objName, n + '[i]'])}; /*3.3*/ }`)
+          else pushDecode(`  for (int i = 0; i < ${n}_len; i++) { ${makeDecodeStr(actualType, [objName, n + '[i]'])}; /*3.4*/ }`)
         }
       } else if (typeName === 'switch') {
         const compareTo = Array.isArray(fieldType[1]) ? fieldType[1][2] : fieldType[1]
@@ -386,7 +419,7 @@ function visitRoot (root, mode) {
           else if (['true', 'false'].includes(caseName) || !isNaN(caseName)) { pushAll(`    case ${caseName}: { /*8.1*/`) }
           else if (caseName === 'default') { pushAll(`    default: { /*8.1*/`) }
           else if (caseName.startsWith('/')) { pushAll(`    case pdef::proto::${toSafeVar(caseName).replace('/', '')}: { /*8.2*/`) }
-          else { pushAll(`    case pdef::proto::${objPath.join('::')}::${compareToType}::${toSafeVar(caseName)}: { /*8.3*/`) }
+          else { pushAll(`    case pdef::proto::${colonJoin(objPath)}::${compareToType}::${toSafeVar(caseName)}: { /*8.3*/`) }
           // encodingFromContainer(caseName, caseType, structPaddingLevel + 2, objName)
           let realName = isAnon ? null : caseType[5] || caseType['*name']
           const isScoped = isAnon ? false : !Array.isArray(caseType)
@@ -395,9 +428,9 @@ function visitRoot (root, mode) {
             // TODO: handle optional fields
             const structureName = promoteToPascalOrSuffix(realName)
             if (!Array.isArray(caseType)) {
-              pushDecode(`      pdef::proto::${objPath.join('::')}::${structureName} &v = ${objName}.${realName} = {}; /*8.4*/`)
-              pushEncode(`      pdef::proto::${objPath.join('::')}::${structureName} &v = ${objName}.${realName}; /*8.5*/`)
-              pushSize(`      pdef::proto::${objPath.join('::')}::${structureName} &v = ${objName}.${realName}; /*8.6*/`)
+              pushDecode(`      pdef::proto::${colonJoin(objPath)}::${structureName} &v = ${objName}.${realName} = {}; /*8.4*/`)
+              pushEncode(`      pdef::proto::${colonJoin(objPath)}::${structureName} &v = ${objName}.${realName}; /*8.5*/`)
+              pushSize(`      pdef::proto::${colonJoin(objPath)}::${structureName} &v = ${objName}.${realName}; /*8.6*/`)
             }
           }
           visitType(n, caseType, structPaddingLevel + 2, (isScoped && realName) ? objPath.concat(promoteToPascalOrSuffix(realName)) : objPath, true)
@@ -408,20 +441,20 @@ function visitRoot (root, mode) {
       } else if (typeName === 'mapper') {
         const actualType = fieldType[1]
         if (fieldName.endsWith('^')) {
-          pushSizeEncode(`  ${protodefTypeToCpp[actualType] ?? ('pdef::proto::' + actualType)} ${n} = ${objName}.${n}; /*0.3*/`)
+          pushSizeEncode(`  ${protodefTypeToCpp[actualType] ?? ('pdef::proto::' + actualType)} ${n} = ${structPropName}; /*0.3*/`)
         }
         pushSize(`  ${makeSizeStr(actualType, [objName, n])}; /*${fieldName}: ${actualType}*/ /*7.0*/`)
         pushEncode(`  ${makeEncodeStr(actualType, [objName, n])}; /*7.1*/`)
         pushDecode(`  ${makeDecodeStr(actualType, [objName, n])}; /*7.2*/`)
         if (fieldName.endsWith('^')) {
-          pushDecode(`  ${protodefTypeToCpp[actualType] ?? ('pdef::proto::' + actualType)} &${n} = ${objName}.${n}; /*0.7*/`)
+          pushDecode(`  ${protodefTypeToCpp[actualType] ?? ('pdef::proto::' + actualType)} &${n} = ${structPropName}; /*0.7*/`)
         }
       } else if (typeName === 'container') {
         const structureName = promoteToPascalOrSuffix(fieldName)
-        const varName = `${objName}.${n}`
-        pushDecode(`  pdef::proto::${objPath.join('::')}::${structureName} &v = ${objName}.${n} = {}; /*${JSON.stringify(objPath)}*/ /*7.3*/`)
-        pushEncode(`  pdef::proto::${objPath.join('::')}::${structureName} &v = ${isAnon ? `*` : ''}${objName}.${n}; /*${JSON.stringify(objPath)}*/ /*7.4*/`)
-        pushSize(`  ${isAnon ? `EXPECT_OR_BAIL(${varName}); ` : ''}pdef::proto::${objPath.join('::')}::${structureName} &v = ${isAnon ? `*` : ''}${objName}.${n}; /*${JSON.stringify(objPath)}*/ /*7.4*/`)
+        const varName = `${structPropName}`
+        pushDecode(`  pdef::proto::${colonJoin(objPath)}::${structureName} &v = ${structPropName} = {}; /*${JSON.stringify(objPath)}*/ /*7.3*/`)
+        pushEncode(`  pdef::proto::${colonJoin(objPath)}::${structureName} &v = ${isAnon ? `*` : ''}${structPropName}; /*${JSON.stringify(objPath)}*/ /*7.4*/`)
+        pushSize(`  ${isAnon ? `EXPECT_OR_BAIL(${varName}); ` : ''}pdef::proto::${colonJoin(objPath)}::${structureName} &v = ${isAnon ? `*` : ''}${structPropName}; /*${JSON.stringify(objPath)}*/ /*7.4*/`)
       } else {
         // TODO: handle container types
         // we'd call into the specific encode function for this type
@@ -432,32 +465,44 @@ function visitRoot (root, mode) {
     }
   }
 
-  function encodingFromContainer (name, container, structPaddingLevel = 0, objPath, excludeHeaders) {
-    if (!Array.isArray(objPath)) throw new Error('objPath is required')
-    if (mode === 'struct') return
+  function writeHeader (name, structPaddingLevel) {
     const pad = (str) => '  '.repeat(structPaddingLevel) + str
     const pushSize = (str) => { sizeLines += pad(str) + '\n' }
     const pushEncode = (str) => { encodeLines += pad(str) + '\n' }
     const pushDecode = (str) => { decodeLines += pad(str) + '\n' }
+    pushEncode(`bool ${name}(pdef::Stream &stream, const pdef::proto::${name} &obj, bool allocate = true) {`)
+    pushEncode(`  if (allocate) { auto writeSize = pdef::proto::size::${name}(obj); if (!writeSize) return false; stream.reserve(stream, writeSize); }`)
+    pushDecode(`bool ${name}(pdef::Stream &stream, pdef::proto::${name} &obj) {`)
+    pushSize(`size_t ${name}(pdef::Stream &stream, const pdef::proto::${name} &obj) {`)
+    pushSize('  size_t len = 0;')
+  }
+
+  function writeFooter (name, structPaddingLevel) {
+    const pad = (str) => '  '.repeat(structPaddingLevel) + str
+    const pushSize = (str) => { sizeLines += pad(str) + '\n' }
+    const pushEncode = (str) => { encodeLines += pad(str) + '\n' }
+    const pushDecode = (str) => { decodeLines += pad(str) + '\n' }
+    pushSize('  return len;')
+    pushSize('}')
+    pushEncode('  return true;')
+    pushEncode('}')
+    pushDecode('  return true;')
+    pushDecode('}')
+  }
+
+  function encodingFromContainer (name, container, structPaddingLevel = 0, objPath, excludeHeaders) {
+    if (!Array.isArray(objPath)) throw new Error('objPath is required')
+    if (mode === 'struct') return
 
     if (!excludeHeaders) {
-      pushEncode(`bool ${name}(pdef::Stream &stream, const pdef::proto::${name} &obj, bool allocate = true) {`)
-      pushEncode(`  if (allocate) { auto writeSize = pdef::proto::size::${name}(obj); if (!writeSize) return false; stream.reserve(stream, writeSize); }`)
-      pushDecode(`bool ${name}(pdef::Stream &stream, pdef::proto::${name} &obj) {`)
-      pushSize(`size_t ${name}(pdef::Stream &stream, const pdef::proto::${name} &obj) {`)
-      pushSize('  size_t len = 0;')
+      writeHeader(name, structPaddingLevel)
     }
     for (const [fieldName, fieldType] of Object.entries(container)) {
       if (fieldName.startsWith('*')) continue
       encodeType(fieldName, fieldType, structPaddingLevel, objPath)
     }
     if (!excludeHeaders) {
-      pushSize('  return len;')
-      pushSize('}')
-      pushEncode('  return true;')
-      pushEncode('}')
-      pushDecode('  return true;')
-      pushDecode('}')
+      writeFooter(name, structPaddingLevel)
     }
   }
 
@@ -473,7 +518,10 @@ function visitRoot (root, mode) {
       if (!Array.isArray(_type) && typeof _type === 'object') { // a container
         structFromContainer(structName, _type, structPaddingLevel + 1)
         // encode type with typeArgs as type
+        // if it's a top-level we need to add a header/footer as only encodingFromContainer will add it
+        if (structPaddingLevel === 0) writeHeader(structName, structPaddingLevel)
         encodeType(structName, unretardify(type), structPaddingLevel, objPath, excludeHeaders)
+        if (structPaddingLevel === 0) writeFooter(structName, structPaddingLevel)        
       } else if (structPaddingLevel) {
         encodeType(structName, unretardify(type), structPaddingLevel, objPath, excludeHeaders)
       }
