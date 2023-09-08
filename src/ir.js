@@ -44,8 +44,14 @@ const fs = require('fs')
 function preprocess (schema) {
   function fixCompareToType (type) {
     const fix = type.replaceAll('../', '')
-    if (fix.startsWith('/')) return type
-    return fix.split('.')[0]
+    if (fix.startsWith('/')) return [type]
+    // mcdata-pc
+    if (fix.includes('/')) { // if we *still* have a slash, it's likely supposed to be a dot
+      const x = fix.replaceAll('/', '.')
+      return [x.split('.')[0], x]
+    }
+    // end mcdata-pc
+    return [fix.split('.')[0]]
   }
 
   function walkBackwardAndInject (untilMatch, parent, injectable) {
@@ -77,13 +83,27 @@ function preprocess (schema) {
 
     } else if (Array.isArray(type)) {
       type.parent = parent
+
+      if (schema[type[0]] && (schema[type[0]][0] === 'switch')) {
+        console.log('Inlining root switch', type[0])
+        const rootSwitch = schema[type[0]][1]
+        const next = { ...rootSwitch, ...type[1] }
+        type[0] = 'switch'
+        type[1] = next
+        console.log('Inlined root switch', JSON.stringify(type))
+      }
+
       const [name, ...args] = type
       if (name === 'container') {
         visitContainer(args[0], parent)
       } else if (name === 'switch') {
         const cases = args[0].fields
         cases.default = args[0].default
-        const compareTo = fixCompareToType(args[0].compareTo)
+        const [compareTo, shouldReplace] = fixCompareToType(args[0].compareTo)
+        if (shouldReplace) {
+          console.log('Replacing compareTo', args[0].compareTo, '->', shouldReplace)
+          args[0].compareTo = shouldReplace
+        }
         if (compareTo.startsWith('/')) {
           // Special case, ignore for now
         } else {
@@ -114,8 +134,25 @@ function preprocess (schema) {
   }
 
   for (const typeName in schema) {
-    visitType(schema[typeName], schema)
+    const rootType = schema[typeName]
+    // mcdata-pc handling
+    const typename = rootType[0]
+    if (typename === 'switch') {
+      console.log('Ignoring root-level switch statement [', typeName, '], will be inlined later')
+      continue
+    }
+    // end mcdata-pc handling
+    visitType(rootType, schema)
   }
+  // mcdata handling: delete all root-level switch statements as they've been inlined
+  for (const typeName in schema) {
+    const rootType = schema[typeName]
+    const typename = rootType[0]
+    if (typename === 'switch') {
+      delete schema[typeName]
+    }
+  }
+  // end mcdata handling
   return schema
 }
 
@@ -172,6 +209,9 @@ function debloatSchema (bloatedSchema) {
     addMaybe (name, type, metadata) { return this._set('?' + name, type, metadata) }
 
     dedupeAnon () {
+      // TODO: this function causes reordering of the object keys, which is not ideal
+      // it's ok because it only is adding "?" prefix fields that are only used in struct
+      // generation and not for size/encode/decode step (for those steps "?" prefix are ignored).
       const deleteAllAnonSubTypes = (forKey) => {
         for (const key in this.vars) {
           if (key.startsWith(forKey + ',') || key === forKey) {
@@ -607,10 +647,13 @@ module.exports = {
 
 if (!module.parent) {
   // debloatSchema(basicJSON)
-  let schema = require('./protocol.json').types
+  const pc1_18 = require('./pc1_18.json')
+  let schema = { ...pc1_18.types, ...pc1_18.play.toServer.types } 
+  // let schema = require('./protocol.json').types
   // schema = {
   //   // ItemLegacy:schema.ItemLegacy,
   //   // Recipes:schema.Recipes,
+  //   packet_text: schema.packet_text,
   //   packet_interact: schema.packet_interact,
   // }
   const pp = preprocess(schema)

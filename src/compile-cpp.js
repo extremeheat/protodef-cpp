@@ -129,7 +129,7 @@ function unretardify (objOrArr) {
 }
 
 function deanonymizeStr (fieldName) {
-  return fieldName.replaceAll('?', '').replaceAll(',', '_').replaceAll('^', '')
+  return fieldName.replaceAll('?', '').replaceAll(',', '_').replaceAll('^', '').replaceAll(':', '_')
 }
 
 function promoteToPascalOrSuffix (str) {
@@ -345,9 +345,9 @@ function visitRoot (root, mode) {
     const builtinEncodeFn = protodefTypeToCppEncode[typeName]
     if (builtinEncodeFn) {
       if (fieldName.endsWith('^')) {
-        pushSizeEncode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} ${n} = ${structPropName}; /*0.1*/`)
+        pushSizeEncode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} &${n} = ${structPropName}; /*0.1*/`)
       } else {
-        pushSizeEncode(`  ${makeSizeStr(typeName, [objName, n])}; /*0.2*/`)
+        pushSize(`  ${makeSizeStr(typeName, [objName, n])}; /*0.2*/`)
       }
       pushEncode('  ' + makeEncodeStr(typeName, [objName, n]) + '; /*0.4*/')
       pushDecode('  ' + makeDecodeStr(typeName, [objName, n], isAnon) + '; /*0.5*/')
@@ -446,7 +446,7 @@ function visitRoot (root, mode) {
       } else if (typeName === 'mapper') {
         const actualType = fieldType[1]
         if (fieldName.endsWith('^')) {
-          pushSizeEncode(`  ${protodefTypeToCpp[actualType] ?? ('pdef::proto::' + actualType)} ${n} = ${structPropName}; /*0.3*/`)
+          pushSizeEncode(`  ${protodefTypeToCpp[actualType] ?? ('pdef::proto::' + actualType)} &${n} = ${structPropName}; /*0.3*/`)
         }
         pushSize(`  ${makeSizeStr(actualType, [objName, n])}; /*${fieldName}: ${actualType}*/ /*7.0*/`)
         pushEncode(`  ${makeEncodeStr(actualType, [objName, n])}; /*7.1*/`)
@@ -461,11 +461,17 @@ function visitRoot (root, mode) {
         pushEncode(`  pdef::proto::${colonJoin(objPath)}::${structureName} &v = ${isAnon ? `*` : ''}${structPropName}; /*${JSON.stringify(objPath)}*/ /*7.4*/`)
         pushSize(`  ${isAnon ? `EXPECT_OR_BAIL(${varName}); ` : ''}pdef::proto::${colonJoin(objPath)}::${structureName} &v = ${isAnon ? `*` : ''}${structPropName}; /*${JSON.stringify(objPath)}*/ /*7.4*/`)
       } else {
-        // TODO: handle container types
+        // TODO: handle custom types
         // we'd call into the specific encode function for this type
+        if (fieldName.endsWith('^')) {
+          pushSizeEncode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} &${n} = ${structPropName}; /*0.1*/`)
+        }
         pushSize(`  ${makeSizeStr(Array.isArray(fieldType) ? fieldType[0] : fieldType, [objName, n], isAnon)}; /*${fieldName} ${structPaddingLevel}*/ /*4.0*/`)
         pushEncode(`  ${makeEncodeStr(Array.isArray(fieldType) ? fieldType[0] : fieldType, [objName, n], isAnon)}; /*${typeName}*/ /*4.1*/`)
         pushDecode(`  ${makeDecodeStr(Array.isArray(fieldType) ? fieldType[0] : fieldType, [objName, n], isAnon)}; /*4.2*/`)
+        if (fieldName.endsWith('^')) {
+          pushDecode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} &${n} = ${structPropName}; /*0.7*/`)
+        }
       }
     }
   }
