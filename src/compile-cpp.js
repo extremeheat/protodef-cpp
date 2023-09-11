@@ -28,7 +28,10 @@ const protodefTypeToCpp = {
   lf64: 'double',
   bool: 'bool',
   varint: 'int',
-  cstring: 'std::string'
+  cstring: 'std::string',
+  varint64: 'int64_t',
+  zigzag32: 'int',
+  zigzag64: 'int64_t',
   // buffer: 'std::vector<uint8_t>'
 }
 const protodefTypeToCppEncode = {
@@ -90,24 +93,47 @@ const protodefTypeSizes = {
 const customTypes = {
   pstring: {
     struct (args, name, makeCallingCode) {
-      return `using ${name} = std::string;`
+      return `std::string ${name};`
     },
     read (args, name, makeCallingCode) {
       return `
-int ${name}_strlen = ${makeCallingCode(args.countType)};
-obj->${name} = stream->readString(${name}_strlen);
+int ${name}_strlen; ${makeCallingCode(args.countType, `${name}_strlen`)};
+obj.${name} = stream->readString(${name}_strlen);
 `.trim()
     },
     write (args, name, makeCallingCode) {
       return `
-${makeCallingCode(args.countType, ['obj', name, '.length()'])};
-stream->writeString(obj->${name}, 'obj->${name}.length()');
+${makeCallingCode(args.countType, ['obj', name, 'length()'])};
+stream->writeString(obj->${name});
 `.trim()
     },
     size (args, name, makeCallingCode) {
       return `
-${makeCallingCode(args.countType, ['obj', name, '.length()'])};
-size += obj->${name}.length();
+${makeCallingCode(args.countType, ['obj', name, 'length()'])};
+  size += obj.${name}.length();
+`.trim()
+    }
+  },
+  buffer: {
+    struct (args, name, makeCallingCode) {
+      return `std::vector<uint8_t> ${name};`
+    },
+    read (args, name, makeCallingCode) {
+      return `
+int ${name}_len; ${makeCallingCode(args.countType, `${name}_len`)};
+obj.${name} = stream->readBuffer(${name}_len);
+`.trim()
+    },
+    write (args, name, makeCallingCode) {
+      return `
+${makeCallingCode(args.countType, ['obj', name, 'size()'])};
+stream->writeBuffer(obj->${name});
+`.trim()
+    },
+    size (args, name, makeCallingCode) {
+      return `
+${makeCallingCode(args.countType, ['obj', name, 'size()'])};
+size += obj.${name}.size();
 `.trim()
     }
   }
@@ -157,8 +183,9 @@ const dotJoin = (...arr) => filterNull(arr).join('.')
 const colonJoin = (...arr) => filterNull(arr).join('::')
 
 const headers = `
-#define WRITE_OR_BAIL(fn, val) if (!fn(stream, val)) { return false; }
-#define READ_OR_BAIL(fn, val) if (!fn(stream, val)) { return false; }
+#include "stream.h"
+#define WRITE_OR_BAIL(fn, val) if (!stream.fn(val)) { return false; }
+#define READ_OR_BAIL(fn, val) if (!steam.fn(val)) { return false; }
 #define EXPECT_OR_BAIL(val) if (!val) { return false; }
 `
 const footer = `
@@ -198,7 +225,17 @@ function visitRoot (root, mode) {
     fieldType = unretardify(fieldType)
     console.log(`  ${fieldName}: ${fieldType}`)
     if (fieldName.endsWith('?')) return // When generating structs, we ignore switches
-    const typeName = fieldType[0]
+    let typeName = fieldType[0]
+    let oldTypeName = typeName
+    const isRootArray = root[typeName] && root[typeName][0] === 'array'
+    const shouldInlineFromRoot = checkShouldInlineFromRoot(typeName)
+    if (shouldInlineFromRoot) {
+      fieldType = unretardify(root[typeName])
+      typeName = fieldType[0]
+      // push('// inlined from root')
+    } else {
+      // push('// not inlined from root: ' + typeName)
+    }
     const n = deanonymizeStr(fieldName)
 
     const isAnon = fieldName.startsWith('?')
@@ -214,12 +251,11 @@ function visitRoot (root, mode) {
       return s
     }
 
-    const isRootArray = root[typeName] && root[typeName][0] === 'array'
     if (typeName === 'void') return // TODO: remove this in the IR
     else if (protodefTypeToCpp[typeName]) push(`  ${protodefTypeToCpp[typeName]} ${n}; /*0.0*/`)
     else if (isRootArray) {
-      const rootArrayType = root[typeName][3]
-      push(`  ${typeStrForType(Array.isArray(rootArrayType) ? rootArrayType[0] : typeName, n, 1)}; /*1.0*/`)
+      const rootArrayType = root[oldTypeName][3]
+      push(`  ${typeStrForType(Array.isArray(rootArrayType) ? rootArrayType[0] : oldTypeName, n, 1)}; /*1.0*/`)
     } else if (typeName === 'container' || typeName === 'array' || typeName === 'mapper') {
       // We need 2 separate fields in the struct for this.
       // One for the enum, and one for the actual value.
@@ -246,6 +282,7 @@ function visitRoot (root, mode) {
             }
           }
         }
+        // TODO: some recursion is needed here to determine the type of the array
         const inLocalScope = actualType[0] === 'container' || protodefTypeToCpp[typename]
         push(`  ${typeStrForType(protodefTypeToCpp[typename] || typename, n, arrayLevel, inLocalScope)}; /*3.0*/`)
         // push(`  std::vector<${newName}> ${deanonymizeStr(fieldName)}; /*3*/`)
@@ -253,15 +290,15 @@ function visitRoot (root, mode) {
         push(`  ${typeStrForType(newName, n, false, true)}; /*3.2*/`)
         // push(`  ${newName} ${deanonymizeStr(fieldName)}; /*3*/`)
       }
-    } else if (nativeTypes.includes(typeName) || customTypes[typeName]) {
-      push('/*5*/ // custom type, TODO')
-      return// TODO
+    } else if (customTypes[typeName]) {
       const typeImpl = customTypes[typeName]
-      if (!typeImpl) throw new Error(`Missing custom type ${typeName}`)
-      const structCode = typeImpl.struct(fieldType, fieldName, structPaddingLevel)
-      push(`// custom ${typeName} L${structPaddingLevel}`)
-      structCode.split('\n').forEach(push)
-    } else push(`  ${typeStrForType(typeName, n)}; /*4.0*/`)
+      const structCode = typeImpl.struct(fieldType, n, (type, args) => typeStrForType(type, args))
+      structCode.split('\n').forEach(e => push('  ' + e + ` /*5.0*/`))
+    } else {
+      push(` // ERROR: unknown type ${typeName} L${structPaddingLevel} /*5.1*/`)
+      // throw new Error(`Missing custom type ${typeName}`)
+      // push(`  ${typeStrForType(typeName, n)}; /*4.0*/`)
+    }
   }
 
   function structFromMapper (name, mapper, structPaddingLevel) {
@@ -308,6 +345,16 @@ function visitRoot (root, mode) {
     }
   }
 
+  function checkShouldInlineFromRoot (typeName) {
+    const isRootArray = root[typeName] && root[typeName][0] === 'array'
+    let shouldInlineFromRoot = Array.isArray(root[typeName]) && root[typeName][0] !== 'native'
+    if (shouldInlineFromRoot && isRootArray) {
+      // an array can be its own container. we only inline if the type is an array of primitives
+      shouldInlineFromRoot = Array.isArray(root[typeName][3])
+    }
+    return shouldInlineFromRoot
+  }
+
   function encodeType (fieldName, fieldType, structPaddingLevel = 0, objPath) {
     if (!Array.isArray(objPath)) throw new Error('objPath is required')
     const objName = objPath.length > 1 ? 'v' : 'obj'
@@ -324,15 +371,11 @@ function visitRoot (root, mode) {
 
     let typeName = fieldType[0]
     const isRootArray = root[typeName] && root[typeName][0] === 'array'
-    let shouldInlineFromRoot = Array.isArray(root[typeName]) && root[typeName][0] !== 'native'
-    if (shouldInlineFromRoot && isRootArray) {
-      // an array can be its own container. we only inline if the type is an array of primitives
-      shouldInlineFromRoot = Array.isArray(root[typeName][3])
-    }
+    const shouldInlineFromRoot = checkShouldInlineFromRoot(typeName)
     if (shouldInlineFromRoot) {
       fieldType = unretardify(root[typeName])
       typeName = fieldType[0]
-      pushAll('// inlined from root')
+      // pushAll('// inlined from root')
     }
     // In case it's modified
     const variableName = fieldType[5] || fieldType['*name'] || fieldName
@@ -466,9 +509,29 @@ function visitRoot (root, mode) {
         if (fieldName.endsWith('^')) {
           pushSizeEncode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} &${n} = ${structPropName}; /*0.1*/`)
         }
-        pushSize(`  ${makeSizeStr(Array.isArray(fieldType) ? fieldType[0] : fieldType, [objName, n], isAnon)}; /*${fieldName} ${structPaddingLevel}*/ /*4.0*/`)
-        pushEncode(`  ${makeEncodeStr(Array.isArray(fieldType) ? fieldType[0] : fieldType, [objName, n], isAnon)}; /*${typeName}*/ /*4.1*/`)
-        pushDecode(`  ${makeDecodeStr(Array.isArray(fieldType) ? fieldType[0] : fieldType, [objName, n], isAnon)}; /*4.2*/`)
+        if (Array.isArray(fieldType)) {
+          const actualType = fieldType[0]
+          if (customTypes[actualType]) {
+            const typeImpl = customTypes[actualType]
+            const sizeCode = typeImpl.size(fieldType[1], fieldName, (type, args) => makeSizeStr(type, args, isAnon))
+            const encodeCode = typeImpl.write(fieldType[1], fieldName, (type, args) => makeEncodeStr(type, args, isAnon))
+            const decodeCode = typeImpl.read(fieldType[1], fieldName, (type, args) => makeDecodeStr(type, args, isAnon))
+            pushSize(`  ${sizeCode} /*${fieldName}: ${actualType}*/ /*4.1*/`)
+            pushEncode(`  ${encodeCode} /*${fieldName}: ${actualType}*/ /*4.2*/`)
+            pushDecode(`  ${decodeCode} /*${fieldName}: ${actualType}*/ /*4.3*/`)
+          } else if (root[actualType] && root[actualType][0] !== 'native') {
+            pushSize(`  ${makeSizeStr(Array.isArray(fieldType) ? fieldType[0] : fieldType, [objName, n], isAnon)}; /*${fieldName} ${structPaddingLevel}*/ /*4.1*/`)
+            pushEncode(`  ${makeEncodeStr(Array.isArray(fieldType) ? fieldType[0] : fieldType, [objName, n], isAnon)}; /*${typeName}*/ /*4.2*/`)
+            pushDecode(`  ${makeDecodeStr(Array.isArray(fieldType) ? fieldType[0] : fieldType, [objName, n], isAnon)}; /*4.3*/`)
+          } else {
+            console.warn('Do not know how to handle unknown type: ' + actualType)
+            pushSize(`// ERROR: unknown type ${actualType} /*4.1*/`)
+            pushEncode(`// ERROR: unknown type ${actualType} /*4.2*/`)
+            pushDecode(`// ERROR: unknown type ${actualType} /*4.3*/`)
+          }
+        } else {
+
+        }
         if (fieldName.endsWith('^')) {
           pushDecode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} &${n} = ${structPropName}; /*0.7*/`)
         }

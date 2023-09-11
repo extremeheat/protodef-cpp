@@ -647,9 +647,9 @@ module.exports = {
 
 if (!module.parent) {
   // debloatSchema(basicJSON)
-  const pc1_18 = require('./pc1_18.json')
-  let schema = { ...pc1_18.types, ...pc1_18.play.toServer.types } 
-  // let schema = require('./protocol.json').types
+  // const pc1_18 = require('./pc1_18.json')
+  // let schema = { ...pc1_18.types, ...pc1_18.play.toClient.types } 
+  let schema = require('./protocol.json').types
   // schema = {
   //   // ItemLegacy:schema.ItemLegacy,
   //   // Recipes:schema.Recipes,
