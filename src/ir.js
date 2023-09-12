@@ -347,6 +347,19 @@ function debloatSchema (bloatedSchema) {
     return fix
   }
 
+  function sanitizeMapper (type) {
+    const vals = []
+    let i = 0
+    for (const key in type) {
+      const val = type[key]
+      if (vals.includes(val)) {
+        type[key] = val + '_' + (i++)
+      }
+      vals.push(val)
+    }
+    return type
+  }
+
   function visit (root, simplified, isAnonIteration = false) {
     // console.log('Visiting...', JSON.stringify(root), isAnonIteration ? '(anon)' : '')
 
@@ -393,9 +406,9 @@ function debloatSchema (bloatedSchema) {
             nextField.finish()
           } else if (_actualType === 'mapper') {
             // This is adding to the nested scope of the switch:
-            next.add(field, ['mapper', _args.type, _args.mappings])
+            next.add(field, ['mapper', _args.type, sanitizeMapper(_args.mappings)])
             // This is added to the parent for each type combo of the switch:
-            sharedScope.add('mapper', ['mapper', _args.type, _args.mappings])
+            sharedScope.add('mapper', ['mapper', _args.type, sanitizeMapper(_args.mappings)])
             // This just adds all the children of the switch to the parent, without any wrapper:
             // if (anon) simplified.addMaybe(field, ['mapper', _args.type, _args.mappings])
           } else if (_actualType === 'array') {
@@ -460,7 +473,7 @@ function debloatSchema (bloatedSchema) {
       } else if (actualType === 'switch') {
         handleSwitch(newName, args, anon, simplified)
       } else if (actualType === 'mapper') {
-        addToScope(newName, ['mapper', args.type, args.mappings])
+        addToScope(newName, ['mapper', args.type, sanitizeMapper(args.mappings)])
       } else if (actualType === 'array') {
         // visit(args.type[1], children)
         const count = args.count ? [args.count, args.countVarType] : null
@@ -650,6 +663,10 @@ if (!module.parent) {
   // const pc1_18 = require('./pc1_18.json')
   // let schema = { ...pc1_18.types, ...pc1_18.play.toClient.types } 
   let schema = require('./protocol.json').types
+  // move mcpe_packet to the end
+  const oldmcpe_packet = schema.mcpe_packet
+  delete schema.mcpe_packet
+  schema.mcpe_packet = oldmcpe_packet
   // schema = {
   //   // ItemLegacy:schema.ItemLegacy,
   //   // Recipes:schema.Recipes,
