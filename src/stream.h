@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 #define CHECK_BOUNDS(index) if (index >= this->length) { return false; }
 /*
   u8: 'writeByte',
@@ -36,8 +37,7 @@ struct BinaryStream {
 
   BinaryStream(int length) : length(length) {}
 
-  int sizeOfVarIntPrefixedString(std::string value) { return sizeOfVarInt(value.length()) + value.length(); }
-  int sizeOfVarIntPrefixedBuffer(char *value, int bufferLength) { return sizeOfVarInt(bufferLength) + bufferLength; }
+  // Varints
   int sizeOfVarInt(int32_t value) {
     if (value < 0) return 10;
     if (value < 0x80) return 1;
@@ -61,11 +61,11 @@ struct BinaryStream {
   }
   int sizeOfZigZagVarLong(int64_t value) { return sizeOfVarLong((value << 1) ^ (value >> 63)); }
   int sizeOfVarInt64(int64_t value) { return sizeOfVarLong(value); }
-  int sizeOfVarInt64PrefixedString(std::string value) { return sizeOfVarInt64(value.length()) + value.length(); }
-  int sizeOfVarInt64PrefixedBuffer(char *value, int bufferLength) { return sizeOfVarInt64(bufferLength) + bufferLength; }
-  int sizeOfZigZagVarIntPrefixedString(std::string value) { return sizeOfZigZagVarInt(value.length()) + value.length(); }
-  int sizeOfBuffer(char *value, int bufferLength) { return bufferLength; }
 
+  // Buffer/String
+  int sizeOfBuffer(std::vector<unsigned char> &buffer) { return buffer.size(); }
+  int sizeOfString(std::string &value) { return value.length(); }
+  
   bool writeByte(int8_t value) {
     CHECK_BOUNDS(writeIndex);
     buffer[writeIndex++] = value;
@@ -152,30 +152,16 @@ struct BinaryStream {
     buffer[writeIndex++] = 0;
     return true;
   }
-  bool writeIntPrefixedString(std::string &value) {
-    CHECK_BOUNDS(writeIndex + value.length() + 4);
-    memcpy(buffer + writeIndex, value.c_str(), value.length());
-    writeIndex += value.length() + 4;
-    return true;
-  }
-  bool writeUnsignedVarIntPrefixedString(std::string &value) {
-    CHECK_BOUNDS(writeIndex + sizeOfVarIntPrefixedString(value));
-    int wroteLength = writeUnsignedVarInt(value.length());
-    memcpy(buffer + writeIndex, value.c_str(), value.length());
-    writeIndex += value.length();
-    return wroteLength;
-  }
-  bool writeZigZagVarIntPrefixedString(std::string &value) {
-    CHECK_BOUNDS(writeIndex + sizeOfZigZagVarIntPrefixedString(value));
-    writeZigZagVarInt(value.length());
-    memcpy(buffer + writeIndex, value.c_str(), value.length());
+  bool writeString(std::string &value) {
+    CHECK_BOUNDS(writeIndex + value.length());
+    memcpy(buffer + writeIndex, value.data(), value.length());
     writeIndex += value.length();
     return true;
   }
-  bool writeBuffer(BinaryStream &value) {
-    CHECK_BOUNDS(writeIndex + value.length);
-    memcpy(buffer + writeIndex, value.buffer, value.length);
-    writeIndex += value.length;
+  bool writeBuffer(std::vector<unsigned char> &value) {
+    CHECK_BOUNDS(writeIndex + value.size());
+    memcpy(buffer + writeIndex, value.data(), value.size());
+    writeIndex += value.size();
     return true;
   }
   int writeUnsignedVarInt(uint32_t value) {
@@ -213,23 +199,24 @@ struct BinaryStream {
     return writeUnsignedVarLong((value << 1) ^ (value >> 63));
   }
   // Read methods must be checked by the caller
-  int8_t readByte() {
-    return buffer[readIndex++];
+  bool readByte(int8_t &value) {
+    value = buffer[readIndex++];
+    return true;
   }
-  uint16_t readUShortBE() {
-    uint16_t value = buffer[readIndex++] << 8;
+  bool readUShortBE(uint16_t &value) {
+    value = buffer[readIndex++] << 8;
     value |= buffer[readIndex++];
-    return value;
+    return true;
   }
-  uint32_t readUIntBE() {
-    uint32_t value = buffer[readIndex++] << 24;
+  bool readUIntBE(uint32_t &value) {
+    value = buffer[readIndex++] << 24;
     value |= buffer[readIndex++] << 16;
     value |= buffer[readIndex++] << 8;
     value |= buffer[readIndex++];
     return value;
   }
-  uint64_t readULongBE() {
-    uint64_t value = static_cast<uint64_t>(buffer[readIndex++]) << 56LL;
+  bool readULongBE(uint64_t &value) {
+    value = static_cast<uint64_t>(buffer[readIndex++]) << 56LL;
     value |= static_cast<uint64_t>(buffer[readIndex++]) << 48;
     value |= static_cast<uint64_t>(buffer[readIndex++]) << 40;
     value |= static_cast<uint64_t>(buffer[readIndex++]) << 32;
@@ -237,71 +224,69 @@ struct BinaryStream {
     value |= static_cast<uint64_t>(buffer[readIndex++]) << 16;
     value |= static_cast<uint64_t>(buffer[readIndex++]) << 8;
     value |= static_cast<uint64_t>(buffer[readIndex++]);
-    return value;
+    return true;
   }
-  int16_t readShortBE() {
-    return readUShortBE();
+  bool readShortBE(int16_t &value) {
+    return readUShortBE((uint16_t&) value);
   }
-  int32_t readIntBE() {
-    return readUIntBE();
+  bool readIntBE(int32_t &value) {
+    return readUIntBE((uint32_t&) value);
   }
-  int64_t readLongBE() {
-    return readULongBE();
+  bool readLongBE(int64_t &value) {
+    return readULongBE((uint64_t&) value);
   }
-  float readFloatBE() {
-    uint32_t value = readUIntBE();
-    return *(float *)&value;
+  bool readFloatBE(float &value) {
+    return readUIntBE(*(uint32_t*)&value);
   }
-  double readDoubleBE() {
-    uint64_t value = readULongBE();
-    return *(double *)&value;
+  bool readDoubleBE(double &value) {
+    return readULongBE(*(uint64_t*)&value);
   }
-  uint16_t readUShortLE() {
-    uint16_t value;
+  bool readUShortLE(uint16_t &value) {
     memcpy(&value, buffer + readIndex, 2);
     readIndex += 2;
-    return value;
+    return true;
   }
-  uint32_t readUIntLE() {
-    uint32_t value;
+  bool readUIntLE(uint32_t &value) {
     memcpy(&value, buffer + readIndex, 4);
     readIndex += 4;
-    return value;
+    return true;
   }
-  uint64_t readULongLE() {
-    uint64_t value;
+  bool readULongLE(uint64_t &value) {
     memcpy(&value, buffer + readIndex, 8);
     readIndex += 8;
-    return value;
+    return true;
   }
-  int16_t readShortLE() {
-    return readUShortLE();
+  bool readShortLE(int16_t &value) {
+    return readUShortLE((uint16_t&) value);
   }
-  int32_t readIntLE() {
-    return readUIntLE();
+  bool readIntLE(int32_t &value) {
+    return readUIntLE((uint32_t&) value);
   }
-  int64_t readLongLE() {
-    return readULongLE();
+  bool readLongLE(int64_t &value) {
+    return readULongLE((uint64_t&) value);
   }
-  float readFloatLE() {
-    uint32_t value = readUIntLE();
-    return *(float *)&value;
+  bool readFloatLE(float &value) {
+    memcpy(&value, buffer + readIndex, 4);
+    readIndex += 4;
+    return true;
   }
-  double readDoubleLE() {
-    uint64_t value = readULongLE();
-    return *(double *)&value;
+  double readDoubleLE(double &value) {
+    memcpy(&value, buffer + readIndex, 8);
+    readIndex += 8;
+    return true;
   }
-  bool readBool() {
-    return readByte() != 0;
+  bool readBool(bool &value) {
+    value = buffer[readIndex++] != 0;
+    return true;
   }
-  std::string readCString() {
-    std::string value;
+  bool readCString(std::string &value) {
     while (true) {
-      char c = readByte();
+      int8_t c;
+      if (!readByte(c)) return false;
       if (c == 0) break;
       value += c;
     }
-    return value;
+    return true;
   }
 };
 
