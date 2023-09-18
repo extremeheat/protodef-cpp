@@ -1,7 +1,8 @@
 const fs = require('fs')
 let ir = require('./redone.json')
 // ir = {
-//   ItemLegacy: ir.ItemLegacy,
+//   // ItemLegacy: ir.ItemLegacy,
+//   packet_emote_list: ir.packet_emote_list,
 //   // string: ir.string,
 //   // packet_available_commands: ir.packet_available_commands,
 //   // packet_education_settings: ir.packet_education_settings,
@@ -104,13 +105,13 @@ if (!stream.readString(obj.${name}, ${name}_strlen)) return false;
     write (args, name, makeCallingCode) {
       return `
 ${makeCallingCode(args.countType, ['obj', name, 'length()'])};
-stream.writeString(obj.${name});
+WRITE_OR_BAIL(writeString, obj.${name});
 `.trim()
     },
     size (args, name, makeCallingCode) {
       return `
 ${makeCallingCode(args.countType, ['obj', name, 'length()'])};
-  len += obj.${name}.length();
+len += obj.${name}.length();
 `.trim()
     }
   },
@@ -132,7 +133,7 @@ ${makeCallingCode(args.countType, ['obj', name, 'length()'])};
     write (args, name, makeCallingCode) {
       return `
 ${makeCallingCode(args.countType, ['obj', name, 'size()'])};
-stream.writeBuffer(obj.${name});
+WRITE_OR_BAIL(writeBuffer, obj.${name});
 `.trim()
     },
     size (args, name, makeCallingCode) {
@@ -410,7 +411,8 @@ function visitRoot (root, mode) {
 
     const variableName = fieldType[5] || fieldType['*name'] || fieldName
     const isAnon = variableName.startsWith('?')
-    const n = deanonymizeStr(variableName) + ((deanonymizeStr(variableName) !== deanonymizeStr(fieldName)) ? `/*~${variableName} < ${fieldName}*/` : '')
+    // const ctx = `/*~${variableName} < ${fieldName}*/`
+    const n = deanonymizeStr(variableName) + ((deanonymizeStr(variableName) !== deanonymizeStr(fieldName)) ? '' : '')
     
     if (shouldInlineFromRoot) {
       fieldType = unretardify(root[typeName])
@@ -422,27 +424,38 @@ function visitRoot (root, mode) {
     if (typeName === 'void') return // TODO: remove this in the IR
 
     const structPropName = dotJoin(objName, n)
+    let typePropName = protodefTypeToCpp[typeName] ?? `pdef::proto::${colonJoin(objPath)}::${typeName}`
 
     const builtinEncodeFn = protodefTypeToCppEncode[typeName]
     if (builtinEncodeFn) {
       if (fieldName.endsWith('^')) {
-        pushSizeEncode(`  const ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} &${n} = ${structPropName}; /*0.1*/`)
+        pushSizeEncode(`  const ${typePropName} &${n} = ${structPropName}; /*0.1*/`)
       } else {
         pushSize(`  ${makeSizeStr(typeName, [objName, n])}; /*0.2*/`)
       }
       pushEncode('  ' + makeEncodeStr(typeName, [objName, n]) + '; /*0.4*/')
       pushDecode('  ' + makeDecodeStr(typeName, [objName, n], isAnon) + '; /*0.5*/')
       // .... this ^ needs to be similarly handled in each case below for read/write/size
-      if (fieldName.endsWith('^')) pushDecode(`  const ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} &${n} = ${structPropName}; /*0.6*/`)
+      if (fieldName.endsWith('^')) pushDecode(`  ${typePropName} &${n} = ${structPropName}; /*0.6*/`)
     } else if (isRootArray && !shouldInlineFromRoot) {
-      const lengthType = root[typeName][1]
+      // A root array can be its own container. We only inline if the type is an array of primitives.
+      // So, here we consider the type to be a structure that already has compiled read/write/size functions.
+      const rootType = root[typeName]
+      const lengthType = rootType[1]
+      const lengthVar = rootType[2] // Not really possible from root
       pushEncode(`  ${makeEncodeStr(lengthType, [objName, n, 'size()'])}; /*2.1*/`)
-      pushEncode(`  for (const auto &v : ${structPropName}) { ${makeEncodeStr(typeName, 'v')}; } /*6*/`)
+      pushEncode(`  for (const auto &v : ${structPropName}) { ${makeEncodeStr(typeName, 'v')}; } /*2.2*/`)
       // TODO: Can't decode into .size() ! We need a separate variable for this.
-      pushDecode(`  ${makeDecodeStr(lengthType, [objName, n, 'size()'], isAnon)}; /*2.3*/`)
-      pushDecode(`  for (auto &v : ${structPropName}) { ${makeDecodeStr(typeName, 'v', isAnon)}; } /*6*/`)
       pushSize(`  ${makeSizeStr(lengthType, [objName, n, 'size()'])}; /*2.4*/`)
-      pushSize(`  for (const auto &v : ${structPropName}) { ${makeSizeStr(typeName, 'v')}; } /*6*/`)
+      pushSize(`  for (const auto &v : ${structPropName}) { ${makeSizeStr(typeName, 'v')}; } /*2.5*/`)
+      const typeStr = protodefTypeToCpp[lengthType] || 'int'
+      pushDecode(`  ${typeStr} ${n}_len; /*2.3*/`)
+      // pushDecode(`  ${makeDecodeStr(lengthType, [objName, n, 'size()'], isAnon)}; /*2.3*/`)
+      pushDecode(`  ${makeDecodeStr(lengthType, [n + '_len'])}; /*2.6*/`)
+      // Resize the std::vector so it has enough space to fit length
+      pushDecode(`  ${objName}.${n}.resize(${n}_len); /*2.7*/`)
+      pushDecode(`  for (int i = 0; i < ${n}_len; i++) { ${makeDecodeStr(typeName, [objName, n + '[i]'], false)}; } /*2.8*/`)
+      // pushDecode(`  for (auto &v : ${structPropName}) { ${makeDecodeStr(typeName, 'v', isAnon)}; } /*6*/`)
     } else {
       // We need 2 separate fields in the struct for this.
       // One for the enum, and one for the actual value.
@@ -458,20 +471,24 @@ function visitRoot (root, mode) {
           const [lengthVariable, lengthTyp] = lengthVar
           pushSize(`  ${makeSizeStr(lengthTyp, [lengthVariable, 'size()'])}; /*1.1*/`)
           pushEncode(`  ${makeEncodeStr(lengthTyp, [lengthVariable, 'size()'])}; /*1.2*/`)
-          // pushDecode(`  int ${lengthVariable}_len = *${lengthVariable}_ptr; /*1*/`)
+          // Resize the std::vector so it has enough space to fit length
+          pushDecode(`  ${objName}.${n}.resize(${lengthVariable}); /*1.6*/`)
         } else {
           pushSize(`  ${makeSizeStr(lengthType, [objName, n, 'size()'], isAnon)}; /*1.3*/`)
           pushEncode(`  ${makeEncodeStr(lengthType, [objName, n, 'size()'], isAnon)}; /*1.4*/`)
           const typeStr = protodefTypeToCpp[lengthType] || 'int'
-          pushDecode(`  ${typeStr} ${n}_len; /*1.5*/`)
-          pushDecode(`  ${makeDecodeStr(lengthType, [n + '_len'])}; /*1.5*/`)
+          pushDecode(`  ${typeStr} ${n}_len; ${makeDecodeStr(lengthType, [n + '_len'])}; /*1.5*/`)
+          // Resize the std::vector so it has enough space to fit length
+          pushDecode(`  ${objName}.${n}.resize(${n}_len); /*1.6*/`)
         }
         const actualType = unretardify(fieldType[3])
         if (actualType[0] === 'container') {
+          const arrayStructName = promoteToPascalOrSuffix(n)
+          typePropName = `pdef::proto::${colonJoin(objPath)}::${arrayStructName}`
           // inline
           pushSizeEncode(`  for (const auto &v : ${[objName, n].join('.')}) { /*5*/`)
-          if (lengthVar) pushDecode(`  for (int i = 0; i < ${lengthVar[0]}; i++) { /*5*/`), pushDecode(`    auto &v = ${[objName, n].join('.')}[i]; /*5.1*/`)
-          else pushDecode(`  for (int i = 0; i < ${n}_len; i++) { /*5*/`), pushDecode(`    auto &v = ${[objName, n].join('.')}[i]; /*5.1*/`)
+          if (lengthVar) pushDecode(`  for (int i = 0; i < ${lengthVar[0]}; i++) { /*5*/`), pushDecode(`    ${typePropName} &v = ${[objName, n].join('.')}[i]; /*5.1*/`)
+          else pushDecode(`  for (int i = 0; i < ${n}_len; i++) { /*5*/`), pushDecode(`    ${typePropName} &v = ${[objName, n].join('.')}[i]; /*5.1*/`)
           encodingFromContainer(newName, actualType[1], structPaddingLevel + 1, structPaddingLevel === 0 ? objPath.concat('') : objPath.concat(promoteToPascalOrSuffix(n)), true)
           pushSizeEncode('  }')
           pushDecode('  }')
@@ -517,7 +534,7 @@ function visitRoot (root, mode) {
             // TODO: handle optional fields
             const structureName = promoteToPascalOrSuffix(realName)
             if (!Array.isArray(caseType)) {
-              pushDecode(`      const pdef::proto::${colonJoin(objPath)}::${structureName} &v = ${objName}.${realName} = {}; /*8.4*/`)
+              pushDecode(`       ${objName}.${realName} = {}; pdef::proto::${colonJoin(objPath)}::${structureName} &v = *${objName}.${realName}; /*8.4*/`)
               // "expect or bail" is not needed here because we already checked the switch case
               pushEncode(`      const pdef::proto::${colonJoin(objPath)}::${structureName} &v = ${objName}.${realName}; /*8.5*/`)
               pushSize(`      EXPECT_OR_BAIL(${objName}.${realName}); const pdef::proto::${colonJoin(objPath)}::${structureName} &v = *${objName}.${realName}; /*8.6*/`)
@@ -556,12 +573,12 @@ function visitRoot (root, mode) {
           const actualType = fieldType[0]
           if (customTypes[actualType]) {
             const typeImpl = customTypes[actualType]
-            const sizeCode = typeImpl.size(fieldType[1], n, (type, args) => makeSizeStr(type, args, isAnon))
-            const encodeCode = typeImpl.write(fieldType[1], n, (type, args) => makeEncodeStr(type, args, isAnon))
-            const decodeCode = typeImpl.read(fieldType[1], n, (type, args) => makeDecodeStr(type, args, isAnon))
-            pushSize(`  ${sizeCode.replaceAll('obj', objName)} /*${fieldName}: ${actualType}*/ /*4.1*/`)
-            pushEncode(`  ${encodeCode.replaceAll('obj', objName)} /*${n}: ${actualType}*/ /*4.2*/`)
-            pushDecode(`  ${decodeCode.replaceAll('obj', objName)} /*${n}: ${actualType}*/ /*4.3*/`)
+            const sizeCode = typeImpl.size(fieldType[1], n, (type, args) => makeSizeStr(type, args, isAnon)).split('\n').map(e => pad('  ' + e.trim())).join('\n').trim()
+            const encodeCode = typeImpl.write(fieldType[1], n, (type, args) => makeEncodeStr(type, args, isAnon)).split('\n').map(e => pad('  ' + e.trim())).join('\n').trim()
+            const decodeCode = typeImpl.read(fieldType[1], n, (type, args) => makeDecodeStr(type, args, isAnon)).split('\n').map(e => pad('  ' + e.trim())).join('\n').trim()
+            pushSize(`  ${sizeCode.replaceAll('obj.', objName + '.')} /*${fieldName}: ${actualType}*/ /*4.1*/`)
+            pushEncode(`  ${encodeCode.replaceAll('obj.', objName + '.')} /*${n}: ${actualType}*/ /*4.2*/`)
+            pushDecode(`  ${decodeCode.replaceAll('obj.', objName + '.')} /*${n}: ${actualType}*/ /*4.3*/`)
           } else if (root[actualType] && root[actualType][0] !== 'native') {
             pushSize(`  ${makeSizeStr(Array.isArray(fieldType) ? fieldType[0] : fieldType, [objName, n], isAnon)}; /*${escapeComment(n)}*/ /*4.4*/`)
             pushEncode(`  ${makeEncodeStr(Array.isArray(fieldType) ? fieldType[0] : fieldType, [objName, n], isAnon)}; /*${typeName}*/ /*4.5*/`)
@@ -576,7 +593,7 @@ function visitRoot (root, mode) {
 
         }
         if (fieldName.endsWith('^')) {
-          pushDecode(`  const ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} &${n} = ${structPropName}; /*0.7*/`)
+          pushDecode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} &${n} = ${structPropName}; /*0.7*/`)
         }
       }
     }
@@ -588,11 +605,11 @@ function visitRoot (root, mode) {
     const pushEncode = (str) => { encodeLines += pad(str) + '\n' }
     const pushDecode = (str) => { decodeLines += pad(str) + '\n' }
     pushEncode(`bool ${name}(pdef::Stream &stream, const pdef::proto::${name} &obj, bool allocate = true) {`)
-    pushEncode(`  if (allocate) { auto writeSize = pdef::proto::size::${name}(stream, obj); if (!writeSize) return false; stream.reserve(stream, writeSize); }`)
+    pushEncode(`  if (allocate) { auto writeSize = pdef::proto::size::${name}(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }`)
     pushDecode(`bool ${name}(pdef::Stream &stream, pdef::proto::${name} &obj) {`)
     pushSize(`size_t ${name}(pdef::Stream &stream, const pdef::proto::${name} &obj) {`)
     pushSize('  size_t len = 0;')
-    encodeFwds.push(`bool ${name}(pdef::Stream &stream, const pdef::proto::${name} &obj, bool allocate = true);`)
+    encodeFwds.push(`bool ${name}(pdef::Stream &stream, const pdef::proto::${name} &obj, bool allocate);`)
     decodeFwds.push(`bool ${name}(pdef::Stream &stream, pdef::proto::${name} &obj);`)
     sizeFwds.push(`size_t ${name}(pdef::Stream &stream, const pdef::proto::${name} &obj);`)
   }
@@ -727,3 +744,6 @@ if (packet.entity_metadata)
 
 
 //TODO: packet_crafting_data size is broken
+// packet_set_score: switch compareTo's need to have correct ../ in front of them in the IR
+// so we know how many levels up to go to find the enum type. Currently we
+// assume the type is in the same level as the switch, which is not always true.
