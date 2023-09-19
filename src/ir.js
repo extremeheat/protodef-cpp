@@ -56,32 +56,40 @@ function preprocess (schema) {
 
   function walkBackwardAndInject (untilMatch, parent, injectable) {
     let current = parent
+    let nonAnonLevelsUp = 0
     while (current) {
       for (const _current of current) {
         if (_current.name === untilMatch) {
           Object.assign(_current, injectable)
           // console.log('Injected', injectable, 'into', _current)
+          _current.usedLevelsDown = nonAnonLevelsUp
           return _current
         }
       }
       if (!current.parent) {
         // console.log('Top most', current)
       }
+      if (current.scopeIsAnon) nonAnonLevelsUp--
+      // if (current.scopeIsAnon) throw Error()
+      nonAnonLevelsUp++
+      // console.dir(current, { depth: null })
       current = current.parent
     }
   }
 
-  function visitContainer (container, parent) {
+  function visitContainer (container, parent, anon) {
+    container.scopeIsAnon = !!anon
     container.parent = parent
-    for (const { name, type } of container) {
-      visitType(type, container)
+    for (const { name, type, anon } of container) {
+      visitType(type, container, anon)
     }
   }
 
-  function visitType (type, parent) {
+  function visitType (type, parent, anon) {
     if (typeof type === 'string') {
 
     } else if (Array.isArray(type)) {
+      type.scopeIsAnon = !!anon
       type.parent = parent
 
       if (schema[type[0]] && (schema[type[0]][0] === 'switch')) {
@@ -95,7 +103,7 @@ function preprocess (schema) {
 
       const [name, ...args] = type
       if (name === 'container') {
-        visitContainer(args[0], parent)
+        visitContainer(args[0], parent, anon)
       } else if (name === 'switch') {
         const cases = args[0].fields
         cases.default = args[0].default
@@ -115,10 +123,11 @@ function preprocess (schema) {
             else args[0].compareToType = injectedObj.type
             if (!args[0].compareToType) throw Error('Could not find compareTo ' + compareTo)
             // else console.log('Found compareTo', compareTo, '->', args[0].compareToType)
+            args[0].compareToType = '../'.repeat(injectedObj.usedLevelsDown) + '' + args[0].compareToType
           } else throw Error('Could not find compareTo ' + compareTo)
         }
         for (const [caseName, caseType] of Object.entries(cases)) {
-          visitType(caseType, parent)
+          visitType(caseType, parent, anon)
         }
       } else if (name === 'array') {
         if (typeof args[0].count === 'string') {
@@ -670,8 +679,9 @@ if (!module.parent) {
   // schema = {
   //   // ItemLegacy:schema.ItemLegacy,
   //   // Recipes:schema.Recipes,
-  //   packet_text: schema.packet_text,
-  //   packet_interact: schema.packet_interact,
+  //   // packet_text: schema.packet_text,
+  //   // packet_interact: schema.packet_interact,
+  //   packet_set_score: schema.packet_set_score,
   // }
   const pp = preprocess(schema)
   const redone = debloatSchema(pp)

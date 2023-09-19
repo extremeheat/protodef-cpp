@@ -193,6 +193,11 @@ const dotJoin = (...arr) => filterNull(arr).map(toSafeVar).join('.')
 const colonJoin = (...arr) => filterNull(arr).map(toSafeVar).join('::')
 const escapeComment = (cmt) => cmt.replaceAll('*', '|')
 
+function parseCompareToType (compareToType) {
+  const levelsUp = compareToType.split('../').length - 1
+  return [levelsUp, compareToType.replaceAll('../', '')]
+}
+
 const headers = `
 #include <string>
 #include <vector>
@@ -322,7 +327,7 @@ function visitRoot (root, mode) {
     } else if (customTypes[typeName]) {
       const typeImpl = customTypes[typeName]
       const structCode = typeImpl.struct(fieldType, n, (typename, varname) => typeStrForType(typename, varname, 0, true))
-      structCode.split('\n').forEach(e => push('  ' + e + ` /*5.0*/`))
+      structCode.split('\n').forEach(e => push('  ' + e + ` /*6.0*/`))
     } else if (root[typeName] && root[typeName][0] !== 'native') {
       if (isRootArray) {
         const rootArrayType = root[oldTypeName][3]
@@ -331,7 +336,7 @@ function visitRoot (root, mode) {
         push(`  ${typeStrForType(typeName, n)} /*4.0*/`)
       } 
     } else {
-      push(` // ERROR: unknown type ${typeName} L${structPaddingLevel} /*5.1*/`)
+      push(` // ERROR: unknown type ${typeName} L${structPaddingLevel} /*6.1*/`)
       // throw new Error(`Missing custom type ${typeName}`)
     }
     return ret.trim()
@@ -366,12 +371,13 @@ function visitRoot (root, mode) {
     return `${isAnon ? `EXPECT_OR_BAIL(${name}); ` : ''}size_t ${sizeVar} = pdef::proto::size::${type}(stream, ${isAnon ? '*' : ''}${name}); EXPECT_OR_BAIL(${sizeVar}); len += ${sizeVar}`
   }
   const makeEncodeStr = (type, varName, isAnon) => protodefTypeToCppEncode[type]
-    ? `WRITE_OR_BAIL(${protodefTypeToCppEncode[type]}, ${Array.isArray(varName) ? varName.map(toSafeVar).join('.') : toSafeVar(varName)})`
+    ? `WRITE_OR_BAIL(${protodefTypeToCppEncode[type]}, (${protodefTypeToCpp[type]})${Array.isArray(varName) ? varName.map(toSafeVar).join('.') : toSafeVar(varName)})`
     : `pdef::proto::encode::${type}(stream, ${isAnon ? '*' : ''}${Array.isArray(varName) ? varName.map(toSafeVar).join('.') : varName})`
 
   function makeDecodeStr (type, varName, maybe) {
     const name = Array.isArray(varName) ? varName.join('.') : varName
     if (protodefTypeToCppDecode[type]) {
+      // const cast = protodefTypeToCpp[type] ? `(${protodefTypeToCpp[type]}&)` : ''
       return `READ_OR_BAIL(${protodefTypeToCppDecode[type]}, ${name})`
     } else {
       let s = ''
@@ -469,8 +475,8 @@ function visitRoot (root, mode) {
         if (lengthVar) {
           // console.log('lengthVar', fieldType, lengthVar)
           const [lengthVariable, lengthTyp] = lengthVar
-          pushSize(`  ${makeSizeStr(lengthTyp, [lengthVariable, 'size()'])}; /*1.1*/`)
-          pushEncode(`  ${makeEncodeStr(lengthTyp, [lengthVariable, 'size()'])}; /*1.2*/`)
+          pushSize(`  ${makeSizeStr(lengthTyp, [lengthVariable])}; /*1.1*/`)
+          pushEncode(`  ${makeEncodeStr(lengthTyp, [lengthVariable])}; /*1.2*/`)
           // Resize the std::vector so it has enough space to fit length
           pushDecode(`  ${objName}.${n}.resize(${lengthVariable}); /*1.6*/`)
         } else {
@@ -487,19 +493,55 @@ function visitRoot (root, mode) {
           typePropName = `pdef::proto::${colonJoin(objPath)}::${arrayStructName}`
           // inline
           pushSizeEncode(`  for (const auto &v : ${[objName, n].join('.')}) { /*5*/`)
-          if (lengthVar) pushDecode(`  for (int i = 0; i < ${lengthVar[0]}; i++) { /*5*/`), pushDecode(`    ${typePropName} &v = ${[objName, n].join('.')}[i]; /*5.1*/`)
-          else pushDecode(`  for (int i = 0; i < ${n}_len; i++) { /*5*/`), pushDecode(`    ${typePropName} &v = ${[objName, n].join('.')}[i]; /*5.1*/`)
+          if (lengthVar) pushDecode(`  for (int i = 0; i < ${lengthVar[0]}; i++) { /*5*/`), pushDecode(`    ${typePropName} &v = ${[objName, n].join('.')}[i]; /*5.0*/`)
+          else pushDecode(`  for (int i = 0; i < ${n}_len; i++) { /*5*/`), pushDecode(`    ${typePropName} &v = ${[objName, n].join('.')}[i]; /*5.0*/`)
           encodingFromContainer(newName, actualType[1], structPaddingLevel + 1, structPaddingLevel === 0 ? objPath.concat('') : objPath.concat(promoteToPascalOrSuffix(n)), true)
           pushSizeEncode('  }')
           pushDecode('  }')
         } else if (actualType[0] === 'array') {
-          pushSizeEncode(`  for (const auto &v : ${structPropName}) { /*5*/`)
-          if (lengthVar) pushDecode(`  for (int i = 0; i < ${lengthVar[0]}; i++) { /*5*/`)
-          else pushDecode(`  for (int i = 0; i < ${n}_len; i++) { /*5*/`)
-          const actualActualType = unretardify(actualType[3])
-          encodeType('', actualType, structPaddingLevel + 1, objPath, true)
-          pushSizeEncode('  }')
-          pushDecode('  }')
+          const [, actualLengthType, actualLengthVar, _actualActualType] = actualType
+          const actualActualType = unretardify(_actualActualType)
+          if (actualActualType[0] === 'array') { // 3D array, max supported depth
+            throw new Error('TODO: Only up to 2D arrays are supported')
+          } else { // 2D array
+            pushSizeEncode(`  for (const auto &v : ${structPropName}) { /*5.1*/`)
+            pushDecode(`  for (int i = 0; i < ${n}_len; i++) { /*5.2*/`)
+            if (actualLengthVar) {
+              const [actualLengthVariable, actualLengthTyp] = actualLengthVar
+              pushSize(`    ${makeSizeStr(actualLengthTyp, [actualLengthVariable])}; /*5.3*/`)
+              pushEncode(`    ${makeEncodeStr(actualLengthTyp, [actualLengthVariable])}; /*5.4*/`)
+              const typeStr = protodefTypeToCpp[actualLengthTyp] || 'int'
+              pushDecode(`    ${typeStr} ${n}_len2; ${makeDecodeStr(actualLengthTyp, [n + '_len2'])}; /*5.5*/`)
+              pushDecode(`    ${objName}.${n}[i].resize(${n}_len2); /*5.10*/`)
+            } else {
+              pushSize(`    ${makeSizeStr(actualLengthType, [objName, n, 'size()'], isAnon)}; /*5.6*/`)
+              pushEncode(`    ${makeEncodeStr(actualLengthType, [objName, n, 'size()'], isAnon)}; /*5.7*/`)
+              const typeStr = protodefTypeToCpp[actualLengthType] || 'int'
+              pushDecode(`    ${typeStr} ${n}_len2; ${makeDecodeStr(actualLengthType, [n + '_len2'])}; /*5.8*/`)
+              pushDecode(`    ${objName}.${n}[i].resize(${n}_len2); /*5.9*/`)
+            }
+            pushSizeEncode(`    for (const auto &v : v) { /*5.10*/`)
+            pushDecode(`    for (int j = 0; j < ${n}_len2; j++) { /*5.11*/`)
+
+            if (actualActualType[0] === 'container') {
+             encodingFromContainer(newName, actualActualType[1], structPaddingLevel + 2, structPaddingLevel === 0 ? objPath.concat('') : objPath.concat(promoteToPascalOrSuffix(n)), true) 
+            } else {
+              pushSize(`      ${makeSizeStr(actualActualType[0], 'v')}; /*5.12*/`)
+              pushEncode(`      ${makeEncodeStr(actualActualType[0], 'v')}; /*5.13*/`)
+              pushDecode(`      ${makeDecodeStr(actualActualType[0], [objName, n + '[i][j]'])}; /*5.14*/`)
+            }
+            pushSizeEncode('    }')
+            pushDecode('    }')
+            pushSizeEncode('  }')
+            pushDecode('  }')
+          }
+          // pushSizeEncode(`  for (const auto &v : ${structPropName}) { /*5.7*/`)
+          // if (lengthVar) pushDecode(`  for (int i = 0; i < ${lengthVar[0]}; i++) { /*5.8*/`)
+          // else pushDecode(`  for (int i = 0; i < ${n}_len; i++) { /*5.9*/`)
+          // const actualActualType = unretardify(actualType[3])
+          // encodeType('', actualType, structPaddingLevel + 1, objPath, true)
+          // pushSizeEncode('  }')
+          // pushDecode('  }')
         } else {
           pushEncode(`  for (const auto &v : ${structPropName}) { ${makeEncodeStr(actualType, 'v')}; /*3.1*/ }`)
           pushSize(`  for (const auto &v : ${structPropName}) { ${makeSizeStr(actualType, 'v')}; /*3.2*/ }`)
@@ -508,8 +550,10 @@ function visitRoot (root, mode) {
         }
       } else if (typeName === 'switch') {
         const compareTo = Array.isArray(fieldType[1]) ? fieldType[1][2] : fieldType[1]
-        const _compareToType = fieldType[2]
-        const compareToType = (fieldType[2] && fieldType[2] !== 'mapper') ? fieldType[2] : promoteToPascalOrSuffix(compareTo)
+        const [levelsUp, _compareToType] = parseCompareToType(fieldType[2])
+        const pathToCompareTo = (levelsUp ? objPath.slice(0, -levelsUp) : objPath) //+ `/*${objPath.join(',')}*/`
+        const compareToType = (_compareToType && _compareToType !== 'mapper') ? _compareToType : promoteToPascalOrSuffix(compareTo)
+        const compareToName = promoteToPascalOrSuffix(compareTo)
         const cases = fieldType[3]
         pushAll(`  switch (${compareTo}) { /*8.0*/`)
         for (const [caseName, caseType] of Object.entries(cases)) {
@@ -525,7 +569,7 @@ function visitRoot (root, mode) {
           else if ((['true', 'false'].includes(caseName) && (_compareToType !== 'mapper')) || !isNaN(caseName)) { pushAll(`    case ${caseName}: { /*8.1*/`) }
           else if (caseName === 'default') { pushAll(`    default: { /*8.1*/`) }
           else if (caseName.startsWith('/')) { pushAll(`    case pdef::proto::${toSafeVar(caseName).replace('/', '')}: { /*8.2*/`) }
-          else { pushAll(`    case pdef::proto::${colonJoin(objPath)}::${compareToType}::${toSafeVar(promoteToPascalOrSuffix(caseName))}: { /*8.3*/`) }
+          else { pushAll(`    case pdef::proto::${colonJoin(pathToCompareTo)}::${compareToName}::${toSafeVar(promoteToPascalOrSuffix(caseName))}: { /*8.3*/`) }
           // encodingFromContainer(caseName, caseType, structPaddingLevel + 2, objName)
           let realName = isAnon ? null : caseType[5] || caseType['*name']
           const isScoped = isAnon ? false : !Array.isArray(caseType)
@@ -536,7 +580,7 @@ function visitRoot (root, mode) {
             if (!Array.isArray(caseType)) {
               pushDecode(`       ${objName}.${realName} = {}; pdef::proto::${colonJoin(objPath)}::${structureName} &v = *${objName}.${realName}; /*8.4*/`)
               // "expect or bail" is not needed here because we already checked the switch case
-              pushEncode(`      const pdef::proto::${colonJoin(objPath)}::${structureName} &v = ${objName}.${realName}; /*8.5*/`)
+              pushEncode(`      const pdef::proto::${colonJoin(objPath)}::${structureName} &v = *${objName}.${realName}; /*8.5*/`)
               pushSize(`      EXPECT_OR_BAIL(${objName}.${realName}); const pdef::proto::${colonJoin(objPath)}::${structureName} &v = *${objName}.${realName}; /*8.6*/`)
             }
           }
