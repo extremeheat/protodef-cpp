@@ -1,3 +1,4 @@
+/* eslint-disable no-return-assign, no-sequences, no-unused-vars */
 const fs = require('fs')
 // const basicJSON = require('./sample.json')
 
@@ -87,7 +88,7 @@ function preprocess (schema) {
 
   function visitType (type, parent, anon) {
     if (typeof type === 'string') {
-
+      // pass
     } else if (Array.isArray(type)) {
       type.scopeIsAnon = !!anon
       type.parent = parent
@@ -670,12 +671,12 @@ module.exports = {
 if (!module.parent) {
   // debloatSchema(basicJSON)
   // const pc1_18 = require('./pc1_18.json')
-  // let schema = { ...pc1_18.types, ...pc1_18.play.toClient.types } 
-  let schema = require('./protocol.json').types
+  // let schema = { ...pc1_18.types, ...pc1_18.play.toClient.types }
+  const schema = require('./protocol.json').types
   // move mcpe_packet to the end
-  const oldmcpe_packet = schema.mcpe_packet
+  const oldmcpePacket = schema.mcpe_packet
   delete schema.mcpe_packet
-  schema.mcpe_packet = oldmcpe_packet
+  schema.mcpe_packet = oldmcpePacket
   // schema = {
   //   // ItemLegacy:schema.ItemLegacy,
   //   // Recipes:schema.Recipes,
