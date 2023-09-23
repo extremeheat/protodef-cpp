@@ -97,18 +97,21 @@ const customTypes = {
       return makeCallingCode('std::string', name)
     },
     read (args, name, makeCallingCode) {
+      if (args.count) return `if (!stream.readString(obj.${name}, ${args.count})) return false;`
       return `
 int ${name}_strlen; ${makeCallingCode(args.countType, `${name}_strlen`)};
 if (!stream.readString(obj.${name}, ${name}_strlen)) return false;
 `.trim()
     },
     write (args, name, makeCallingCode) {
+      if (args.count) return `WRITE_OR_BAIL(writeString, obj.${name});`
       return `
 ${makeCallingCode(args.countType, ['obj', name, 'length()'])};
 WRITE_OR_BAIL(writeString, obj.${name});
 `.trim()
     },
     size (args, name, makeCallingCode) {
+      if (args.count) return `len += ${args.count};`
       return `
 ${makeCallingCode(args.countType, ['obj', name, 'length()'])};
 len += obj.${name}.length();
@@ -131,24 +134,154 @@ len += obj.${name}.length();
       return lines
     },
     write (args, name, makeCallingCode) {
+      if (args.count) return `WRITE_OR_BAIL(writeBuffer, obj.${name});`
       return `
 ${makeCallingCode(args.countType, ['obj', name, 'size()'])};
 WRITE_OR_BAIL(writeBuffer, obj.${name});
 `.trim()
     },
     size (args, name, makeCallingCode) {
+      if (args.count) return `len += ${args.count};`
       return `
-${makeCallingCode(args.countType, ['obj', name, 'size()'])};
+${makeCallingCode(args.countType, ['obj', name, 'size()'], false)};
 len += obj.${name}.size();
 `.trim()
     }
+  },
+  bitflags: {
+    type (args, name, makeCallingCode) {
+      return `${name}_t`
+    },
+    struct (args, name, makeCallingCode) {
+      const flags = Array.isArray(args.flags) 
+        ? args.flags.map(toSafeVar)
+        : Object.entries(args.flags).reduce((acc, [k, v]) => (acc[v] = k, acc), []).map(toSafeVar)
+      let s = `struct ${name}_t {\n`
+      for (let i = 0; i < flags.length; i++) {
+        const k = flags[i]
+        if (!k) continue
+        s += `  bool ${k} = false;\n`
+      }
+      s += `} ${name};`
+      return s
+    },
+    read (args, name, makeCallingCode) {
+      const flags = Array.isArray(args.flags) 
+        ? args.flags.map(toSafeVar)
+        : Object.entries(args.flags).reduce((acc, [k, v]) => (acc[v] = k, acc), []).map(toSafeVar)
+      const primitiveType = protodefTypeToCpp[args.type]
+      let s = `${primitiveType} ${name}_val;\n`
+      s += makeCallingCode(args.type, `${name}_val`) + ';\n'
+      for (let i = 0; i < flags.length; i++) {
+        const flag = flags[i]
+        if (!flag) continue
+        s += `obj.${name}.${flag} = ${name}_val & (1 << ${i});\n`
+      }
+      return s
+    },
+    write (args, name, makeCallingCode) {
+      const flags = Array.isArray(args.flags) 
+        ? args.flags.map(toSafeVar)
+        : Object.entries(args.flags).reduce((acc, [k, v]) => (acc[v] = k, acc), []).map(toSafeVar)
+      const primitiveType = protodefTypeToCpp[args.type]
+      let s = `${primitiveType} ${name}_val = 0;\n`
+      for (let i = 0; i < flags.length; i++) {
+        const flag = flags[i]
+        if (!flag) continue
+        s += `${name}_val |= obj.${name}.${flag} << ${i};\n`
+      }
+      s += makeCallingCode(args.type, `${name}_val`)
+      return s
+    },
+    size (args, name, makeCallingCode) {
+      const flags = Array.isArray(args.flags) 
+        ? args.flags.map(toSafeVar)
+        : Object.entries(args.flags).reduce((acc, [k, v]) => (acc[v] = k, acc), []).map(toSafeVar)
+      const primitiveType = protodefTypeToCpp[args.type]
+      let s = `${primitiveType} ${name}_val = 0; /*X*/\n`
+      for (let i = 0; i < flags.length; i++) {
+        const flag = flags[i]
+        if (!flag) continue
+        s += `${name}_val |= obj.${name}.${flag} << ${i};\n`
+      }
+      s += makeCallingCode(args.type, `${name}_val`) + ';\n'
+      return s
+    }
+  },
+  // bitfield is read as a u8 encapsulating many fields of variable bit size
+  // "bitfield", [ { "name": "unused", "size": 1, "signed": false }, { "name": "collapse_enum", "size": 1, "signed": false }, { "name": "has_semantic_constraint", "size": 1, "signed": false }, { "name": "as_chained_command", "size": 1, "signed": false }, { "name": "unknown2", "size": 4, "signed": false } ] ],
+  bitfield: {
+    struct (args, name, makeCallingCode) {
+      let s = `struct {\n`
+      for (const v of args) {
+        s += `  int ${v.name} = 0;\n`
+      }
+      s += `} ${name};`
+      return s
+    },
+    read (args, name, makeCallingCode) {
+      let s = `uint8_t ${name}_val;\n`
+      s += `READ_OR_BAIL(${protodefTypeToCppDecode.u8}, ${name}_val);\n`
+      let bitOffset = 0
+      for (const v of args) {
+        s += `obj.${name}.${v.name} = ${name}_val >> ${bitOffset} & ${v.size};\n`
+        bitOffset += v.size
+      }
+      return s
+    },
+    write (args, name, makeCallingCode) {
+      let s = `uint8_t ${name}_val = 0;\n`
+      let bitOffset = 0
+      for (const v of args) {
+        s += `${name}_val |= obj.${name}.${v.name} << ${bitOffset};\n`
+        bitOffset += v.size
+      }
+      s += `WRITE_OR_BAIL(${protodefTypeToCppEncode.u8}, ${name}_val);\n`
+      return s
+    },
+    size (args, name, makeCallingCode) {
+      return 'len += 1;'
+    }
+  },
+  enum_size_based_on_values_len: {
+    type () {
+      return ''
+    },
+    struct (args, name, makeCallingCode) {
+      let s = `enum class _EnumType { Byte, Short, Int }; _EnumType ${name};`
+      return s
+    },
+    read (args, name, makeCallingCode) {
+      return `pdef::proto::packet_available_commands::_EnumType ${name}; if (values_len <= 0xff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (values_len <= 0xffff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Short; } else { ${name} = pdef::proto::packet_available_commands::_EnumType::Int; }`
+    },
+    write (args, name, makeCallingCode) {
+      return `pdef::proto::packet_available_commands::_EnumType ${name}; if (values_len <= 0xff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (values_len <= 0xffff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Short; } else { ${name} = pdef::proto::packet_available_commands::_EnumType::Int; }`
+    },
+    size (args, name, makeCallingCode) {
+      return `pdef::proto::packet_available_commands::_EnumType ${name}; if (values_len <= 0xff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (values_len <= 0xffff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Short; } else { ${name} = pdef::proto::packet_available_commands::_EnumType::Int; }`
+    }
   }
 }
-
 const protodefTypeToCppDecode = Object.fromEntries(
   Object.entries(protodefTypeToCppEncode)
     .map(([k, v]) => [k, v.replace('write', 'read')])
 )
+function addAliasType (newType, baseType) {
+  protodefTypeToCpp[newType] = protodefTypeToCpp[baseType]
+  protodefTypeToCppEncode[newType] = protodefTypeToCppEncode[baseType]
+  protodefTypeToCppDecode[newType] = protodefTypeToCppDecode[baseType]
+  protodefTypeSizes[newType] = protodefTypeSizes[baseType]
+  if (customTypes[baseType]) customTypes[newType] = customTypes[baseType]
+}
+// some stubs
+addAliasType('nbt', 'i8')
+addAliasType('lnbt', 'i8')
+addAliasType('nbtLoop', 'i8')
+addAliasType('uuid', 'u64')
+addAliasType('encapsulated', 'i8')
+addAliasType('slot', 'i8')
+addAliasType('byterot', 'i8')
+addAliasType('restBuffer', 'i8')
 
 function unretardify (objOrArr) {
   if (objOrArr == null) return []
@@ -161,7 +294,7 @@ function unretardify (objOrArr) {
 }
 
 function deanonymizeStr (fieldName) {
-  return fieldName.replaceAll('?', '').replaceAll(',', '_').replaceAll('^', '').replaceAll(':', '_')
+  return fieldName.replaceAll('?', '').replaceAll(',', '_').replaceAll('/', '_').replaceAll('^', '').replaceAll(':', '_')
 }
 
 function promoteToPascalOrSuffix (str, suffixIfAlreadyPascal = true) {
@@ -179,12 +312,30 @@ function promoteToPascalOrSuffix (str, suffixIfAlreadyPascal = true) {
   }
 }
 
+// illegal C++ keywords
+const illegal = ['byte', 'short', 'int', 'long', 'float', 'double', 'bool', 'default', 'break', 'void',
+'case', 'char', 'class', 'const', 'continue', 'do', 'else', 'enum', 'extern', 'for', 'goto', 'if', 'inline',
+'namespace', 'new', 'operator', 'private', 'protected', 'public', 'return', 'sizeof', 'static', 'struct',
+'switch', 'template', 'this', 'throw', 'try', 'typedef', 'union', 'unsigned', 'virtual', 'while', 'auto',
+'catch', 'const_cast', 'delete', 'dynamic_cast', 'explicit', 'export', 'false', 'friend', 'mutable', 'nullptr',
+'reinterpret_cast', 'static_cast', 'static_assert', 'thread_local', 'typeid', 'typename', 'using']
 function toSafeVar (name) {
+  if (!name) return
   // add a _ suffix to reserved keywords in C++
-  const illegal = ['byte', 'short', 'int', 'long', 'float', 'double', 'bool', 'default', 'break']
   if (illegal.includes(name)) name += '_'
   // check if name starts with a number
   if (!isNaN(name[0])) name = '_' + name
+  return name
+}
+// this is for switch statements where we need to use the variable name as a case
+function toSafeVarSwitch (name) {
+  for (const ill of illegal) {
+    if (name.includes('.' + ill + ' ')) {
+      name = name.replaceAll('.' + ill + ' ', '.' + ill + '_')
+    } else if (name.endsWith('.' + ill)) {
+      name = name + '_'
+    }
+  }
   return name
 }
 
@@ -326,7 +477,7 @@ function visitRoot (root, mode) {
       }
     } else if (customTypes[typeName]) {
       const typeImpl = customTypes[typeName]
-      const structCode = typeImpl.struct(fieldType, n, (typename, varname) => typeStrForType(typename, varname, 0, true))
+      const structCode = typeImpl.struct(fieldType[1], n, (typename, varname) => typeStrForType(typename, varname, 0, true))
       structCode.split('\n').forEach(e => push('  ' + e + ` /*6.0*/`))
     } else if (root[typeName] && root[typeName][0] !== 'native') {
       if (isRootArray) {
@@ -335,9 +486,9 @@ function visitRoot (root, mode) {
       } else {
         push(`  ${typeStrForType(typeName, n)} /*4.0*/`)
       } 
-    } else {
-      push(` // ERROR: unknown type ${typeName} L${structPaddingLevel} /*6.1*/`)
-      // throw new Error(`Missing custom type ${typeName}`)
+    } else if (!['switch'].includes(typeName)) {
+      // push(` // ERROR: unknown type ${typeName} L${structPaddingLevel} /*6.1*/`)
+      throw new Error(`Missing custom type ${typeName}`)
     }
     return ret.trim()
   }
@@ -505,7 +656,8 @@ function visitRoot (root, mode) {
             throw new Error('TODO: Only up to 2D arrays are supported')
           } else { // 2D array
             pushSizeEncode(`  for (const auto &v : ${structPropName}) { /*5.1*/`)
-            pushDecode(`  for (int i = 0; i < ${n}_len; i++) { /*5.2*/`)
+            if (lengthVar) pushDecode(`  for (int i = 0; i < ${lengthVar[0]}; i++) { /*5.2*/`)
+            else pushDecode(`  for (int i = 0; i < ${n}_len; i++) { /*5.2*/`)
             if (actualLengthVar) {
               const [actualLengthVariable, actualLengthTyp] = actualLengthVar
               pushSize(`    ${makeSizeStr(actualLengthTyp, [actualLengthVariable])}; /*5.3*/`)
@@ -521,7 +673,8 @@ function visitRoot (root, mode) {
               pushDecode(`    ${objName}.${n}[i].resize(${n}_len2); /*5.9*/`)
             }
             pushSizeEncode(`    for (const auto &v : v) { /*5.10*/`)
-            pushDecode(`    for (int j = 0; j < ${n}_len2; j++) { /*5.11*/`)
+            if (actualLengthVar) pushDecode(`    for (int j = 0; j < ${actualLengthVar[0]}; j++) { /*5.11*/`)
+            else pushDecode(`    for (int j = 0; j < ${n}_len2; j++) { /*5.11*/`)
 
             if (actualActualType[0] === 'container') {
              encodingFromContainer(newName, actualActualType[1], structPaddingLevel + 2, structPaddingLevel === 0 ? objPath.concat('') : objPath.concat(promoteToPascalOrSuffix(n)), true) 
@@ -555,7 +708,7 @@ function visitRoot (root, mode) {
         const compareToType = (_compareToType && _compareToType !== 'mapper') ? _compareToType : promoteToPascalOrSuffix(compareTo)
         const compareToName = promoteToPascalOrSuffix(compareTo)
         const cases = fieldType[3]
-        pushAll(`  switch (${compareTo}) { /*8.0*/`)
+        pushAll(`  switch (${toSafeVarSwitch(compareTo)}) { /*8.0*/`)
         for (const [caseName, caseType] of Object.entries(cases)) {
           // let absName
           // if (Array.isArray(caseType)) {
@@ -588,6 +741,7 @@ function visitRoot (root, mode) {
           pushAll('      break;')
           pushAll('    } /*8.7*/')
         }
+        if (!cases['default']) pushAll('    default: break; /*avoid unhandled case warning*/')
         pushAll('  } /*8.8*/')
       } else if (typeName === 'mapper') {
         const actualType = fieldType[1]
@@ -610,16 +764,15 @@ function visitRoot (root, mode) {
       } else {
         // TODO: handle custom types
         // we'd call into the specific encode function for this type
-        if (fieldName.endsWith('^')) {
-          pushSizeEncode(`  const ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} &${n} = ${structPropName}; /*0.1*/`)
-        }
+        let structVarType
         if (Array.isArray(fieldType)) {
           const actualType = fieldType[0]
           if (customTypes[actualType]) {
             const typeImpl = customTypes[actualType]
-            const sizeCode = typeImpl.size(fieldType[1], n, (type, args) => makeSizeStr(type, args, isAnon)).split('\n').map(e => pad('  ' + e.trim())).join('\n').trim()
-            const encodeCode = typeImpl.write(fieldType[1], n, (type, args) => makeEncodeStr(type, args, isAnon)).split('\n').map(e => pad('  ' + e.trim())).join('\n').trim()
-            const decodeCode = typeImpl.read(fieldType[1], n, (type, args) => makeDecodeStr(type, args, isAnon)).split('\n').map(e => pad('  ' + e.trim())).join('\n').trim()
+            structVarType = typeImpl.type?.(fieldType[1], n)
+            const sizeCode = typeImpl.size(fieldType[1], n, (type, args, anon) => makeSizeStr(type, args, anon ?? isAnon)).split('\n').map(e => pad('  ' + e.trim())).join('\n').trim()
+            const encodeCode = typeImpl.write(fieldType[1], n, (type, args, anon) => makeEncodeStr(type, args, anon ?? isAnon)).split('\n').map(e => pad('  ' + e.trim())).join('\n').trim()
+            const decodeCode = typeImpl.read(fieldType[1], n, (type, args, anon) => makeDecodeStr(type, args, anon ?? isAnon)).split('\n').map(e => pad('  ' + e.trim())).join('\n').trim()
             pushSize(`  ${sizeCode.replaceAll('obj.', objName + '.')} /*${fieldName}: ${actualType}*/ /*4.1*/`)
             pushEncode(`  ${encodeCode.replaceAll('obj.', objName + '.')} /*${n}: ${actualType}*/ /*4.2*/`)
             pushDecode(`  ${decodeCode.replaceAll('obj.', objName + '.')} /*${n}: ${actualType}*/ /*4.3*/`)
@@ -632,12 +785,18 @@ function visitRoot (root, mode) {
             pushSize(`// ERROR: unknown type ${actualType} /*4.1*/`)
             pushEncode(`// ERROR: unknown type ${actualType} /*4.2*/`)
             pushDecode(`// ERROR: unknown type ${actualType} /*4.3*/`)
+            throw new Error('Unknown type: ' + actualType)
           }
         } else {
 
         }
         if (fieldName.endsWith('^')) {
-          pushDecode(`  ${protodefTypeToCpp[typeName] ?? ('pdef::proto::' + typeName)} &${n} = ${structPropName}; /*0.7*/`)
+          const varType = structVarType ?? typeName;
+          if (varType) { // structVarType being '' means scoping is not needed, maybe handled
+            const typename = protodefTypeToCpp[varType] || `pdef::proto::${colonJoin(objPath)}::${varType}`
+            pushSizeEncode(`  const ${typename} &${n} = ${structPropName}; /*0.1*/`)
+            pushDecode(`  ${typename} &${n} = ${structPropName}; /*0.7*/`)
+          }
         }
       }
     }
