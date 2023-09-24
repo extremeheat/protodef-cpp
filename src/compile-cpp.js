@@ -97,25 +97,26 @@ const customTypes = {
     struct (args, name, makeCallingCode) {
       return makeCallingCode('std::string', name)
     },
-    read (args, name, makeCallingCode) {
-      if (args.count) return `if (!stream.readString(obj.${name}, ${args.count})) return false;`
+    read (args, [name, refName], makeCallingCode) {
+      if (args.count) return `if (!stream.readString(${refName}, ${args.count})) return false;`
+      const primitiveType = protodefTypeToCpp[args.countType]
       return `
-int ${name}_strlen; ${makeCallingCode(args.countType, `${name}_strlen`)};
-if (!stream.readString(obj.${name}, ${name}_strlen)) return false;
+${primitiveType} ${name}_strlen; ${makeCallingCode(args.countType, `${name}_strlen`)};
+if (!stream.readString(${refName}, ${name}_strlen)) return false;
 `.trim()
     },
-    write (args, name, makeCallingCode) {
-      if (args.count) return `WRITE_OR_BAIL(writeString, obj.${name});`
+    write (args, [name, refName], makeCallingCode) {
+      if (args.count) return `WRITE_OR_BAIL(writeString, ${refName});`
       return `
-${makeCallingCode(args.countType, ['obj', name, 'length()'])};
-WRITE_OR_BAIL(writeString, obj.${name});
+${makeCallingCode(args.countType, [refName, 'length()'])};
+WRITE_OR_BAIL(writeString, ${refName});
 `.trim()
     },
-    size (args, name, makeCallingCode) {
+    size (args, [name, refName], makeCallingCode) {
       if (args.count) return `len += ${args.count};`
       return `
-${makeCallingCode(args.countType, ['obj', name, 'length()'])};
-len += obj.${name}.length();
+${makeCallingCode(args.countType, [refName, 'length()'])};
+len += ${refName}.length();
 `.trim()
     }
   },
@@ -123,29 +124,29 @@ len += obj.${name}.length();
     struct (args, name, makeCallingCode) {
       return makeCallingCode('std::vector<uint8_t>', name)
     },
-    read (args, name, makeCallingCode) {
+    read (args, [name, refName], makeCallingCode) {
       const typeStr = protodefTypeToCpp[args.countType] || 'int'
       let lines = ''
       if (args.count) {
-        lines += `if (!stream.readBuffer(obj.${name}, ${args.count})) return false;`
+        lines += `if (!stream.readBuffer(${refName}, ${args.count})) return false;`
       } else {
         lines += `${typeStr} ${name}_len; ${makeCallingCode(args.countType, `${name}_len`)};`
-        lines += `if (!stream.readBuffer(obj.${name}, ${name}_len)) return false;`
+        lines += `if (!stream.readBuffer(${refName}, ${name}_len)) return false;`
       }
       return lines
     },
-    write (args, name, makeCallingCode) {
-      if (args.count) return `WRITE_OR_BAIL(writeBuffer, obj.${name});`
+    write (args, [name, refName], makeCallingCode) {
+      if (args.count) return `WRITE_OR_BAIL(writeBuffer, ${refName});`
       return `
-${makeCallingCode(args.countType, ['obj', name, 'size()'])};
-WRITE_OR_BAIL(writeBuffer, obj.${name});
+${makeCallingCode(args.countType, [refName, 'size()'])};
+WRITE_OR_BAIL(writeBuffer, ${refName});
 `.trim()
     },
-    size (args, name, makeCallingCode) {
+    size (args, [name, refName], makeCallingCode) {
       if (args.count) return `len += ${args.count};`
       return `
-${makeCallingCode(args.countType, ['obj', name, 'size()'], false)};
-len += obj.${name}.size();
+${makeCallingCode(args.countType, [refName, 'size()'], false)};
+len += ${refName}.size();
 `.trim()
     }
   },
@@ -166,7 +167,7 @@ len += obj.${name}.size();
       s += `} ${name};`
       return s
     },
-    read (args, name, makeCallingCode) {
+    read (args, [name, refName], makeCallingCode) {
       const primitiveType = protodefTypeToCpp[args.type]
       let s = `${primitiveType} ${name}_val;\n`
       s += makeCallingCode(args.type, `${name}_val`) + ';\n'
@@ -175,16 +176,16 @@ len += obj.${name}.size();
         for (let i = 0; i < flags.length; i++) {
           const flag = flags[i]
           if (!flag) continue
-          s += `obj.${name}.${flag} = ${name}_val & (1 << ${i});\n`
+          s += `${refName}.${flag} = ${name}_val & ((${primitiveType})1 << ${i});\n`
         }
       } else {
         for (const [flag, bit] of Object.entries(args.flags)) {
-          s += `obj.${name}.${flag} = (${name}_val & ${bit}) == ${bit};\n`
+          s += `${refName}.${toSafeVar(flag)} = (${name}_val & ${bit}) == ${bit};\n`
         }
       }
       return s
     },
-    write (args, name, makeCallingCode) {
+    write (args, [name, refName], makeCallingCode) {
       const primitiveType = protodefTypeToCpp[args.type]
       let s = `${primitiveType} ${name}_val = 0;\n`
       if (Array.isArray(args.flags)) {
@@ -192,17 +193,17 @@ len += obj.${name}.size();
         for (let i = 0; i < flags.length; i++) {
           const flag = flags[i]
           if (!flag) continue
-          s += `${name}_val |= (${primitiveType})obj.${name}.${flag} << ${i};\n`
+          s += `${name}_val |= (${primitiveType})${refName}.${flag} << ${i};\n`
         }
       } else {
         for (const [flag, bit] of Object.entries(args.flags)) {
-          s += `if (obj.${name}.${flag}) ${name}_val |= ${bit};\n`
+          s += `if (${refName}.${toSafeVar(flag)}) ${name}_val |= ${bit};\n`
         }
       }
       s += makeCallingCode(args.type, `${name}_val`)
       return s
     },
-    size (args, name, makeCallingCode) {
+    size (args, [name, refName], makeCallingCode) {
       const primitiveType = protodefTypeToCpp[args.type]
       let s = `${primitiveType} ${name}_val = 0; /*X*/\n`
       if (Array.isArray(args.flags)) {
@@ -210,11 +211,11 @@ len += obj.${name}.size();
         for (let i = 0; i < flags.length; i++) {
           const flag = flags[i]
           if (!flag) continue
-          s += `${name}_val |= (${primitiveType})obj.${name}.${flag} << ${i};\n`
+          s += `${name}_val |= (${primitiveType})${refName}.${flag} << ${i};\n`
         }
       } else {
         for (const [flag, bit] of Object.entries(args.flags)) {
-          s += `if (obj.${name}.${flag}) ${name}_val |= ${bit};\n`
+          s += `if (${refName}.${toSafeVar(flag)}) ${name}_val |= ${bit};\n`
         }
       }
       s += makeCallingCode(args.type, `${name}_val`) + ';\n'
@@ -232,27 +233,27 @@ len += obj.${name}.size();
       s += `} ${name};`
       return s
     },
-    read (args, name, makeCallingCode) {
+    read (args, [name, refName], makeCallingCode) {
       let s = `uint8_t ${name}_val;\n`
       s += `READ_OR_BAIL(${protodefTypeToCppDecode.u8}, ${name}_val);\n`
       let bitOffset = 0
       for (const v of args) {
-        s += `obj.${name}.${v.name} = ${name}_val >> ${bitOffset} & ${v.size};\n`
+        s += `${refName}.${v.name} = ${name}_val >> ${bitOffset} & ${v.size};\n`
         bitOffset += v.size
       }
       return s
     },
-    write (args, name, makeCallingCode) {
+    write (args, [name, refName], makeCallingCode) {
       let s = `uint8_t ${name}_val = 0;\n`
       let bitOffset = 0
       for (const v of args) {
-        s += `${name}_val |= obj.${name}.${v.name} << ${bitOffset};\n`
+        s += `${name}_val |= ${refName}.${v.name} << ${bitOffset};\n`
         bitOffset += v.size
       }
       s += `WRITE_OR_BAIL(${protodefTypeToCppEncode.u8}, ${name}_val);\n`
       return s
     },
-    size (args, name, makeCallingCode) {
+    size (args, [name], makeCallingCode) {
       return 'len += 1;'
     }
   },
@@ -264,13 +265,13 @@ len += obj.${name}.size();
       const s = `enum class _EnumType { Byte, Short, Int }; _EnumType ${name};`
       return s
     },
-    read (args, name, makeCallingCode) {
+    read (args, [name], makeCallingCode) {
       return `pdef::proto::packet_available_commands::_EnumType ${name}; if (values_len <= 0xff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (values_len <= 0xffff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Short; } else { ${name} = pdef::proto::packet_available_commands::_EnumType::Int; }`
     },
-    write (args, name, makeCallingCode) {
+    write (args, [name], makeCallingCode) {
       return `pdef::proto::packet_available_commands::_EnumType ${name}; if (values_len <= 0xff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (values_len <= 0xffff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Short; } else { ${name} = pdef::proto::packet_available_commands::_EnumType::Int; }`
     },
-    size (args, name, makeCallingCode) {
+    size (args, [name], makeCallingCode) {
       return `pdef::proto::packet_available_commands::_EnumType ${name}; if (values_len <= 0xff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (values_len <= 0xffff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Short; } else { ${name} = pdef::proto::packet_available_commands::_EnumType::Int; }`
     }
   }
@@ -529,16 +530,16 @@ function visitRoot (root, mode) {
     const s = protodefTypeSizes[type]
     if (typeof s === 'number') return `len += ${s}`
     else if (typeof s === 'string') return `len += stream.${protodefTypeSizes[type]}(${Array.isArray(varName) ? dotJoin(...varName) : toSafeVar(varName)})`
-    const name = Array.isArray(varName) ? varName.map(toSafeVar).join('.') : toSafeVar(varName)
+    const name = Array.isArray(varName) ? dotJoin(varName) : toSafeVar(varName)
     const sizeVar = `len_${sizeIx++}`
     return `${isAnon ? `EXPECT_OR_BAIL(${name}); ` : ''}size_t ${sizeVar} = pdef::proto::size::${type}(stream, ${isAnon ? '*' : ''}${name}); EXPECT_OR_BAIL(${sizeVar}); len += ${sizeVar}`
   }
   const makeEncodeStr = (type, varName, isAnon) => protodefTypeToCppEncode[type]
-    ? `WRITE_OR_BAIL(${protodefTypeToCppEncode[type]}, (${protodefTypeToCpp[type]})${Array.isArray(varName) ? varName.map(toSafeVar).join('.') : toSafeVar(varName)})`
-    : `pdef::proto::encode::${type}(stream, ${isAnon ? '*' : ''}${Array.isArray(varName) ? varName.map(toSafeVar).join('.') : varName})`
+    ? `WRITE_OR_BAIL(${protodefTypeToCppEncode[type]}, (${protodefTypeToCpp[type]})${Array.isArray(varName) ? dotJoin(varName) : toSafeVar(varName)})`
+    : `pdef::proto::encode::${type}(stream, ${isAnon ? '*' : ''}${Array.isArray(varName) ? dotJoin(varName) : varName})`
 
   function makeDecodeStr (type, varName, maybe) {
-    const name = Array.isArray(varName) ? varName.join('.') : varName
+    const name = Array.isArray(varName) ? dotJoin(varName) : varName
     if (protodefTypeToCppDecode[type]) {
       // const cast = protodefTypeToCpp[type] ? `(${protodefTypeToCpp[type]}&)` : ''
       return `READ_OR_BAIL(${protodefTypeToCppDecode[type]}, ${name})`
@@ -560,15 +561,16 @@ function visitRoot (root, mode) {
     return shouldInlineFromRoot
   }
 
-  function encodeType (fieldName, fieldType, structPaddingLevel = 0, objPath) {
+  function encodeType (fieldName, fieldType, structPaddingLevel = 0, objPath, _, objectName) {
     if (!Array.isArray(objPath)) throw new Error('objPath is required')
-    const objName = objPath.length > 1 ? 'v' : 'obj'
+    const objName = objectName ?? (objPath.length > 1 ? 'v' : 'obj')
     const pad = (str) => '  '.repeat(structPaddingLevel) + str
     const pushSize = (str) => { sizeLines += pad(str) + '\n' }
     const pushEncode = (str) => { encodeLines += pad(str) + '\n' }
     const pushSizeEncode = (str) => (pushSize(str), pushEncode(str))
     const pushAll = (str) => (pushSize(str), pushEncode(str), pushDecode(str))
     const pushDecode = (str) => { decodeLines += pad(str) + '\n' }
+    pushAll(`// ${objectName} ${objName}`)
 
     console.log(`.  ${fieldName}: ${fieldType}`)
     fieldType = unretardify(fieldType)
@@ -622,7 +624,7 @@ function visitRoot (root, mode) {
       // pushDecode(`  ${makeDecodeStr(lengthType, [objName, n, 'size()'], isAnon)}; /*2.3*/`)
       pushDecode(`  ${makeDecodeStr(lengthType, [n + '_len'])}; /*2.6*/`)
       // Resize the std::vector so it has enough space to fit length
-      pushDecode(`  ${objName}.${n}.resize(${n}_len); /*2.7*/`)
+      pushDecode(`  ${structPropName}.resize(${n}_len); /*2.7*/`)
       pushDecode(`  for (int i = 0; i < ${n}_len; i++) { ${makeDecodeStr(typeName, [objName, n + '[i]'], false)}; } /*2.8*/`)
       // pushDecode(`  for (auto &v : ${structPropName}) { ${makeDecodeStr(typeName, 'v', isAnon)}; } /*6*/`)
     } else {
@@ -641,29 +643,30 @@ function visitRoot (root, mode) {
           pushSize(`  ${makeSizeStr(lengthTyp, [lengthVariable])}; /*1.1*/`)
           pushEncode(`  ${makeEncodeStr(lengthTyp, [lengthVariable])}; /*1.2*/`)
           // Resize the std::vector so it has enough space to fit length
-          pushDecode(`  ${objName}.${n}.resize(${lengthVariable}); /*1.6*/`)
+          pushDecode(`  ${structPropName}.resize(${lengthVariable}); /*1.6*/`)
         } else {
           pushSize(`  ${makeSizeStr(lengthType, [objName, n, 'size()'], isAnon)}; /*1.3*/`)
           pushEncode(`  ${makeEncodeStr(lengthType, [objName, n, 'size()'], isAnon)}; /*1.4*/`)
           const typeStr = protodefTypeToCpp[lengthType] || 'int'
           pushDecode(`  ${typeStr} ${n}_len; ${makeDecodeStr(lengthType, [n + '_len'])}; /*1.5*/`)
           // Resize the std::vector so it has enough space to fit length
-          pushDecode(`  ${objName}.${n}.resize(${n}_len); /*1.6*/`)
+          pushDecode(`  ${structPropName}.resize(${n}_len); /*1.6*/`)
         }
         const actualType = unretardify(fieldType[3])
         if (actualType[0] === 'container') {
           const arrayStructName = promoteToPascalOrSuffix(n)
           typePropName = `pdef::proto::${colonJoin(objPath)}::${arrayStructName}`
+          const vName = 'v' + (structPaddingLevel + 1)
           // inline
-          pushSizeEncode(`  for (const auto &v : ${[objName, n].join('.')}) { /*5*/`)
+          pushSizeEncode(`  for (const auto &${vName} : ${dotJoin(objName, n)}) { /*5.20*/`)
           if (lengthVar) {
-            pushDecode(`  for (int i = 0; i < ${lengthVar[0]}; i++) { /*5*/`)
-            pushDecode(`    ${typePropName} &v = ${[objName, n].join('.')}[i]; /*5.0*/`)
+            pushDecode(`  for (int i = 0; i < ${lengthVar[0]}; i++) { /*5.21*/`)
+            pushDecode(`    ${typePropName} &${vName} = ${dotJoin(objName, n)}[i]; /*5.22*/`)
           } else {
             pushDecode(`  for (int i = 0; i < ${n}_len; i++) { /*5*/`)
-            pushDecode(`    ${typePropName} &v = ${[objName, n].join('.')}[i]; /*5.0*/`)
+            pushDecode(`    ${typePropName} &${vName} = ${dotJoin(objName, n)}[i]; /*5.23*/`)
           }
-          encodingFromContainer(newName, actualType[1], structPaddingLevel + 1, structPaddingLevel === 0 ? objPath.concat('') : objPath.concat(promoteToPascalOrSuffix(n)), true)
+          encodingFromContainer(newName, actualType[1], structPaddingLevel + 1, structPaddingLevel === 0 ? objPath.concat('') : objPath.concat(promoteToPascalOrSuffix(n)), true, vName)
           pushSizeEncode('  }')
           pushDecode('  }')
         } else if (actualType[0] === 'array') {
@@ -681,13 +684,13 @@ function visitRoot (root, mode) {
               pushEncode(`    ${makeEncodeStr(actualLengthTyp, [actualLengthVariable])}; /*5.4*/`)
               const typeStr = protodefTypeToCpp[actualLengthTyp] || 'int'
               pushDecode(`    ${typeStr} ${n}_len2; ${makeDecodeStr(actualLengthTyp, [n + '_len2'])}; /*5.5*/`)
-              pushDecode(`    ${objName}.${n}[i].resize(${n}_len2); /*5.10*/`)
+              pushDecode(`    ${structPropName}[i].resize(${n}_len2); /*5.10*/`)
             } else {
               pushSize(`    ${makeSizeStr(actualLengthType, [objName, n, 'size()'], isAnon)}; /*5.6*/`)
               pushEncode(`    ${makeEncodeStr(actualLengthType, [objName, n, 'size()'], isAnon)}; /*5.7*/`)
               const typeStr = protodefTypeToCpp[actualLengthType] || 'int'
               pushDecode(`    ${typeStr} ${n}_len2; ${makeDecodeStr(actualLengthType, [n + '_len2'])}; /*5.8*/`)
-              pushDecode(`    ${objName}.${n}[i].resize(${n}_len2); /*5.9*/`)
+              pushDecode(`    ${structPropName}[i].resize(${n}_len2); /*5.9*/`)
             }
             pushSizeEncode('    for (const auto &v : v) { /*5.10*/')
             if (actualLengthVar) pushDecode(`    for (int j = 0; j < ${actualLengthVar[0]}; j++) { /*5.11*/`)
@@ -713,10 +716,18 @@ function visitRoot (root, mode) {
           // pushSizeEncode('  }')
           // pushDecode('  }')
         } else {
-          pushEncode(`  for (const auto &v : ${structPropName}) { ${makeEncodeStr(actualType, 'v')}; /*3.1*/ }`)
-          pushSize(`  for (const auto &v : ${structPropName}) { ${makeSizeStr(actualType, 'v')}; /*3.2*/ }`)
-          if (lengthVar) pushDecode(`  for (int i = 0; i < ${lengthVar[0]}; i++) { ${makeDecodeStr(actualType, [objName, n + '[i]'])}; /*3.3*/ }`)
-          else pushDecode(`  for (int i = 0; i < ${n}_len; i++) { ${makeDecodeStr(actualType, [objName, n + '[i]'])}; /*3.4*/ }`)
+          const vName = 'v' + (structPaddingLevel + 1)
+          pushEncode(`  for (const auto &${vName} : ${structPropName}) { /*3.1*/`)
+          pushSize(`  for (const auto &${vName} : ${structPropName}) {`)
+          if (lengthVar) pushDecode(`  for (int i = 0; i < ${lengthVar[0]}; i++) {`)
+          else pushDecode(`  for (int i = 0; i < ${n}_len; i++) {`)
+          pushDecode(`    auto &${vName} = ${structPropName}[i]; /*3.4*/`)
+          // visitType('', actualType, structPaddingLevel + 1, objPath.concat(n), true)
+          // fieldName, fieldType, structPaddingLevel = 0, objPath, objectName
+          encodeType('', actualType, structPaddingLevel + 1, objPath.concat(n), undefined, vName)
+          pushEncode('  }')
+          pushSize('  }')
+          pushDecode('  }')
         }
       } else if (typeName === 'switch') {
         const compareTo = Array.isArray(fieldType[1]) ? fieldType[1][2] : fieldType[1]
@@ -750,7 +761,7 @@ function visitRoot (root, mode) {
               pushSize(`      EXPECT_OR_BAIL(${objName}.${realName}); const pdef::proto::${colonJoin(objPath)}::${structureName} &v = *${objName}.${realName}; /*8.6*/`)
             }
           }
-          visitType(n, caseType, structPaddingLevel + 2, (isScoped && realName) ? objPath.concat(promoteToPascalOrSuffix(realName)) : objPath, true)
+          visitType(n, caseType, structPaddingLevel + 2, (isScoped && realName) ? objPath.concat(promoteToPascalOrSuffix(realName)) : objPath, true, objectName)
           pushAll('      break;')
           pushAll('    } /*8.7*/')
         }
@@ -783,16 +794,17 @@ function visitRoot (root, mode) {
           if (customTypes[actualType]) {
             const typeImpl = customTypes[actualType]
             structVarType = typeImpl.type?.(fieldType[1], n)
-            const sizeCode = typeImpl.size(fieldType[1], n, (type, args, anon) => makeSizeStr(type, args, anon ?? isAnon)).split('\n').map(e => pad('  ' + e.trim())).join('\n').trim()
-            const encodeCode = typeImpl.write(fieldType[1], n, (type, args, anon) => makeEncodeStr(type, args, anon ?? isAnon)).split('\n').map(e => pad('  ' + e.trim())).join('\n').trim()
-            const decodeCode = typeImpl.read(fieldType[1], n, (type, args, anon) => makeDecodeStr(type, args, anon ?? isAnon)).split('\n').map(e => pad('  ' + e.trim())).join('\n').trim()
-            pushSize(`  ${sizeCode.replaceAll('obj.', objName + '.')} /*${fieldName}: ${actualType}*/ /*4.1*/`)
-            pushEncode(`  ${encodeCode.replaceAll('obj.', objName + '.')} /*${n}: ${actualType}*/ /*4.2*/`)
-            pushDecode(`  ${decodeCode.replaceAll('obj.', objName + '.')} /*${n}: ${actualType}*/ /*4.3*/`)
+            const structVarRef = `${objName}`
+            const sizeCode = typeImpl.size(fieldType[1], [n, structPropName], (type, args, anon) => makeSizeStr(type, args, anon ?? isAnon)).split('\n').map(e => pad('  ' + e.trim())).join('\n').trim()
+            const encodeCode = typeImpl.write(fieldType[1], [n, structPropName], (type, args, anon) => makeEncodeStr(type, args, anon ?? isAnon)).split('\n').map(e => pad('  ' + e.trim())).join('\n').trim()
+            const decodeCode = typeImpl.read(fieldType[1], [n, structPropName], (type, args, anon) => makeDecodeStr(type, args, anon ?? isAnon)).split('\n').map(e => pad('  ' + e.trim())).join('\n').trim()
+            pushSize(`  ${sizeCode} /*${fieldName}: ${actualType}*/ /*4.1*/`)
+            pushEncode(`  ${encodeCode} /*${n}: ${actualType}*/ /*4.2*/`)
+            pushDecode(`  ${decodeCode} /*${n}: ${actualType}*/ /*4.3*/`)
           } else if (root[actualType] && root[actualType][0] !== 'native') {
             pushSize(`  ${makeSizeStr(Array.isArray(fieldType) ? fieldType[0] : fieldType, [objName, n], isAnon)}; /*${escapeComment(n)}*/ /*4.4*/`)
             pushEncode(`  ${makeEncodeStr(Array.isArray(fieldType) ? fieldType[0] : fieldType, [objName, n], isAnon)}; /*${typeName}*/ /*4.5*/`)
-            pushDecode(`  ${makeDecodeStr(Array.isArray(fieldType) ? fieldType[0] : fieldType, [objName, n], isAnon)}; /*4.6*/`)
+            pushDecode(`  ${makeDecodeStr(Array.isArray(fieldType) ? fieldType[0] : fieldType, [objName, n], isAnon)}; /*${objName}*/ /*4.6*/`)
           } else {
             console.warn('Do not know how to handle unknown type: ' + actualType)
             pushSize(`// ERROR: unknown type ${actualType} /*4.1*/`)
@@ -842,7 +854,7 @@ function visitRoot (root, mode) {
     pushDecode('}')
   }
 
-  function encodingFromContainer (name, container, structPaddingLevel = 0, objPath, excludeHeaders) {
+  function encodingFromContainer (name, container, structPaddingLevel = 0, objPath, excludeHeaders, objName) {
     if (!Array.isArray(objPath)) throw new Error('objPath is required')
     if (mode === 'struct') return
 
@@ -851,14 +863,14 @@ function visitRoot (root, mode) {
     }
     for (const [fieldName, fieldType] of Object.entries(container)) {
       if (fieldName.startsWith('*')) continue
-      encodeType(fieldName, fieldType, structPaddingLevel, objPath)
+      encodeType(fieldName, fieldType, structPaddingLevel, objPath, undefined, objName)
     }
     if (!excludeHeaders) {
       writeFooter(name, structPaddingLevel)
     }
   }
 
-  function visitType (structName, type, structPaddingLevel = 0, objPath, excludeHeaders) {
+  function visitType (structName, type, structPaddingLevel = 0, objPath, excludeHeaders, objName) {
     objPath ||= [structName]
     // const pad = (str) => '  '.repeat(structPaddingLevel) + str
     const [typeName, ...typeArgs] = unretardify(type)
@@ -875,20 +887,20 @@ function visitRoot (root, mode) {
           writeHeader(structName, structPaddingLevel)
           encodingFromContainer(structName, _type, structPaddingLevel + 1, objPath, true)
         } else {
-          encodeType(structName, unretardify(type), structPaddingLevel, objPath, excludeHeaders)
+          encodeType(structName, unretardify(type), structPaddingLevel, objPath, excludeHeaders, objName)
         }
         if (structPaddingLevel === 0) writeFooter(structName, structPaddingLevel)
       } else if (structPaddingLevel) {
-        encodeType(structName, unretardify(type), structPaddingLevel, objPath, excludeHeaders)
+        encodeType(structName, unretardify(type), structPaddingLevel, objPath, excludeHeaders, objName)
       }
     } else if (typeName === 'container') {
       structFromContainer(structName, typeArgs[0], structPaddingLevel + 1)
-      encodingFromContainer(structName, typeArgs[0], structPaddingLevel + 1, objPath, excludeHeaders)
+      encodingFromContainer(structName, typeArgs[0], structPaddingLevel + 1, objPath, excludeHeaders, objName)
     } else if (typeName === 'mapper') {
       structFromMapper(structName, typeArgs, structPaddingLevel + 1)
     } else if (structPaddingLevel) {
       structForType(structName, type, structPaddingLevel + 1)
-      encodeType(structName, type, structPaddingLevel, objPath, excludeHeaders)
+      encodeType(structName, type, structPaddingLevel, objPath, excludeHeaders, objName)
       // pushEncode(`  pdef6::proto::encode::${typeName}(stream, ${objName}.${structName});`)
     }
   }
