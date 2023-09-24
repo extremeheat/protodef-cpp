@@ -381,8 +381,8 @@ function debloatSchema (bloatedSchema) {
       for (const field in args.fields) {
         const val = args.fields[field]
         if (typeof val === 'string') {
-          if (val === 'void') continue
           next.add(field, [val])
+          if (val === 'void') continue
           sharedScope.add('', [val])
         } else if (Array.isArray(val)) {
           const [_actualType, _args] = val
@@ -591,13 +591,21 @@ function postprocess (schema) {
     }
   }
   function visitSwitch (name, switchType, optionalsInNS) {
-    // console.log('visiting switch', name, switchType, optionalsInNS)
     const [n] = cleanName(name)
     // console.log('Visiting switch', name, switchType, optionalsInNS, n)
     const isAnon = name.startsWith('_')
     const [compareTo, compareToType, cases] = switchType
+    // Move default to the end
+    if (cases.default) {
+      const defaultCase = cases.default
+      delete cases.default
+      cases.default = defaultCase
+      switchType[6] = 'moved!'
+    }
+
     for (const caseName in cases) {
       const type = fixType(cases[caseName])
+      if (type[0] === 'void') continue // void is important for switch statements with a case==0 and default
       if (type[0] === 'switch') {
         // console.log('Visiting nested switch', caseName, type)
         visitSwitch(n, type.slice(1), optionalsInNS)
@@ -610,7 +618,7 @@ function postprocess (schema) {
           if (optionalsInNS[N][json]) {
             if (Array.isArray(cases[caseName][fieldName])) { queueForAssignment(cases[caseName][fieldName], 5, optionalsInNS[N][json]) } else { queueForAssignment(cases[caseName][fieldName], '*name', optionalsInNS[N][json]) }
             // console.log('Added!', optionalsInNS[N][json], 'to', cases[caseName][fieldName])
-          } else {
+          } else { 
             // console.log('Optionals so far', optionalsInNS, cases[caseName][fieldName])
             throw new Error('Error in anon switch during postprocess for ' + fieldName)
           }
@@ -694,6 +702,9 @@ if (!module.parent) {
 }
 
 // Broken: Shaped recipes with array-array nesting and input=width*height
+//  this should be specially handled in the IR with a new multidimensional array
+//  to avoid a lot of complexity in the generator
+// Broken: can't use `default` as a field name in switch
 
 // IR:
 // Object key with a "?" prefix is promoted field from a switch or anonymous container

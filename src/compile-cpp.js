@@ -92,6 +92,9 @@ const protodefTypeSizes = {
   zigzag32: 'sizeOfZigZagVarInt',
   zigzag64: 'sizeOfZigZagVarLong'
 }
+const specialVars = {
+  ShieldItemID: ['u32', 0]
+}
 const customTypes = {
   pstring: {
     struct (args, name, makeCallingCode) {
@@ -326,6 +329,8 @@ function promoteToPascalOrSuffix (str, suffixIfAlreadyPascal = true) {
   }
 }
 
+const wrapWithParenIfNeeded = (str) => str.includes(' ') ? `(${str})` : str
+
 // illegal C++ keywords
 const illegal = ['byte', 'short', 'int', 'long', 'float', 'double', 'bool', 'default', 'break', 'void',
   'case', 'char', 'class', 'const', 'continue', 'do', 'else', 'enum', 'extern', 'for', 'goto', 'if', 'inline',
@@ -378,7 +383,14 @@ const footer = `
 `
 
 function visitRoot (root, mode) {
-  let structLines = headers + 'namespace pdef::proto {\n/*FWD_DECLS*/\n'
+  let variableLines = ''
+  for (const varName in specialVars) {
+    const [varType, varInitialValue] = specialVars[varName]
+    const primitiveType = protodefTypeToCpp[varType]
+    if (!primitiveType) throw new Error(`Missing primitive type for ${varName}`)
+    variableLines += `${primitiveType} ${varName} = ${varInitialValue};\n`
+  }
+  let structLines = headers + `namespace pdef::proto {\n${variableLines}\n/*FWD_DECLS*/\n`
   let sizeLines = 'namespace pdef::proto::size {\n/*FWD_DECLS*/\n'
   let encodeLines = 'namespace pdef::proto::encode {\n/*FWD_DECLS*/\n'
   let decodeLines = 'namespace pdef::proto::decode {\n/*FWD_DECLS*/\n'
@@ -404,7 +416,6 @@ function visitRoot (root, mode) {
       structForType(fieldName, fieldType, structPaddingLevel)
     }
     push('};')
-    console.log('{\n')
   }
 
   function structForType (fieldName, fieldType, structPaddingLevel, anonymouslyWrite) {
@@ -480,6 +491,11 @@ function visitRoot (root, mode) {
         if (parsedType.startsWith('std::optional')) {
           parsedType = parsedType.replace('std::optional<', '').replace('>', '')
           // arrayLevel--
+        } else if (parsedType === 'bool' || parsedType.startsWith('bool ')) {
+          // Because std::vector<bool> is a special case that doesn't return a lvalue reference,
+          // we need to use std::vector<char> instead. (Sigh...)
+          // https://en.cppreference.com/w/cpp/container/vector_bool
+          parsedType = 'char'
         }
         if (!parsedType.startsWith('//')) { push(`  ${typeStrForType(parsedType, n, arrayLevel, true)} /*3.0*/`) }
         // push(`  std::vector<${newName}> ${deanonymizeStr(fieldName)}; /*3*/`)
@@ -522,7 +538,6 @@ function visitRoot (root, mode) {
       '};\n'
     ].map(pad).join('\n')
     structLines += l
-    console.log(l)
   }
 
   let sizeIx = 0
@@ -542,7 +557,8 @@ function visitRoot (root, mode) {
     const name = Array.isArray(varName) ? dotJoin(varName) : varName
     if (protodefTypeToCppDecode[type]) {
       // const cast = protodefTypeToCpp[type] ? `(${protodefTypeToCpp[type]}&)` : ''
-      return `READ_OR_BAIL(${protodefTypeToCppDecode[type]}, ${name})`
+      // Cast for bool here per special case with std::vector<bool> having to be std::vector<char>
+      return `READ_OR_BAIL(${protodefTypeToCppDecode[type]}, ${type === 'bool' ? '(bool&)': ''}${name})`
     } else {
       let s = ''
       if (maybe) s += `${name} = {}; pdef::proto::decode::${type}(stream, *${name})`
@@ -570,7 +586,6 @@ function visitRoot (root, mode) {
     const pushSizeEncode = (str) => (pushSize(str), pushEncode(str))
     const pushAll = (str) => (pushSize(str), pushEncode(str), pushDecode(str))
     const pushDecode = (str) => { decodeLines += pad(str) + '\n' }
-    pushAll(`// ${objectName} ${objName}`)
 
     console.log(`.  ${fieldName}: ${fieldType}`)
     fieldType = unretardify(fieldType)
@@ -736,7 +751,30 @@ function visitRoot (root, mode) {
         const compareToType = (_compareToType && _compareToType !== 'mapper') ? _compareToType : promoteToPascalOrSuffix(compareTo)
         const compareToName = promoteToPascalOrSuffix(compareTo)
         const cases = fieldType[3]
-        pushAll(`  switch (${toSafeVarSwitch(compareTo)}) { /*8.0*/`)
+
+        // Clang warns us on switches for booleans, so we need to use if/else instead
+        let canBeSwitch = _compareToType === 'mapper'
+        // if we branch on a dynamic value, we can't use a switch
+        const allCases = Object.entries(cases)
+        if (allCases[0][0] === 'default') throw new Error('default case must be last')
+        else if (cases.default && cases.default[0] === 'void') delete cases.default // void default case is useless
+        for (const [caseName] of Object.entries(cases)) {
+          if (caseName.startsWith('/')) canBeSwitch = false
+        }
+        if (canBeSwitch) pushAll(`  switch (${toSafeVarSwitch(compareTo)}) { /*8.0*/`)
+        let firstCase = true
+        function pushCaseStart (matchCase, caseBody) {
+          const ifStatement = firstCase ? 'if' : 'else if'
+          if (matchCase === 'default') {
+            if (canBeSwitch) pushAll('    default: { ' + caseBody)
+            else pushAll(firstCase ? '  {' : `  else {`)
+          } else {
+            if (canBeSwitch) pushAll(`    case ${matchCase}: { ` + caseBody)
+            else pushAll(`  ${ifStatement} (${wrapWithParenIfNeeded(toSafeVarSwitch(compareTo))} == ${wrapWithParenIfNeeded(matchCase)}) { ` + caseBody)            
+          }
+          firstCase = false
+        }
+
         for (const [caseName, caseType] of Object.entries(cases)) {
           // let absName
           // if (Array.isArray(caseType)) {
@@ -746,7 +784,17 @@ function visitRoot (root, mode) {
           // }
           // if(!absName) console.log('no absName', caseType)
           // absName = deanonymizeStr(absName)
-          if (compareToType === 'bool') { pushAll(`    case ${caseName}: { /*8.0*/`) } else if ((['true', 'false'].includes(caseName) && (_compareToType !== 'mapper')) || !isNaN(caseName)) { pushAll(`    case ${caseName}: { /*8.1*/`) } else if (caseName === 'default') { pushAll('    default: { /*8.1*/') } else if (caseName.startsWith('/')) { pushAll(`    case pdef::proto::${toSafeVar(caseName).replace('/', '')}: { /*8.2*/`) } else { pushAll(`    case pdef::proto::${colonJoin(pathToCompareTo)}::${compareToName}::${toSafeVar(promoteToPascalOrSuffix(caseName))}: { /*8.3*/`) }
+          if (compareToType === 'bool') {
+            pushCaseStart(caseName, '/*8.1*/')
+          } else if ((['true', 'false'].includes(caseName) && (_compareToType !== 'mapper')) || !isNaN(caseName)) {
+            pushCaseStart(caseName, '/*8.2*/')
+          } else if (caseName === 'default') {
+            pushCaseStart('default', '/*8.3*/')
+          } else if (caseName.startsWith('/')) {
+            pushCaseStart(`pdef::proto::${toSafeVar(caseName).replace('/', '')}`, '/*8.4*/')
+          } else {
+            pushCaseStart(`pdef::proto::${colonJoin(pathToCompareTo)}::${compareToName}::${toSafeVar(promoteToPascalOrSuffix(caseName))}`, '/*8.5*/')
+          }
           // encodingFromContainer(caseName, caseType, structPaddingLevel + 2, objName)
           let realName = isAnon ? null : caseType[5] || caseType['*name']
           const isScoped = isAnon ? false : !Array.isArray(caseType)
@@ -761,12 +809,18 @@ function visitRoot (root, mode) {
               pushSize(`      EXPECT_OR_BAIL(${objName}.${realName}); const pdef::proto::${colonJoin(objPath)}::${structureName} &v = *${objName}.${realName}; /*8.6*/`)
             }
           }
-          visitType(n, caseType, structPaddingLevel + 2, (isScoped && realName) ? objPath.concat(promoteToPascalOrSuffix(realName)) : objPath, true, objectName)
-          pushAll('      break;')
-          pushAll('    } /*8.7*/')
+          visitType(n, caseType, structPaddingLevel + 1 + (canBeSwitch), (isScoped && realName) ? objPath.concat(promoteToPascalOrSuffix(realName)) : objPath, true, objectName)
+          if (canBeSwitch) {
+            pushAll('      break;')
+            pushAll('    } /*8.7*/')
+          } else { // 1 level less deep
+            pushAll('  }')
+          }
         }
-        if (!cases.default) pushAll('    default: break; /*avoid unhandled case warning*/')
-        pushAll('  } /*8.8*/')
+        if (canBeSwitch) {
+          if (!cases.default) pushAll('    default: break; /*avoid unhandled case warning*/')
+          pushAll('  } /*8.8*/')
+        }
       } else if (typeName === 'mapper') {
         const actualType = fieldType[1]
         if (fieldName.endsWith('^')) {
@@ -874,7 +928,7 @@ function visitRoot (root, mode) {
     objPath ||= [structName]
     // const pad = (str) => '  '.repeat(structPaddingLevel) + str
     const [typeName, ...typeArgs] = unretardify(type)
-    console.log(typeName, typeArgs)
+    // console.log(typeName, typeArgs)
     if (typeName === 'native') {
       structLines += `// ${structName} is built in\n`
     } else if (typeName === 'array') {
