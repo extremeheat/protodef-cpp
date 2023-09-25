@@ -1,8 +1,8 @@
 # protodef-cpp
 [![NPM version](https://img.shields.io/npm/v/protodef-cpp.svg?logo=npm)](http://npmjs.com/package/protodef-cpp)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/PrismarineJS/protodef-cpp/ci.yml.svg?label=CI&logo=github)](https://github.com/extremeheat/protodef-cpp/actions?query=workflow%3A%22CI%22)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/extremeheat/protodef-cpp/ci.yml.svg?label=CI&logo=github)](https://github.com/extremeheat/protodef-cpp/actions?query=workflow%3A%22CI%22)
 [![Try it on gitpod](https://img.shields.io/static/v1.svg?label=try&message=on%20gitpod&color=brightgreen&logo=gitpod)](https://gitpod.io/#https://github.com/extremeheat/protodef-cpp)
-[![Official Discord](https://img.shields.io/static/v1.svg?label=OFFICIAL&message=DISCORD&color=blue&logo=discord)](https://discord.gg/GsEFRM8)
+[![Official Discord](https://img.shields.io/static/v1.svg?label=PrismarineJS&message=Discord&color=blue&logo=discord)](https://discord.gg/GsEFRM8)
 
 C++ compiler for ProtoDef schemas, a lighter and more versatile alternative to Google Protocol Buffers or FlatBuffers that can support any binary format.
 
