@@ -83,7 +83,7 @@ const protodefTypeSizes = {
   zigzag64: 'sizeOfZigZagVarLong'
 }
 const specialVars = {
-  ShieldItemID: ['u32', 0]
+
 }
 const customTypes = {
   pstring: {
@@ -249,24 +249,6 @@ len += ${refName}.size();
     size (args, [name], makeCallingCode) {
       return 'len += 1;'
     }
-  },
-  enum_size_based_on_values_len: {
-    type () {
-      return ''
-    },
-    struct (args, name, makeCallingCode) {
-      const s = `enum class _EnumType { Byte, Short, Int }; _EnumType ${name};`
-      return s
-    },
-    read (args, [name], makeCallingCode) {
-      return `pdef::proto::packet_available_commands::_EnumType ${name}; if (values_len <= 0xff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (values_len <= 0xffff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Short; } else { ${name} = pdef::proto::packet_available_commands::_EnumType::Int; }`
-    },
-    write (args, [name], makeCallingCode) {
-      return `pdef::proto::packet_available_commands::_EnumType ${name}; if (values_len <= 0xff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (values_len <= 0xffff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Short; } else { ${name} = pdef::proto::packet_available_commands::_EnumType::Int; }`
-    },
-    size (args, [name], makeCallingCode) {
-      return `pdef::proto::packet_available_commands::_EnumType ${name}; if (values_len <= 0xff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (values_len <= 0xffff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Short; } else { ${name} = pdef::proto::packet_available_commands::_EnumType::Int; }`
-    }
   }
 }
 const protodefTypeToCppDecode = Object.fromEntries(
@@ -364,7 +346,7 @@ const footer = `
 #undef READ_OR_BAIL
 `
 
-function visitRoot (root, mode, logging) {
+function visitRoot (root, mode, customTypes, specialVars, logging) {
   const log = logging ? console.log : () => {}
   let variableLines = ''
   for (const varName in specialVars) {
@@ -961,11 +943,12 @@ function visitRoot (root, mode, logging) {
   return { structLines, sizeLines, encodeLines, decodeLines }
 }
 
-function visit (ir) {
-  const { structLines } = visitRoot(ir, 'struct')
-  const { sizeLines } = visitRoot(ir, 'size')
-  const { encodeLines } = visitRoot(ir, 'encode')
-  const { decodeLines } = visitRoot(ir, 'decode')
+function visit (ir, userDefinedCustomTypes, globalVars) {
+  const customTypeImpl = { ...customTypes, ...userDefinedCustomTypes }
+  const { structLines } = visitRoot(ir, 'struct', customTypeImpl, globalVars)
+  const { sizeLines } = visitRoot(ir, 'size', customTypeImpl, globalVars)
+  const { encodeLines } = visitRoot(ir, 'encode', customTypeImpl, globalVars)
+  const { decodeLines } = visitRoot(ir, 'decode', customTypeImpl, globalVars)
   const lines = structLines + '\n' + sizeLines + '\n' + encodeLines + '\n' + decodeLines
   return { structLines, sizeLines, encodeLines, decodeLines, lines }
 }

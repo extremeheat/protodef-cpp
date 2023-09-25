@@ -1,9 +1,14 @@
+if (typeof process !== 'undefined' && parseInt(process.versions.node.split('.')[0]) < 18) {
+  console.error('Your node version is currently', process.versions.node)
+  console.error('Please update it to a version >= 18.x.x from https://nodejs.org/')
+  process.exit(1)
+}
 const fs = require('fs')
 const { join } = require('path')
 const ir = require('./ir')
 const compileCpp = require('./compile-cpp')
 
-function compile ({ inputJSON, inputFile, outputFolder, typeAliases }) {
+function compile ({ lang, inputJSON, inputFile, outputFolder, typeAliases, customTypes, variables, namespace }) {
   if (!inputJSON) {
     inputJSON = fs.readFileSync(inputFile, 'utf8')
   }
@@ -17,7 +22,7 @@ function compile ({ inputJSON, inputFile, outputFolder, typeAliases }) {
     }
   }
 
-  const compiledCppCode = compileCpp.compile(generatedIR)
+  const compiledCppCode = compileCpp.compile(generatedIR, customTypes, variables)
   const inputFileName = inputFile?.split('/').pop()?.split('.')?.[0] ?? 'protocol'
   const parsedOutputFolder = outputFolder || './'
   const outputFilename = parsedOutputFolder + `${inputFileName}.h`

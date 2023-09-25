@@ -6,7 +6,7 @@ const schema = { ...pc1_18.types, ...pc1_18.play.toClient.types }
 
 protodefCpp.compile({
   inputJSON: schema,
-  outputFolder: './',
+  outputFolder: './build/',
   // Some stubs as this is only a proof of concept
   typeAliases: [
     ['nbt', 'i8'],

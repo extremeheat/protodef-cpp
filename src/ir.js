@@ -1,5 +1,6 @@
 /* eslint-disable no-return-assign, no-sequences, no-unused-vars */
 const fs = require('fs')
+
 // Resolve switch statements' compareTo's
 function preprocess (schema, logging) {
   const log = logging ? console.log : () => {}
@@ -70,7 +71,7 @@ function preprocess (schema, logging) {
           args[0].compareTo = shouldReplace
         }
         if (compareTo.startsWith('/')) {
-          // Special case, ignore for now
+          // Root variables, these are specially defined by the user
         } else {
           log('Injecting compareTo', compareTo)
           const injectedObj = walkBackwardAndInject(compareTo, parent, { comparedTo: true })

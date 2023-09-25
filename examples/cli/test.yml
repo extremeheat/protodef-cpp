@@ -1,0 +1,9 @@
+string: ["pstring", { countType: "varint" }]
+packet_video_stream_connect:
+  server_uri: string
+  frame_send_frequency: lf32
+  action: u8 =>
+     1: none
+     2: close
+  resolution_x: li32
+  resolution_y: li32
