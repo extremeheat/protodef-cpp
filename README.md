@@ -55,7 +55,7 @@ protocol.yml:
 ```yaml
 string: ["pstring", { countType: "varint" }]
 packet_video_stream_connect:
-  server_uri: ShortString
+  server_uri: string
   frame_send_frequency: lf32
   action: u8 =>
      1: none
