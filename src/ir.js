@@ -619,10 +619,10 @@ module.exports = {
 
 // if (!module.parent) {
 //   const schema = require('./__tmp/protocol.json').types
-//   // move mcpe_packet to the end
-//   const oldmcpePacket = schema.mcpe_packet
-//   delete schema.mcpe_packet
-//   schema.mcpe_packet = oldmcpePacket
+// // move mcpe_packet to the end
+// const oldmcpePacket = schema.mcpe_packet
+// delete schema.mcpe_packet
+// schema.mcpe_packet = oldmcpePacket
 //   const final = module.exports.generate(schema)
 //   fs.writeFileSync('./redone.json', JSON.stringify(final, null, 2))
 // }

@@ -28,10 +28,10 @@ protodef-cpp - A C++ compiler for ProtoDef schemas
 
 Options:
   --input, -i   Path to ProtoDef JSON/YAML file with protocol data
-  --lang        What language use compile to. Currently only C++.  (default: cpp)
+  --lang, -l    What language use compile to. Currently only C++.  (default: cpp)
   --output      Output folder  (default: ./)
-  --customTypes Path to custom types file
-  --namespace   What namespace to use, useful if you have multiple protocols. (default: proto)
+  --config, -t  Path to JS file whose exports will be merged into the current options, which allows you to define custom types and variables.
+  --namespace   What namespace to use, useful if you have multiple protocols.  (default: proto)
 ```
 
 If you have multiple protocols specified inside one JSON file, you can run the command multiple times 

@@ -8,7 +8,7 @@ const { join } = require('path')
 const ir = require('./ir')
 const compileCpp = require('./compile-cpp')
 
-function compile ({ lang, inputJSON, inputFile, outputFolder, typeAliases, customTypes, variables, namespace }) {
+function compile ({ lang, inputJSON, inputFile, outputFolder, typeAliases, customTypes, variables, namespace, outputProtocolFileName }) {
   if (!inputJSON) {
     inputJSON = fs.readFileSync(inputFile, 'utf8')
   }
@@ -22,8 +22,8 @@ function compile ({ lang, inputJSON, inputFile, outputFolder, typeAliases, custo
     }
   }
 
-  const compiledCppCode = compileCpp.compile(generatedIR, customTypes, variables)
-  const inputFileName = inputFile?.split('/').pop()?.split('.')?.[0] ?? 'protocol'
+  const compiledCppCode = compileCpp.compile(generatedIR, customTypes, variables, namespace)
+  const inputFileName = inputFile?.split('/').pop()?.split('.')?.[0] ?? outputProtocolFileName ?? namespace ?? 'protocol'
   const parsedOutputFolder = outputFolder || './'
   const outputFilename = parsedOutputFolder + `${inputFileName}.h`
   fs.writeFileSync(outputFilename, compiledCppCode.lines)

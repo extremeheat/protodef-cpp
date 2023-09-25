@@ -722,7 +722,8 @@ function visitRoot (root, mode, customTypes, specialVars, logging) {
         let canBeSwitch = _compareToType === 'mapper'
         // if we branch on a dynamic value, we can't use a switch
         const allCases = Object.entries(cases)
-        if (allCases[0][0] === 'default') throw new Error('default case must be last')
+        if (!allCases.length) return // empty switch
+        if (allCases[0][0] === 'default') throw new Error('default case must be last: reading ' + fieldName)
         else if (cases.default && cases.default[0] === 'void') delete cases.default // void default case is useless
         for (const [caseName] of Object.entries(cases)) {
           if (caseName.startsWith('/')) canBeSwitch = false
@@ -742,14 +743,6 @@ function visitRoot (root, mode, customTypes, specialVars, logging) {
         }
 
         for (const [caseName, caseType] of Object.entries(cases)) {
-          // let absName
-          // if (Array.isArray(caseType)) {
-          //   absName = caseType[5]
-          // } else {
-          //   absName = caseType['*name']
-          // }
-          // if(!absName) console.log('no absName', caseType)
-          // absName = deanonymizeStr(absName)
           if (compareToType === 'bool') {
             pushCaseStart(caseName, '/*8.1*/')
           } else if ((['true', 'false'].includes(caseName) && (_compareToType !== 'mapper')) || !isNaN(caseName)) {
@@ -921,12 +914,10 @@ function visitRoot (root, mode, customTypes, specialVars, logging) {
     } else if (structPaddingLevel) {
       structForType(structName, type, structPaddingLevel + 1)
       encodeType(structName, type, structPaddingLevel, objPath, excludeHeaders, objName)
-      // pushEncode(`  pdef6::proto::encode::${typeName}(stream, ${objName}.${structName});`)
     }
   }
 
   for (const structName in root) {
-    // console.log(root[structName])
     visitType(structName, root[structName])
   }
 
@@ -943,13 +934,14 @@ function visitRoot (root, mode, customTypes, specialVars, logging) {
   return { structLines, sizeLines, encodeLines, decodeLines }
 }
 
-function visit (ir, userDefinedCustomTypes, globalVars) {
+function visit (ir, userDefinedCustomTypes, globalVars, namespace) {
   const customTypeImpl = { ...customTypes, ...userDefinedCustomTypes }
   const { structLines } = visitRoot(ir, 'struct', customTypeImpl, globalVars)
   const { sizeLines } = visitRoot(ir, 'size', customTypeImpl, globalVars)
   const { encodeLines } = visitRoot(ir, 'encode', customTypeImpl, globalVars)
   const { decodeLines } = visitRoot(ir, 'decode', customTypeImpl, globalVars)
-  const lines = structLines + '\n' + sizeLines + '\n' + encodeLines + '\n' + decodeLines
+  let lines = structLines + '\n' + sizeLines + '\n' + encodeLines + '\n' + decodeLines
+  if (namespace) lines = lines.replaceAll('pdef::proto ', `pdef::${namespace} `).replaceAll('pdef::proto::', `pdef::${namespace}::`)
   return { structLines, sizeLines, encodeLines, decodeLines, lines }
 }
 
