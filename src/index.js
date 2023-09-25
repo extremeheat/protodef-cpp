@@ -1,4 +1,5 @@
 const fs = require('fs')
+const { join } = require('path')
 const ir = require('./ir')
 const compileCpp = require('./compile-cpp')
 
@@ -22,7 +23,7 @@ function compile ({ inputJSON, inputFile, outputFolder, typeAliases }) {
   const outputFilename = parsedOutputFolder + `${inputFileName}.h`
   fs.writeFileSync(outputFilename, compiledCppCode.lines)
   // Copy over stream.h into the output dir, if it's not already there
-  fs.copyFileSync(__dirname + '/stream.h', parsedOutputFolder + 'stream.h')
+  fs.copyFileSync(join(__dirname, '/stream.h'), parsedOutputFolder + 'stream.h')
 }
 
 module.exports = { compile }

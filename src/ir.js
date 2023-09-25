@@ -1,7 +1,5 @@
 /* eslint-disable no-return-assign, no-sequences, no-unused-vars */
 const fs = require('fs')
-// const basicJSON = require('./sample.json')
-
 // Resolve switch statements' compareTo's
 function preprocess (schema, logging) {
   const log = logging ? console.log : () => {}
@@ -24,16 +22,12 @@ function preprocess (schema, logging) {
       for (const _current of current) {
         if (_current.name === untilMatch) {
           Object.assign(_current, injectable)
-          // console.log('Injected', injectable, 'into', _current)
           _current.usedLevelsDown = nonAnonLevelsUp
           return _current
         }
       }
-      if (!current.parent) {
-        // console.log('Top most', current)
-      }
+      // if (!current.parent) console.log('Top most')
       if (current.scopeIsAnon) nonAnonLevelsUp--
-      // if (current.scopeIsAnon) throw Error()
       nonAnonLevelsUp++
       // console.dir(current, { depth: null })
       current = current.parent
@@ -94,13 +88,29 @@ function preprocess (schema, logging) {
         }
       } else if (name === 'array') {
         if (typeof args[0].count === 'string') {
-          // console.log('Injecting array count', args)
           const injectedObj = walkBackwardAndInject(args[0].count, parent, { counted: true })
           if (injectedObj) {
             args[0].countVarType = injectedObj.type
           } else throw Error('Could not find count variable: ' + args[0].count)
         }
         visitType(args[0].type, parent)
+      } else if (name === 'option') {
+        // TODO: proper backend support for option
+        // turn this into a switch
+        const nextContainer = [
+          { name: 'has', type: 'bool' },
+          {
+            name: 'value',
+            type: [
+              'switch',
+              { compareTo: 'has', compareToType: 'bool', fields: { true: args[0] } }
+            ]
+          }
+        ]
+        type[0] = 'container'
+        type[1] = nextContainer
+        // Now visit the new container
+        visitContainer(nextContainer, parent, anon)
       }
     }
   }
@@ -128,7 +138,6 @@ function preprocess (schema, logging) {
   return schema
 }
 
-// Yes, it's a mess.
 function processSchema (bloatedSchema, logging) {
   const debugLog = logging ? console.log : () => {}
   let i = 0
@@ -261,8 +270,6 @@ function processSchema (bloatedSchema, logging) {
               this.vars[newKey] = JSON.parse(group)
               debugLog('Combined ', [...typeGroups[group]], 'into', newKey, 'with', group)
             }
-            // console.log('First', first, name)
-            // this.vars[name] = JSON.parse(group)
             for (const k of rest) {
               delete this.vars[k]
             }
@@ -270,14 +277,6 @@ function processSchema (bloatedSchema, logging) {
           // console.log('After pruning', Object.entries(this.vars).map(([k, v]) => [k, JSON.stringify(v)]))
           this.typesForKey[key] = next
         }
-
-        // if (key.includes('destination')) {
-        //   console.dir(this.typesForKey, {depth: null})
-        //   console.dir(this.vars, {depth: null})
-        //   // console.log(JSON.stringify(this.typesForKey['?block_action,array'][0]))
-        //   // console.log(JSON.stringify(this.vars['?block_action,array']))
-        //   throw Error()
-        // }
       }
 
       // Make sure we actually did simplify things
@@ -304,7 +303,6 @@ function processSchema (bloatedSchema, logging) {
 
     toJSON () {
       return this.vars
-      // return { ...this.vars, didSimplify: this.didSimplify }
     }
   }
 
@@ -334,7 +332,7 @@ function processSchema (bloatedSchema, logging) {
   }
 
   function visit (root, simplified, isAnonIteration = false) {
-    // console.log('Visiting...', JSON.stringify(root), isAnonIteration ? '(anon)' : '')
+    // debugLog('Visiting...', JSON.stringify(root), isAnonIteration ? '(anon)' : '')
 
     function handleSwitch (newName, args, anon, simplified) {
       const next = new Scope()
@@ -361,11 +359,8 @@ function processSchema (bloatedSchema, logging) {
             // if (anon) visit(_args, simplified, true)
             nextField.finish()
           } else if (_actualType === 'switch') {
-            // throw new Error('Nested switch not supported')
             const nextField = new Scope()
             handleSwitch(field, _args, false, nextField)
-            // console.log('NextScope for switch')
-            // console.dir(nextField, { depth: null })
             for (const f in nextField.vars) {
               if (f.endsWith('?')) {
                 next.add(field, nextField.vars[f])
@@ -373,9 +368,6 @@ function processSchema (bloatedSchema, logging) {
                 sharedScope.add(field, nextField.vars[f])
               }
             }
-            // handleSwitch(field, _args, false, sharedScope)
-            // next.add(field, nextField/*.get('default?')*/)
-            // if (anon) handleSwitch(field, _args, true, simplified)
             nextField.finish()
           } else if (_actualType === 'mapper') {
             // This is adding to the nested scope of the switch:
@@ -394,7 +386,6 @@ function processSchema (bloatedSchema, logging) {
                 throw new Error('Nested switch-array-switch not supported, please rewrite schema')
               }
               const children = new Scope()
-              // visit(_args.type[1], children)
               if (anon) {
                 simplified.addMaybe(field, ['array', _args.countType, count, children])
                 throw new Error('Anon switch cannot have an arrays as child : would have an undefined name')
@@ -405,10 +396,6 @@ function processSchema (bloatedSchema, logging) {
                 sharedScope.add('array', ['array', _args.countType, count, unwrap])
               }
               children.finish()
-              // if (newName.includes('block_action')) {
-              //   console.dir(children, {depth: null})
-              //   throw Error()
-              // }
             }
           } else {
             debugLog('Unknown type', _actualType, _args)
@@ -420,7 +407,6 @@ function processSchema (bloatedSchema, logging) {
 
       simplified.add(newName + '?', ['switch', fixCompareToType(args.compareTo), args.compareToType, next])
       if (!args.compareToType) throw new Error('Missing compareToType ' + JSON.stringify(args))
-      // simplified[newName] = sharedScope
       for (const key in sharedScope.vars) {
         simplified.addMaybe(anon ? key : newName, sharedScope.vars[key], key)
       }
@@ -433,9 +419,6 @@ function processSchema (bloatedSchema, logging) {
       if (typeof type === 'string') type = [type]
       const newName = anon ? ('_' + i++) : name
       const addToScope = (...a) => isAnonIteration ? simplified.addMaybe(...a) : simplified.add(...a)
-      // this is handled inside Scope:
-      // newName = isAnonIteration ? ('?' + newName) : newName
-      // newName = disambiguateField(newName, type, simplified)
       const [actualType, args] = type
       if (actualType === 'container') {
         const scope = new Scope()
@@ -448,7 +431,6 @@ function processSchema (bloatedSchema, logging) {
       } else if (actualType === 'mapper') {
         addToScope(newName, ['mapper', args.type, sanitizeMapper(args.mappings)])
       } else if (actualType === 'array') {
-        // visit(args.type[1], children)
         const count = args.count ? [args.count, args.countVarType] : null
         if (typeof args.type === 'string') {
           addToScope(newName, ['array', args.countType, count, [args.type]])
@@ -466,11 +448,6 @@ function processSchema (bloatedSchema, logging) {
             addToScope(newName, ['array', args.countType, count, unwrap])
             children.finish()
           }
-
-          // if (newName.includes('block_action')) {
-          //   console.dir(children, {depth: null})
-          //   throw Error()
-          // }
         }
       } else {
         // console.warn('! Unknown type', actualType, args)
@@ -579,7 +556,7 @@ function postprocess (schema) {
           const [N] = cleanName(fieldName)
           if (optionalsInNS[N][json]) {
             if (Array.isArray(cases[caseName][fieldName])) { queueForAssignment(cases[caseName][fieldName], 5, optionalsInNS[N][json]) } else { queueForAssignment(cases[caseName][fieldName], '*name', optionalsInNS[N][json]) }
-            // console.log('Added!', optionalsInNS[N][json], 'to', cases[caseName][fieldName])
+            // console.log('Added', optionalsInNS[N][json], 'to', cases[caseName][fieldName])
           } else {
             // console.log('Optionals so far', optionalsInNS, cases[caseName][fieldName])
             throw new Error('Error in anon switch during postprocess for ' + fieldName)
@@ -589,7 +566,7 @@ function postprocess (schema) {
         const json = JSON.stringify(type)
         if (optionalsInNS[n][json]) {
           if (Array.isArray(cases[caseName])) { queueForAssignment(cases[caseName], 5, optionalsInNS[n][json]) } else { queueForAssignment(cases[caseName], '*name', optionalsInNS[n][json]) }
-          // console.log('Added!')
+          // console.log('Added')
         } else {
           // console.log('Optionals so far', optionalsInNS, cases[caseName])
           throw new Error(`Error in switch during postprocess ${caseName} ${json} ${n}`)
@@ -598,10 +575,6 @@ function postprocess (schema) {
       // console.log('Would visit', caseName, cases[caseName])
       visitType(caseName, cases[caseName])
     }
-    // if (name.includes('_1406')) {
-    //   console.log('dbg', isAnon)
-    //   process.exit()
-    // }
   }
   function visitType (name, type, optionalsInNS) {
     const [typeName, ...args] = fixType(type)
@@ -637,31 +610,21 @@ module.exports = {
     const pp = preprocess(schema)
     const from = processSchema(pp)
     const cloned = JSON.parse(JSON.stringify(from))
+    // fs.writeFileSync('tmp.json', JSON.stringify(cloned, null, 2))
     const final = postprocess(cloned)
     return final
   }
 }
 
-if (!module.parent) {
-  // processSchema(basicJSON)
-  // const pc1_18 = require('./pc1_18.json')
-  // let schema = { ...pc1_18.types, ...pc1_18.play.toClient.types }
-  const schema = require('./__tmp/protocol.json').types
-  // move mcpe_packet to the end
-  const oldmcpePacket = schema.mcpe_packet
-  delete schema.mcpe_packet
-  schema.mcpe_packet = oldmcpePacket
-  // schema = {
-  //   // ItemLegacy:schema.ItemLegacy,
-  //   // Recipes:schema.Recipes,
-  //   // packet_text: schema.packet_text,
-  //   // packet_interact: schema.packet_interact,
-  //   packet_set_score: schema.packet_set_score,
-  // }
-
-  const final = module.exports.generate(schema)
-  fs.writeFileSync('./redone.json', JSON.stringify(final, null, 2))
-}
+// if (!module.parent) {
+//   const schema = require('./__tmp/protocol.json').types
+//   // move mcpe_packet to the end
+//   const oldmcpePacket = schema.mcpe_packet
+//   delete schema.mcpe_packet
+//   schema.mcpe_packet = oldmcpePacket
+//   const final = module.exports.generate(schema)
+//   fs.writeFileSync('./redone.json', JSON.stringify(final, null, 2))
+// }
 
 // Broken: Shaped recipes with array-array nesting and input=width*height
 //  this should be specially handled in the IR with a new multidimensional array
