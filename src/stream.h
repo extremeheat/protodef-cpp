@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#define CHECK_BOUNDS(index) if (index >= this->length) { return false; }
+#define CHECK_BOUNDS(index) if (index > this->length) { return false; }
 namespace pdef {
 /*
   u8: 'writeByte',
@@ -36,7 +36,28 @@ struct BinaryStream {
   int writeIndex = 0;
   int readIndex = 0;
 
-  BinaryStream(int length) : length(length) {}
+  BinaryStream(int length) : length(length) {
+    this->buffer = new char[length];
+  }
+
+  ~BinaryStream() {
+    delete[] this->buffer;
+  }
+
+  void reserve(int length) {
+    if (length > this->length) {
+      delete[] this->buffer;
+      this->buffer = new char[length];
+      this->length = length;
+    }
+  }
+
+  void dumpToStdout() {
+    for (int i = 0; i < this->length; i++) {
+      printf("%02x ", (unsigned char)this->buffer[i]);
+    }
+    printf("\n");
+  }
 
   // Varints
   int sizeOfVarInt(int32_t value) {
@@ -158,13 +179,13 @@ struct BinaryStream {
     buffer[writeIndex++] = 0;
     return true;
   }
-  bool writeString(std::string &value) {
+  bool writeString(const std::string &value) {
     CHECK_BOUNDS(writeIndex + value.length());
     memcpy(buffer + writeIndex, value.data(), value.length());
     writeIndex += value.length();
     return true;
   }
-  bool writeBuffer(std::vector<unsigned char> &value) {
+  bool writeBuffer(const std::vector<unsigned char> &value) {
     CHECK_BOUNDS(writeIndex + value.size());
     memcpy(buffer + writeIndex, value.data(), value.size());
     writeIndex += value.size();
@@ -369,3 +390,5 @@ struct BinaryStream {
 };
 using Stream = BinaryStream;
 }
+
+#undef CHECK_BOUNDS

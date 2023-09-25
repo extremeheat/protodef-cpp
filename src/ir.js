@@ -2,45 +2,6 @@
 const fs = require('fs')
 // const basicJSON = require('./sample.json')
 
-// struct ScoreEntries {
-//   enum : int {
-//     Change,
-//     Remove
-//   } type;
-//   struct EntriesStruct {
-//     int scoreboard_id;
-//     std::string objective_name;
-//     int score;
-//     enum : int {
-//       player,
-//       entity,
-//       fake_player
-//     } entry_type;
-//     int entity_unique_id;
-//     std::string custom_name;
-//   } *entries;
-//   int entries_count;
-// };
-
-// const want = {
-//   ScoreEntries: {
-//     type: ['u8', ['change', 'remove']],
-//     entries: ['array', 'varint', {
-//       scoreboard_id: ['varint'],
-//       objective_name: ['string'],
-//       score: ['varint'],
-//       _: [
-//         'switch', '../type', {
-//           remove: ['^entry_type']
-//         }
-//       ],
-//       '?entry_type': ['u8', ['player', 'entity', 'fake_player']],
-//       '?entity_unique_id': ['varint'],
-//       '?custom_name': ['string']
-//     }]
-//   }
-// }
-
 // Resolve switch statements' compareTo's
 function preprocess (schema) {
   function fixCompareToType (type) {
@@ -618,7 +579,7 @@ function postprocess (schema) {
           if (optionalsInNS[N][json]) {
             if (Array.isArray(cases[caseName][fieldName])) { queueForAssignment(cases[caseName][fieldName], 5, optionalsInNS[N][json]) } else { queueForAssignment(cases[caseName][fieldName], '*name', optionalsInNS[N][json]) }
             // console.log('Added!', optionalsInNS[N][json], 'to', cases[caseName][fieldName])
-          } else { 
+          } else {
             // console.log('Optionals so far', optionalsInNS, cases[caseName][fieldName])
             throw new Error('Error in anon switch during postprocess for ' + fieldName)
           }
@@ -671,8 +632,12 @@ function postprocess (schema) {
 }
 
 module.exports = {
-  generate (from) {
-    return debloatSchema(from)
+  generate (schema) {
+    const pp = preprocess(schema)
+    const from = debloatSchema(pp)
+    const cloned = JSON.parse(JSON.stringify(from))
+    const final = postprocess(cloned)
+    return final
   }
 }
 
@@ -692,13 +657,17 @@ if (!module.parent) {
   //   // packet_interact: schema.packet_interact,
   //   packet_set_score: schema.packet_set_score,
   // }
-  const pp = preprocess(schema)
-  const redone = debloatSchema(pp)
-  // const redone = debloatSchema(require('./proto2.json').types)
-  const json = JSON.stringify(redone, null, 2)
-  fs.writeFileSync('./redone.json', JSON.stringify(redone, null, 2))
-  const final = postprocess(JSON.parse(json, null, 2))
+
+  const final = module.exports.generate(schema)
   fs.writeFileSync('./redone.json', JSON.stringify(final, null, 2))
+
+  // const pp = preprocess(schema)
+  // const redone = debloatSchema(pp)
+  // // const redone = debloatSchema(require('./proto2.json').types)
+  // const json = JSON.stringify(redone, null, 2)
+  // fs.writeFileSync('./redone.json', JSON.stringify(redone, null, 2))
+  // const final = postprocess(JSON.parse(json, null, 2))
+  // fs.writeFileSync('./redone.json', JSON.stringify(final, null, 2))
 }
 
 // Broken: Shaped recipes with array-array nesting and input=width*height

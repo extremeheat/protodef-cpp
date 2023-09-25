@@ -1,13 +1,5 @@
 /* eslint-disable no-return-assign, no-sequences, no-unused-vars */
 const fs = require('fs')
-const ir = require('./redone.json')
-// ir = {
-//   // ItemLegacy: ir.ItemLegacy,
-//   packet_emote_list: ir.packet_emote_list,
-//   // string: ir.string,
-//   // packet_available_commands: ir.packet_available_commands,
-//   // packet_education_settings: ir.packet_education_settings,
-// }
 
 const protodefTypeToCpp = {
   u8: 'uint8_t',
@@ -34,7 +26,6 @@ const protodefTypeToCpp = {
   varint64: 'int64_t',
   zigzag32: 'int',
   zigzag64: 'int64_t'
-  // buffer: 'std::vector<uint8_t>'
 }
 const protodefTypeToCppEncode = {
   u8: 'writeUByte',
@@ -57,7 +48,6 @@ const protodefTypeToCppEncode = {
   lf64: 'writeDoubleLE',
   bool: 'writeBool',
   cstring: 'writeCString',
-  // buffer: 'writeBuffer',
   varint: 'writeUnsignedVarInt',
   varint64: 'writeUnsignedVarLong',
   zigzag32: 'writeZigZagVarInt',
@@ -290,15 +280,6 @@ function addAliasType (newType, baseType) {
   protodefTypeSizes[newType] = protodefTypeSizes[baseType]
   if (customTypes[baseType]) customTypes[newType] = customTypes[baseType]
 }
-// some stubs
-addAliasType('nbt', 'i8')
-addAliasType('lnbt', 'i8')
-addAliasType('nbtLoop', 'i8')
-addAliasType('uuid', 'u64')
-addAliasType('encapsulated', 'i8')
-addAliasType('slot', 'i8')
-addAliasType('byterot', 'i8')
-addAliasType('restBuffer', 'i8')
 
 function unretardify (objOrArr) {
   if (objOrArr == null) return []
@@ -373,9 +354,10 @@ const headers = `
 #include <vector>
 #include <optional>
 #include "stream.h"
-#define WRITE_OR_BAIL(fn, val) if (!stream.fn(val)) { return false; }
-#define READ_OR_BAIL(fn, val) if (!stream.fn(val)) { return false; }
-#define EXPECT_OR_BAIL(val) if (!val) { return false; }
+#define DBG_PRINT printf
+#define WRITE_OR_BAIL(fn, val) if (!stream.fn(val)) { DBG_PRINT("%s:%d: %s: write FAIL\\n", __func__, __LINE__, #fn); return false; }; DBG_PRINT("%s:%d: %s: written, stream now at %d\\n", __func__, __LINE__, #fn, stream.writeIndex);
+#define READ_OR_BAIL(fn, val) if (!stream.fn(val)) { DBG_PRINT("%s:%d: %s: read FAIL\\n", __func__, __LINE__, #fn); return false; } DBG_PRINT("%s:%d: %s: read, stream now at %d\\n", __func__, __LINE__, #fn, stream.readIndex);
+#define EXPECT_OR_BAIL(val) if (!val) { DBG_PRINT("%s:%d: bad assert %s\\n", __func__, __LINE__, #val); return false; }
 `
 const footer = `
 #undef WRITE_OR_BAIL
@@ -543,9 +525,10 @@ function visitRoot (root, mode) {
   let sizeIx = 0
   function makeSizeStr (type, varName, isAnon) {
     const s = protodefTypeSizes[type]
+    const name = Array.isArray(varName) ? dotJoin(varName) : toSafeVar(varName)
     if (typeof s === 'number') return `len += ${s}`
     else if (typeof s === 'string') return `len += stream.${protodefTypeSizes[type]}(${Array.isArray(varName) ? dotJoin(...varName) : toSafeVar(varName)})`
-    const name = Array.isArray(varName) ? dotJoin(varName) : toSafeVar(varName)
+    else if (typeof s === 'function') return `len += ${s(null, name)}`
     const sizeVar = `len_${sizeIx++}`
     return `${isAnon ? `EXPECT_OR_BAIL(${name}); ` : ''}size_t ${sizeVar} = pdef::proto::size::${type}(stream, ${isAnon ? '*' : ''}${name}); EXPECT_OR_BAIL(${sizeVar}); len += ${sizeVar}`
   }
@@ -558,7 +541,7 @@ function visitRoot (root, mode) {
     if (protodefTypeToCppDecode[type]) {
       // const cast = protodefTypeToCpp[type] ? `(${protodefTypeToCpp[type]}&)` : ''
       // Cast for bool here per special case with std::vector<bool> having to be std::vector<char>
-      return `READ_OR_BAIL(${protodefTypeToCppDecode[type]}, ${type === 'bool' ? '(bool&)': ''}${name})`
+      return `READ_OR_BAIL(${protodefTypeToCppDecode[type]}, ${type === 'bool' ? '(bool&)' : ''}${name})`
     } else {
       let s = ''
       if (maybe) s += `${name} = {}; pdef::proto::decode::${type}(stream, *${name})`
@@ -656,7 +639,7 @@ function visitRoot (root, mode) {
           // console.log('lengthVar', fieldType, lengthVar)
           const [lengthVariable, lengthTyp] = lengthVar
           pushSize(`  ${makeSizeStr(lengthTyp, [lengthVariable])}; /*1.1*/`)
-          pushEncode(`  ${makeEncodeStr(lengthTyp, [lengthVariable])}; /*1.2*/`)
+          // pushEncode(`  ${makeEncodeStr(lengthTyp, [lengthVariable])}; /*1.2*/`)
           // Resize the std::vector so it has enough space to fit length
           pushDecode(`  ${structPropName}.resize(${lengthVariable}); /*1.6*/`)
         } else {
@@ -767,10 +750,10 @@ function visitRoot (root, mode) {
           const ifStatement = firstCase ? 'if' : 'else if'
           if (matchCase === 'default') {
             if (canBeSwitch) pushAll('    default: { ' + caseBody)
-            else pushAll(firstCase ? '  {' : `  else {`)
+            else pushAll(firstCase ? '  {' : '  else {')
           } else {
             if (canBeSwitch) pushAll(`    case ${matchCase}: { ` + caseBody)
-            else pushAll(`  ${ifStatement} (${wrapWithParenIfNeeded(toSafeVarSwitch(compareTo))} == ${wrapWithParenIfNeeded(matchCase)}) { ` + caseBody)            
+            else pushAll(`  ${ifStatement} (${wrapWithParenIfNeeded(toSafeVarSwitch(compareTo))} == ${wrapWithParenIfNeeded(matchCase)}) { ` + caseBody)
           }
           firstCase = false
         }
@@ -900,7 +883,7 @@ function visitRoot (root, mode) {
     const pushSize = (str) => { sizeLines += pad(str) + '\n' }
     const pushEncode = (str) => { encodeLines += pad(str) + '\n' }
     const pushDecode = (str) => { decodeLines += pad(str) + '\n' }
-    pushSize('  return len;')
+    pushSize('  DBG_PRINT("%s: sized at %lld\\n", __func__, len); return len;')
     pushSize('}')
     pushEncode('  return true;')
     pushEncode('}')
@@ -985,45 +968,26 @@ function visit (ir) {
   return { structLines, sizeLines, encodeLines, decodeLines }
 }
 
-const compiled = visit(ir)
-fs.writeFileSync('structs.h', compiled.structLines + '\n' + compiled.sizeLines + '\n' + compiled.encodeLines + '\n' + compiled.decodeLines)
-// console.log(structLines)
+module.exports = { visit }
 
-const wanted = `
-namespace pdef::proto::encode {
-  void packet_toast_request(pdef::Stream &stream, const pdef::proto::packet_toast_request &value) {
-    stream->writeString(value.title);
-    stream->writeString(value.message);
-  }
-  void packet_request_permissions(pdef::Stream &stream, const pdef::proto::packet_request_permissions &value) {
-    stream->writeInt64(value.entity_unique_id);
-    stream->writeInt32(static_cast<int32_t>(value.permission_level));
-    stream->writeInt32(static_cast<int32_t>(value.requested_permissions));
-  }
+if (!module.parent) {
+  // some stubs
+  addAliasType('nbt', 'i8')
+  addAliasType('lnbt', 'i8')
+  addAliasType('nbtLoop', 'i8')
+  addAliasType('uuid', 'u64')
+  addAliasType('encapsulated', 'i8')
+  addAliasType('slot', 'i8')
+  addAliasType('byterot', 'i8')
+  addAliasType('restBuffer', 'i8')
+  const ir = require('./redone.json')
+  // ir = {
+  //   // ItemLegacy: ir.ItemLegacy,
+  //   packet_emote_list: ir.packet_emote_list,
+  //   // string: ir.string,
+  //   // packet_available_commands: ir.packet_available_commands,
+  //   // packet_education_settings: ir.packet_education_settings,
+  // }
+  const compiled = visit(ir)
+  fs.writeFileSync('structs.h', compiled.structLines + '\n' + compiled.sizeLines + '\n' + compiled.encodeLines + '\n' + compiled.decodeLines)
 }
-
-pdef::Stream stream;
-pdef::proto::packet_available_commands commands_packet {
-  .values_len = 0,
-  .enum_values = {},
-  .suffixes = {},
-  .enums = {},
-  .command_data = {},
-  .dynamic_enums = {},
-  .enum_constraints = {},
-};
-pdef::proto::encode::packet_available_commands(stream, commands_packet);
-char *data = stream->data();
-size_t size = stream->size();
-
-pdef::Stream stream2;
-stream2.readFromBuffer(data, size);
-mcpe_packet packet;
-pdef::proto::decode::mcpe_packet(stream2, packet);
-if (packet.entity_metadata)
-`
-
-// TODO: packet_crafting_data size is broken
-// packet_set_score: switch compareTo's need to have correct ../ in front of them in the IR
-// so we know how many levels up to go to find the enum type. Currently we
-// assume the type is in the same level as the switch, which is not always true.
