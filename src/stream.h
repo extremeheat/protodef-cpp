@@ -1,4 +1,5 @@
 #pragma once
+#include <cstring>
 #include <string>
 #include <vector>
 #define CHECK_BOUNDS(index) if (index > this->length) { return false; }

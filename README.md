@@ -34,8 +34,7 @@ Options:
   --namespace   What namespace to use, useful if you have multiple protocols.  (default: proto)
 ```
 
-If you have multiple protocols specified inside one JSON file, you can run the command multiple times 
-with an additional "--input-path" argument, along with a custom namespace for each protocol.
+If you have multiple protocols specified inside one JSON file, please use the programmatic API instead.
 
 ### via code / programmatic API
 
