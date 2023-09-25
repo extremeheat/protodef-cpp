@@ -1,8 +1,8 @@
 {
-  "name": "prismarine-template",
+  "name": "protodef-cpp",
   "version": "1.0.0",
-  "description": "A template repository to make it easy to create new prismarine repo",
-  "main": "index.js",
+  "description": "C++ compiler for ProtoDef schemas to encode and decode packets",
+  "main": "src/index.js",
   "type": "commonjs",
   "scripts": {
     "test": "mocha --reporter spec --exit",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PrismarineJS/prismarine-template.git"
+    "url": "git+https://github.com/extremeheat/protodef-cpp.git"
   },
   "keywords": [
     "prismarine",
@@ -21,11 +21,11 @@
   "author": "Romain Beaumont",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/PrismarineJS/prismarine-template/issues"
+    "url": "https://github.com/extremeheat/protodef-cpp/issues"
   },
-  "homepage": "https://github.com/PrismarineJS/prismarine-template#readme",
+  "homepage": "https://github.com/extremeheat/protodef-cpp#readme",
   "devDependencies": {
-    "prismarine-template": "file:.",
+    "protodef-cpp": "file:.",
     "standard": "^17.0.0",
     "mocha": "^10.0.0"
   }

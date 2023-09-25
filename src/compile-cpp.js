@@ -281,7 +281,7 @@ function addAliasType (newType, baseType) {
   if (customTypes[baseType]) customTypes[newType] = customTypes[baseType]
 }
 
-function unretardify (objOrArr) {
+function unickify (objOrArr) {
   if (objOrArr == null) return []
   if (Array.isArray(objOrArr)) {
     return objOrArr
@@ -364,7 +364,8 @@ const footer = `
 #undef READ_OR_BAIL
 `
 
-function visitRoot (root, mode) {
+function visitRoot (root, mode, logging) {
+  const log = logging ? console.log : () => {}
   let variableLines = ''
   for (const varName in specialVars) {
     const [varType, varInitialValue] = specialVars[varName]
@@ -408,15 +409,15 @@ function visitRoot (root, mode) {
       else structLines += pad(str) + '\n'
     }
 
-    fieldType = unretardify(fieldType)
-    console.log(`  ${fieldName}: ${fieldType}`)
+    fieldType = unickify(fieldType)
+    log(`  ${fieldName}: ${fieldType}`)
     if (fieldName.endsWith('?')) return // When generating structs, we ignore switches
     let typeName = fieldType[0]
     const oldTypeName = typeName
     const isRootArray = root[typeName] && root[typeName][0] === 'array'
     const shouldInlineFromRoot = checkShouldInlineFromRoot(typeName)
     if (shouldInlineFromRoot) {
-      fieldType = unretardify(root[typeName])
+      fieldType = unickify(root[typeName])
       typeName = fieldType[0]
       // push('// inlined from root')
     } else {
@@ -452,14 +453,14 @@ function visitRoot (root, mode) {
       // TODO: per above TODO, we need to use DFS to determine array level
       if (fieldType[0] === 'array') {
         let arrayLevel = 1
-        let actualType = unretardify(fieldType[3])
+        let actualType = unickify(fieldType[3])
         let typename = actualType[0] === 'container' ? newName : actualType[0]
         if (typename === 'array') {
-          actualType = unretardify(actualType[3])
+          actualType = unickify(actualType[3])
           typename = actualType[0] === 'container' ? newName : actualType[0]
           arrayLevel++
           if (typename === 'array') {
-            actualType = unretardify(actualType[3])
+            actualType = unickify(actualType[3])
             typename = actualType[0] === 'container' ? newName : actualType[0]
             arrayLevel++
             if (typename === 'array') {
@@ -570,8 +571,8 @@ function visitRoot (root, mode) {
     const pushAll = (str) => (pushSize(str), pushEncode(str), pushDecode(str))
     const pushDecode = (str) => { decodeLines += pad(str) + '\n' }
 
-    console.log(`.  ${fieldName}: ${fieldType}`)
-    fieldType = unretardify(fieldType)
+    log(`.  ${fieldName}: ${fieldType}`)
+    fieldType = unickify(fieldType)
     if (fieldName.startsWith('?')) return
 
     let typeName = fieldType[0]
@@ -584,7 +585,7 @@ function visitRoot (root, mode) {
     const n = deanonymizeStr(variableName) + ((deanonymizeStr(variableName) !== deanonymizeStr(fieldName)) ? '' : '')
 
     if (shouldInlineFromRoot) {
-      fieldType = unretardify(root[typeName])
+      fieldType = unickify(root[typeName])
       typeName = fieldType[0]
       // pushAll('// inlined from root')
     }
@@ -650,7 +651,7 @@ function visitRoot (root, mode) {
           // Resize the std::vector so it has enough space to fit length
           pushDecode(`  ${structPropName}.resize(${n}_len); /*1.6*/`)
         }
-        const actualType = unretardify(fieldType[3])
+        const actualType = unickify(fieldType[3])
         if (actualType[0] === 'container') {
           const arrayStructName = promoteToPascalOrSuffix(n)
           typePropName = `pdef::proto::${colonJoin(objPath)}::${arrayStructName}`
@@ -669,7 +670,7 @@ function visitRoot (root, mode) {
           pushDecode('  }')
         } else if (actualType[0] === 'array') {
           const [, actualLengthType, actualLengthVar, _actualActualType] = actualType
-          const actualActualType = unretardify(_actualActualType)
+          const actualActualType = unickify(_actualActualType)
           if (actualActualType[0] === 'array') { // 3D array, max supported depth
             throw new Error('TODO: Only up to 2D arrays are supported')
           } else { // 2D array
@@ -910,7 +911,7 @@ function visitRoot (root, mode) {
   function visitType (structName, type, structPaddingLevel = 0, objPath, excludeHeaders, objName) {
     objPath ||= [structName]
     // const pad = (str) => '  '.repeat(structPaddingLevel) + str
-    const [typeName, ...typeArgs] = unretardify(type)
+    const [typeName, ...typeArgs] = unickify(type)
     // console.log(typeName, typeArgs)
     if (typeName === 'native') {
       structLines += `// ${structName} is built in\n`
@@ -924,11 +925,11 @@ function visitRoot (root, mode) {
           writeHeader(structName, structPaddingLevel)
           encodingFromContainer(structName, _type, structPaddingLevel + 1, objPath, true)
         } else {
-          encodeType(structName, unretardify(type), structPaddingLevel, objPath, excludeHeaders, objName)
+          encodeType(structName, unickify(type), structPaddingLevel, objPath, excludeHeaders, objName)
         }
         if (structPaddingLevel === 0) writeFooter(structName, structPaddingLevel)
       } else if (structPaddingLevel) {
-        encodeType(structName, unretardify(type), structPaddingLevel, objPath, excludeHeaders, objName)
+        encodeType(structName, unickify(type), structPaddingLevel, objPath, excludeHeaders, objName)
       }
     } else if (typeName === 'container') {
       structFromContainer(structName, typeArgs[0], structPaddingLevel + 1)
@@ -965,10 +966,11 @@ function visit (ir) {
   const { sizeLines } = visitRoot(ir, 'size')
   const { encodeLines } = visitRoot(ir, 'encode')
   const { decodeLines } = visitRoot(ir, 'decode')
-  return { structLines, sizeLines, encodeLines, decodeLines }
+  const lines = structLines + '\n' + sizeLines + '\n' + encodeLines + '\n' + decodeLines
+  return { structLines, sizeLines, encodeLines, decodeLines, lines }
 }
 
-module.exports = { visit }
+module.exports = { addAliasType, compile: visit }
 
 if (!module.parent) {
   // some stubs
@@ -980,7 +982,7 @@ if (!module.parent) {
   addAliasType('slot', 'i8')
   addAliasType('byterot', 'i8')
   addAliasType('restBuffer', 'i8')
-  const ir = require('./redone.json')
+  const ir = require('./__tmp/redone.json')
   // ir = {
   //   // ItemLegacy: ir.ItemLegacy,
   //   packet_emote_list: ir.packet_emote_list,

@@ -3,7 +3,8 @@ const fs = require('fs')
 // const basicJSON = require('./sample.json')
 
 // Resolve switch statements' compareTo's
-function preprocess (schema) {
+function preprocess (schema, logging) {
+  const log = logging ? console.log : () => {}
   function fixCompareToType (type) {
     const fix = type.replaceAll('../', '')
     if (fix.startsWith('/')) return [type]
@@ -55,12 +56,12 @@ function preprocess (schema) {
       type.parent = parent
 
       if (schema[type[0]] && (schema[type[0]][0] === 'switch')) {
-        console.log('Inlining root switch', type[0])
+        log('Inlining root switch', type[0])
         const rootSwitch = schema[type[0]][1]
         const next = { ...rootSwitch, ...type[1] }
         type[0] = 'switch'
         type[1] = next
-        console.log('Inlined root switch', JSON.stringify(type))
+        log('Inlined root switch', JSON.stringify(type))
       }
 
       const [name, ...args] = type
@@ -71,13 +72,13 @@ function preprocess (schema) {
         cases.default = args[0].default
         const [compareTo, shouldReplace] = fixCompareToType(args[0].compareTo)
         if (shouldReplace) {
-          console.log('Replacing compareTo', args[0].compareTo, '->', shouldReplace)
+          log('Replacing compareTo', args[0].compareTo, '->', shouldReplace)
           args[0].compareTo = shouldReplace
         }
         if (compareTo.startsWith('/')) {
           // Special case, ignore for now
         } else {
-          console.log('Injecting compareTo', compareTo)
+          log('Injecting compareTo', compareTo)
           const injectedObj = walkBackwardAndInject(compareTo, parent, { comparedTo: true })
           if (injectedObj) {
             // TODO: handle more than just mapper
@@ -109,7 +110,7 @@ function preprocess (schema) {
     // mcdata-pc handling
     const typename = rootType[0]
     if (typename === 'switch') {
-      console.log('Ignoring root-level switch statement [', typeName, '], will be inlined later')
+      log('Ignoring root-level switch statement [', typeName, '], will be inlined later')
       continue
     }
     // end mcdata-pc handling
@@ -128,7 +129,8 @@ function preprocess (schema) {
 }
 
 // Yes, it's a mess.
-function debloatSchema (bloatedSchema) {
+function processSchema (bloatedSchema, logging) {
+  const debugLog = logging ? console.log : () => {}
   let i = 0
 
   class Scope {
@@ -227,7 +229,7 @@ function debloatSchema (bloatedSchema) {
           for (const typeGroup in typeGroups) {
             if (typeGroups[typeGroup].size > 1) log = true
           }
-          if (log) console.log('Type Groups with dupes', typeGroups, Object.entries(this.vars).map(([k, v]) => [k, JSON.stringify(v)]))
+          if (log) debugLog('Type Groups with dupes', typeGroups, Object.entries(this.vars).map(([k, v]) => [k, JSON.stringify(v)]))
           // console.log('Before pruning', Object.entries(this.vars).map(([k, v]) => [k, JSON.stringify(v)]))
 
           for (const group in typeGroups) {
@@ -257,7 +259,7 @@ function debloatSchema (bloatedSchema) {
               const body = bodies.join('_or_')
               const newKey = `${key},${body}`
               this.vars[newKey] = JSON.parse(group)
-              console.log('Combined ', [...typeGroups[group]], 'into', newKey, 'with', group)
+              debugLog('Combined ', [...typeGroups[group]], 'into', newKey, 'with', group)
             }
             // console.log('First', first, name)
             // this.vars[name] = JSON.parse(group)
@@ -409,7 +411,7 @@ function debloatSchema (bloatedSchema) {
               // }
             }
           } else {
-            console.log('Unknown type', _actualType, _args)
+            debugLog('Unknown type', _actualType, _args)
             sharedScope.add(field, [_actualType, _args])
             next.add(field, [_actualType, _args])
           }
@@ -561,7 +563,6 @@ function postprocess (schema) {
       const defaultCase = cases.default
       delete cases.default
       cases.default = defaultCase
-      switchType[6] = 'moved!'
     }
 
     for (const caseName in cases) {
@@ -634,7 +635,7 @@ function postprocess (schema) {
 module.exports = {
   generate (schema) {
     const pp = preprocess(schema)
-    const from = debloatSchema(pp)
+    const from = processSchema(pp)
     const cloned = JSON.parse(JSON.stringify(from))
     const final = postprocess(cloned)
     return final
@@ -642,10 +643,10 @@ module.exports = {
 }
 
 if (!module.parent) {
-  // debloatSchema(basicJSON)
+  // processSchema(basicJSON)
   // const pc1_18 = require('./pc1_18.json')
   // let schema = { ...pc1_18.types, ...pc1_18.play.toClient.types }
-  const schema = require('./protocol.json').types
+  const schema = require('./__tmp/protocol.json').types
   // move mcpe_packet to the end
   const oldmcpePacket = schema.mcpe_packet
   delete schema.mcpe_packet
@@ -660,14 +661,6 @@ if (!module.parent) {
 
   const final = module.exports.generate(schema)
   fs.writeFileSync('./redone.json', JSON.stringify(final, null, 2))
-
-  // const pp = preprocess(schema)
-  // const redone = debloatSchema(pp)
-  // // const redone = debloatSchema(require('./proto2.json').types)
-  // const json = JSON.stringify(redone, null, 2)
-  // fs.writeFileSync('./redone.json', JSON.stringify(redone, null, 2))
-  // const final = postprocess(JSON.parse(json, null, 2))
-  // fs.writeFileSync('./redone.json', JSON.stringify(final, null, 2))
 }
 
 // Broken: Shaped recipes with array-array nesting and input=width*height
