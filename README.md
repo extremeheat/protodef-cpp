@@ -1,24 +1,128 @@
-# prismarine-template
-[![NPM version](https://img.shields.io/npm/v/prismarine-template.svg?logo=npm)](http://npmjs.com/package/prismarine-template)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/PrismarineJS/prismarine-template/ci.yml.svg?label=CI&logo=github)](https://github.com/PrismarineJS/prismarine-template/actions?query=workflow%3A%22CI%22)
-[![Try it on gitpod](https://img.shields.io/static/v1.svg?label=try&message=on%20gitpod&color=brightgreen&logo=gitpod)](https://gitpod.io/#https://github.com/PrismarineJS/prismarine-template)
-[![GitHub Sponsors](https://img.shields.io/github/sponsors/PrismarineJS)](https://github.com/sponsors/PrismarineJS)
+# protodef-cpp
+[![NPM version](https://img.shields.io/npm/v/protodef-cpp.svg?logo=npm)](http://npmjs.com/package/protodef-cpp)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/PrismarineJS/protodef-cpp/ci.yml.svg?label=CI&logo=github)](https://github.com/extremeheat/protodef-cpp/actions?query=workflow%3A%22CI%22)
+[![Try it on gitpod](https://img.shields.io/static/v1.svg?label=try&message=on%20gitpod&color=brightgreen&logo=gitpod)](https://gitpod.io/#https://github.com/extremeheat/protodef-cpp)
+[![Official Discord](https://img.shields.io/static/v1.svg?label=OFFICIAL&message=DISCORD&color=blue&logo=discord)](https://discord.gg/GsEFRM8)
 
-[![Official Discord](https://img.shields.io/static/v1.svg?label=OFFICIAL&message=DISCORD&color=blue&logo=discord&style=for-the-badge)](https://discord.gg/GsEFRM8)
+C++ compiler for ProtoDef schemas, a lighter and more versatile alternative to Google Protocol Buffers or FlatBuffers that can support any binary format.
 
+See the ProtoDef specification at https://github.com/ProtoDef-io/ProtoDef.
 
-A template repository to make it easy to create new prismarine repo
+## Install
+```cmd
+npm install protodef-cpp
+```
 
 ## Usage
 
-```js
-const template = require('prismarine-template')
+### via npx / command line 
 
-template.helloWorld()
+Feed the CLI tool a .json or .yaml file, and optionally specify a directory to write the generated files to.
+Two header files will be written: a "streams.h", containing a binary stream implementation used by the encoder/decoder (if you don't already have one), 
+and a "protocol.h" header file (name will vary depending on your input name), containing the generated encoder/decoder code.
+
+```go
+$ npx protodef-cpp --help
+protodef-cpp - v1.0.0
+protodef-cpp - A C++ compiler for ProtoDef schemas
+
+Options:
+  --input, -i   Path to ProtoDef JSON/YAML file with protocol data
+  --lang        What language use compile to. Currently only C++.  (default: cpp)
+  --output      Output folder  (default: ./)
+  --customTypes Path to custom types file
+  --namespace   What namespace to use, useful if you have multiple protocols. (default: proto)
 ```
 
-## API
+If you have multiple protocols specified inside one JSON file, you can run the command multiple times 
+with an additional "--input-path" argument, along with a custom namespace for each protocol.
 
-### helloWorld()
+### via code / programmatic API
 
-Prints hello world
+```js
+const protodefCpp = require('protodef-cpp')
+protodefCpp.compile({
+  inputFile: 'protocol.json',
+  outputFolder: './',
+  lang: 'cpp',
+  namespace: 'proto',
+})
+```
+
+### Example
+
+protocol.yml:
+
+```yaml
+string: ["pstring", { countType: "varint" }]
+packet_video_stream_connect:
+  server_uri: ShortString
+  frame_send_frequency: lf32
+  action: u8 =>
+     1: none
+     2: close
+  resolution_x: li32
+  resolution_y: li32
+```
+
+<!-- <details>
+<summary>Custom Types implementation in JavaScript</summary>
+Inside types.js:
+
+```js
+module.exports = {
+ pstring: {
+    struct (args, name, makeCallingCode) {
+      return makeCallingCode('std::string', name)
+    },
+    read (args, [name, refName], makeCallingCode) {
+      if (args.count) return `if (!stream.readString(${refName}, ${args.count})) return false;`
+      const primitiveType = protodefTypeToCpp[args.countType]
+      return `
+        ${primitiveType} ${name}_strlen; ${makeCallingCode(args.countType, `${name}_strlen`)};
+        if (!stream.readString(${refName}, ${name}_strlen)) return false;
+      `.trim()
+    },
+    write (args, [name, refName], makeCallingCode) {
+      if (args.count) return `WRITE_OR_BAIL(writeString, ${refName});`
+      return `
+        ${makeCallingCode(args.countType, [refName, 'length()'])};
+        WRITE_OR_BAIL(writeString, ${refName});
+      `.trim()
+    },
+    size (args, [name, refName], makeCallingCode) {
+      if (args.count) return `len += ${args.count};`
+      return `
+        ${makeCallingCode(args.countType, [refName, 'length()'])};
+        len += ${refName}.length();
+      `.trim()
+    }
+  }
+}
+```
+</details> -->
+
+Example:
+```cmd
+npx protodef-cpp -i protocol.yml --lang cpp
+```
+
+Done! You should now have a "protocol.h" file in your current directory. Here's how you would encode a structure:
+
+```cpp
+#include "protocol.h"
+
+int main () {
+  pdef::proto::packet_video_stream_connect packet {
+    .server_uri = "wss://example.com",
+    .frame_send_frequency = 60.0f,
+    .action = pdef::proto::packet_video_stream_connect::Action::None,
+    .resolution_x = 1920,
+    .resolution_y = 1080,
+  };
+  pdef::Stream stream(0);
+  pdef::proto::encode::packet_video_stream_connect(stream, packet);
+  stream.dumpToStdout();
+  return 0;
+}
+```

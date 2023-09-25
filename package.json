@@ -10,6 +10,9 @@
     "lint": "standard",
     "fix": "standard --fix"
   },
+  "bin": {
+    "protodef-cpp": "src/cli.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/extremeheat/protodef-cpp.git"
@@ -25,8 +28,12 @@
   },
   "homepage": "https://github.com/extremeheat/protodef-cpp#readme",
   "devDependencies": {
+    "mocha": "^10.0.0",
     "protodef-cpp": "file:.",
-    "standard": "^17.0.0",
-    "mocha": "^10.0.0"
+    "standard": "^17.0.0"
+  },
+  "dependencies": {
+    "basic-args": "^1.3.0",
+    "protodef-yaml": "^1.4.0"
   }
 }
