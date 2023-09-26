@@ -1542,10 +1542,10 @@ size_t packet_simulation_distance(pdef::Stream &stream, const pdef::pc1_18_play_
 size_t packet(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet &obj);
   size_t slot(pdef::Stream &stream, const pdef::pc1_18_play_toClient::slot &obj) {
     size_t len = 0;
-    const bool &present = obj.present; /*0.1*/
-    if (present == false) { /*8.1*/
+    const bool &V_present = obj.present; /*0.1*/
+    if (V_present == false) { /*8.1*/
     }
-    else if (present == true) { /*8.1*/
+    else if (V_present == true) { /*8.1*/
         len += stream.sizeOfVarInt(obj.itemId); /*0.2*/
         len += 1; /*0.2*/
         len += 1; /*0.2*/
@@ -1554,23 +1554,23 @@ size_t packet(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet &ob
   }
   size_t particle(pdef::Stream &stream, const pdef::pc1_18_play_toClient::particle &obj) {
     size_t len = 0;
-    const int &particleId = obj.particleId; /*0.1*/
-    if (particleId == 2) { /*8.2*/
+    const int &V_particleId = obj.particleId; /*0.1*/
+    if (V_particleId == 2) { /*8.2*/
         EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.6*/
         len += stream.sizeOfVarInt(v2.blockState); /*0.2*/
     }
-    else if (particleId == 3) { /*8.2*/
+    else if (V_particleId == 3) { /*8.2*/
         EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.6*/
         len += stream.sizeOfVarInt(v2.blockState); /*0.2*/
     }
-    else if (particleId == 14) { /*8.2*/
+    else if (V_particleId == 14) { /*8.2*/
         EXPECT_OR_BAIL(obj.data_14); const pdef::pc1_18_play_toClient::particle::Data14 &v2 = *obj.data_14; /*8.6*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
     }
-    else if (particleId == 15) { /*8.2*/
+    else if (V_particleId == 15) { /*8.2*/
         EXPECT_OR_BAIL(obj.data_15); const pdef::pc1_18_play_toClient::particle::Data15 &v2 = *obj.data_15; /*8.6*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
@@ -1580,24 +1580,24 @@ size_t packet(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet &ob
         len += 4; /*0.2*/
         len += 4; /*0.2*/
     }
-    else if (particleId == 24) { /*8.2*/
+    else if (V_particleId == 24) { /*8.2*/
         EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.6*/
         len += stream.sizeOfVarInt(v2.blockState); /*0.2*/
     }
-    else if (particleId == 35) { /*8.2*/
+    else if (V_particleId == 35) { /*8.2*/
         EXPECT_OR_BAIL(obj.data_35); const pdef::pc1_18_play_toClient::particle::Data35 &v2 = *obj.data_35; /*8.6*/
         len += 1; /*0.2*/
     }
-    else if (particleId == 36) { /*8.2*/
+    else if (V_particleId == 36) { /*8.2*/
         EXPECT_OR_BAIL(obj.data_36); const pdef::pc1_18_play_toClient::particle::Data36 &v2 = *obj.data_36; /*8.6*/
         len += 1; /*origin: bitfield*/ /*4.1*/
         len += stream.sizeOfVarInt(v2.positionType.length());
         len += v2.positionType.length(); /*positionType^: pstring*/ /*4.1*/
-        const std::string &positionType = v2.positionType; /*4.7*/
-        if (positionType == "minecraft:block") { /*8.0*/
+        const std::string &V_positionType = v2.positionType; /*4.7*/
+        if (V_positionType == "minecraft:block") { /*8.0*/
           len += 1; /*destination: bitfield*/ /*4.1*/
         }
-        else if (positionType == "minecraft:entity") { /*8.0*/
+        else if (V_positionType == "minecraft:entity") { /*8.0*/
           len += stream.sizeOfVarInt(v2.destination_varint); /*0.2*/
         }
         len += stream.sizeOfVarInt(v2.ticks); /*0.2*/
@@ -1609,7 +1609,7 @@ size_t packet(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet &ob
     len += stream.sizeOfVarInt(obj.group.length());
     len += obj.group.length(); /*group: pstring*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.ingredient.size()); /*1.3*/
-    for (const auto &v2 : obj.ingredient) {
+    for (const auto &v2 : obj.ingredient) { /*3.2*/
       len += 1; /*0.2*/
     }
     len += 1; /*0.2*/
@@ -1622,7 +1622,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     len += stream.sizeOfVarInt(obj.tagName.length());
     len += obj.tagName.length(); /*tagName: pstring*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.entries.size()); /*1.3*/
-    for (const auto &v2 : obj.entries) {
+    for (const auto &v2 : obj.entries) { /*3.2*/
       len += stream.sizeOfVarInt(v2); /*0.2*/
     }
   PDEF_SIZE_DBG; return len;
@@ -1638,169 +1638,169 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   size_t command_node(pdef::Stream &stream, const pdef::pc1_18_play_toClient::command_node &obj) {
     size_t len = 0;
     len += 1; /*flags^: bitfield*/ /*4.1*/
-    const pdef::pc1_18_play_toClient::command_node::flags_t &flags = obj.flags; /*4.7*/
+    const pdef::pc1_18_play_toClient::command_node::flags_t &V_flags = obj.flags; /*4.7*/
     len += stream.sizeOfVarInt(obj.children.size()); /*1.3*/
-    for (const auto &v2 : obj.children) {
+    for (const auto &v2 : obj.children) { /*3.2*/
       len += stream.sizeOfVarInt(v2); /*0.2*/
     }
-    if (flags.has_redirect_node == 1) { /*8.2*/
+    if (V_flags.has_redirect_node == 1) { /*8.2*/
       len += stream.sizeOfVarInt(obj.redirectNode); /*0.2*/
     }
-    if (flags.command_node_type == 0) { /*8.2*/
+    if (V_flags.command_node_type == 0) { /*8.2*/
     }
-    else if (flags.command_node_type == 1) { /*8.2*/
+    else if (V_flags.command_node_type == 1) { /*8.2*/
         EXPECT_OR_BAIL(obj.extraNodeData_1); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData1 &v2 = *obj.extraNodeData_1; /*8.6*/
         len += stream.sizeOfVarInt(v2.name.length());
         len += v2.name.length(); /*name: pstring*/ /*4.1*/
     }
-    else if (flags.command_node_type == 2) { /*8.2*/
+    else if (V_flags.command_node_type == 2) { /*8.2*/
         EXPECT_OR_BAIL(obj.extraNodeData_2); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2 &v2 = *obj.extraNodeData_2; /*8.6*/
         len += stream.sizeOfVarInt(v2.name.length());
         len += v2.name.length(); /*name: pstring*/ /*4.1*/
         len += stream.sizeOfVarInt(v2.parser.length());
         len += v2.parser.length(); /*parser^: pstring*/ /*4.1*/
-        const std::string &parser = v2.parser; /*4.7*/
-        if (parser == "brigadier:bool") { /*8.0*/
+        const std::string &V_parser = v2.parser; /*4.7*/
+        if (V_parser == "brigadier:bool") { /*8.0*/
         }
-        else if (parser == "brigadier:float") { /*8.0*/
+        else if (V_parser == "brigadier:float") { /*8.0*/
             EXPECT_OR_BAIL(v2.properties_brigadier_float); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat &v4 = *v2.properties_brigadier_float; /*8.6*/
             len += 1; /*flags^: bitfield*/ /*4.1*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat::flags_t &flags = v4.flags; /*4.7*/
-            if (flags.min_present == 1) { /*8.2*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat::flags_t &V_flags = v4.flags; /*4.7*/
+            if (V_flags.min_present == 1) { /*8.2*/
               len += 4; /*0.2*/
             }
-            if (flags.max_present == 1) { /*8.2*/
+            if (V_flags.max_present == 1) { /*8.2*/
               len += 4; /*0.2*/
             }
         }
-        else if (parser == "brigadier:double") { /*8.0*/
+        else if (V_parser == "brigadier:double") { /*8.0*/
             EXPECT_OR_BAIL(v2.properties_brigadier_double); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble &v4 = *v2.properties_brigadier_double; /*8.6*/
             len += 1; /*flags^: bitfield*/ /*4.1*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble::flags_t &flags = v4.flags; /*4.7*/
-            if (flags.min_present == 1) { /*8.2*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble::flags_t &V_flags = v4.flags; /*4.7*/
+            if (V_flags.min_present == 1) { /*8.2*/
               len += 8; /*0.2*/
             }
-            if (flags.max_present == 1) { /*8.2*/
+            if (V_flags.max_present == 1) { /*8.2*/
               len += 8; /*0.2*/
             }
         }
-        else if (parser == "brigadier:integer") { /*8.0*/
+        else if (V_parser == "brigadier:integer") { /*8.0*/
             EXPECT_OR_BAIL(v2.properties_brigadier_integer); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger &v4 = *v2.properties_brigadier_integer; /*8.6*/
             len += 1; /*flags^: bitfield*/ /*4.1*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger::flags_t &flags = v4.flags; /*4.7*/
-            if (flags.min_present == 1) { /*8.2*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger::flags_t &V_flags = v4.flags; /*4.7*/
+            if (V_flags.min_present == 1) { /*8.2*/
               len += 4; /*0.2*/
             }
-            if (flags.max_present == 1) { /*8.2*/
+            if (V_flags.max_present == 1) { /*8.2*/
               len += 4; /*0.2*/
             }
         }
-        else if (parser == "brigadier:long") { /*8.0*/
+        else if (V_parser == "brigadier:long") { /*8.0*/
             EXPECT_OR_BAIL(v2.properties_brigadier_long); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong &v4 = *v2.properties_brigadier_long; /*8.6*/
             len += 1; /*flags^: bitfield*/ /*4.1*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong::flags_t &flags = v4.flags; /*4.7*/
-            if (flags.min_present == 1) { /*8.2*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong::flags_t &V_flags = v4.flags; /*4.7*/
+            if (V_flags.min_present == 1) { /*8.2*/
               len += 8; /*0.2*/
             }
-            if (flags.max_present == 1) { /*8.2*/
+            if (V_flags.max_present == 1) { /*8.2*/
               len += 8; /*0.2*/
             }
         }
-        else if (parser == "brigadier:string") { /*8.0*/
+        else if (V_parser == "brigadier:string") { /*8.0*/
         }
-        else if (parser == "minecraft:entity") { /*8.0*/
+        else if (V_parser == "minecraft:entity") { /*8.0*/
           len += 1; /*properties: bitfield*/ /*4.1*/
         }
-        else if (parser == "minecraft:game_profile") { /*8.0*/
+        else if (V_parser == "minecraft:game_profile") { /*8.0*/
         }
-        else if (parser == "minecraft:block_pos") { /*8.0*/
+        else if (V_parser == "minecraft:block_pos") { /*8.0*/
         }
-        else if (parser == "minecraft:column_pos") { /*8.0*/
+        else if (V_parser == "minecraft:column_pos") { /*8.0*/
         }
-        else if (parser == "minecraft:vec3") { /*8.0*/
+        else if (V_parser == "minecraft:vec3") { /*8.0*/
         }
-        else if (parser == "minecraft:vec2") { /*8.0*/
+        else if (V_parser == "minecraft:vec2") { /*8.0*/
         }
-        else if (parser == "minecraft:block_state") { /*8.0*/
+        else if (V_parser == "minecraft:block_state") { /*8.0*/
         }
-        else if (parser == "minecraft:block_predicate") { /*8.0*/
+        else if (V_parser == "minecraft:block_predicate") { /*8.0*/
         }
-        else if (parser == "minecraft:item_stack") { /*8.0*/
+        else if (V_parser == "minecraft:item_stack") { /*8.0*/
         }
-        else if (parser == "minecraft:item_predicate") { /*8.0*/
+        else if (V_parser == "minecraft:item_predicate") { /*8.0*/
         }
-        else if (parser == "minecraft:color") { /*8.0*/
+        else if (V_parser == "minecraft:color") { /*8.0*/
         }
-        else if (parser == "minecraft:component") { /*8.0*/
+        else if (V_parser == "minecraft:component") { /*8.0*/
         }
-        else if (parser == "minecraft:message") { /*8.0*/
+        else if (V_parser == "minecraft:message") { /*8.0*/
         }
-        else if (parser == "minecraft:nbt") { /*8.0*/
+        else if (V_parser == "minecraft:nbt") { /*8.0*/
         }
-        else if (parser == "minecraft:nbt_path") { /*8.0*/
+        else if (V_parser == "minecraft:nbt_path") { /*8.0*/
         }
-        else if (parser == "minecraft:objective") { /*8.0*/
+        else if (V_parser == "minecraft:objective") { /*8.0*/
         }
-        else if (parser == "minecraft:objective_criteria") { /*8.0*/
+        else if (V_parser == "minecraft:objective_criteria") { /*8.0*/
         }
-        else if (parser == "minecraft:operation") { /*8.0*/
+        else if (V_parser == "minecraft:operation") { /*8.0*/
         }
-        else if (parser == "minecraft:particle") { /*8.0*/
+        else if (V_parser == "minecraft:particle") { /*8.0*/
         }
-        else if (parser == "minecraft:angle") { /*8.0*/
+        else if (V_parser == "minecraft:angle") { /*8.0*/
         }
-        else if (parser == "minecraft:rotation") { /*8.0*/
+        else if (V_parser == "minecraft:rotation") { /*8.0*/
         }
-        else if (parser == "minecraft:scoreboard_slot") { /*8.0*/
+        else if (V_parser == "minecraft:scoreboard_slot") { /*8.0*/
         }
-        else if (parser == "minecraft:score_holder") { /*8.0*/
+        else if (V_parser == "minecraft:score_holder") { /*8.0*/
           len += 1; /*properties: bitfield*/ /*4.1*/
         }
-        else if (parser == "minecraft:swizzle") { /*8.0*/
+        else if (V_parser == "minecraft:swizzle") { /*8.0*/
         }
-        else if (parser == "minecraft:team") { /*8.0*/
+        else if (V_parser == "minecraft:team") { /*8.0*/
         }
-        else if (parser == "minecraft:item_slot") { /*8.0*/
+        else if (V_parser == "minecraft:item_slot") { /*8.0*/
         }
-        else if (parser == "minecraft:resource_location") { /*8.0*/
+        else if (V_parser == "minecraft:resource_location") { /*8.0*/
         }
-        else if (parser == "minecraft:mob_effect") { /*8.0*/
+        else if (V_parser == "minecraft:mob_effect") { /*8.0*/
         }
-        else if (parser == "minecraft:function") { /*8.0*/
+        else if (V_parser == "minecraft:function") { /*8.0*/
         }
-        else if (parser == "minecraft:entity_anchor") { /*8.0*/
+        else if (V_parser == "minecraft:entity_anchor") { /*8.0*/
         }
-        else if (parser == "minecraft:range") { /*8.0*/
+        else if (V_parser == "minecraft:range") { /*8.0*/
             EXPECT_OR_BAIL(v2.properties_minecraft_range); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftRange &v4 = *v2.properties_minecraft_range; /*8.6*/
             len += 1; /*0.2*/
         }
-        else if (parser == "minecraft:int_range") { /*8.0*/
+        else if (V_parser == "minecraft:int_range") { /*8.0*/
         }
-        else if (parser == "minecraft:float_range") { /*8.0*/
+        else if (V_parser == "minecraft:float_range") { /*8.0*/
         }
-        else if (parser == "minecraft:item_enchantment") { /*8.0*/
+        else if (V_parser == "minecraft:item_enchantment") { /*8.0*/
         }
-        else if (parser == "minecraft:entity_summon") { /*8.0*/
+        else if (V_parser == "minecraft:entity_summon") { /*8.0*/
         }
-        else if (parser == "minecraft:dimension") { /*8.0*/
+        else if (V_parser == "minecraft:dimension") { /*8.0*/
         }
-        else if (parser == "minecraft:nbt_compound_tag") { /*8.0*/
+        else if (V_parser == "minecraft:nbt_compound_tag") { /*8.0*/
         }
-        else if (parser == "minecraft:time") { /*8.0*/
+        else if (V_parser == "minecraft:time") { /*8.0*/
         }
-        else if (parser == "minecraft:resource_or_tag") { /*8.0*/
+        else if (V_parser == "minecraft:resource_or_tag") { /*8.0*/
             EXPECT_OR_BAIL(v2.properties_minecraft_resource_or_tag_or_minecraft_resource); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.6*/
             len += stream.sizeOfVarInt(v4.registry.length());
             len += v4.registry.length(); /*registry: pstring*/ /*4.1*/
         }
-        else if (parser == "minecraft:resource") { /*8.0*/
+        else if (V_parser == "minecraft:resource") { /*8.0*/
             EXPECT_OR_BAIL(v2.properties_minecraft_resource_or_tag_or_minecraft_resource); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.6*/
             len += stream.sizeOfVarInt(v4.registry.length());
             len += v4.registry.length(); /*registry: pstring*/ /*4.1*/
         }
-        else if (parser == "minecraft:uuid") { /*8.0*/
+        else if (V_parser == "minecraft:uuid") { /*8.0*/
         }
-        if (flags.has_custom_suggestions == 1) { /*8.2*/
+        if (V_flags.has_custom_suggestions == 1) { /*8.2*/
           len += stream.sizeOfVarInt(v2.suggestionType.length());
           len += v2.suggestionType.length(); /*suggestionType: pstring*/ /*4.1*/
         }
@@ -1894,7 +1894,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
       const pdef::pc1_18_play_toClient::packet_advancements::AdvancementMapping::Value &v = v2.value; /*["packet_advancements","AdvancementMapping"]*/ /*7.4*/
     }
     len += stream.sizeOfVarInt(obj.identifiers.size()); /*1.3*/
-    for (const auto &v2 : obj.identifiers) {
+    for (const auto &v2 : obj.identifiers) { /*3.2*/
       len += stream.sizeOfVarInt(v2.length());
       len += v2.length(); /*: pstring*/ /*4.1*/
     }
@@ -1942,37 +1942,37 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   size_t packet_boss_bar(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_boss_bar &obj) {
     size_t len = 0;
     len += 8; /*0.2*/
-    const int &action = obj.action; /*0.1*/
-    if (action == 0) { /*8.2*/
+    const int &V_action = obj.action; /*0.1*/
+    if (V_action == 0) { /*8.2*/
       len += stream.sizeOfVarInt(obj.title.length());
       len += obj.title.length(); /*title: pstring*/ /*4.1*/
     }
-    else if (action == 3) { /*8.2*/
+    else if (V_action == 3) { /*8.2*/
       len += stream.sizeOfVarInt(obj.title.length());
       len += obj.title.length(); /*title: pstring*/ /*4.1*/
     }
-    if (action == 0) { /*8.2*/
+    if (V_action == 0) { /*8.2*/
       len += 4; /*0.2*/
     }
-    else if (action == 2) { /*8.2*/
+    else if (V_action == 2) { /*8.2*/
       len += 4; /*0.2*/
     }
-    if (action == 0) { /*8.2*/
+    if (V_action == 0) { /*8.2*/
       len += stream.sizeOfVarInt(obj.color); /*0.2*/
     }
-    else if (action == 4) { /*8.2*/
+    else if (V_action == 4) { /*8.2*/
       len += stream.sizeOfVarInt(obj.color); /*0.2*/
     }
-    if (action == 0) { /*8.2*/
+    if (V_action == 0) { /*8.2*/
       len += stream.sizeOfVarInt(obj.dividers); /*0.2*/
     }
-    else if (action == 4) { /*8.2*/
+    else if (V_action == 4) { /*8.2*/
       len += stream.sizeOfVarInt(obj.dividers); /*0.2*/
     }
-    if (action == 0) { /*8.2*/
+    if (V_action == 0) { /*8.2*/
       len += 1; /*0.2*/
     }
-    else if (action == 5) { /*8.2*/
+    else if (V_action == 5) { /*8.2*/
       len += 1; /*0.2*/
     }
     PDEF_SIZE_DBG; return len;
@@ -1999,7 +1999,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   size_t packet_declare_commands(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_declare_commands &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.nodes.size()); /*1.3*/
-    for (const auto &v2 : obj.nodes) {
+    for (const auto &v2 : obj.nodes) { /*3.2*/
       size_t len_0 = pdef::pc1_18_play_toClient::size::command_node(stream, v2); EXPECT_OR_BAIL(len_0); len += len_0; /**/ /*4.4*/
     }
     len += stream.sizeOfVarInt(obj.rootIndex); /*0.2*/
@@ -2011,11 +2011,11 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     len += 8; /*0.2*/
     len += 8; /*0.2*/
     len += 8; /*0.2*/
-    const bool &isEntity = obj.isEntity; /*0.1*/
-    if (isEntity == true) { /*8.1*/
+    const bool &V_isEntity = obj.isEntity; /*0.1*/
+    if (V_isEntity == true) { /*8.1*/
       len += stream.sizeOfVarInt(obj.entityId); /*0.2*/
     }
-    if (isEntity == true) { /*8.1*/
+    if (V_isEntity == true) { /*8.1*/
       len += stream.sizeOfVarInt(obj.entity_feet_eyes.length());
       len += obj.entity_feet_eyes.length(); /*entity_feet_eyes: pstring*/ /*4.1*/
     }
@@ -2040,7 +2040,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     len += 1; /*chunkCoordinates: bitfield*/ /*4.1*/
     len += 1; /*0.2*/
     len += stream.sizeOfVarInt(obj.records.size()); /*1.3*/
-    for (const auto &v2 : obj.records) {
+    for (const auto &v2 : obj.records) { /*3.2*/
       len += stream.sizeOfVarInt(v2); /*0.2*/
     }
     PDEF_SIZE_DBG; return len;
@@ -2063,7 +2063,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     len += 1; /*0.2*/
     len += stream.sizeOfVarInt(obj.stateId); /*0.2*/
     len += stream.sizeOfVarInt(obj.items.size()); /*1.3*/
-    for (const auto &v2 : obj.items) {
+    for (const auto &v2 : obj.items) { /*3.2*/
       len += 1; /*0.2*/
     }
     len += 1; /*0.2*/
@@ -2170,24 +2170,24 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     len += stream.sizeOfVarInt(obj.chunkData.size());
     len += obj.chunkData.size(); /*chunkData: buffer*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.blockEntities.size()); /*1.3*/
-    for (const auto &v2 : obj.blockEntities) {
+    for (const auto &v2 : obj.blockEntities) { /*3.2*/
       size_t len_1 = pdef::pc1_18_play_toClient::size::chunkBlockEntity(stream, v2); EXPECT_OR_BAIL(len_1); len += len_1; /**/ /*4.4*/
     }
     len += 1; /*0.2*/
     len += stream.sizeOfVarInt(obj.skyLightMask.size()); /*1.3*/
-    for (const auto &v2 : obj.skyLightMask) {
+    for (const auto &v2 : obj.skyLightMask) { /*3.2*/
       len += 8; /*0.2*/
     }
     len += stream.sizeOfVarInt(obj.blockLightMask.size()); /*1.3*/
-    for (const auto &v2 : obj.blockLightMask) {
+    for (const auto &v2 : obj.blockLightMask) { /*3.2*/
       len += 8; /*0.2*/
     }
     len += stream.sizeOfVarInt(obj.emptySkyLightMask.size()); /*1.3*/
-    for (const auto &v2 : obj.emptySkyLightMask) {
+    for (const auto &v2 : obj.emptySkyLightMask) { /*3.2*/
       len += 8; /*0.2*/
     }
     len += stream.sizeOfVarInt(obj.emptyBlockLightMask.size()); /*1.3*/
-    for (const auto &v2 : obj.emptyBlockLightMask) {
+    for (const auto &v2 : obj.emptyBlockLightMask) { /*3.2*/
       len += 8; /*0.2*/
     }
     len += stream.sizeOfVarInt(obj.skyLight.size()); /*1.3*/
@@ -2216,7 +2216,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   size_t packet_world_particles(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_world_particles &obj) {
     size_t len = 0;
-    const int32_t &particleId = obj.particleId; /*0.1*/
+    const int32_t &V_particleId = obj.particleId; /*0.1*/
     len += 1; /*0.2*/
     len += 8; /*0.2*/
     len += 8; /*0.2*/
@@ -2226,22 +2226,22 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     len += 4; /*0.2*/
     len += 4; /*0.2*/
     len += 4; /*0.2*/
-    if (particleId == 2) { /*8.2*/
+    if (V_particleId == 2) { /*8.2*/
         EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.6*/
         len += stream.sizeOfVarInt(v2.blockState); /*0.2*/
     }
-    else if (particleId == 3) { /*8.2*/
+    else if (V_particleId == 3) { /*8.2*/
         EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.6*/
         len += stream.sizeOfVarInt(v2.blockState); /*0.2*/
     }
-    else if (particleId == 14) { /*8.2*/
+    else if (V_particleId == 14) { /*8.2*/
         EXPECT_OR_BAIL(obj.data_14); const pdef::pc1_18_play_toClient::packet_world_particles::Data14 &v2 = *obj.data_14; /*8.6*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
     }
-    else if (particleId == 15) { /*8.2*/
+    else if (V_particleId == 15) { /*8.2*/
         EXPECT_OR_BAIL(obj.data_15); const pdef::pc1_18_play_toClient::packet_world_particles::Data15 &v2 = *obj.data_15; /*8.6*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
@@ -2251,24 +2251,24 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
         len += 4; /*0.2*/
         len += 4; /*0.2*/
     }
-    else if (particleId == 24) { /*8.2*/
+    else if (V_particleId == 24) { /*8.2*/
         EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.6*/
         len += stream.sizeOfVarInt(v2.blockState); /*0.2*/
     }
-    else if (particleId == 35) { /*8.2*/
+    else if (V_particleId == 35) { /*8.2*/
         EXPECT_OR_BAIL(obj.data_35); const pdef::pc1_18_play_toClient::packet_world_particles::Data35 &v2 = *obj.data_35; /*8.6*/
         len += 1; /*0.2*/
     }
-    else if (particleId == 36) { /*8.2*/
+    else if (V_particleId == 36) { /*8.2*/
         EXPECT_OR_BAIL(obj.data_36); const pdef::pc1_18_play_toClient::packet_world_particles::Data36 &v2 = *obj.data_36; /*8.6*/
         len += 1; /*origin: bitfield*/ /*4.1*/
         len += stream.sizeOfVarInt(v2.positionType.length());
         len += v2.positionType.length(); /*positionType^: pstring*/ /*4.1*/
-        const std::string &positionType = v2.positionType; /*4.7*/
-        if (positionType == "minecraft:block") { /*8.0*/
+        const std::string &V_positionType = v2.positionType; /*4.7*/
+        if (V_positionType == "minecraft:block") { /*8.0*/
           len += 1; /*destination: bitfield*/ /*4.1*/
         }
-        else if (positionType == "minecraft:entity") { /*8.0*/
+        else if (V_positionType == "minecraft:entity") { /*8.0*/
           len += stream.sizeOfVarInt(v2.destination_varint); /*0.2*/
         }
         len += stream.sizeOfVarInt(v2.ticks); /*0.2*/
@@ -2281,19 +2281,19 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     len += stream.sizeOfVarInt(obj.chunkZ); /*0.2*/
     len += 1; /*0.2*/
     len += stream.sizeOfVarInt(obj.skyLightMask.size()); /*1.3*/
-    for (const auto &v2 : obj.skyLightMask) {
+    for (const auto &v2 : obj.skyLightMask) { /*3.2*/
       len += 8; /*0.2*/
     }
     len += stream.sizeOfVarInt(obj.blockLightMask.size()); /*1.3*/
-    for (const auto &v2 : obj.blockLightMask) {
+    for (const auto &v2 : obj.blockLightMask) { /*3.2*/
       len += 8; /*0.2*/
     }
     len += stream.sizeOfVarInt(obj.emptySkyLightMask.size()); /*1.3*/
-    for (const auto &v2 : obj.emptySkyLightMask) {
+    for (const auto &v2 : obj.emptySkyLightMask) { /*3.2*/
       len += 8; /*0.2*/
     }
     len += stream.sizeOfVarInt(obj.emptyBlockLightMask.size()); /*1.3*/
-    for (const auto &v2 : obj.emptyBlockLightMask) {
+    for (const auto &v2 : obj.emptyBlockLightMask) { /*3.2*/
       len += 8; /*0.2*/
     }
     len += stream.sizeOfVarInt(obj.skyLight.size()); /*1.3*/
@@ -2319,7 +2319,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     len += 1; /*0.2*/
     len += 1; /*0.2*/
     len += stream.sizeOfVarInt(obj.worldNames.size()); /*1.3*/
-    for (const auto &v2 : obj.worldNames) {
+    for (const auto &v2 : obj.worldNames) { /*3.2*/
       len += stream.sizeOfVarInt(v2.length());
       len += v2.length(); /*: pstring*/ /*4.1*/
     }
@@ -2343,23 +2343,23 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     len += 1; /*0.2*/
     len += 1; /*0.2*/
     const pdef::pc1_18_play_toClient::packet_map::Icons &v = obj.icons; /*["packet_map"]*/ /*7.4*/
-    const uint8_t &columns = obj.columns; /*0.1*/
-    if (columns == 0) { /*8.2*/
+    const uint8_t &V_columns = obj.columns; /*0.1*/
+    if (V_columns == 0) { /*8.2*/
     }
     else {
       len += 1; /*0.2*/
     }
-    if (columns == 0) { /*8.2*/
+    if (V_columns == 0) { /*8.2*/
     }
     else {
       len += 1; /*0.2*/
     }
-    if (columns == 0) { /*8.2*/
+    if (V_columns == 0) { /*8.2*/
     }
     else {
       len += 1; /*0.2*/
     }
-    if (columns == 0) { /*8.2*/
+    if (V_columns == 0) { /*8.2*/
     }
     else {
       len += stream.sizeOfVarInt(obj.data.size());
@@ -2470,15 +2470,15 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   size_t packet_player_info(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_player_info &obj) {
     size_t len = 0;
-    const int &action = obj.action; /*0.1*/
+    const int &V_action = obj.action; /*0.1*/
     len += stream.sizeOfVarInt(obj.data.size()); /*1.3*/
     for (const auto &v2 : obj.data) { /*5.20*/
       len += 8; /*0.2*/
-      if (action == 0) { /*8.2*/
+      if (V_action == 0) { /*8.2*/
         len += stream.sizeOfVarInt(v2.name.length());
         len += v2.name.length(); /*name: pstring*/ /*4.1*/
       }
-      if (action == 0) { /*8.2*/
+      if (V_action == 0) { /*8.2*/
         len += stream.sizeOfVarInt(v2.properties.size()); /*1.3*/
         for (const auto &v4 : v2.properties) { /*5.20*/
           len += stream.sizeOfVarInt(v4.name.length());
@@ -2488,30 +2488,30 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
           const pdef::pc1_18_play_toClient::packet_player_info::Data::Properties::Signature &v = v4.signature; /*["packet_player_info","Data","Properties"]*/ /*7.4*/
         }
       }
-      if (action == 0) { /*8.2*/
+      if (V_action == 0) { /*8.2*/
         len += stream.sizeOfVarInt(v2.gamemode); /*0.2*/
       }
-      else if (action == 1) { /*8.2*/
+      else if (V_action == 1) { /*8.2*/
         len += stream.sizeOfVarInt(v2.gamemode); /*0.2*/
       }
-      if (action == 0) { /*8.2*/
+      if (V_action == 0) { /*8.2*/
         len += stream.sizeOfVarInt(v2.ping); /*0.2*/
       }
-      else if (action == 2) { /*8.2*/
+      else if (V_action == 2) { /*8.2*/
         len += stream.sizeOfVarInt(v2.ping); /*0.2*/
       }
-      if (action == 0) { /*8.2*/
+      if (V_action == 0) { /*8.2*/
           EXPECT_OR_BAIL(v2.displayName); const pdef::pc1_18_play_toClient::packet_player_info::Data::DisplayName &v3 = *v2.displayName; /*8.6*/
-          const bool &has = v3.has; /*0.1*/
-          if (has == true) { /*8.1*/
+          const bool &V_has = v3.has; /*0.1*/
+          if (V_has == true) { /*8.1*/
             len += stream.sizeOfVarInt(v3.value.length());
             len += v3.value.length(); /*value: pstring*/ /*4.1*/
           }
       }
-      else if (action == 3) { /*8.2*/
+      else if (V_action == 3) { /*8.2*/
           EXPECT_OR_BAIL(v2.displayName); const pdef::pc1_18_play_toClient::packet_player_info::Data::DisplayName &v3 = *v2.displayName; /*8.6*/
-          const bool &has = v3.has; /*0.1*/
-          if (has == true) { /*8.1*/
+          const bool &V_has = v3.has; /*0.1*/
+          if (V_has == true) { /*8.1*/
             len += stream.sizeOfVarInt(v3.value.length());
             len += v3.value.length(); /*value: pstring*/ /*4.1*/
           }
@@ -2533,7 +2533,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   size_t packet_unlock_recipes(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_unlock_recipes &obj) {
     size_t len = 0;
-    const int &action = obj.action; /*0.1*/
+    const int &V_action = obj.action; /*0.1*/
     len += 1; /*0.2*/
     len += 1; /*0.2*/
     len += 1; /*0.2*/
@@ -2543,13 +2543,13 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     len += 1; /*0.2*/
     len += 1; /*0.2*/
     len += stream.sizeOfVarInt(obj.recipes1.size()); /*1.3*/
-    for (const auto &v2 : obj.recipes1) {
+    for (const auto &v2 : obj.recipes1) { /*3.2*/
       len += stream.sizeOfVarInt(v2.length());
       len += v2.length(); /*: pstring*/ /*4.1*/
     }
-    if (action == 0) { /*8.2*/
+    if (V_action == 0) { /*8.2*/
       len += stream.sizeOfVarInt(obj.recipes2.size()); /*1.3*/
-      for (const auto &v3 : obj.recipes2) {
+      for (const auto &v3 : obj.recipes2) { /*3.2*/
         len += stream.sizeOfVarInt(v3.length());
         len += v3.length(); /*: pstring*/ /*4.1*/
       }
@@ -2559,7 +2559,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   size_t packet_entity_destroy(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_destroy &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.entityIds.size()); /*1.3*/
-    for (const auto &v2 : obj.entityIds) {
+    for (const auto &v2 : obj.entityIds) { /*3.2*/
       len += stream.sizeOfVarInt(v2); /*0.2*/
     }
     PDEF_SIZE_DBG; return len;
@@ -2671,19 +2671,19 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.name.length());
     len += obj.name.length(); /*name: pstring*/ /*4.1*/
-    const int8_t &action = obj.action; /*0.1*/
-    if (action == 0) { /*8.2*/
+    const int8_t &V_action = obj.action; /*0.1*/
+    if (V_action == 0) { /*8.2*/
       len += stream.sizeOfVarInt(obj.displayText.length());
       len += obj.displayText.length(); /*displayText: pstring*/ /*4.1*/
     }
-    else if (action == 2) { /*8.2*/
+    else if (V_action == 2) { /*8.2*/
       len += stream.sizeOfVarInt(obj.displayText.length());
       len += obj.displayText.length(); /*displayText: pstring*/ /*4.1*/
     }
-    if (action == 0) { /*8.2*/
+    if (V_action == 0) { /*8.2*/
       len += stream.sizeOfVarInt(obj.type); /*0.2*/
     }
-    else if (action == 2) { /*8.2*/
+    else if (V_action == 2) { /*8.2*/
       len += stream.sizeOfVarInt(obj.type); /*0.2*/
     }
     PDEF_SIZE_DBG; return len;
@@ -2692,7 +2692,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.entityId); /*0.2*/
     len += stream.sizeOfVarInt(obj.passengers.size()); /*1.3*/
-    for (const auto &v2 : obj.passengers) {
+    for (const auto &v2 : obj.passengers) { /*3.2*/
       len += stream.sizeOfVarInt(v2); /*0.2*/
     }
     PDEF_SIZE_DBG; return len;
@@ -2701,76 +2701,76 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.team.length());
     len += obj.team.length(); /*team: pstring*/ /*4.1*/
-    const int8_t &mode = obj.mode; /*0.1*/
-    if (mode == 0) { /*8.2*/
+    const int8_t &V_mode = obj.mode; /*0.1*/
+    if (V_mode == 0) { /*8.2*/
       len += stream.sizeOfVarInt(obj.name.length());
       len += obj.name.length(); /*name: pstring*/ /*4.1*/
     }
-    else if (mode == 2) { /*8.2*/
+    else if (V_mode == 2) { /*8.2*/
       len += stream.sizeOfVarInt(obj.name.length());
       len += obj.name.length(); /*name: pstring*/ /*4.1*/
     }
-    if (mode == 0) { /*8.2*/
+    if (V_mode == 0) { /*8.2*/
       len += 1; /*0.2*/
     }
-    else if (mode == 2) { /*8.2*/
+    else if (V_mode == 2) { /*8.2*/
       len += 1; /*0.2*/
     }
-    if (mode == 0) { /*8.2*/
+    if (V_mode == 0) { /*8.2*/
       len += stream.sizeOfVarInt(obj.nameTagVisibility.length());
       len += obj.nameTagVisibility.length(); /*nameTagVisibility: pstring*/ /*4.1*/
     }
-    else if (mode == 2) { /*8.2*/
+    else if (V_mode == 2) { /*8.2*/
       len += stream.sizeOfVarInt(obj.nameTagVisibility.length());
       len += obj.nameTagVisibility.length(); /*nameTagVisibility: pstring*/ /*4.1*/
     }
-    if (mode == 0) { /*8.2*/
+    if (V_mode == 0) { /*8.2*/
       len += stream.sizeOfVarInt(obj.collisionRule.length());
       len += obj.collisionRule.length(); /*collisionRule: pstring*/ /*4.1*/
     }
-    else if (mode == 2) { /*8.2*/
+    else if (V_mode == 2) { /*8.2*/
       len += stream.sizeOfVarInt(obj.collisionRule.length());
       len += obj.collisionRule.length(); /*collisionRule: pstring*/ /*4.1*/
     }
-    if (mode == 0) { /*8.2*/
+    if (V_mode == 0) { /*8.2*/
       len += stream.sizeOfVarInt(obj.formatting); /*0.2*/
     }
-    else if (mode == 2) { /*8.2*/
+    else if (V_mode == 2) { /*8.2*/
       len += stream.sizeOfVarInt(obj.formatting); /*0.2*/
     }
-    if (mode == 0) { /*8.2*/
+    if (V_mode == 0) { /*8.2*/
       len += stream.sizeOfVarInt(obj.prefix.length());
       len += obj.prefix.length(); /*prefix: pstring*/ /*4.1*/
     }
-    else if (mode == 2) { /*8.2*/
+    else if (V_mode == 2) { /*8.2*/
       len += stream.sizeOfVarInt(obj.prefix.length());
       len += obj.prefix.length(); /*prefix: pstring*/ /*4.1*/
     }
-    if (mode == 0) { /*8.2*/
+    if (V_mode == 0) { /*8.2*/
       len += stream.sizeOfVarInt(obj.suffix.length());
       len += obj.suffix.length(); /*suffix: pstring*/ /*4.1*/
     }
-    else if (mode == 2) { /*8.2*/
+    else if (V_mode == 2) { /*8.2*/
       len += stream.sizeOfVarInt(obj.suffix.length());
       len += obj.suffix.length(); /*suffix: pstring*/ /*4.1*/
     }
-    if (mode == 0) { /*8.2*/
+    if (V_mode == 0) { /*8.2*/
       len += stream.sizeOfVarInt(obj.players.size()); /*1.3*/
-      for (const auto &v3 : obj.players) {
+      for (const auto &v3 : obj.players) { /*3.2*/
         len += stream.sizeOfVarInt(v3.length());
         len += v3.length(); /*: pstring*/ /*4.1*/
       }
     }
-    else if (mode == 3) { /*8.2*/
+    else if (V_mode == 3) { /*8.2*/
       len += stream.sizeOfVarInt(obj.players.size()); /*1.3*/
-      for (const auto &v3 : obj.players) {
+      for (const auto &v3 : obj.players) { /*3.2*/
         len += stream.sizeOfVarInt(v3.length());
         len += v3.length(); /*: pstring*/ /*4.1*/
       }
     }
-    else if (mode == 4) { /*8.2*/
+    else if (V_mode == 4) { /*8.2*/
       len += stream.sizeOfVarInt(obj.players.size()); /*1.3*/
-      for (const auto &v3 : obj.players) {
+      for (const auto &v3 : obj.players) { /*3.2*/
         len += stream.sizeOfVarInt(v3.length());
         len += v3.length(); /*: pstring*/ /*4.1*/
       }
@@ -2781,10 +2781,10 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.itemName.length());
     len += obj.itemName.length(); /*itemName: pstring*/ /*4.1*/
-    const int &action = obj.action; /*0.1*/
+    const int &V_action = obj.action; /*0.1*/
     len += stream.sizeOfVarInt(obj.scoreName.length());
     len += obj.scoreName.length(); /*scoreName: pstring*/ /*4.1*/
-    if (action == 1) { /*8.2*/
+    if (V_action == 1) { /*8.2*/
     }
     else {
       len += stream.sizeOfVarInt(obj.value); /*0.2*/
@@ -2814,18 +2814,18 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   size_t packet_stop_sound(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_stop_sound &obj) {
     size_t len = 0;
-    const int8_t &flags = obj.flags; /*0.1*/
-    if (flags == 1) { /*8.2*/
+    const int8_t &V_flags = obj.flags; /*0.1*/
+    if (V_flags == 1) { /*8.2*/
       len += stream.sizeOfVarInt(obj.source); /*0.2*/
     }
-    else if (flags == 3) { /*8.2*/
+    else if (V_flags == 3) { /*8.2*/
       len += stream.sizeOfVarInt(obj.source); /*0.2*/
     }
-    if (flags == 2) { /*8.2*/
+    if (V_flags == 2) { /*8.2*/
       len += stream.sizeOfVarInt(obj.sound.length());
       len += obj.sound.length(); /*sound: pstring*/ /*4.1*/
     }
-    else if (flags == 3) { /*8.2*/
+    else if (V_flags == 3) { /*8.2*/
       len += stream.sizeOfVarInt(obj.sound.length());
       len += obj.sound.length(); /*sound: pstring*/ /*4.1*/
     }
@@ -2905,98 +2905,98 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     for (const auto &v2 : obj.recipes) { /*5.20*/
       len += stream.sizeOfVarInt(v2.type.length());
       len += v2.type.length(); /*type^: pstring*/ /*4.1*/
-      const std::string &type = v2.type; /*4.7*/
+      const std::string &V_type = v2.type; /*4.7*/
       len += stream.sizeOfVarInt(v2.recipeId.length());
       len += v2.recipeId.length(); /*recipeId: pstring*/ /*4.1*/
-      if (type == "minecraft:crafting_shapeless") { /*8.0*/
+      if (V_type == "minecraft:crafting_shapeless") { /*8.0*/
           EXPECT_OR_BAIL(v2.data_minecraft_crafting_shapeless); const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftCraftingShapeless &v3 = *v2.data_minecraft_crafting_shapeless; /*8.6*/
           len += stream.sizeOfVarInt(v3.group.length());
           len += v3.group.length(); /*group: pstring*/ /*4.1*/
           len += stream.sizeOfVarInt(v3.ingredients.size()); /*1.3*/
-          for (const auto &v5 : v3.ingredients) {
+          for (const auto &v5 : v3.ingredients) { /*3.2*/
             len += stream.sizeOfVarInt(v5.size()); /*1.3*/
-            for (const auto &v6 : v5) {
+            for (const auto &v6 : v5) { /*3.2*/
               len += 1; /*0.2*/
             }
           }
           len += 1; /*0.2*/
       }
-      else if (type == "minecraft:crafting_shaped") { /*8.0*/
+      else if (V_type == "minecraft:crafting_shaped") { /*8.0*/
           EXPECT_OR_BAIL(v2.data_minecraft_crafting_shaped); const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftCraftingShaped &v3 = *v2.data_minecraft_crafting_shaped; /*8.6*/
-          const int &width = v3.width; /*0.1*/
-          const int &height = v3.height; /*0.1*/
+          const int &V_width = v3.width; /*0.1*/
+          const int &V_height = v3.height; /*0.1*/
           len += stream.sizeOfVarInt(v3.group.length());
           len += v3.group.length(); /*group: pstring*/ /*4.1*/
-          len += stream.sizeOfVarInt(width); /*1.1*/
+          len += stream.sizeOfVarInt(V_width); /*1.1*/
           for (const auto &v : v3.ingredients) { /*5.1*/
-            len += stream.sizeOfVarInt(height); /*5.3*/
+            len += stream.sizeOfVarInt(V_height); /*5.3*/
             for (const auto &v : v) { /*5.10*/
               len += stream.sizeOfVarInt(v.size()); /*1.3*/
-              for (const auto &v7 : v) {
+              for (const auto &v7 : v) { /*3.2*/
                 len += 1; /*0.2*/
               }
             }
           }
           len += 1; /*0.2*/
       }
-      else if (type == "minecraft:crafting_special_armordye") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_armordye") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_bookcloning") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_bookcloning") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_mapcloning") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_mapcloning") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_mapextending") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_mapextending") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_firework_rocket") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_firework_rocket") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_firework_star") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_firework_star") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_firework_star_fade") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_firework_star_fade") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_repairitem") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_repairitem") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_tippedarrow") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_tippedarrow") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_bannerduplicate") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_bannerduplicate") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_banneraddpattern") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_banneraddpattern") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_shielddecoration") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_shielddecoration") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_shulkerboxcoloring") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_shulkerboxcoloring") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_suspiciousstew") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_suspiciousstew") { /*8.0*/
       }
-      else if (type == "minecraft:smelting") { /*8.0*/
+      else if (V_type == "minecraft:smelting") { /*8.0*/
         EXPECT_OR_BAIL(v2.data_minecraft_smelting_format); size_t len_2 = pdef::pc1_18_play_toClient::size::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); EXPECT_OR_BAIL(len_2); len += len_2; /*data_minecraft_smelting_format*/ /*4.4*/
       }
-      else if (type == "minecraft:blasting") { /*8.0*/
+      else if (V_type == "minecraft:blasting") { /*8.0*/
         EXPECT_OR_BAIL(v2.data_minecraft_smelting_format); size_t len_3 = pdef::pc1_18_play_toClient::size::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); EXPECT_OR_BAIL(len_3); len += len_3; /*data_minecraft_smelting_format*/ /*4.4*/
       }
-      else if (type == "minecraft:smoking") { /*8.0*/
+      else if (V_type == "minecraft:smoking") { /*8.0*/
         EXPECT_OR_BAIL(v2.data_minecraft_smelting_format); size_t len_4 = pdef::pc1_18_play_toClient::size::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); EXPECT_OR_BAIL(len_4); len += len_4; /*data_minecraft_smelting_format*/ /*4.4*/
       }
-      else if (type == "minecraft:campfire_cooking") { /*8.0*/
+      else if (V_type == "minecraft:campfire_cooking") { /*8.0*/
         EXPECT_OR_BAIL(v2.data_minecraft_smelting_format); size_t len_5 = pdef::pc1_18_play_toClient::size::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); EXPECT_OR_BAIL(len_5); len += len_5; /*data_minecraft_smelting_format*/ /*4.4*/
       }
-      else if (type == "minecraft:stonecutting") { /*8.0*/
+      else if (V_type == "minecraft:stonecutting") { /*8.0*/
           EXPECT_OR_BAIL(v2.data_minecraft_stonecutting); const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftStonecutting &v3 = *v2.data_minecraft_stonecutting; /*8.6*/
           len += stream.sizeOfVarInt(v3.group.length());
           len += v3.group.length(); /*group: pstring*/ /*4.1*/
           len += stream.sizeOfVarInt(v3.ingredient.size()); /*1.3*/
-          for (const auto &v5 : v3.ingredient) {
+          for (const auto &v5 : v3.ingredient) { /*3.2*/
             len += 1; /*0.2*/
           }
           len += 1; /*0.2*/
       }
-      else if (type == "minecraft:smithing") { /*8.0*/
+      else if (V_type == "minecraft:smithing") { /*8.0*/
           EXPECT_OR_BAIL(v2.data_minecraft_smithing); const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftSmithing &v3 = *v2.data_minecraft_smithing; /*8.6*/
           len += stream.sizeOfVarInt(v3.base.size()); /*1.3*/
-          for (const auto &v5 : v3.base) {
+          for (const auto &v5 : v3.base) { /*3.2*/
             len += 1; /*0.2*/
           }
           len += stream.sizeOfVarInt(v3.addition.size()); /*1.3*/
-          for (const auto &v5 : v3.addition) {
+          for (const auto &v5 : v3.addition) { /*3.2*/
             len += 1; /*0.2*/
           }
           len += 1; /*0.2*/
@@ -3028,11 +3028,11 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     len += 1; /*sourcePosition: bitfield*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.destinationIdentifier.length());
     len += obj.destinationIdentifier.length(); /*destinationIdentifier^: pstring*/ /*4.1*/
-    const std::string &destinationIdentifier = obj.destinationIdentifier; /*4.7*/
-    if (destinationIdentifier == "block") { /*8.0*/
+    const std::string &V_destinationIdentifier = obj.destinationIdentifier; /*4.7*/
+    if (V_destinationIdentifier == "block") { /*8.0*/
       len += 1; /*destination: bitfield*/ /*4.1*/
     }
-    else if (destinationIdentifier == "entityId") { /*8.0*/
+    else if (V_destinationIdentifier == "entityId") { /*8.0*/
       len += stream.sizeOfVarInt(obj.destination_varint); /*0.2*/
     }
     len += stream.sizeOfVarInt(obj.arrivalTicks); /*0.2*/
@@ -3120,9 +3120,9 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   size_t packet(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet &obj) {
     size_t len = 0;
-    const pdef::pc1_18_play_toClient::packet::Name &name = obj.name; /*0.3*/
+    const pdef::pc1_18_play_toClient::packet::Name &V_name = obj.name; /*0.3*/
     len += stream.sizeOfVarInt((int&)obj.name); /*name^: varint*/ /*7.0*/
-    switch (name) { /*8.0*/
+    switch (V_name) { /*8.0*/
       case pdef::pc1_18_play_toClient::packet::Name::SpawnEntity: { /*8.5*/
         EXPECT_OR_BAIL(obj.params_packet_spawn_entity); size_t len_7 = pdef::pc1_18_play_toClient::size::packet_spawn_entity(stream, *obj.params_packet_spawn_entity); EXPECT_OR_BAIL(len_7); len += len_7; /*params_packet_spawn_entity*/ /*4.4*/
         break;
@@ -3659,11 +3659,11 @@ bool packet_simulation_distance(pdef::Stream &stream, const pdef::pc1_18_play_to
 bool packet(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet &obj, bool allocate);
   bool slot(pdef::Stream &stream, const pdef::pc1_18_play_toClient::slot &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::pc1_18_play_toClient::size::slot(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const bool &present = obj.present; /*0.1*/
+    const bool &V_present = obj.present; /*0.1*/
     WRITE_OR_BAIL(writeBool, (bool)obj.present); /*0.4*/
-    if (present == false) { /*8.1*/
+    if (V_present == false) { /*8.1*/
     }
-    else if (present == true) { /*8.1*/
+    else if (V_present == true) { /*8.1*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.itemId); /*0.4*/
         WRITE_OR_BAIL(writeByte, (int8_t)obj.itemCount); /*0.4*/
         WRITE_OR_BAIL(writeByte, (int8_t)obj.nbtData); /*0.4*/
@@ -3672,24 +3672,24 @@ bool packet(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet &obj,
   }
   bool particle(pdef::Stream &stream, const pdef::pc1_18_play_toClient::particle &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::pc1_18_play_toClient::size::particle(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const int &particleId = obj.particleId; /*0.1*/
+    const int &V_particleId = obj.particleId; /*0.1*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.particleId); /*0.4*/
-    if (particleId == 2) { /*8.2*/
+    if (V_particleId == 2) { /*8.2*/
         const pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.5*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.blockState); /*0.4*/
     }
-    else if (particleId == 3) { /*8.2*/
+    else if (V_particleId == 3) { /*8.2*/
         const pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.5*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.blockState); /*0.4*/
     }
-    else if (particleId == 14) { /*8.2*/
+    else if (V_particleId == 14) { /*8.2*/
         const pdef::pc1_18_play_toClient::particle::Data14 &v2 = *obj.data_14; /*8.5*/
         WRITE_OR_BAIL(writeFloatBE, (float)v2.red); /*0.4*/
         WRITE_OR_BAIL(writeFloatBE, (float)v2.green); /*0.4*/
         WRITE_OR_BAIL(writeFloatBE, (float)v2.blue); /*0.4*/
         WRITE_OR_BAIL(writeFloatBE, (float)v2.scale); /*0.4*/
     }
-    else if (particleId == 15) { /*8.2*/
+    else if (V_particleId == 15) { /*8.2*/
         const pdef::pc1_18_play_toClient::particle::Data15 &v2 = *obj.data_15; /*8.5*/
         WRITE_OR_BAIL(writeFloatBE, (float)v2.fromRed); /*0.4*/
         WRITE_OR_BAIL(writeFloatBE, (float)v2.fromGreen); /*0.4*/
@@ -3699,15 +3699,15 @@ bool packet(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet &obj,
         WRITE_OR_BAIL(writeFloatBE, (float)v2.toGreen); /*0.4*/
         WRITE_OR_BAIL(writeFloatBE, (float)v2.toBlue); /*0.4*/
     }
-    else if (particleId == 24) { /*8.2*/
+    else if (V_particleId == 24) { /*8.2*/
         const pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.5*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.blockState); /*0.4*/
     }
-    else if (particleId == 35) { /*8.2*/
+    else if (V_particleId == 35) { /*8.2*/
         const pdef::pc1_18_play_toClient::particle::Data35 &v2 = *obj.data_35; /*8.5*/
         WRITE_OR_BAIL(writeByte, (int8_t)v2.item); /*0.4*/
     }
-    else if (particleId == 36) { /*8.2*/
+    else if (V_particleId == 36) { /*8.2*/
         const pdef::pc1_18_play_toClient::particle::Data36 &v2 = *obj.data_36; /*8.5*/
         uint64_t origin_val = 0;
         origin_val |= (uint64_t)v2.origin.x << 0;
@@ -3716,15 +3716,15 @@ bool packet(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet &obj,
         WRITE_OR_BAIL(writeULongBE, origin_val); /*origin: bitfield*/ /*4.2*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.positionType.length());
         WRITE_OR_BAIL(writeString, v2.positionType); /*positionType: pstring*/ /*4.2*/
-        const std::string &positionType = v2.positionType; /*4.7*/
-        if (positionType == "minecraft:block") { /*8.0*/
+        const std::string &V_positionType = v2.positionType; /*4.7*/
+        if (V_positionType == "minecraft:block") { /*8.0*/
           uint64_t destination_position_val = 0;
           destination_position_val |= (uint64_t)v2.destination_position.x << 0;
           destination_position_val |= (uint64_t)v2.destination_position.z << 26;
           destination_position_val |= (uint64_t)v2.destination_position.y << 52;
           WRITE_OR_BAIL(writeULongBE, destination_position_val); /*destination_position: bitfield*/ /*4.2*/
         }
-        else if (positionType == "minecraft:entity") { /*8.0*/
+        else if (V_positionType == "minecraft:entity") { /*8.0*/
           WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.destination_varint); /*0.4*/
         }
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.ticks); /*0.4*/
@@ -3774,192 +3774,192 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
     flags_val |= (uint8_t)obj.flags.has_command << 5;
     flags_val |= (uint8_t)obj.flags.command_node_type << 6;
     WRITE_OR_BAIL(writeUByte, flags_val); /*flags: bitfield*/ /*4.2*/
-    const pdef::pc1_18_play_toClient::command_node::flags_t &flags = obj.flags; /*4.7*/
+    const pdef::pc1_18_play_toClient::command_node::flags_t &V_flags = obj.flags; /*4.7*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.children.size()); /*1.4*/
     for (const auto &v2 : obj.children) { /*3.1*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2); /*0.4*/
     }
-    if (flags.has_redirect_node == 1) { /*8.2*/
+    if (V_flags.has_redirect_node == 1) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.redirectNode); /*0.4*/
     }
-    if (flags.command_node_type == 0) { /*8.2*/
+    if (V_flags.command_node_type == 0) { /*8.2*/
     }
-    else if (flags.command_node_type == 1) { /*8.2*/
+    else if (V_flags.command_node_type == 1) { /*8.2*/
         const pdef::pc1_18_play_toClient::command_node::ExtraNodeData1 &v2 = *obj.extraNodeData_1; /*8.5*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.name.length());
         WRITE_OR_BAIL(writeString, v2.name); /*name: pstring*/ /*4.2*/
     }
-    else if (flags.command_node_type == 2) { /*8.2*/
+    else if (V_flags.command_node_type == 2) { /*8.2*/
         const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2 &v2 = *obj.extraNodeData_2; /*8.5*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.name.length());
         WRITE_OR_BAIL(writeString, v2.name); /*name: pstring*/ /*4.2*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.parser.length());
         WRITE_OR_BAIL(writeString, v2.parser); /*parser: pstring*/ /*4.2*/
-        const std::string &parser = v2.parser; /*4.7*/
-        if (parser == "brigadier:bool") { /*8.0*/
+        const std::string &V_parser = v2.parser; /*4.7*/
+        if (V_parser == "brigadier:bool") { /*8.0*/
         }
-        else if (parser == "brigadier:float") { /*8.0*/
+        else if (V_parser == "brigadier:float") { /*8.0*/
             const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat &v4 = *v2.properties_brigadier_float; /*8.5*/
             uint8_t flags_val = 0;
             flags_val |= (uint8_t)v4.flags.unused << 0;
             flags_val |= (uint8_t)v4.flags.max_present << 6;
             flags_val |= (uint8_t)v4.flags.min_present << 7;
             WRITE_OR_BAIL(writeUByte, flags_val); /*flags: bitfield*/ /*4.2*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat::flags_t &flags = v4.flags; /*4.7*/
-            if (flags.min_present == 1) { /*8.2*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat::flags_t &V_flags = v4.flags; /*4.7*/
+            if (V_flags.min_present == 1) { /*8.2*/
               WRITE_OR_BAIL(writeFloatBE, (float)v4.min); /*0.4*/
             }
-            if (flags.max_present == 1) { /*8.2*/
+            if (V_flags.max_present == 1) { /*8.2*/
               WRITE_OR_BAIL(writeFloatBE, (float)v4.max); /*0.4*/
             }
         }
-        else if (parser == "brigadier:double") { /*8.0*/
+        else if (V_parser == "brigadier:double") { /*8.0*/
             const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble &v4 = *v2.properties_brigadier_double; /*8.5*/
             uint8_t flags_val = 0;
             flags_val |= (uint8_t)v4.flags.unused << 0;
             flags_val |= (uint8_t)v4.flags.max_present << 6;
             flags_val |= (uint8_t)v4.flags.min_present << 7;
             WRITE_OR_BAIL(writeUByte, flags_val); /*flags: bitfield*/ /*4.2*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble::flags_t &flags = v4.flags; /*4.7*/
-            if (flags.min_present == 1) { /*8.2*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble::flags_t &V_flags = v4.flags; /*4.7*/
+            if (V_flags.min_present == 1) { /*8.2*/
               WRITE_OR_BAIL(writeDoubleBE, (double)v4.min); /*0.4*/
             }
-            if (flags.max_present == 1) { /*8.2*/
+            if (V_flags.max_present == 1) { /*8.2*/
               WRITE_OR_BAIL(writeDoubleBE, (double)v4.max); /*0.4*/
             }
         }
-        else if (parser == "brigadier:integer") { /*8.0*/
+        else if (V_parser == "brigadier:integer") { /*8.0*/
             const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger &v4 = *v2.properties_brigadier_integer; /*8.5*/
             uint8_t flags_val = 0;
             flags_val |= (uint8_t)v4.flags.unused << 0;
             flags_val |= (uint8_t)v4.flags.max_present << 6;
             flags_val |= (uint8_t)v4.flags.min_present << 7;
             WRITE_OR_BAIL(writeUByte, flags_val); /*flags: bitfield*/ /*4.2*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger::flags_t &flags = v4.flags; /*4.7*/
-            if (flags.min_present == 1) { /*8.2*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger::flags_t &V_flags = v4.flags; /*4.7*/
+            if (V_flags.min_present == 1) { /*8.2*/
               WRITE_OR_BAIL(writeIntBE, (int32_t)v4.min); /*0.4*/
             }
-            if (flags.max_present == 1) { /*8.2*/
+            if (V_flags.max_present == 1) { /*8.2*/
               WRITE_OR_BAIL(writeIntBE, (int32_t)v4.max); /*0.4*/
             }
         }
-        else if (parser == "brigadier:long") { /*8.0*/
+        else if (V_parser == "brigadier:long") { /*8.0*/
             const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong &v4 = *v2.properties_brigadier_long; /*8.5*/
             uint8_t flags_val = 0;
             flags_val |= (uint8_t)v4.flags.unused << 0;
             flags_val |= (uint8_t)v4.flags.max_present << 6;
             flags_val |= (uint8_t)v4.flags.min_present << 7;
             WRITE_OR_BAIL(writeUByte, flags_val); /*flags: bitfield*/ /*4.2*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong::flags_t &flags = v4.flags; /*4.7*/
-            if (flags.min_present == 1) { /*8.2*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong::flags_t &V_flags = v4.flags; /*4.7*/
+            if (V_flags.min_present == 1) { /*8.2*/
               WRITE_OR_BAIL(writeLongBE, (int64_t)v4.min); /*0.4*/
             }
-            if (flags.max_present == 1) { /*8.2*/
+            if (V_flags.max_present == 1) { /*8.2*/
               WRITE_OR_BAIL(writeLongBE, (int64_t)v4.max); /*0.4*/
             }
         }
-        else if (parser == "brigadier:string") { /*8.0*/
+        else if (V_parser == "brigadier:string") { /*8.0*/
         }
-        else if (parser == "minecraft:entity") { /*8.0*/
+        else if (V_parser == "minecraft:entity") { /*8.0*/
           uint8_t properties_minecraft_entity_val = 0;
           properties_minecraft_entity_val |= (uint8_t)v2.properties_minecraft_entity.unused << 0;
           properties_minecraft_entity_val |= (uint8_t)v2.properties_minecraft_entity.onlyAllowPlayers << 6;
           properties_minecraft_entity_val |= (uint8_t)v2.properties_minecraft_entity.onlyAllowEntities << 7;
           WRITE_OR_BAIL(writeUByte, properties_minecraft_entity_val); /*properties_minecraft_entity: bitfield*/ /*4.2*/
         }
-        else if (parser == "minecraft:game_profile") { /*8.0*/
+        else if (V_parser == "minecraft:game_profile") { /*8.0*/
         }
-        else if (parser == "minecraft:block_pos") { /*8.0*/
+        else if (V_parser == "minecraft:block_pos") { /*8.0*/
         }
-        else if (parser == "minecraft:column_pos") { /*8.0*/
+        else if (V_parser == "minecraft:column_pos") { /*8.0*/
         }
-        else if (parser == "minecraft:vec3") { /*8.0*/
+        else if (V_parser == "minecraft:vec3") { /*8.0*/
         }
-        else if (parser == "minecraft:vec2") { /*8.0*/
+        else if (V_parser == "minecraft:vec2") { /*8.0*/
         }
-        else if (parser == "minecraft:block_state") { /*8.0*/
+        else if (V_parser == "minecraft:block_state") { /*8.0*/
         }
-        else if (parser == "minecraft:block_predicate") { /*8.0*/
+        else if (V_parser == "minecraft:block_predicate") { /*8.0*/
         }
-        else if (parser == "minecraft:item_stack") { /*8.0*/
+        else if (V_parser == "minecraft:item_stack") { /*8.0*/
         }
-        else if (parser == "minecraft:item_predicate") { /*8.0*/
+        else if (V_parser == "minecraft:item_predicate") { /*8.0*/
         }
-        else if (parser == "minecraft:color") { /*8.0*/
+        else if (V_parser == "minecraft:color") { /*8.0*/
         }
-        else if (parser == "minecraft:component") { /*8.0*/
+        else if (V_parser == "minecraft:component") { /*8.0*/
         }
-        else if (parser == "minecraft:message") { /*8.0*/
+        else if (V_parser == "minecraft:message") { /*8.0*/
         }
-        else if (parser == "minecraft:nbt") { /*8.0*/
+        else if (V_parser == "minecraft:nbt") { /*8.0*/
         }
-        else if (parser == "minecraft:nbt_path") { /*8.0*/
+        else if (V_parser == "minecraft:nbt_path") { /*8.0*/
         }
-        else if (parser == "minecraft:objective") { /*8.0*/
+        else if (V_parser == "minecraft:objective") { /*8.0*/
         }
-        else if (parser == "minecraft:objective_criteria") { /*8.0*/
+        else if (V_parser == "minecraft:objective_criteria") { /*8.0*/
         }
-        else if (parser == "minecraft:operation") { /*8.0*/
+        else if (V_parser == "minecraft:operation") { /*8.0*/
         }
-        else if (parser == "minecraft:particle") { /*8.0*/
+        else if (V_parser == "minecraft:particle") { /*8.0*/
         }
-        else if (parser == "minecraft:angle") { /*8.0*/
+        else if (V_parser == "minecraft:angle") { /*8.0*/
         }
-        else if (parser == "minecraft:rotation") { /*8.0*/
+        else if (V_parser == "minecraft:rotation") { /*8.0*/
         }
-        else if (parser == "minecraft:scoreboard_slot") { /*8.0*/
+        else if (V_parser == "minecraft:scoreboard_slot") { /*8.0*/
         }
-        else if (parser == "minecraft:score_holder") { /*8.0*/
+        else if (V_parser == "minecraft:score_holder") { /*8.0*/
           uint8_t properties_minecraft_score_holder_val = 0;
           properties_minecraft_score_holder_val |= (uint8_t)v2.properties_minecraft_score_holder.unused << 0;
           properties_minecraft_score_holder_val |= (uint8_t)v2.properties_minecraft_score_holder.allowMultiple << 7;
           WRITE_OR_BAIL(writeUByte, properties_minecraft_score_holder_val); /*properties_minecraft_score_holder: bitfield*/ /*4.2*/
         }
-        else if (parser == "minecraft:swizzle") { /*8.0*/
+        else if (V_parser == "minecraft:swizzle") { /*8.0*/
         }
-        else if (parser == "minecraft:team") { /*8.0*/
+        else if (V_parser == "minecraft:team") { /*8.0*/
         }
-        else if (parser == "minecraft:item_slot") { /*8.0*/
+        else if (V_parser == "minecraft:item_slot") { /*8.0*/
         }
-        else if (parser == "minecraft:resource_location") { /*8.0*/
+        else if (V_parser == "minecraft:resource_location") { /*8.0*/
         }
-        else if (parser == "minecraft:mob_effect") { /*8.0*/
+        else if (V_parser == "minecraft:mob_effect") { /*8.0*/
         }
-        else if (parser == "minecraft:function") { /*8.0*/
+        else if (V_parser == "minecraft:function") { /*8.0*/
         }
-        else if (parser == "minecraft:entity_anchor") { /*8.0*/
+        else if (V_parser == "minecraft:entity_anchor") { /*8.0*/
         }
-        else if (parser == "minecraft:range") { /*8.0*/
+        else if (V_parser == "minecraft:range") { /*8.0*/
             const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftRange &v4 = *v2.properties_minecraft_range; /*8.5*/
             WRITE_OR_BAIL(writeBool, (bool)v4.allowDecimals); /*0.4*/
         }
-        else if (parser == "minecraft:int_range") { /*8.0*/
+        else if (V_parser == "minecraft:int_range") { /*8.0*/
         }
-        else if (parser == "minecraft:float_range") { /*8.0*/
+        else if (V_parser == "minecraft:float_range") { /*8.0*/
         }
-        else if (parser == "minecraft:item_enchantment") { /*8.0*/
+        else if (V_parser == "minecraft:item_enchantment") { /*8.0*/
         }
-        else if (parser == "minecraft:entity_summon") { /*8.0*/
+        else if (V_parser == "minecraft:entity_summon") { /*8.0*/
         }
-        else if (parser == "minecraft:dimension") { /*8.0*/
+        else if (V_parser == "minecraft:dimension") { /*8.0*/
         }
-        else if (parser == "minecraft:nbt_compound_tag") { /*8.0*/
+        else if (V_parser == "minecraft:nbt_compound_tag") { /*8.0*/
         }
-        else if (parser == "minecraft:time") { /*8.0*/
+        else if (V_parser == "minecraft:time") { /*8.0*/
         }
-        else if (parser == "minecraft:resource_or_tag") { /*8.0*/
+        else if (V_parser == "minecraft:resource_or_tag") { /*8.0*/
             const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.5*/
             WRITE_OR_BAIL(writeUnsignedVarInt, (int)v4.registry.length());
             WRITE_OR_BAIL(writeString, v4.registry); /*registry: pstring*/ /*4.2*/
         }
-        else if (parser == "minecraft:resource") { /*8.0*/
+        else if (V_parser == "minecraft:resource") { /*8.0*/
             const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.5*/
             WRITE_OR_BAIL(writeUnsignedVarInt, (int)v4.registry.length());
             WRITE_OR_BAIL(writeString, v4.registry); /*registry: pstring*/ /*4.2*/
         }
-        else if (parser == "minecraft:uuid") { /*8.0*/
+        else if (V_parser == "minecraft:uuid") { /*8.0*/
         }
-        if (flags.has_custom_suggestions == 1) { /*8.2*/
+        if (V_flags.has_custom_suggestions == 1) { /*8.2*/
           WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.suggestionType.length());
           WRITE_OR_BAIL(writeString, v2.suggestionType); /*suggestionType: pstring*/ /*4.2*/
         }
@@ -4121,38 +4121,38 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
   bool packet_boss_bar(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_boss_bar &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::pc1_18_play_toClient::size::packet_boss_bar(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
     WRITE_OR_BAIL(writeULongBE, (uint64_t)obj.entityUUID); /*0.4*/
-    const int &action = obj.action; /*0.1*/
+    const int &V_action = obj.action; /*0.1*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.action); /*0.4*/
-    if (action == 0) { /*8.2*/
+    if (V_action == 0) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.title.length());
       WRITE_OR_BAIL(writeString, obj.title); /*title: pstring*/ /*4.2*/
     }
-    else if (action == 3) { /*8.2*/
+    else if (V_action == 3) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.title.length());
       WRITE_OR_BAIL(writeString, obj.title); /*title: pstring*/ /*4.2*/
     }
-    if (action == 0) { /*8.2*/
+    if (V_action == 0) { /*8.2*/
       WRITE_OR_BAIL(writeFloatBE, (float)obj.health); /*0.4*/
     }
-    else if (action == 2) { /*8.2*/
+    else if (V_action == 2) { /*8.2*/
       WRITE_OR_BAIL(writeFloatBE, (float)obj.health); /*0.4*/
     }
-    if (action == 0) { /*8.2*/
+    if (V_action == 0) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.color); /*0.4*/
     }
-    else if (action == 4) { /*8.2*/
+    else if (V_action == 4) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.color); /*0.4*/
     }
-    if (action == 0) { /*8.2*/
+    if (V_action == 0) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.dividers); /*0.4*/
     }
-    else if (action == 4) { /*8.2*/
+    else if (V_action == 4) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.dividers); /*0.4*/
     }
-    if (action == 0) { /*8.2*/
+    if (V_action == 0) { /*8.2*/
       WRITE_OR_BAIL(writeUByte, (uint8_t)obj.flags); /*0.4*/
     }
-    else if (action == 5) { /*8.2*/
+    else if (V_action == 5) { /*8.2*/
       WRITE_OR_BAIL(writeUByte, (uint8_t)obj.flags); /*0.4*/
     }
     return true;
@@ -4191,12 +4191,12 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
     WRITE_OR_BAIL(writeDoubleBE, (double)obj.x); /*0.4*/
     WRITE_OR_BAIL(writeDoubleBE, (double)obj.y); /*0.4*/
     WRITE_OR_BAIL(writeDoubleBE, (double)obj.z); /*0.4*/
-    const bool &isEntity = obj.isEntity; /*0.1*/
+    const bool &V_isEntity = obj.isEntity; /*0.1*/
     WRITE_OR_BAIL(writeBool, (bool)obj.isEntity); /*0.4*/
-    if (isEntity == true) { /*8.1*/
+    if (V_isEntity == true) { /*8.1*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.entityId); /*0.4*/
     }
-    if (isEntity == true) { /*8.1*/
+    if (V_isEntity == true) { /*8.1*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.entity_feet_eyes.length());
       WRITE_OR_BAIL(writeString, obj.entity_feet_eyes); /*entity_feet_eyes: pstring*/ /*4.2*/
     }
@@ -4405,7 +4405,7 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
   }
   bool packet_world_particles(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_world_particles &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::pc1_18_play_toClient::size::packet_world_particles(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const int32_t &particleId = obj.particleId; /*0.1*/
+    const int32_t &V_particleId = obj.particleId; /*0.1*/
     WRITE_OR_BAIL(writeIntBE, (int32_t)obj.particleId); /*0.4*/
     WRITE_OR_BAIL(writeBool, (bool)obj.longDistance); /*0.4*/
     WRITE_OR_BAIL(writeDoubleBE, (double)obj.x); /*0.4*/
@@ -4416,22 +4416,22 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
     WRITE_OR_BAIL(writeFloatBE, (float)obj.offsetZ); /*0.4*/
     WRITE_OR_BAIL(writeFloatBE, (float)obj.particleData); /*0.4*/
     WRITE_OR_BAIL(writeIntBE, (int32_t)obj.particles); /*0.4*/
-    if (particleId == 2) { /*8.2*/
+    if (V_particleId == 2) { /*8.2*/
         const pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.5*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.blockState); /*0.4*/
     }
-    else if (particleId == 3) { /*8.2*/
+    else if (V_particleId == 3) { /*8.2*/
         const pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.5*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.blockState); /*0.4*/
     }
-    else if (particleId == 14) { /*8.2*/
+    else if (V_particleId == 14) { /*8.2*/
         const pdef::pc1_18_play_toClient::packet_world_particles::Data14 &v2 = *obj.data_14; /*8.5*/
         WRITE_OR_BAIL(writeFloatBE, (float)v2.red); /*0.4*/
         WRITE_OR_BAIL(writeFloatBE, (float)v2.green); /*0.4*/
         WRITE_OR_BAIL(writeFloatBE, (float)v2.blue); /*0.4*/
         WRITE_OR_BAIL(writeFloatBE, (float)v2.scale); /*0.4*/
     }
-    else if (particleId == 15) { /*8.2*/
+    else if (V_particleId == 15) { /*8.2*/
         const pdef::pc1_18_play_toClient::packet_world_particles::Data15 &v2 = *obj.data_15; /*8.5*/
         WRITE_OR_BAIL(writeFloatBE, (float)v2.fromRed); /*0.4*/
         WRITE_OR_BAIL(writeFloatBE, (float)v2.fromGreen); /*0.4*/
@@ -4441,15 +4441,15 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
         WRITE_OR_BAIL(writeFloatBE, (float)v2.toGreen); /*0.4*/
         WRITE_OR_BAIL(writeFloatBE, (float)v2.toBlue); /*0.4*/
     }
-    else if (particleId == 24) { /*8.2*/
+    else if (V_particleId == 24) { /*8.2*/
         const pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.5*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.blockState); /*0.4*/
     }
-    else if (particleId == 35) { /*8.2*/
+    else if (V_particleId == 35) { /*8.2*/
         const pdef::pc1_18_play_toClient::packet_world_particles::Data35 &v2 = *obj.data_35; /*8.5*/
         WRITE_OR_BAIL(writeByte, (int8_t)v2.item); /*0.4*/
     }
-    else if (particleId == 36) { /*8.2*/
+    else if (V_particleId == 36) { /*8.2*/
         const pdef::pc1_18_play_toClient::packet_world_particles::Data36 &v2 = *obj.data_36; /*8.5*/
         uint64_t origin_val = 0;
         origin_val |= (uint64_t)v2.origin.x << 0;
@@ -4458,15 +4458,15 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
         WRITE_OR_BAIL(writeULongBE, origin_val); /*origin: bitfield*/ /*4.2*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.positionType.length());
         WRITE_OR_BAIL(writeString, v2.positionType); /*positionType: pstring*/ /*4.2*/
-        const std::string &positionType = v2.positionType; /*4.7*/
-        if (positionType == "minecraft:block") { /*8.0*/
+        const std::string &V_positionType = v2.positionType; /*4.7*/
+        if (V_positionType == "minecraft:block") { /*8.0*/
           uint64_t destination_position_val = 0;
           destination_position_val |= (uint64_t)v2.destination_position.x << 0;
           destination_position_val |= (uint64_t)v2.destination_position.z << 26;
           destination_position_val |= (uint64_t)v2.destination_position.y << 52;
           WRITE_OR_BAIL(writeULongBE, destination_position_val); /*destination_position: bitfield*/ /*4.2*/
         }
-        else if (positionType == "minecraft:entity") { /*8.0*/
+        else if (V_positionType == "minecraft:entity") { /*8.0*/
           WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.destination_varint); /*0.4*/
         }
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.ticks); /*0.4*/
@@ -4541,24 +4541,24 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
     WRITE_OR_BAIL(writeByte, (int8_t)obj.scale); /*0.4*/
     WRITE_OR_BAIL(writeBool, (bool)obj.locked); /*0.4*/
     const pdef::pc1_18_play_toClient::packet_map::Icons &v = obj.icons; /*["packet_map"]*/ /*7.4*/
-    const uint8_t &columns = obj.columns; /*0.1*/
+    const uint8_t &V_columns = obj.columns; /*0.1*/
     WRITE_OR_BAIL(writeUByte, (uint8_t)obj.columns); /*0.4*/
-    if (columns == 0) { /*8.2*/
+    if (V_columns == 0) { /*8.2*/
     }
     else {
       WRITE_OR_BAIL(writeUByte, (uint8_t)obj.rows); /*0.4*/
     }
-    if (columns == 0) { /*8.2*/
+    if (V_columns == 0) { /*8.2*/
     }
     else {
       WRITE_OR_BAIL(writeUByte, (uint8_t)obj.x); /*0.4*/
     }
-    if (columns == 0) { /*8.2*/
+    if (V_columns == 0) { /*8.2*/
     }
     else {
       WRITE_OR_BAIL(writeUByte, (uint8_t)obj.y); /*0.4*/
     }
-    if (columns == 0) { /*8.2*/
+    if (V_columns == 0) { /*8.2*/
     }
     else {
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.data.size());
@@ -4673,16 +4673,16 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
   }
   bool packet_player_info(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_player_info &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::pc1_18_play_toClient::size::packet_player_info(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const int &action = obj.action; /*0.1*/
+    const int &V_action = obj.action; /*0.1*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.action); /*0.4*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.data.size()); /*1.4*/
     for (const auto &v2 : obj.data) { /*5.20*/
       WRITE_OR_BAIL(writeULongBE, (uint64_t)v2.UUID); /*0.4*/
-      if (action == 0) { /*8.2*/
+      if (V_action == 0) { /*8.2*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.name.length());
         WRITE_OR_BAIL(writeString, v2.name); /*name: pstring*/ /*4.2*/
       }
-      if (action == 0) { /*8.2*/
+      if (V_action == 0) { /*8.2*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.properties.size()); /*1.4*/
         for (const auto &v4 : v2.properties) { /*5.20*/
           WRITE_OR_BAIL(writeUnsignedVarInt, (int)v4.name.length());
@@ -4692,32 +4692,32 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
           const pdef::pc1_18_play_toClient::packet_player_info::Data::Properties::Signature &v = v4.signature; /*["packet_player_info","Data","Properties"]*/ /*7.4*/
         }
       }
-      if (action == 0) { /*8.2*/
+      if (V_action == 0) { /*8.2*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.gamemode); /*0.4*/
       }
-      else if (action == 1) { /*8.2*/
+      else if (V_action == 1) { /*8.2*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.gamemode); /*0.4*/
       }
-      if (action == 0) { /*8.2*/
+      if (V_action == 0) { /*8.2*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.ping); /*0.4*/
       }
-      else if (action == 2) { /*8.2*/
+      else if (V_action == 2) { /*8.2*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.ping); /*0.4*/
       }
-      if (action == 0) { /*8.2*/
+      if (V_action == 0) { /*8.2*/
           const pdef::pc1_18_play_toClient::packet_player_info::Data::DisplayName &v3 = *v2.displayName; /*8.5*/
-          const bool &has = v3.has; /*0.1*/
+          const bool &V_has = v3.has; /*0.1*/
           WRITE_OR_BAIL(writeBool, (bool)v3.has); /*0.4*/
-          if (has == true) { /*8.1*/
+          if (V_has == true) { /*8.1*/
             WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.value.length());
             WRITE_OR_BAIL(writeString, v3.value); /*value: pstring*/ /*4.2*/
           }
       }
-      else if (action == 3) { /*8.2*/
+      else if (V_action == 3) { /*8.2*/
           const pdef::pc1_18_play_toClient::packet_player_info::Data::DisplayName &v3 = *v2.displayName; /*8.5*/
-          const bool &has = v3.has; /*0.1*/
+          const bool &V_has = v3.has; /*0.1*/
           WRITE_OR_BAIL(writeBool, (bool)v3.has); /*0.4*/
-          if (has == true) { /*8.1*/
+          if (V_has == true) { /*8.1*/
             WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.value.length());
             WRITE_OR_BAIL(writeString, v3.value); /*value: pstring*/ /*4.2*/
           }
@@ -4739,7 +4739,7 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
   }
   bool packet_unlock_recipes(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_unlock_recipes &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::pc1_18_play_toClient::size::packet_unlock_recipes(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const int &action = obj.action; /*0.1*/
+    const int &V_action = obj.action; /*0.1*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.action); /*0.4*/
     WRITE_OR_BAIL(writeBool, (bool)obj.craftingBookOpen); /*0.4*/
     WRITE_OR_BAIL(writeBool, (bool)obj.filteringCraftable); /*0.4*/
@@ -4754,7 +4754,7 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.length());
       WRITE_OR_BAIL(writeString, v2); /*: pstring*/ /*4.2*/
     }
-    if (action == 0) { /*8.2*/
+    if (V_action == 0) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.recipes2.size()); /*1.4*/
       for (const auto &v3 : obj.recipes2) { /*3.1*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.length());
@@ -4878,20 +4878,20 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
     if (allocate) { auto writeSize = pdef::pc1_18_play_toClient::size::packet_scoreboard_objective(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.name.length());
     WRITE_OR_BAIL(writeString, obj.name); /*name: pstring*/ /*4.2*/
-    const int8_t &action = obj.action; /*0.1*/
+    const int8_t &V_action = obj.action; /*0.1*/
     WRITE_OR_BAIL(writeByte, (int8_t)obj.action); /*0.4*/
-    if (action == 0) { /*8.2*/
+    if (V_action == 0) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.displayText.length());
       WRITE_OR_BAIL(writeString, obj.displayText); /*displayText: pstring*/ /*4.2*/
     }
-    else if (action == 2) { /*8.2*/
+    else if (V_action == 2) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.displayText.length());
       WRITE_OR_BAIL(writeString, obj.displayText); /*displayText: pstring*/ /*4.2*/
     }
-    if (action == 0) { /*8.2*/
+    if (V_action == 0) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.type); /*0.4*/
     }
-    else if (action == 2) { /*8.2*/
+    else if (V_action == 2) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.type); /*0.4*/
     }
     return true;
@@ -4909,75 +4909,75 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
     if (allocate) { auto writeSize = pdef::pc1_18_play_toClient::size::packet_teams(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.team.length());
     WRITE_OR_BAIL(writeString, obj.team); /*team: pstring*/ /*4.2*/
-    const int8_t &mode = obj.mode; /*0.1*/
+    const int8_t &V_mode = obj.mode; /*0.1*/
     WRITE_OR_BAIL(writeByte, (int8_t)obj.mode); /*0.4*/
-    if (mode == 0) { /*8.2*/
+    if (V_mode == 0) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.name.length());
       WRITE_OR_BAIL(writeString, obj.name); /*name: pstring*/ /*4.2*/
     }
-    else if (mode == 2) { /*8.2*/
+    else if (V_mode == 2) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.name.length());
       WRITE_OR_BAIL(writeString, obj.name); /*name: pstring*/ /*4.2*/
     }
-    if (mode == 0) { /*8.2*/
+    if (V_mode == 0) { /*8.2*/
       WRITE_OR_BAIL(writeByte, (int8_t)obj.friendlyFire); /*0.4*/
     }
-    else if (mode == 2) { /*8.2*/
+    else if (V_mode == 2) { /*8.2*/
       WRITE_OR_BAIL(writeByte, (int8_t)obj.friendlyFire); /*0.4*/
     }
-    if (mode == 0) { /*8.2*/
+    if (V_mode == 0) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.nameTagVisibility.length());
       WRITE_OR_BAIL(writeString, obj.nameTagVisibility); /*nameTagVisibility: pstring*/ /*4.2*/
     }
-    else if (mode == 2) { /*8.2*/
+    else if (V_mode == 2) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.nameTagVisibility.length());
       WRITE_OR_BAIL(writeString, obj.nameTagVisibility); /*nameTagVisibility: pstring*/ /*4.2*/
     }
-    if (mode == 0) { /*8.2*/
+    if (V_mode == 0) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.collisionRule.length());
       WRITE_OR_BAIL(writeString, obj.collisionRule); /*collisionRule: pstring*/ /*4.2*/
     }
-    else if (mode == 2) { /*8.2*/
+    else if (V_mode == 2) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.collisionRule.length());
       WRITE_OR_BAIL(writeString, obj.collisionRule); /*collisionRule: pstring*/ /*4.2*/
     }
-    if (mode == 0) { /*8.2*/
+    if (V_mode == 0) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.formatting); /*0.4*/
     }
-    else if (mode == 2) { /*8.2*/
+    else if (V_mode == 2) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.formatting); /*0.4*/
     }
-    if (mode == 0) { /*8.2*/
+    if (V_mode == 0) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.prefix.length());
       WRITE_OR_BAIL(writeString, obj.prefix); /*prefix: pstring*/ /*4.2*/
     }
-    else if (mode == 2) { /*8.2*/
+    else if (V_mode == 2) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.prefix.length());
       WRITE_OR_BAIL(writeString, obj.prefix); /*prefix: pstring*/ /*4.2*/
     }
-    if (mode == 0) { /*8.2*/
+    if (V_mode == 0) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.suffix.length());
       WRITE_OR_BAIL(writeString, obj.suffix); /*suffix: pstring*/ /*4.2*/
     }
-    else if (mode == 2) { /*8.2*/
+    else if (V_mode == 2) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.suffix.length());
       WRITE_OR_BAIL(writeString, obj.suffix); /*suffix: pstring*/ /*4.2*/
     }
-    if (mode == 0) { /*8.2*/
+    if (V_mode == 0) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.players.size()); /*1.4*/
       for (const auto &v3 : obj.players) { /*3.1*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.length());
         WRITE_OR_BAIL(writeString, v3); /*: pstring*/ /*4.2*/
       }
     }
-    else if (mode == 3) { /*8.2*/
+    else if (V_mode == 3) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.players.size()); /*1.4*/
       for (const auto &v3 : obj.players) { /*3.1*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.length());
         WRITE_OR_BAIL(writeString, v3); /*: pstring*/ /*4.2*/
       }
     }
-    else if (mode == 4) { /*8.2*/
+    else if (V_mode == 4) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.players.size()); /*1.4*/
       for (const auto &v3 : obj.players) { /*3.1*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.length());
@@ -4990,11 +4990,11 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
     if (allocate) { auto writeSize = pdef::pc1_18_play_toClient::size::packet_scoreboard_score(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.itemName.length());
     WRITE_OR_BAIL(writeString, obj.itemName); /*itemName: pstring*/ /*4.2*/
-    const int &action = obj.action; /*0.1*/
+    const int &V_action = obj.action; /*0.1*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.action); /*0.4*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.scoreName.length());
     WRITE_OR_BAIL(writeString, obj.scoreName); /*scoreName: pstring*/ /*4.2*/
-    if (action == 1) { /*8.2*/
+    if (V_action == 1) { /*8.2*/
     }
     else {
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.value); /*0.4*/
@@ -5028,19 +5028,19 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
   }
   bool packet_stop_sound(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_stop_sound &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::pc1_18_play_toClient::size::packet_stop_sound(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const int8_t &flags = obj.flags; /*0.1*/
+    const int8_t &V_flags = obj.flags; /*0.1*/
     WRITE_OR_BAIL(writeByte, (int8_t)obj.flags); /*0.4*/
-    if (flags == 1) { /*8.2*/
+    if (V_flags == 1) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.source); /*0.4*/
     }
-    else if (flags == 3) { /*8.2*/
+    else if (V_flags == 3) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.source); /*0.4*/
     }
-    if (flags == 2) { /*8.2*/
+    if (V_flags == 2) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.sound.length());
       WRITE_OR_BAIL(writeString, obj.sound); /*sound: pstring*/ /*4.2*/
     }
-    else if (flags == 3) { /*8.2*/
+    else if (V_flags == 3) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.sound.length());
       WRITE_OR_BAIL(writeString, obj.sound); /*sound: pstring*/ /*4.2*/
     }
@@ -5120,10 +5120,10 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
     for (const auto &v2 : obj.recipes) { /*5.20*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.type.length());
       WRITE_OR_BAIL(writeString, v2.type); /*type: pstring*/ /*4.2*/
-      const std::string &type = v2.type; /*4.7*/
+      const std::string &V_type = v2.type; /*4.7*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.recipeId.length());
       WRITE_OR_BAIL(writeString, v2.recipeId); /*recipeId: pstring*/ /*4.2*/
-      if (type == "minecraft:crafting_shapeless") { /*8.0*/
+      if (V_type == "minecraft:crafting_shapeless") { /*8.0*/
           const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftCraftingShapeless &v3 = *v2.data_minecraft_crafting_shapeless; /*8.5*/
           WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.group.length());
           WRITE_OR_BAIL(writeString, v3.group); /*group: pstring*/ /*4.2*/
@@ -5136,16 +5136,16 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
           }
           WRITE_OR_BAIL(writeByte, (int8_t)v3.result); /*0.4*/
       }
-      else if (type == "minecraft:crafting_shaped") { /*8.0*/
+      else if (V_type == "minecraft:crafting_shaped") { /*8.0*/
           const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftCraftingShaped &v3 = *v2.data_minecraft_crafting_shaped; /*8.5*/
-          const int &width = v3.width; /*0.1*/
+          const int &V_width = v3.width; /*0.1*/
           WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.width); /*0.4*/
-          const int &height = v3.height; /*0.1*/
+          const int &V_height = v3.height; /*0.1*/
           WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.height); /*0.4*/
           WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.group.length());
           WRITE_OR_BAIL(writeString, v3.group); /*group: pstring*/ /*4.2*/
           for (const auto &v : v3.ingredients) { /*5.1*/
-            WRITE_OR_BAIL(writeUnsignedVarInt, (int)height); /*5.4*/
+            WRITE_OR_BAIL(writeUnsignedVarInt, (int)V_height); /*5.4*/
             for (const auto &v : v) { /*5.10*/
               WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.size()); /*1.4*/
               for (const auto &v7 : v) { /*3.1*/
@@ -5155,47 +5155,47 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
           }
           WRITE_OR_BAIL(writeByte, (int8_t)v3.result); /*0.4*/
       }
-      else if (type == "minecraft:crafting_special_armordye") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_armordye") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_bookcloning") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_bookcloning") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_mapcloning") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_mapcloning") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_mapextending") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_mapextending") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_firework_rocket") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_firework_rocket") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_firework_star") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_firework_star") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_firework_star_fade") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_firework_star_fade") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_repairitem") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_repairitem") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_tippedarrow") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_tippedarrow") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_bannerduplicate") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_bannerduplicate") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_banneraddpattern") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_banneraddpattern") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_shielddecoration") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_shielddecoration") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_shulkerboxcoloring") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_shulkerboxcoloring") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_suspiciousstew") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_suspiciousstew") { /*8.0*/
       }
-      else if (type == "minecraft:smelting") { /*8.0*/
+      else if (V_type == "minecraft:smelting") { /*8.0*/
         pdef::pc1_18_play_toClient::encode::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); /*minecraft_smelting_format*/ /*4.5*/
       }
-      else if (type == "minecraft:blasting") { /*8.0*/
+      else if (V_type == "minecraft:blasting") { /*8.0*/
         pdef::pc1_18_play_toClient::encode::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); /*minecraft_smelting_format*/ /*4.5*/
       }
-      else if (type == "minecraft:smoking") { /*8.0*/
+      else if (V_type == "minecraft:smoking") { /*8.0*/
         pdef::pc1_18_play_toClient::encode::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); /*minecraft_smelting_format*/ /*4.5*/
       }
-      else if (type == "minecraft:campfire_cooking") { /*8.0*/
+      else if (V_type == "minecraft:campfire_cooking") { /*8.0*/
         pdef::pc1_18_play_toClient::encode::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); /*minecraft_smelting_format*/ /*4.5*/
       }
-      else if (type == "minecraft:stonecutting") { /*8.0*/
+      else if (V_type == "minecraft:stonecutting") { /*8.0*/
           const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftStonecutting &v3 = *v2.data_minecraft_stonecutting; /*8.5*/
           WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.group.length());
           WRITE_OR_BAIL(writeString, v3.group); /*group: pstring*/ /*4.2*/
@@ -5205,7 +5205,7 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
           }
           WRITE_OR_BAIL(writeByte, (int8_t)v3.result); /*0.4*/
       }
-      else if (type == "minecraft:smithing") { /*8.0*/
+      else if (V_type == "minecraft:smithing") { /*8.0*/
           const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftSmithing &v3 = *v2.data_minecraft_smithing; /*8.5*/
           WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.base.size()); /*1.4*/
           for (const auto &v5 : v3.base) { /*3.1*/
@@ -5252,15 +5252,15 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
     WRITE_OR_BAIL(writeULongBE, sourcePosition_val); /*sourcePosition: bitfield*/ /*4.2*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.destinationIdentifier.length());
     WRITE_OR_BAIL(writeString, obj.destinationIdentifier); /*destinationIdentifier: pstring*/ /*4.2*/
-    const std::string &destinationIdentifier = obj.destinationIdentifier; /*4.7*/
-    if (destinationIdentifier == "block") { /*8.0*/
+    const std::string &V_destinationIdentifier = obj.destinationIdentifier; /*4.7*/
+    if (V_destinationIdentifier == "block") { /*8.0*/
       uint64_t destination_position_val = 0;
       destination_position_val |= (uint64_t)obj.destination_position.x << 0;
       destination_position_val |= (uint64_t)obj.destination_position.z << 26;
       destination_position_val |= (uint64_t)obj.destination_position.y << 52;
       WRITE_OR_BAIL(writeULongBE, destination_position_val); /*destination_position: bitfield*/ /*4.2*/
     }
-    else if (destinationIdentifier == "entityId") { /*8.0*/
+    else if (V_destinationIdentifier == "entityId") { /*8.0*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.destination_varint); /*0.4*/
     }
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.arrivalTicks); /*0.4*/
@@ -5348,9 +5348,9 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
   }
   bool packet(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::pc1_18_play_toClient::size::packet(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const pdef::pc1_18_play_toClient::packet::Name &name = obj.name; /*0.3*/
+    const pdef::pc1_18_play_toClient::packet::Name &V_name = obj.name; /*0.3*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)(int&)obj.name); /*7.1*/
-    switch (name) { /*8.0*/
+    switch (V_name) { /*8.0*/
       case pdef::pc1_18_play_toClient::packet::Name::SpawnEntity: { /*8.5*/
         pdef::pc1_18_play_toClient::encode::packet_spawn_entity(stream, *obj.params_packet_spawn_entity); /*packet_spawn_entity*/ /*4.5*/
         break;
@@ -5887,10 +5887,10 @@ bool packet_simulation_distance(pdef::Stream &stream, pdef::pc1_18_play_toClient
 bool packet(pdef::Stream &stream, pdef::pc1_18_play_toClient::packet &obj);
   bool slot(pdef::Stream &stream, pdef::pc1_18_play_toClient::slot &obj) {
     READ_OR_BAIL(readBool, (bool&)obj.present); /*0.5*/
-    bool &present = obj.present; /*0.6*/
-    if (present == false) { /*8.1*/
+    bool &V_present = obj.present; /*0.6*/
+    if (V_present == false) { /*8.1*/
     }
-    else if (present == true) { /*8.1*/
+    else if (V_present == true) { /*8.1*/
         READ_OR_BAIL(readUnsignedVarInt, obj.itemId); /*0.5*/
         READ_OR_BAIL(readByte, obj.itemCount); /*0.5*/
         READ_OR_BAIL(readByte, obj.nbtData); /*0.5*/
@@ -5899,23 +5899,23 @@ bool packet(pdef::Stream &stream, pdef::pc1_18_play_toClient::packet &obj);
   }
   bool particle(pdef::Stream &stream, pdef::pc1_18_play_toClient::particle &obj) {
     READ_OR_BAIL(readUnsignedVarInt, obj.particleId); /*0.5*/
-    int &particleId = obj.particleId; /*0.6*/
-    if (particleId == 2) { /*8.2*/
+    int &V_particleId = obj.particleId; /*0.6*/
+    if (V_particleId == 2) { /*8.2*/
          obj.data_2_or_3_or_24 = {}; pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
         READ_OR_BAIL(readUnsignedVarInt, v2.blockState); /*0.5*/
     }
-    else if (particleId == 3) { /*8.2*/
+    else if (V_particleId == 3) { /*8.2*/
          obj.data_2_or_3_or_24 = {}; pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
         READ_OR_BAIL(readUnsignedVarInt, v2.blockState); /*0.5*/
     }
-    else if (particleId == 14) { /*8.2*/
+    else if (V_particleId == 14) { /*8.2*/
          obj.data_14 = {}; pdef::pc1_18_play_toClient::particle::Data14 &v2 = *obj.data_14; /*8.4*/
         READ_OR_BAIL(readFloatBE, v2.red); /*0.5*/
         READ_OR_BAIL(readFloatBE, v2.green); /*0.5*/
         READ_OR_BAIL(readFloatBE, v2.blue); /*0.5*/
         READ_OR_BAIL(readFloatBE, v2.scale); /*0.5*/
     }
-    else if (particleId == 15) { /*8.2*/
+    else if (V_particleId == 15) { /*8.2*/
          obj.data_15 = {}; pdef::pc1_18_play_toClient::particle::Data15 &v2 = *obj.data_15; /*8.4*/
         READ_OR_BAIL(readFloatBE, v2.fromRed); /*0.5*/
         READ_OR_BAIL(readFloatBE, v2.fromGreen); /*0.5*/
@@ -5925,15 +5925,15 @@ bool packet(pdef::Stream &stream, pdef::pc1_18_play_toClient::packet &obj);
         READ_OR_BAIL(readFloatBE, v2.toGreen); /*0.5*/
         READ_OR_BAIL(readFloatBE, v2.toBlue); /*0.5*/
     }
-    else if (particleId == 24) { /*8.2*/
+    else if (V_particleId == 24) { /*8.2*/
          obj.data_2_or_3_or_24 = {}; pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
         READ_OR_BAIL(readUnsignedVarInt, v2.blockState); /*0.5*/
     }
-    else if (particleId == 35) { /*8.2*/
+    else if (V_particleId == 35) { /*8.2*/
          obj.data_35 = {}; pdef::pc1_18_play_toClient::particle::Data35 &v2 = *obj.data_35; /*8.4*/
         READ_OR_BAIL(readByte, v2.item); /*0.5*/
     }
-    else if (particleId == 36) { /*8.2*/
+    else if (V_particleId == 36) { /*8.2*/
          obj.data_36 = {}; pdef::pc1_18_play_toClient::particle::Data36 &v2 = *obj.data_36; /*8.4*/
         uint64_t origin_val;
         READ_OR_BAIL(readULongBE, origin_val);
@@ -5942,15 +5942,15 @@ bool packet(pdef::Stream &stream, pdef::pc1_18_play_toClient::packet &obj);
         v2.origin.y = origin_val >> 52 & 12; /*origin: bitfield*/ /*4.3*/
         int positionType_strlen; READ_OR_BAIL(readUnsignedVarInt, positionType_strlen);
         if (!stream.readString(v2.positionType, positionType_strlen)) return false; /*positionType: pstring*/ /*4.3*/
-        std::string &positionType = v2.positionType; /*4.8*/
-        if (positionType == "minecraft:block") { /*8.0*/
+        std::string &V_positionType = v2.positionType; /*4.8*/
+        if (V_positionType == "minecraft:block") { /*8.0*/
           uint64_t destination_position_val;
           READ_OR_BAIL(readULongBE, destination_position_val);
           v2.destination_position.x = destination_position_val >> 0 & 26;
           v2.destination_position.z = destination_position_val >> 26 & 26;
           v2.destination_position.y = destination_position_val >> 52 & 12; /*destination_position: bitfield*/ /*4.3*/
         }
-        else if (positionType == "minecraft:entity") { /*8.0*/
+        else if (V_positionType == "minecraft:entity") { /*8.0*/
           READ_OR_BAIL(readUnsignedVarInt, v2.destination_varint); /*0.5*/
         }
         READ_OR_BAIL(readUnsignedVarInt, v2.ticks); /*0.5*/
@@ -5962,7 +5962,7 @@ bool packet(pdef::Stream &stream, pdef::pc1_18_play_toClient::packet &obj);
     if (!stream.readString(obj.group, group_strlen)) return false; /*group: pstring*/ /*4.3*/
     int ingredient_len; READ_OR_BAIL(readUnsignedVarInt, ingredient_len); /*1.5*/
     obj.ingredient.resize(ingredient_len); /*1.6*/
-    for (int i = 0; i < ingredient_len; i++) {
+    for (int i = 0; i < ingredient_len; i++) { /*3.3*/
       auto &v2 = obj.ingredient[i]; /*3.4*/
       READ_OR_BAIL(readByte, v2); /*0.5*/
     }
@@ -5976,7 +5976,7 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
     if (!stream.readString(obj.tagName, tagName_strlen)) return false; /*tagName: pstring*/ /*4.3*/
     int entries_len; READ_OR_BAIL(readUnsignedVarInt, entries_len); /*1.5*/
     obj.entries.resize(entries_len); /*1.6*/
-    for (int i = 0; i < entries_len; i++) {
+    for (int i = 0; i < entries_len; i++) { /*3.3*/
       auto &v2 = obj.entries[i]; /*3.4*/
       READ_OR_BAIL(readUnsignedVarInt, v2); /*0.5*/
     }
@@ -6000,194 +6000,194 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
     obj.flags.has_redirect_node = flags_val >> 4 & 1;
     obj.flags.has_command = flags_val >> 5 & 1;
     obj.flags.command_node_type = flags_val >> 6 & 2; /*flags: bitfield*/ /*4.3*/
-    pdef::pc1_18_play_toClient::command_node::flags_t &flags = obj.flags; /*4.8*/
+    pdef::pc1_18_play_toClient::command_node::flags_t &V_flags = obj.flags; /*4.8*/
     int children_len; READ_OR_BAIL(readUnsignedVarInt, children_len); /*1.5*/
     obj.children.resize(children_len); /*1.6*/
-    for (int i = 0; i < children_len; i++) {
+    for (int i = 0; i < children_len; i++) { /*3.3*/
       auto &v2 = obj.children[i]; /*3.4*/
       READ_OR_BAIL(readUnsignedVarInt, v2); /*0.5*/
     }
-    if (flags.has_redirect_node == 1) { /*8.2*/
+    if (V_flags.has_redirect_node == 1) { /*8.2*/
       READ_OR_BAIL(readUnsignedVarInt, obj.redirectNode); /*0.5*/
     }
-    if (flags.command_node_type == 0) { /*8.2*/
+    if (V_flags.command_node_type == 0) { /*8.2*/
     }
-    else if (flags.command_node_type == 1) { /*8.2*/
+    else if (V_flags.command_node_type == 1) { /*8.2*/
          obj.extraNodeData_1 = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData1 &v2 = *obj.extraNodeData_1; /*8.4*/
         int name_strlen; READ_OR_BAIL(readUnsignedVarInt, name_strlen);
         if (!stream.readString(v2.name, name_strlen)) return false; /*name: pstring*/ /*4.3*/
     }
-    else if (flags.command_node_type == 2) { /*8.2*/
+    else if (V_flags.command_node_type == 2) { /*8.2*/
          obj.extraNodeData_2 = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2 &v2 = *obj.extraNodeData_2; /*8.4*/
         int name_strlen; READ_OR_BAIL(readUnsignedVarInt, name_strlen);
         if (!stream.readString(v2.name, name_strlen)) return false; /*name: pstring*/ /*4.3*/
         int parser_strlen; READ_OR_BAIL(readUnsignedVarInt, parser_strlen);
         if (!stream.readString(v2.parser, parser_strlen)) return false; /*parser: pstring*/ /*4.3*/
-        std::string &parser = v2.parser; /*4.8*/
-        if (parser == "brigadier:bool") { /*8.0*/
+        std::string &V_parser = v2.parser; /*4.8*/
+        if (V_parser == "brigadier:bool") { /*8.0*/
         }
-        else if (parser == "brigadier:float") { /*8.0*/
+        else if (V_parser == "brigadier:float") { /*8.0*/
              v2.properties_brigadier_float = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat &v4 = *v2.properties_brigadier_float; /*8.4*/
             uint8_t flags_val;
             READ_OR_BAIL(readUByte, flags_val);
             v4.flags.unused = flags_val >> 0 & 6;
             v4.flags.max_present = flags_val >> 6 & 1;
             v4.flags.min_present = flags_val >> 7 & 1; /*flags: bitfield*/ /*4.3*/
-            pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat::flags_t &flags = v4.flags; /*4.8*/
-            if (flags.min_present == 1) { /*8.2*/
+            pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat::flags_t &V_flags = v4.flags; /*4.8*/
+            if (V_flags.min_present == 1) { /*8.2*/
               READ_OR_BAIL(readFloatBE, v4.min); /*0.5*/
             }
-            if (flags.max_present == 1) { /*8.2*/
+            if (V_flags.max_present == 1) { /*8.2*/
               READ_OR_BAIL(readFloatBE, v4.max); /*0.5*/
             }
         }
-        else if (parser == "brigadier:double") { /*8.0*/
+        else if (V_parser == "brigadier:double") { /*8.0*/
              v2.properties_brigadier_double = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble &v4 = *v2.properties_brigadier_double; /*8.4*/
             uint8_t flags_val;
             READ_OR_BAIL(readUByte, flags_val);
             v4.flags.unused = flags_val >> 0 & 6;
             v4.flags.max_present = flags_val >> 6 & 1;
             v4.flags.min_present = flags_val >> 7 & 1; /*flags: bitfield*/ /*4.3*/
-            pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble::flags_t &flags = v4.flags; /*4.8*/
-            if (flags.min_present == 1) { /*8.2*/
+            pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble::flags_t &V_flags = v4.flags; /*4.8*/
+            if (V_flags.min_present == 1) { /*8.2*/
               READ_OR_BAIL(readDoubleBE, v4.min); /*0.5*/
             }
-            if (flags.max_present == 1) { /*8.2*/
+            if (V_flags.max_present == 1) { /*8.2*/
               READ_OR_BAIL(readDoubleBE, v4.max); /*0.5*/
             }
         }
-        else if (parser == "brigadier:integer") { /*8.0*/
+        else if (V_parser == "brigadier:integer") { /*8.0*/
              v2.properties_brigadier_integer = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger &v4 = *v2.properties_brigadier_integer; /*8.4*/
             uint8_t flags_val;
             READ_OR_BAIL(readUByte, flags_val);
             v4.flags.unused = flags_val >> 0 & 6;
             v4.flags.max_present = flags_val >> 6 & 1;
             v4.flags.min_present = flags_val >> 7 & 1; /*flags: bitfield*/ /*4.3*/
-            pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger::flags_t &flags = v4.flags; /*4.8*/
-            if (flags.min_present == 1) { /*8.2*/
+            pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger::flags_t &V_flags = v4.flags; /*4.8*/
+            if (V_flags.min_present == 1) { /*8.2*/
               READ_OR_BAIL(readIntBE, v4.min); /*0.5*/
             }
-            if (flags.max_present == 1) { /*8.2*/
+            if (V_flags.max_present == 1) { /*8.2*/
               READ_OR_BAIL(readIntBE, v4.max); /*0.5*/
             }
         }
-        else if (parser == "brigadier:long") { /*8.0*/
+        else if (V_parser == "brigadier:long") { /*8.0*/
              v2.properties_brigadier_long = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong &v4 = *v2.properties_brigadier_long; /*8.4*/
             uint8_t flags_val;
             READ_OR_BAIL(readUByte, flags_val);
             v4.flags.unused = flags_val >> 0 & 6;
             v4.flags.max_present = flags_val >> 6 & 1;
             v4.flags.min_present = flags_val >> 7 & 1; /*flags: bitfield*/ /*4.3*/
-            pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong::flags_t &flags = v4.flags; /*4.8*/
-            if (flags.min_present == 1) { /*8.2*/
+            pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong::flags_t &V_flags = v4.flags; /*4.8*/
+            if (V_flags.min_present == 1) { /*8.2*/
               READ_OR_BAIL(readLongBE, v4.min); /*0.5*/
             }
-            if (flags.max_present == 1) { /*8.2*/
+            if (V_flags.max_present == 1) { /*8.2*/
               READ_OR_BAIL(readLongBE, v4.max); /*0.5*/
             }
         }
-        else if (parser == "brigadier:string") { /*8.0*/
+        else if (V_parser == "brigadier:string") { /*8.0*/
         }
-        else if (parser == "minecraft:entity") { /*8.0*/
+        else if (V_parser == "minecraft:entity") { /*8.0*/
           uint8_t properties_minecraft_entity_val;
           READ_OR_BAIL(readUByte, properties_minecraft_entity_val);
           v2.properties_minecraft_entity.unused = properties_minecraft_entity_val >> 0 & 6;
           v2.properties_minecraft_entity.onlyAllowPlayers = properties_minecraft_entity_val >> 6 & 1;
           v2.properties_minecraft_entity.onlyAllowEntities = properties_minecraft_entity_val >> 7 & 1; /*properties_minecraft_entity: bitfield*/ /*4.3*/
         }
-        else if (parser == "minecraft:game_profile") { /*8.0*/
+        else if (V_parser == "minecraft:game_profile") { /*8.0*/
         }
-        else if (parser == "minecraft:block_pos") { /*8.0*/
+        else if (V_parser == "minecraft:block_pos") { /*8.0*/
         }
-        else if (parser == "minecraft:column_pos") { /*8.0*/
+        else if (V_parser == "minecraft:column_pos") { /*8.0*/
         }
-        else if (parser == "minecraft:vec3") { /*8.0*/
+        else if (V_parser == "minecraft:vec3") { /*8.0*/
         }
-        else if (parser == "minecraft:vec2") { /*8.0*/
+        else if (V_parser == "minecraft:vec2") { /*8.0*/
         }
-        else if (parser == "minecraft:block_state") { /*8.0*/
+        else if (V_parser == "minecraft:block_state") { /*8.0*/
         }
-        else if (parser == "minecraft:block_predicate") { /*8.0*/
+        else if (V_parser == "minecraft:block_predicate") { /*8.0*/
         }
-        else if (parser == "minecraft:item_stack") { /*8.0*/
+        else if (V_parser == "minecraft:item_stack") { /*8.0*/
         }
-        else if (parser == "minecraft:item_predicate") { /*8.0*/
+        else if (V_parser == "minecraft:item_predicate") { /*8.0*/
         }
-        else if (parser == "minecraft:color") { /*8.0*/
+        else if (V_parser == "minecraft:color") { /*8.0*/
         }
-        else if (parser == "minecraft:component") { /*8.0*/
+        else if (V_parser == "minecraft:component") { /*8.0*/
         }
-        else if (parser == "minecraft:message") { /*8.0*/
+        else if (V_parser == "minecraft:message") { /*8.0*/
         }
-        else if (parser == "minecraft:nbt") { /*8.0*/
+        else if (V_parser == "minecraft:nbt") { /*8.0*/
         }
-        else if (parser == "minecraft:nbt_path") { /*8.0*/
+        else if (V_parser == "minecraft:nbt_path") { /*8.0*/
         }
-        else if (parser == "minecraft:objective") { /*8.0*/
+        else if (V_parser == "minecraft:objective") { /*8.0*/
         }
-        else if (parser == "minecraft:objective_criteria") { /*8.0*/
+        else if (V_parser == "minecraft:objective_criteria") { /*8.0*/
         }
-        else if (parser == "minecraft:operation") { /*8.0*/
+        else if (V_parser == "minecraft:operation") { /*8.0*/
         }
-        else if (parser == "minecraft:particle") { /*8.0*/
+        else if (V_parser == "minecraft:particle") { /*8.0*/
         }
-        else if (parser == "minecraft:angle") { /*8.0*/
+        else if (V_parser == "minecraft:angle") { /*8.0*/
         }
-        else if (parser == "minecraft:rotation") { /*8.0*/
+        else if (V_parser == "minecraft:rotation") { /*8.0*/
         }
-        else if (parser == "minecraft:scoreboard_slot") { /*8.0*/
+        else if (V_parser == "minecraft:scoreboard_slot") { /*8.0*/
         }
-        else if (parser == "minecraft:score_holder") { /*8.0*/
+        else if (V_parser == "minecraft:score_holder") { /*8.0*/
           uint8_t properties_minecraft_score_holder_val;
           READ_OR_BAIL(readUByte, properties_minecraft_score_holder_val);
           v2.properties_minecraft_score_holder.unused = properties_minecraft_score_holder_val >> 0 & 7;
           v2.properties_minecraft_score_holder.allowMultiple = properties_minecraft_score_holder_val >> 7 & 1; /*properties_minecraft_score_holder: bitfield*/ /*4.3*/
         }
-        else if (parser == "minecraft:swizzle") { /*8.0*/
+        else if (V_parser == "minecraft:swizzle") { /*8.0*/
         }
-        else if (parser == "minecraft:team") { /*8.0*/
+        else if (V_parser == "minecraft:team") { /*8.0*/
         }
-        else if (parser == "minecraft:item_slot") { /*8.0*/
+        else if (V_parser == "minecraft:item_slot") { /*8.0*/
         }
-        else if (parser == "minecraft:resource_location") { /*8.0*/
+        else if (V_parser == "minecraft:resource_location") { /*8.0*/
         }
-        else if (parser == "minecraft:mob_effect") { /*8.0*/
+        else if (V_parser == "minecraft:mob_effect") { /*8.0*/
         }
-        else if (parser == "minecraft:function") { /*8.0*/
+        else if (V_parser == "minecraft:function") { /*8.0*/
         }
-        else if (parser == "minecraft:entity_anchor") { /*8.0*/
+        else if (V_parser == "minecraft:entity_anchor") { /*8.0*/
         }
-        else if (parser == "minecraft:range") { /*8.0*/
+        else if (V_parser == "minecraft:range") { /*8.0*/
              v2.properties_minecraft_range = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftRange &v4 = *v2.properties_minecraft_range; /*8.4*/
             READ_OR_BAIL(readBool, (bool&)v4.allowDecimals); /*0.5*/
         }
-        else if (parser == "minecraft:int_range") { /*8.0*/
+        else if (V_parser == "minecraft:int_range") { /*8.0*/
         }
-        else if (parser == "minecraft:float_range") { /*8.0*/
+        else if (V_parser == "minecraft:float_range") { /*8.0*/
         }
-        else if (parser == "minecraft:item_enchantment") { /*8.0*/
+        else if (V_parser == "minecraft:item_enchantment") { /*8.0*/
         }
-        else if (parser == "minecraft:entity_summon") { /*8.0*/
+        else if (V_parser == "minecraft:entity_summon") { /*8.0*/
         }
-        else if (parser == "minecraft:dimension") { /*8.0*/
+        else if (V_parser == "minecraft:dimension") { /*8.0*/
         }
-        else if (parser == "minecraft:nbt_compound_tag") { /*8.0*/
+        else if (V_parser == "minecraft:nbt_compound_tag") { /*8.0*/
         }
-        else if (parser == "minecraft:time") { /*8.0*/
+        else if (V_parser == "minecraft:time") { /*8.0*/
         }
-        else if (parser == "minecraft:resource_or_tag") { /*8.0*/
+        else if (V_parser == "minecraft:resource_or_tag") { /*8.0*/
              v2.properties_minecraft_resource_or_tag_or_minecraft_resource = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.4*/
             int registry_strlen; READ_OR_BAIL(readUnsignedVarInt, registry_strlen);
             if (!stream.readString(v4.registry, registry_strlen)) return false; /*registry: pstring*/ /*4.3*/
         }
-        else if (parser == "minecraft:resource") { /*8.0*/
+        else if (V_parser == "minecraft:resource") { /*8.0*/
              v2.properties_minecraft_resource_or_tag_or_minecraft_resource = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.4*/
             int registry_strlen; READ_OR_BAIL(readUnsignedVarInt, registry_strlen);
             if (!stream.readString(v4.registry, registry_strlen)) return false; /*registry: pstring*/ /*4.3*/
         }
-        else if (parser == "minecraft:uuid") { /*8.0*/
+        else if (V_parser == "minecraft:uuid") { /*8.0*/
         }
-        if (flags.has_custom_suggestions == 1) { /*8.2*/
+        if (V_flags.has_custom_suggestions == 1) { /*8.2*/
           int suggestionType_strlen; READ_OR_BAIL(readUnsignedVarInt, suggestionType_strlen);
           if (!stream.readString(v2.suggestionType, suggestionType_strlen)) return false; /*suggestionType: pstring*/ /*4.3*/
         }
@@ -6282,7 +6282,7 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
     }
     int identifiers_len; READ_OR_BAIL(readUnsignedVarInt, identifiers_len); /*1.5*/
     obj.identifiers.resize(identifiers_len); /*1.6*/
-    for (int i = 0; i < identifiers_len; i++) {
+    for (int i = 0; i < identifiers_len; i++) { /*3.3*/
       auto &v2 = obj.identifiers[i]; /*3.4*/
       int _strlen; READ_OR_BAIL(readUnsignedVarInt, _strlen);
       if (!stream.readString(v2, _strlen)) return false; /*: pstring*/ /*4.3*/
@@ -6347,37 +6347,37 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
   bool packet_boss_bar(pdef::Stream &stream, pdef::pc1_18_play_toClient::packet_boss_bar &obj) {
     READ_OR_BAIL(readULongBE, obj.entityUUID); /*0.5*/
     READ_OR_BAIL(readUnsignedVarInt, obj.action); /*0.5*/
-    int &action = obj.action; /*0.6*/
-    if (action == 0) { /*8.2*/
+    int &V_action = obj.action; /*0.6*/
+    if (V_action == 0) { /*8.2*/
       int title_strlen; READ_OR_BAIL(readUnsignedVarInt, title_strlen);
       if (!stream.readString(obj.title, title_strlen)) return false; /*title: pstring*/ /*4.3*/
     }
-    else if (action == 3) { /*8.2*/
+    else if (V_action == 3) { /*8.2*/
       int title_strlen; READ_OR_BAIL(readUnsignedVarInt, title_strlen);
       if (!stream.readString(obj.title, title_strlen)) return false; /*title: pstring*/ /*4.3*/
     }
-    if (action == 0) { /*8.2*/
+    if (V_action == 0) { /*8.2*/
       READ_OR_BAIL(readFloatBE, obj.health); /*0.5*/
     }
-    else if (action == 2) { /*8.2*/
+    else if (V_action == 2) { /*8.2*/
       READ_OR_BAIL(readFloatBE, obj.health); /*0.5*/
     }
-    if (action == 0) { /*8.2*/
+    if (V_action == 0) { /*8.2*/
       READ_OR_BAIL(readUnsignedVarInt, obj.color); /*0.5*/
     }
-    else if (action == 4) { /*8.2*/
+    else if (V_action == 4) { /*8.2*/
       READ_OR_BAIL(readUnsignedVarInt, obj.color); /*0.5*/
     }
-    if (action == 0) { /*8.2*/
+    if (V_action == 0) { /*8.2*/
       READ_OR_BAIL(readUnsignedVarInt, obj.dividers); /*0.5*/
     }
-    else if (action == 4) { /*8.2*/
+    else if (V_action == 4) { /*8.2*/
       READ_OR_BAIL(readUnsignedVarInt, obj.dividers); /*0.5*/
     }
-    if (action == 0) { /*8.2*/
+    if (V_action == 0) { /*8.2*/
       READ_OR_BAIL(readUByte, obj.flags); /*0.5*/
     }
-    else if (action == 5) { /*8.2*/
+    else if (V_action == 5) { /*8.2*/
       READ_OR_BAIL(readUByte, obj.flags); /*0.5*/
     }
     return true;
@@ -6404,7 +6404,7 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
   bool packet_declare_commands(pdef::Stream &stream, pdef::pc1_18_play_toClient::packet_declare_commands &obj) {
     int nodes_len; READ_OR_BAIL(readUnsignedVarInt, nodes_len); /*1.5*/
     obj.nodes.resize(nodes_len); /*1.6*/
-    for (int i = 0; i < nodes_len; i++) {
+    for (int i = 0; i < nodes_len; i++) { /*3.3*/
       auto &v2 = obj.nodes[i]; /*3.4*/
       pdef::pc1_18_play_toClient::decode::command_node(stream, v2); /*v2*/ /*4.6*/
     }
@@ -6417,11 +6417,11 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
     READ_OR_BAIL(readDoubleBE, obj.y); /*0.5*/
     READ_OR_BAIL(readDoubleBE, obj.z); /*0.5*/
     READ_OR_BAIL(readBool, (bool&)obj.isEntity); /*0.5*/
-    bool &isEntity = obj.isEntity; /*0.6*/
-    if (isEntity == true) { /*8.1*/
+    bool &V_isEntity = obj.isEntity; /*0.6*/
+    if (V_isEntity == true) { /*8.1*/
       READ_OR_BAIL(readUnsignedVarInt, obj.entityId); /*0.5*/
     }
-    if (isEntity == true) { /*8.1*/
+    if (V_isEntity == true) { /*8.1*/
       int entity_feet_eyes_strlen; READ_OR_BAIL(readUnsignedVarInt, entity_feet_eyes_strlen);
       if (!stream.readString(obj.entity_feet_eyes, entity_feet_eyes_strlen)) return false; /*entity_feet_eyes: pstring*/ /*4.3*/
     }
@@ -6448,7 +6448,7 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
     READ_OR_BAIL(readBool, (bool&)obj.notTrustEdges); /*0.5*/
     int records_len; READ_OR_BAIL(readUnsignedVarInt, records_len); /*1.5*/
     obj.records.resize(records_len); /*1.6*/
-    for (int i = 0; i < records_len; i++) {
+    for (int i = 0; i < records_len; i++) { /*3.3*/
       auto &v2 = obj.records[i]; /*3.4*/
       READ_OR_BAIL(readUnsignedVarInt, v2); /*0.5*/
     }
@@ -6470,7 +6470,7 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
     READ_OR_BAIL(readUnsignedVarInt, obj.stateId); /*0.5*/
     int items_len; READ_OR_BAIL(readUnsignedVarInt, items_len); /*1.5*/
     obj.items.resize(items_len); /*1.6*/
-    for (int i = 0; i < items_len; i++) {
+    for (int i = 0; i < items_len; i++) { /*3.3*/
       auto &v2 = obj.items[i]; /*3.4*/
       READ_OR_BAIL(readByte, v2); /*0.5*/
     }
@@ -6567,32 +6567,32 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
     int chunkData_len; READ_OR_BAIL(readUnsignedVarInt, chunkData_len);if (!stream.readBuffer(obj.chunkData, chunkData_len)) return false; /*chunkData: buffer*/ /*4.3*/
     int blockEntities_len; READ_OR_BAIL(readUnsignedVarInt, blockEntities_len); /*1.5*/
     obj.blockEntities.resize(blockEntities_len); /*1.6*/
-    for (int i = 0; i < blockEntities_len; i++) {
+    for (int i = 0; i < blockEntities_len; i++) { /*3.3*/
       auto &v2 = obj.blockEntities[i]; /*3.4*/
       pdef::pc1_18_play_toClient::decode::chunkBlockEntity(stream, v2); /*v2*/ /*4.6*/
     }
     READ_OR_BAIL(readBool, (bool&)obj.trustEdges); /*0.5*/
     int skyLightMask_len; READ_OR_BAIL(readUnsignedVarInt, skyLightMask_len); /*1.5*/
     obj.skyLightMask.resize(skyLightMask_len); /*1.6*/
-    for (int i = 0; i < skyLightMask_len; i++) {
+    for (int i = 0; i < skyLightMask_len; i++) { /*3.3*/
       auto &v2 = obj.skyLightMask[i]; /*3.4*/
       READ_OR_BAIL(readLongBE, v2); /*0.5*/
     }
     int blockLightMask_len; READ_OR_BAIL(readUnsignedVarInt, blockLightMask_len); /*1.5*/
     obj.blockLightMask.resize(blockLightMask_len); /*1.6*/
-    for (int i = 0; i < blockLightMask_len; i++) {
+    for (int i = 0; i < blockLightMask_len; i++) { /*3.3*/
       auto &v2 = obj.blockLightMask[i]; /*3.4*/
       READ_OR_BAIL(readLongBE, v2); /*0.5*/
     }
     int emptySkyLightMask_len; READ_OR_BAIL(readUnsignedVarInt, emptySkyLightMask_len); /*1.5*/
     obj.emptySkyLightMask.resize(emptySkyLightMask_len); /*1.6*/
-    for (int i = 0; i < emptySkyLightMask_len; i++) {
+    for (int i = 0; i < emptySkyLightMask_len; i++) { /*3.3*/
       auto &v2 = obj.emptySkyLightMask[i]; /*3.4*/
       READ_OR_BAIL(readLongBE, v2); /*0.5*/
     }
     int emptyBlockLightMask_len; READ_OR_BAIL(readUnsignedVarInt, emptyBlockLightMask_len); /*1.5*/
     obj.emptyBlockLightMask.resize(emptyBlockLightMask_len); /*1.6*/
-    for (int i = 0; i < emptyBlockLightMask_len; i++) {
+    for (int i = 0; i < emptyBlockLightMask_len; i++) { /*3.3*/
       auto &v2 = obj.emptyBlockLightMask[i]; /*3.4*/
       READ_OR_BAIL(readLongBE, v2); /*0.5*/
     }
@@ -6631,7 +6631,7 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
   }
   bool packet_world_particles(pdef::Stream &stream, pdef::pc1_18_play_toClient::packet_world_particles &obj) {
     READ_OR_BAIL(readIntBE, obj.particleId); /*0.5*/
-    int32_t &particleId = obj.particleId; /*0.6*/
+    int32_t &V_particleId = obj.particleId; /*0.6*/
     READ_OR_BAIL(readBool, (bool&)obj.longDistance); /*0.5*/
     READ_OR_BAIL(readDoubleBE, obj.x); /*0.5*/
     READ_OR_BAIL(readDoubleBE, obj.y); /*0.5*/
@@ -6641,22 +6641,22 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
     READ_OR_BAIL(readFloatBE, obj.offsetZ); /*0.5*/
     READ_OR_BAIL(readFloatBE, obj.particleData); /*0.5*/
     READ_OR_BAIL(readIntBE, obj.particles); /*0.5*/
-    if (particleId == 2) { /*8.2*/
+    if (V_particleId == 2) { /*8.2*/
          obj.data_2_or_3_or_24 = {}; pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
         READ_OR_BAIL(readUnsignedVarInt, v2.blockState); /*0.5*/
     }
-    else if (particleId == 3) { /*8.2*/
+    else if (V_particleId == 3) { /*8.2*/
          obj.data_2_or_3_or_24 = {}; pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
         READ_OR_BAIL(readUnsignedVarInt, v2.blockState); /*0.5*/
     }
-    else if (particleId == 14) { /*8.2*/
+    else if (V_particleId == 14) { /*8.2*/
          obj.data_14 = {}; pdef::pc1_18_play_toClient::packet_world_particles::Data14 &v2 = *obj.data_14; /*8.4*/
         READ_OR_BAIL(readFloatBE, v2.red); /*0.5*/
         READ_OR_BAIL(readFloatBE, v2.green); /*0.5*/
         READ_OR_BAIL(readFloatBE, v2.blue); /*0.5*/
         READ_OR_BAIL(readFloatBE, v2.scale); /*0.5*/
     }
-    else if (particleId == 15) { /*8.2*/
+    else if (V_particleId == 15) { /*8.2*/
          obj.data_15 = {}; pdef::pc1_18_play_toClient::packet_world_particles::Data15 &v2 = *obj.data_15; /*8.4*/
         READ_OR_BAIL(readFloatBE, v2.fromRed); /*0.5*/
         READ_OR_BAIL(readFloatBE, v2.fromGreen); /*0.5*/
@@ -6666,15 +6666,15 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
         READ_OR_BAIL(readFloatBE, v2.toGreen); /*0.5*/
         READ_OR_BAIL(readFloatBE, v2.toBlue); /*0.5*/
     }
-    else if (particleId == 24) { /*8.2*/
+    else if (V_particleId == 24) { /*8.2*/
          obj.data_2_or_3_or_24 = {}; pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
         READ_OR_BAIL(readUnsignedVarInt, v2.blockState); /*0.5*/
     }
-    else if (particleId == 35) { /*8.2*/
+    else if (V_particleId == 35) { /*8.2*/
          obj.data_35 = {}; pdef::pc1_18_play_toClient::packet_world_particles::Data35 &v2 = *obj.data_35; /*8.4*/
         READ_OR_BAIL(readByte, v2.item); /*0.5*/
     }
-    else if (particleId == 36) { /*8.2*/
+    else if (V_particleId == 36) { /*8.2*/
          obj.data_36 = {}; pdef::pc1_18_play_toClient::packet_world_particles::Data36 &v2 = *obj.data_36; /*8.4*/
         uint64_t origin_val;
         READ_OR_BAIL(readULongBE, origin_val);
@@ -6683,15 +6683,15 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
         v2.origin.y = origin_val >> 52 & 12; /*origin: bitfield*/ /*4.3*/
         int positionType_strlen; READ_OR_BAIL(readUnsignedVarInt, positionType_strlen);
         if (!stream.readString(v2.positionType, positionType_strlen)) return false; /*positionType: pstring*/ /*4.3*/
-        std::string &positionType = v2.positionType; /*4.8*/
-        if (positionType == "minecraft:block") { /*8.0*/
+        std::string &V_positionType = v2.positionType; /*4.8*/
+        if (V_positionType == "minecraft:block") { /*8.0*/
           uint64_t destination_position_val;
           READ_OR_BAIL(readULongBE, destination_position_val);
           v2.destination_position.x = destination_position_val >> 0 & 26;
           v2.destination_position.z = destination_position_val >> 26 & 26;
           v2.destination_position.y = destination_position_val >> 52 & 12; /*destination_position: bitfield*/ /*4.3*/
         }
-        else if (positionType == "minecraft:entity") { /*8.0*/
+        else if (V_positionType == "minecraft:entity") { /*8.0*/
           READ_OR_BAIL(readUnsignedVarInt, v2.destination_varint); /*0.5*/
         }
         READ_OR_BAIL(readUnsignedVarInt, v2.ticks); /*0.5*/
@@ -6704,25 +6704,25 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
     READ_OR_BAIL(readBool, (bool&)obj.trustEdges); /*0.5*/
     int skyLightMask_len; READ_OR_BAIL(readUnsignedVarInt, skyLightMask_len); /*1.5*/
     obj.skyLightMask.resize(skyLightMask_len); /*1.6*/
-    for (int i = 0; i < skyLightMask_len; i++) {
+    for (int i = 0; i < skyLightMask_len; i++) { /*3.3*/
       auto &v2 = obj.skyLightMask[i]; /*3.4*/
       READ_OR_BAIL(readLongBE, v2); /*0.5*/
     }
     int blockLightMask_len; READ_OR_BAIL(readUnsignedVarInt, blockLightMask_len); /*1.5*/
     obj.blockLightMask.resize(blockLightMask_len); /*1.6*/
-    for (int i = 0; i < blockLightMask_len; i++) {
+    for (int i = 0; i < blockLightMask_len; i++) { /*3.3*/
       auto &v2 = obj.blockLightMask[i]; /*3.4*/
       READ_OR_BAIL(readLongBE, v2); /*0.5*/
     }
     int emptySkyLightMask_len; READ_OR_BAIL(readUnsignedVarInt, emptySkyLightMask_len); /*1.5*/
     obj.emptySkyLightMask.resize(emptySkyLightMask_len); /*1.6*/
-    for (int i = 0; i < emptySkyLightMask_len; i++) {
+    for (int i = 0; i < emptySkyLightMask_len; i++) { /*3.3*/
       auto &v2 = obj.emptySkyLightMask[i]; /*3.4*/
       READ_OR_BAIL(readLongBE, v2); /*0.5*/
     }
     int emptyBlockLightMask_len; READ_OR_BAIL(readUnsignedVarInt, emptyBlockLightMask_len); /*1.5*/
     obj.emptyBlockLightMask.resize(emptyBlockLightMask_len); /*1.6*/
-    for (int i = 0; i < emptyBlockLightMask_len; i++) {
+    for (int i = 0; i < emptyBlockLightMask_len; i++) { /*3.3*/
       auto &v2 = obj.emptyBlockLightMask[i]; /*3.4*/
       READ_OR_BAIL(readLongBE, v2); /*0.5*/
     }
@@ -6755,7 +6755,7 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
     READ_OR_BAIL(readByte, obj.previousGameMode); /*0.5*/
     int worldNames_len; READ_OR_BAIL(readUnsignedVarInt, worldNames_len); /*1.5*/
     obj.worldNames.resize(worldNames_len); /*1.6*/
-    for (int i = 0; i < worldNames_len; i++) {
+    for (int i = 0; i < worldNames_len; i++) { /*3.3*/
       auto &v2 = obj.worldNames[i]; /*3.4*/
       int _strlen; READ_OR_BAIL(readUnsignedVarInt, _strlen);
       if (!stream.readString(v2, _strlen)) return false; /*: pstring*/ /*4.3*/
@@ -6780,23 +6780,23 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
     READ_OR_BAIL(readBool, (bool&)obj.locked); /*0.5*/
     const pdef::pc1_18_play_toClient::packet_map::Icons &v = obj.icons = {}; /*["packet_map"]*/ /*7.3*/
     READ_OR_BAIL(readUByte, obj.columns); /*0.5*/
-    uint8_t &columns = obj.columns; /*0.6*/
-    if (columns == 0) { /*8.2*/
+    uint8_t &V_columns = obj.columns; /*0.6*/
+    if (V_columns == 0) { /*8.2*/
     }
     else {
       READ_OR_BAIL(readUByte, obj.rows); /*0.5*/
     }
-    if (columns == 0) { /*8.2*/
+    if (V_columns == 0) { /*8.2*/
     }
     else {
       READ_OR_BAIL(readUByte, obj.x); /*0.5*/
     }
-    if (columns == 0) { /*8.2*/
+    if (V_columns == 0) { /*8.2*/
     }
     else {
       READ_OR_BAIL(readUByte, obj.y); /*0.5*/
     }
-    if (columns == 0) { /*8.2*/
+    if (V_columns == 0) { /*8.2*/
     }
     else {
       int data_len; READ_OR_BAIL(readUnsignedVarInt, data_len);if (!stream.readBuffer(obj.data, data_len)) return false; /*data: buffer*/ /*4.3*/
@@ -6900,17 +6900,17 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
   }
   bool packet_player_info(pdef::Stream &stream, pdef::pc1_18_play_toClient::packet_player_info &obj) {
     READ_OR_BAIL(readUnsignedVarInt, obj.action); /*0.5*/
-    int &action = obj.action; /*0.6*/
+    int &V_action = obj.action; /*0.6*/
     int data_len; READ_OR_BAIL(readUnsignedVarInt, data_len); /*1.5*/
     obj.data.resize(data_len); /*1.6*/
     for (int i = 0; i < data_len; i++) { /*5*/
       pdef::pc1_18_play_toClient::packet_player_info::Data &v2 = obj.data[i]; /*5.23*/
       READ_OR_BAIL(readULongBE, v2.UUID); /*0.5*/
-      if (action == 0) { /*8.2*/
+      if (V_action == 0) { /*8.2*/
         int name_strlen; READ_OR_BAIL(readUnsignedVarInt, name_strlen);
         if (!stream.readString(v2.name, name_strlen)) return false; /*name: pstring*/ /*4.3*/
       }
-      if (action == 0) { /*8.2*/
+      if (V_action == 0) { /*8.2*/
         int properties_len; READ_OR_BAIL(readUnsignedVarInt, properties_len); /*1.5*/
         v2.properties.resize(properties_len); /*1.6*/
         for (int i = 0; i < properties_len; i++) { /*5*/
@@ -6922,32 +6922,32 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
           const pdef::pc1_18_play_toClient::packet_player_info::Data::Properties::Signature &v = v4.signature = {}; /*["packet_player_info","Data","Properties"]*/ /*7.3*/
         }
       }
-      if (action == 0) { /*8.2*/
+      if (V_action == 0) { /*8.2*/
         READ_OR_BAIL(readUnsignedVarInt, v2.gamemode); /*0.5*/
       }
-      else if (action == 1) { /*8.2*/
+      else if (V_action == 1) { /*8.2*/
         READ_OR_BAIL(readUnsignedVarInt, v2.gamemode); /*0.5*/
       }
-      if (action == 0) { /*8.2*/
+      if (V_action == 0) { /*8.2*/
         READ_OR_BAIL(readUnsignedVarInt, v2.ping); /*0.5*/
       }
-      else if (action == 2) { /*8.2*/
+      else if (V_action == 2) { /*8.2*/
         READ_OR_BAIL(readUnsignedVarInt, v2.ping); /*0.5*/
       }
-      if (action == 0) { /*8.2*/
+      if (V_action == 0) { /*8.2*/
            v2.displayName = {}; pdef::pc1_18_play_toClient::packet_player_info::Data::DisplayName &v3 = *v2.displayName; /*8.4*/
           READ_OR_BAIL(readBool, (bool&)v3.has); /*0.5*/
-          bool &has = v3.has; /*0.6*/
-          if (has == true) { /*8.1*/
+          bool &V_has = v3.has; /*0.6*/
+          if (V_has == true) { /*8.1*/
             int value_strlen; READ_OR_BAIL(readUnsignedVarInt, value_strlen);
             if (!stream.readString(v3.value, value_strlen)) return false; /*value: pstring*/ /*4.3*/
           }
       }
-      else if (action == 3) { /*8.2*/
+      else if (V_action == 3) { /*8.2*/
            v2.displayName = {}; pdef::pc1_18_play_toClient::packet_player_info::Data::DisplayName &v3 = *v2.displayName; /*8.4*/
           READ_OR_BAIL(readBool, (bool&)v3.has); /*0.5*/
-          bool &has = v3.has; /*0.6*/
-          if (has == true) { /*8.1*/
+          bool &V_has = v3.has; /*0.6*/
+          if (V_has == true) { /*8.1*/
             int value_strlen; READ_OR_BAIL(readUnsignedVarInt, value_strlen);
             if (!stream.readString(v3.value, value_strlen)) return false; /*value: pstring*/ /*4.3*/
           }
@@ -6968,7 +6968,7 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
   }
   bool packet_unlock_recipes(pdef::Stream &stream, pdef::pc1_18_play_toClient::packet_unlock_recipes &obj) {
     READ_OR_BAIL(readUnsignedVarInt, obj.action); /*0.5*/
-    int &action = obj.action; /*0.6*/
+    int &V_action = obj.action; /*0.6*/
     READ_OR_BAIL(readBool, (bool&)obj.craftingBookOpen); /*0.5*/
     READ_OR_BAIL(readBool, (bool&)obj.filteringCraftable); /*0.5*/
     READ_OR_BAIL(readBool, (bool&)obj.smeltingBookOpen); /*0.5*/
@@ -6979,15 +6979,15 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
     READ_OR_BAIL(readBool, (bool&)obj.filteringSmoker); /*0.5*/
     int recipes1_len; READ_OR_BAIL(readUnsignedVarInt, recipes1_len); /*1.5*/
     obj.recipes1.resize(recipes1_len); /*1.6*/
-    for (int i = 0; i < recipes1_len; i++) {
+    for (int i = 0; i < recipes1_len; i++) { /*3.3*/
       auto &v2 = obj.recipes1[i]; /*3.4*/
       int _strlen; READ_OR_BAIL(readUnsignedVarInt, _strlen);
       if (!stream.readString(v2, _strlen)) return false; /*: pstring*/ /*4.3*/
     }
-    if (action == 0) { /*8.2*/
+    if (V_action == 0) { /*8.2*/
       int recipes2_len; READ_OR_BAIL(readUnsignedVarInt, recipes2_len); /*1.5*/
       obj.recipes2.resize(recipes2_len); /*1.6*/
-      for (int i = 0; i < recipes2_len; i++) {
+      for (int i = 0; i < recipes2_len; i++) { /*3.3*/
         auto &v3 = obj.recipes2[i]; /*3.4*/
         int _strlen; READ_OR_BAIL(readUnsignedVarInt, _strlen);
         if (!stream.readString(v3, _strlen)) return false; /*: pstring*/ /*4.3*/
@@ -6998,7 +6998,7 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
   bool packet_entity_destroy(pdef::Stream &stream, pdef::pc1_18_play_toClient::packet_entity_destroy &obj) {
     int entityIds_len; READ_OR_BAIL(readUnsignedVarInt, entityIds_len); /*1.5*/
     obj.entityIds.resize(entityIds_len); /*1.6*/
-    for (int i = 0; i < entityIds_len; i++) {
+    for (int i = 0; i < entityIds_len; i++) { /*3.3*/
       auto &v2 = obj.entityIds[i]; /*3.4*/
       READ_OR_BAIL(readUnsignedVarInt, v2); /*0.5*/
     }
@@ -7096,19 +7096,19 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
     int name_strlen; READ_OR_BAIL(readUnsignedVarInt, name_strlen);
     if (!stream.readString(obj.name, name_strlen)) return false; /*name: pstring*/ /*4.3*/
     READ_OR_BAIL(readByte, obj.action); /*0.5*/
-    int8_t &action = obj.action; /*0.6*/
-    if (action == 0) { /*8.2*/
+    int8_t &V_action = obj.action; /*0.6*/
+    if (V_action == 0) { /*8.2*/
       int displayText_strlen; READ_OR_BAIL(readUnsignedVarInt, displayText_strlen);
       if (!stream.readString(obj.displayText, displayText_strlen)) return false; /*displayText: pstring*/ /*4.3*/
     }
-    else if (action == 2) { /*8.2*/
+    else if (V_action == 2) { /*8.2*/
       int displayText_strlen; READ_OR_BAIL(readUnsignedVarInt, displayText_strlen);
       if (!stream.readString(obj.displayText, displayText_strlen)) return false; /*displayText: pstring*/ /*4.3*/
     }
-    if (action == 0) { /*8.2*/
+    if (V_action == 0) { /*8.2*/
       READ_OR_BAIL(readUnsignedVarInt, obj.type); /*0.5*/
     }
-    else if (action == 2) { /*8.2*/
+    else if (V_action == 2) { /*8.2*/
       READ_OR_BAIL(readUnsignedVarInt, obj.type); /*0.5*/
     }
     return true;
@@ -7117,7 +7117,7 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
     READ_OR_BAIL(readUnsignedVarInt, obj.entityId); /*0.5*/
     int passengers_len; READ_OR_BAIL(readUnsignedVarInt, passengers_len); /*1.5*/
     obj.passengers.resize(passengers_len); /*1.6*/
-    for (int i = 0; i < passengers_len; i++) {
+    for (int i = 0; i < passengers_len; i++) { /*3.3*/
       auto &v2 = obj.passengers[i]; /*3.4*/
       READ_OR_BAIL(readUnsignedVarInt, v2); /*0.5*/
     }
@@ -7127,81 +7127,81 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
     int team_strlen; READ_OR_BAIL(readUnsignedVarInt, team_strlen);
     if (!stream.readString(obj.team, team_strlen)) return false; /*team: pstring*/ /*4.3*/
     READ_OR_BAIL(readByte, obj.mode); /*0.5*/
-    int8_t &mode = obj.mode; /*0.6*/
-    if (mode == 0) { /*8.2*/
+    int8_t &V_mode = obj.mode; /*0.6*/
+    if (V_mode == 0) { /*8.2*/
       int name_strlen; READ_OR_BAIL(readUnsignedVarInt, name_strlen);
       if (!stream.readString(obj.name, name_strlen)) return false; /*name: pstring*/ /*4.3*/
     }
-    else if (mode == 2) { /*8.2*/
+    else if (V_mode == 2) { /*8.2*/
       int name_strlen; READ_OR_BAIL(readUnsignedVarInt, name_strlen);
       if (!stream.readString(obj.name, name_strlen)) return false; /*name: pstring*/ /*4.3*/
     }
-    if (mode == 0) { /*8.2*/
+    if (V_mode == 0) { /*8.2*/
       READ_OR_BAIL(readByte, obj.friendlyFire); /*0.5*/
     }
-    else if (mode == 2) { /*8.2*/
+    else if (V_mode == 2) { /*8.2*/
       READ_OR_BAIL(readByte, obj.friendlyFire); /*0.5*/
     }
-    if (mode == 0) { /*8.2*/
+    if (V_mode == 0) { /*8.2*/
       int nameTagVisibility_strlen; READ_OR_BAIL(readUnsignedVarInt, nameTagVisibility_strlen);
       if (!stream.readString(obj.nameTagVisibility, nameTagVisibility_strlen)) return false; /*nameTagVisibility: pstring*/ /*4.3*/
     }
-    else if (mode == 2) { /*8.2*/
+    else if (V_mode == 2) { /*8.2*/
       int nameTagVisibility_strlen; READ_OR_BAIL(readUnsignedVarInt, nameTagVisibility_strlen);
       if (!stream.readString(obj.nameTagVisibility, nameTagVisibility_strlen)) return false; /*nameTagVisibility: pstring*/ /*4.3*/
     }
-    if (mode == 0) { /*8.2*/
+    if (V_mode == 0) { /*8.2*/
       int collisionRule_strlen; READ_OR_BAIL(readUnsignedVarInt, collisionRule_strlen);
       if (!stream.readString(obj.collisionRule, collisionRule_strlen)) return false; /*collisionRule: pstring*/ /*4.3*/
     }
-    else if (mode == 2) { /*8.2*/
+    else if (V_mode == 2) { /*8.2*/
       int collisionRule_strlen; READ_OR_BAIL(readUnsignedVarInt, collisionRule_strlen);
       if (!stream.readString(obj.collisionRule, collisionRule_strlen)) return false; /*collisionRule: pstring*/ /*4.3*/
     }
-    if (mode == 0) { /*8.2*/
+    if (V_mode == 0) { /*8.2*/
       READ_OR_BAIL(readUnsignedVarInt, obj.formatting); /*0.5*/
     }
-    else if (mode == 2) { /*8.2*/
+    else if (V_mode == 2) { /*8.2*/
       READ_OR_BAIL(readUnsignedVarInt, obj.formatting); /*0.5*/
     }
-    if (mode == 0) { /*8.2*/
+    if (V_mode == 0) { /*8.2*/
       int prefix_strlen; READ_OR_BAIL(readUnsignedVarInt, prefix_strlen);
       if (!stream.readString(obj.prefix, prefix_strlen)) return false; /*prefix: pstring*/ /*4.3*/
     }
-    else if (mode == 2) { /*8.2*/
+    else if (V_mode == 2) { /*8.2*/
       int prefix_strlen; READ_OR_BAIL(readUnsignedVarInt, prefix_strlen);
       if (!stream.readString(obj.prefix, prefix_strlen)) return false; /*prefix: pstring*/ /*4.3*/
     }
-    if (mode == 0) { /*8.2*/
+    if (V_mode == 0) { /*8.2*/
       int suffix_strlen; READ_OR_BAIL(readUnsignedVarInt, suffix_strlen);
       if (!stream.readString(obj.suffix, suffix_strlen)) return false; /*suffix: pstring*/ /*4.3*/
     }
-    else if (mode == 2) { /*8.2*/
+    else if (V_mode == 2) { /*8.2*/
       int suffix_strlen; READ_OR_BAIL(readUnsignedVarInt, suffix_strlen);
       if (!stream.readString(obj.suffix, suffix_strlen)) return false; /*suffix: pstring*/ /*4.3*/
     }
-    if (mode == 0) { /*8.2*/
+    if (V_mode == 0) { /*8.2*/
       int players_len; READ_OR_BAIL(readUnsignedVarInt, players_len); /*1.5*/
       obj.players.resize(players_len); /*1.6*/
-      for (int i = 0; i < players_len; i++) {
+      for (int i = 0; i < players_len; i++) { /*3.3*/
         auto &v3 = obj.players[i]; /*3.4*/
         int _strlen; READ_OR_BAIL(readUnsignedVarInt, _strlen);
         if (!stream.readString(v3, _strlen)) return false; /*: pstring*/ /*4.3*/
       }
     }
-    else if (mode == 3) { /*8.2*/
+    else if (V_mode == 3) { /*8.2*/
       int players_len; READ_OR_BAIL(readUnsignedVarInt, players_len); /*1.5*/
       obj.players.resize(players_len); /*1.6*/
-      for (int i = 0; i < players_len; i++) {
+      for (int i = 0; i < players_len; i++) { /*3.3*/
         auto &v3 = obj.players[i]; /*3.4*/
         int _strlen; READ_OR_BAIL(readUnsignedVarInt, _strlen);
         if (!stream.readString(v3, _strlen)) return false; /*: pstring*/ /*4.3*/
       }
     }
-    else if (mode == 4) { /*8.2*/
+    else if (V_mode == 4) { /*8.2*/
       int players_len; READ_OR_BAIL(readUnsignedVarInt, players_len); /*1.5*/
       obj.players.resize(players_len); /*1.6*/
-      for (int i = 0; i < players_len; i++) {
+      for (int i = 0; i < players_len; i++) { /*3.3*/
         auto &v3 = obj.players[i]; /*3.4*/
         int _strlen; READ_OR_BAIL(readUnsignedVarInt, _strlen);
         if (!stream.readString(v3, _strlen)) return false; /*: pstring*/ /*4.3*/
@@ -7213,10 +7213,10 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
     int itemName_strlen; READ_OR_BAIL(readUnsignedVarInt, itemName_strlen);
     if (!stream.readString(obj.itemName, itemName_strlen)) return false; /*itemName: pstring*/ /*4.3*/
     READ_OR_BAIL(readUnsignedVarInt, obj.action); /*0.5*/
-    int &action = obj.action; /*0.6*/
+    int &V_action = obj.action; /*0.6*/
     int scoreName_strlen; READ_OR_BAIL(readUnsignedVarInt, scoreName_strlen);
     if (!stream.readString(obj.scoreName, scoreName_strlen)) return false; /*scoreName: pstring*/ /*4.3*/
-    if (action == 1) { /*8.2*/
+    if (V_action == 1) { /*8.2*/
     }
     else {
       READ_OR_BAIL(readUnsignedVarInt, obj.value); /*0.5*/
@@ -7247,18 +7247,18 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
   }
   bool packet_stop_sound(pdef::Stream &stream, pdef::pc1_18_play_toClient::packet_stop_sound &obj) {
     READ_OR_BAIL(readByte, obj.flags); /*0.5*/
-    int8_t &flags = obj.flags; /*0.6*/
-    if (flags == 1) { /*8.2*/
+    int8_t &V_flags = obj.flags; /*0.6*/
+    if (V_flags == 1) { /*8.2*/
       READ_OR_BAIL(readUnsignedVarInt, obj.source); /*0.5*/
     }
-    else if (flags == 3) { /*8.2*/
+    else if (V_flags == 3) { /*8.2*/
       READ_OR_BAIL(readUnsignedVarInt, obj.source); /*0.5*/
     }
-    if (flags == 2) { /*8.2*/
+    if (V_flags == 2) { /*8.2*/
       int sound_strlen; READ_OR_BAIL(readUnsignedVarInt, sound_strlen);
       if (!stream.readString(obj.sound, sound_strlen)) return false; /*sound: pstring*/ /*4.3*/
     }
-    else if (flags == 3) { /*8.2*/
+    else if (V_flags == 3) { /*8.2*/
       int sound_strlen; READ_OR_BAIL(readUnsignedVarInt, sound_strlen);
       if (!stream.readString(obj.sound, sound_strlen)) return false; /*sound: pstring*/ /*4.3*/
     }
@@ -7336,43 +7336,43 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
       pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes &v2 = obj.recipes[i]; /*5.23*/
       int type_strlen; READ_OR_BAIL(readUnsignedVarInt, type_strlen);
       if (!stream.readString(v2.type, type_strlen)) return false; /*type: pstring*/ /*4.3*/
-      std::string &type = v2.type; /*4.8*/
+      std::string &V_type = v2.type; /*4.8*/
       int recipeId_strlen; READ_OR_BAIL(readUnsignedVarInt, recipeId_strlen);
       if (!stream.readString(v2.recipeId, recipeId_strlen)) return false; /*recipeId: pstring*/ /*4.3*/
-      if (type == "minecraft:crafting_shapeless") { /*8.0*/
+      if (V_type == "minecraft:crafting_shapeless") { /*8.0*/
            v2.data_minecraft_crafting_shapeless = {}; pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftCraftingShapeless &v3 = *v2.data_minecraft_crafting_shapeless; /*8.4*/
           int group_strlen; READ_OR_BAIL(readUnsignedVarInt, group_strlen);
           if (!stream.readString(v3.group, group_strlen)) return false; /*group: pstring*/ /*4.3*/
           int ingredients_len; READ_OR_BAIL(readUnsignedVarInt, ingredients_len); /*1.5*/
           v3.ingredients.resize(ingredients_len); /*1.6*/
-          for (int i = 0; i < ingredients_len; i++) {
+          for (int i = 0; i < ingredients_len; i++) { /*3.3*/
             auto &v5 = v3.ingredients[i]; /*3.4*/
             int _len; READ_OR_BAIL(readUnsignedVarInt, _len); /*1.5*/
             v5.resize(_len); /*1.6*/
-            for (int i = 0; i < _len; i++) {
+            for (int i = 0; i < _len; i++) { /*3.3*/
               auto &v6 = v5[i]; /*3.4*/
               READ_OR_BAIL(readByte, v6); /*0.5*/
             }
           }
           READ_OR_BAIL(readByte, v3.result); /*0.5*/
       }
-      else if (type == "minecraft:crafting_shaped") { /*8.0*/
+      else if (V_type == "minecraft:crafting_shaped") { /*8.0*/
            v2.data_minecraft_crafting_shaped = {}; pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftCraftingShaped &v3 = *v2.data_minecraft_crafting_shaped; /*8.4*/
           READ_OR_BAIL(readUnsignedVarInt, v3.width); /*0.5*/
-          int &width = v3.width; /*0.6*/
+          int &V_width = v3.width; /*0.6*/
           READ_OR_BAIL(readUnsignedVarInt, v3.height); /*0.5*/
-          int &height = v3.height; /*0.6*/
+          int &V_height = v3.height; /*0.6*/
           int group_strlen; READ_OR_BAIL(readUnsignedVarInt, group_strlen);
           if (!stream.readString(v3.group, group_strlen)) return false; /*group: pstring*/ /*4.3*/
-          v3.ingredients.resize(width); /*1.6*/
-          for (int i = 0; i < width; i++) { /*5.2*/
+          v3.ingredients.resize(V_width); /*1.6*/
+          for (int i = 0; i < V_width; i++) { /*5.2*/
             int ingredients_len2; READ_OR_BAIL(readUnsignedVarInt, ingredients_len2); /*5.5*/
             v3.ingredients[i].resize(ingredients_len2); /*5.10*/
-            for (int j = 0; j < height; j++) { /*5.11*/
+            for (int j = 0; j < V_height; j++) { /*5.11*/
               auto &v = v3.ingredients[i][j]; /*5.15*/
               int _len; READ_OR_BAIL(readUnsignedVarInt, _len); /*1.5*/
               v.resize(_len); /*1.6*/
-              for (int i = 0; i < _len; i++) {
+              for (int i = 0; i < _len; i++) { /*3.3*/
                 auto &v7 = v[i]; /*3.4*/
                 READ_OR_BAIL(readByte, v7); /*0.5*/
               }
@@ -7380,69 +7380,69 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
           }
           READ_OR_BAIL(readByte, v3.result); /*0.5*/
       }
-      else if (type == "minecraft:crafting_special_armordye") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_armordye") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_bookcloning") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_bookcloning") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_mapcloning") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_mapcloning") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_mapextending") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_mapextending") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_firework_rocket") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_firework_rocket") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_firework_star") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_firework_star") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_firework_star_fade") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_firework_star_fade") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_repairitem") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_repairitem") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_tippedarrow") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_tippedarrow") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_bannerduplicate") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_bannerduplicate") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_banneraddpattern") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_banneraddpattern") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_shielddecoration") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_shielddecoration") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_shulkerboxcoloring") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_shulkerboxcoloring") { /*8.0*/
       }
-      else if (type == "minecraft:crafting_special_suspiciousstew") { /*8.0*/
+      else if (V_type == "minecraft:crafting_special_suspiciousstew") { /*8.0*/
       }
-      else if (type == "minecraft:smelting") { /*8.0*/
+      else if (V_type == "minecraft:smelting") { /*8.0*/
         v2.data_minecraft_smelting_format = {}; pdef::pc1_18_play_toClient::decode::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); /*v2*/ /*4.6*/
       }
-      else if (type == "minecraft:blasting") { /*8.0*/
+      else if (V_type == "minecraft:blasting") { /*8.0*/
         v2.data_minecraft_smelting_format = {}; pdef::pc1_18_play_toClient::decode::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); /*v2*/ /*4.6*/
       }
-      else if (type == "minecraft:smoking") { /*8.0*/
+      else if (V_type == "minecraft:smoking") { /*8.0*/
         v2.data_minecraft_smelting_format = {}; pdef::pc1_18_play_toClient::decode::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); /*v2*/ /*4.6*/
       }
-      else if (type == "minecraft:campfire_cooking") { /*8.0*/
+      else if (V_type == "minecraft:campfire_cooking") { /*8.0*/
         v2.data_minecraft_smelting_format = {}; pdef::pc1_18_play_toClient::decode::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); /*v2*/ /*4.6*/
       }
-      else if (type == "minecraft:stonecutting") { /*8.0*/
+      else if (V_type == "minecraft:stonecutting") { /*8.0*/
            v2.data_minecraft_stonecutting = {}; pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftStonecutting &v3 = *v2.data_minecraft_stonecutting; /*8.4*/
           int group_strlen; READ_OR_BAIL(readUnsignedVarInt, group_strlen);
           if (!stream.readString(v3.group, group_strlen)) return false; /*group: pstring*/ /*4.3*/
           int ingredient_len; READ_OR_BAIL(readUnsignedVarInt, ingredient_len); /*1.5*/
           v3.ingredient.resize(ingredient_len); /*1.6*/
-          for (int i = 0; i < ingredient_len; i++) {
+          for (int i = 0; i < ingredient_len; i++) { /*3.3*/
             auto &v5 = v3.ingredient[i]; /*3.4*/
             READ_OR_BAIL(readByte, v5); /*0.5*/
           }
           READ_OR_BAIL(readByte, v3.result); /*0.5*/
       }
-      else if (type == "minecraft:smithing") { /*8.0*/
+      else if (V_type == "minecraft:smithing") { /*8.0*/
            v2.data_minecraft_smithing = {}; pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftSmithing &v3 = *v2.data_minecraft_smithing; /*8.4*/
           int base_len; READ_OR_BAIL(readUnsignedVarInt, base_len); /*1.5*/
           v3.base.resize(base_len); /*1.6*/
-          for (int i = 0; i < base_len; i++) {
+          for (int i = 0; i < base_len; i++) { /*3.3*/
             auto &v5 = v3.base[i]; /*3.4*/
             READ_OR_BAIL(readByte, v5); /*0.5*/
           }
           int addition_len; READ_OR_BAIL(readUnsignedVarInt, addition_len); /*1.5*/
           v3.addition.resize(addition_len); /*1.6*/
-          for (int i = 0; i < addition_len; i++) {
+          for (int i = 0; i < addition_len; i++) { /*3.3*/
             auto &v5 = v3.addition[i]; /*3.4*/
             READ_OR_BAIL(readByte, v5); /*0.5*/
           }
@@ -7484,15 +7484,15 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
     obj.sourcePosition.y = sourcePosition_val >> 52 & 12; /*sourcePosition: bitfield*/ /*4.3*/
     int destinationIdentifier_strlen; READ_OR_BAIL(readUnsignedVarInt, destinationIdentifier_strlen);
     if (!stream.readString(obj.destinationIdentifier, destinationIdentifier_strlen)) return false; /*destinationIdentifier: pstring*/ /*4.3*/
-    std::string &destinationIdentifier = obj.destinationIdentifier; /*4.8*/
-    if (destinationIdentifier == "block") { /*8.0*/
+    std::string &V_destinationIdentifier = obj.destinationIdentifier; /*4.8*/
+    if (V_destinationIdentifier == "block") { /*8.0*/
       uint64_t destination_position_val;
       READ_OR_BAIL(readULongBE, destination_position_val);
       obj.destination_position.x = destination_position_val >> 0 & 26;
       obj.destination_position.z = destination_position_val >> 26 & 26;
       obj.destination_position.y = destination_position_val >> 52 & 12; /*destination_position: bitfield*/ /*4.3*/
     }
-    else if (destinationIdentifier == "entityId") { /*8.0*/
+    else if (V_destinationIdentifier == "entityId") { /*8.0*/
       READ_OR_BAIL(readUnsignedVarInt, obj.destination_varint); /*0.5*/
     }
     READ_OR_BAIL(readUnsignedVarInt, obj.arrivalTicks); /*0.5*/
@@ -7567,8 +7567,8 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
   }
   bool packet(pdef::Stream &stream, pdef::pc1_18_play_toClient::packet &obj) {
     READ_OR_BAIL(readUnsignedVarInt, (int&)obj.name); /*7.2*/
-    const pdef::pc1_18_play_toClient::packet::Name &name = obj.name; /*0.7*/
-    switch (name) { /*8.0*/
+    const pdef::pc1_18_play_toClient::packet::Name &V_name = obj.name; /*0.7*/
+    switch (V_name) { /*8.0*/
       case pdef::pc1_18_play_toClient::packet::Name::SpawnEntity: { /*8.5*/
         obj.params_packet_spawn_entity = {}; pdef::pc1_18_play_toClient::decode::packet_spawn_entity(stream, *obj.params_packet_spawn_entity); /*obj*/ /*4.6*/
         break;

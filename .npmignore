@@ -1,0 +1,4 @@
+# Generated C/C++ is on the scale of MBs; unnecessary in the npm package
+.github
+examples
+test

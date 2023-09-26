@@ -27,7 +27,6 @@ function preprocess (schema, logging) {
           return _current
         }
       }
-      // if (!current.parent) console.log('Top most')
       if (current.scopeIsAnon) nonAnonLevelsUp--
       nonAnonLevelsUp++
       // console.dir(current, { depth: null })
@@ -139,7 +138,7 @@ function preprocess (schema, logging) {
   return schema
 }
 
-function processSchema (bloatedSchema, logging) {
+function processSchema (oldSchema, logging) {
   const debugLog = logging ? console.log : () => {}
   let i = 0
 
@@ -226,7 +225,6 @@ function processSchema (bloatedSchema, logging) {
             }
             typeGroups[str] ??= new Set()
             for (const _key in this.vars) {
-              // console.log(_key, key)
               if (_key.startsWith(key + ',') || _key === key) {
                 const val = this.vars[_key]
                 // console.log('val',JSON.stringify(val))
@@ -311,10 +309,30 @@ function processSchema (bloatedSchema, logging) {
     const fix = type.replaceAll('../', '')
     if (fix.startsWith('/')) return type
     if (fix.includes('.') || fix.includes('||')) {
-      // update_flags.initialisation || update_flags.decoration || update_flags.texture
-      // -> [update_flags, [initialisation, decoration, texture]]
-      const n = fix.includes('.') ? fix.split('.')[0] : fix.split('||')[0]
-      return [n, fix.split('||').map(e => e.split('.')[1]), type, type.includes('||') ? 'bool' : null]
+      /*
+      update_flags.initialisation || update_flags.decoration && update_flags.texture
+      -> [
+        [update_flags, initialisation], '||',
+        [update_flags2, decoration], '&&,
+        [update_flags2, texture]
+      ] */
+      const tokens = []
+      const andRegions = fix.split('&&')
+      for (const andRegion of andRegions) {
+        const orRegions = andRegion.split('||')
+        const orTokens = []
+        for (const orRegion of orRegions) {
+          const [a, b] = orRegion.split('.')
+          orTokens.push([a.trim(), b.trim()])
+          orTokens.push('||')
+        }
+        if (orTokens.length) orTokens.pop()
+        tokens.push(...orTokens)
+        tokens.push('&&')
+      }
+      if (tokens.length) tokens.pop()
+      // const variables = new Set([...fix.matchAll(/([^.\s]+)\./g)].map(e => e[1]))
+      return [tokens, type, type.includes('||') ? 'bool' : null]
     }
     return fix
   }
@@ -428,8 +446,8 @@ function processSchema (bloatedSchema, logging) {
       for (const key in sharedScope.vars) {
         simplified.addMaybe(anon ? key : newName, sharedScope.vars[key], key)
       }
-      // console.log('Shared Scope', sharedScope)
       next.finish()
+      // console.log('Shared Scope', sharedScope)
       // sharedScope.finish()
     }
 
@@ -491,12 +509,12 @@ function processSchema (bloatedSchema, logging) {
   }
 
   const simplified = new Scope()
-  for (const name in bloatedSchema) {
-    const type = bloatedSchema[name]
+  for (const name in oldSchema) {
+    const type = oldSchema[name]
     if (Array.isArray(type)) {
       if (type[0] === 'container') {
         const nextScope = new Scope()
-        visit(bloatedSchema[name][1], nextScope)
+        visit(oldSchema[name][1], nextScope)
         simplified.add(name, nextScope)
         nextScope.finish()
       } else {
@@ -544,7 +562,7 @@ function postprocess (schema) {
         if (maybes[n]?.[j]) {
           // console.log('Found maybe', maybes[n][j], name)
           // container[name][5] = maybes[j]
-          throw Error()
+          throw Error('Found maybe that was not handled')
         }
       }
       visitType(name, type, maybes)
@@ -566,7 +584,6 @@ function postprocess (schema) {
       const type = fixType(cases[caseName])
       if (type[0] === 'void') continue // void is important for switch statements with a case==0 and default
       if (type[0] === 'switch') {
-        // console.log('Visiting nested switch', caseName, type)
         visitSwitch(n, type.slice(1), optionalsInNS)
         break
       }
@@ -576,9 +593,7 @@ function postprocess (schema) {
           const [N] = cleanName(fieldName)
           if (optionalsInNS[N][json]) {
             if (Array.isArray(cases[caseName][fieldName])) { queueForAssignment(cases[caseName][fieldName], 5, optionalsInNS[N][json]) } else { queueForAssignment(cases[caseName][fieldName], '*name', optionalsInNS[N][json]) }
-            // console.log('Added', optionalsInNS[N][json], 'to', cases[caseName][fieldName])
           } else {
-            // console.log('Optionals so far', optionalsInNS, cases[caseName][fieldName])
             throw new Error('Error in anon switch during postprocess for ' + fieldName)
           }
         }
@@ -586,19 +601,15 @@ function postprocess (schema) {
         const json = JSON.stringify(type)
         if (optionalsInNS[n][json]) {
           if (Array.isArray(cases[caseName])) { queueForAssignment(cases[caseName], 5, optionalsInNS[n][json]) } else { queueForAssignment(cases[caseName], '*name', optionalsInNS[n][json]) }
-          // console.log('Added')
         } else {
-          // console.log('Optionals so far', optionalsInNS, cases[caseName])
           throw new Error(`Error in switch during postprocess ${caseName} ${json} ${n}`)
         }
       }
-      // console.log('Would visit', caseName, cases[caseName])
       visitType(caseName, cases[caseName])
     }
   }
   function visitType (name, type, optionalsInNS) {
     const [typeName, ...args] = fixType(type)
-    // console.log('Visiting type', name, typeName, type, optionalsInNS)
     if (name.startsWith('*')) return // Special handling only applicable to generator
     if (typeName === 'container') {
       visitContainer(name, args[0], optionalsInNS)
@@ -606,7 +617,6 @@ function postprocess (schema) {
       visitSwitch(name, args, optionalsInNS)
     } else if (typeName === 'array') {
       const actualType = fixType(args[2])
-      // console.log('actualType', actualType)
       if (actualType[0] === 'container') {
         visitContainer(name, actualType[1], optionalsInNS)
       }
@@ -617,7 +627,6 @@ function postprocess (schema) {
     visitType(name, type)
   }
 
-  // console.log('Assignment Q', assignmentQueue)
   for (const [obj, name, type] of assignmentQueue) {
     obj[name] = type
   }
@@ -635,16 +644,6 @@ module.exports = {
     return final
   }
 }
-
-// if (!module.parent) {
-//   const schema = require('./__tmp/protocol.json').types
-// // move mcpe_packet to the end
-// const oldmcpePacket = schema.mcpe_packet
-// delete schema.mcpe_packet
-// schema.mcpe_packet = oldmcpePacket
-//   const final = module.exports.generate(schema)
-//   fs.writeFileSync('./redone.json', JSON.stringify(final, null, 2))
-// }
 
 // Broken: Shaped recipes with array-array nesting and input=width*height
 //  this should be specially handled in the IR with a new multidimensional array

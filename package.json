@@ -8,7 +8,8 @@
     "test": "mocha --reporter spec --exit",
     "pretest": "npm run lint",
     "lint": "standard",
-    "fix": "standard --fix"
+    "fix": "standard --fix",
+    "mocha": "mocha --bail --exit"
   },
   "bin": {
     "protodef-cpp": "src/cli.js"

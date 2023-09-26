@@ -33,13 +33,13 @@ protodefCpp.compile({
         return s
       },
       read (args, [name], makeCallingCode) {
-        return `pdef::proto::packet_available_commands::_EnumType ${name}; if (values_len <= 0xff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (values_len <= 0xffff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Short; } else { ${name} = pdef::proto::packet_available_commands::_EnumType::Int; }`
+        return `pdef::proto::packet_available_commands::_EnumType V_${name}; if (V_values_len <= 0xff) { V_${name} = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (V_values_len <= 0xffff) { V_${name} = pdef::proto::packet_available_commands::_EnumType::Short; } else { V_${name} = pdef::proto::packet_available_commands::_EnumType::Int; }`
       },
       write (args, [name], makeCallingCode) {
-        return `pdef::proto::packet_available_commands::_EnumType ${name}; if (values_len <= 0xff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (values_len <= 0xffff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Short; } else { ${name} = pdef::proto::packet_available_commands::_EnumType::Int; }`
+        return `pdef::proto::packet_available_commands::_EnumType V_${name}; if (V_values_len <= 0xff) { V_${name} = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (V_values_len <= 0xffff) { V_${name} = pdef::proto::packet_available_commands::_EnumType::Short; } else { V_${name} = pdef::proto::packet_available_commands::_EnumType::Int; }`
       },
       size (args, [name], makeCallingCode) {
-        return `pdef::proto::packet_available_commands::_EnumType ${name}; if (values_len <= 0xff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (values_len <= 0xffff) { ${name} = pdef::proto::packet_available_commands::_EnumType::Short; } else { ${name} = pdef::proto::packet_available_commands::_EnumType::Int; }`
+        return `pdef::proto::packet_available_commands::_EnumType V_${name}; if (V_values_len <= 0xff) { V_${name} = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (V_values_len <= 0xffff) { V_${name} = pdef::proto::packet_available_commands::_EnumType::Short; } else { V_${name} = pdef::proto::packet_available_commands::_EnumType::Int; }`
       }
     }
   }
