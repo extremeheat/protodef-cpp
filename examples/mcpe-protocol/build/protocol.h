@@ -5770,9 +5770,9 @@ size_t ResourcePackIdVersions(pdef::Stream &stream, const pdef::proto::ResourceP
     len += stream.sizeOfVarInt(obj.name.length());
     len += obj.name.length(); /*name: pstring*/ /*4.1*/
     len += 1; /*0.2*/
-    const pdef::proto::GameRule::Type &type = obj.type; /*0.3*/
+    const pdef::proto::GameRule::Type &V_type = obj.type; /*0.3*/
     len += stream.sizeOfVarInt((int&)obj.type); /*type^: varint*/ /*7.0*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::GameRule::Type::Bool: { /*8.5*/
         len += 1; /*0.2*/
         break;
@@ -5813,9 +5813,9 @@ size_t Itemstates(pdef::Stream &stream, const pdef::proto::Itemstates &obj) {
 }
   size_t ItemExtraDataWithBlockingTick(pdef::Stream &stream, const pdef::proto::ItemExtraDataWithBlockingTick &obj) {
     size_t len = 0;
-    const pdef::proto::ItemExtraDataWithBlockingTick::HasNbt &has_nbt = obj.has_nbt; /*0.3*/
+    const pdef::proto::ItemExtraDataWithBlockingTick::HasNbt &V_has_nbt = obj.has_nbt; /*0.3*/
     len += 2; /*has_nbt^: lu16*/ /*7.0*/
-    switch (has_nbt) { /*8.0*/
+    switch (V_has_nbt) { /*8.0*/
       case pdef::proto::ItemExtraDataWithBlockingTick::HasNbt::True: { /*8.5*/
         EXPECT_OR_BAIL(obj.nbt); const pdef::proto::ItemExtraDataWithBlockingTick::Nbt &v2 = *obj.nbt; /*8.6*/
           len += 1; /*0.2*/
@@ -5825,12 +5825,12 @@ size_t Itemstates(pdef::Stream &stream, const pdef::proto::Itemstates &obj) {
       default: break; /*avoid unhandled case warning*/
     } /*8.8*/
     len += 4; /*1.3*/
-    for (const auto &v2 : obj.can_place_on) {
+    for (const auto &v2 : obj.can_place_on) { /*3.2*/
       len += 2;
       len += v2.length(); /*: pstring*/ /*4.1*/
     }
     len += 4; /*1.3*/
-    for (const auto &v2 : obj.can_destroy) {
+    for (const auto &v2 : obj.can_destroy) { /*3.2*/
       len += 2;
       len += v2.length(); /*: pstring*/ /*4.1*/
     }
@@ -5839,9 +5839,9 @@ size_t Itemstates(pdef::Stream &stream, const pdef::proto::Itemstates &obj) {
   }
   size_t ItemExtraDataWithoutBlockingTick(pdef::Stream &stream, const pdef::proto::ItemExtraDataWithoutBlockingTick &obj) {
     size_t len = 0;
-    const pdef::proto::ItemExtraDataWithoutBlockingTick::HasNbt &has_nbt = obj.has_nbt; /*0.3*/
+    const pdef::proto::ItemExtraDataWithoutBlockingTick::HasNbt &V_has_nbt = obj.has_nbt; /*0.3*/
     len += 2; /*has_nbt^: lu16*/ /*7.0*/
-    switch (has_nbt) { /*8.0*/
+    switch (V_has_nbt) { /*8.0*/
       case pdef::proto::ItemExtraDataWithoutBlockingTick::HasNbt::True: { /*8.5*/
         EXPECT_OR_BAIL(obj.nbt); const pdef::proto::ItemExtraDataWithoutBlockingTick::Nbt &v2 = *obj.nbt; /*8.6*/
           len += 1; /*0.2*/
@@ -5851,12 +5851,12 @@ size_t Itemstates(pdef::Stream &stream, const pdef::proto::Itemstates &obj) {
       default: break; /*avoid unhandled case warning*/
     } /*8.8*/
     len += 4; /*1.3*/
-    for (const auto &v2 : obj.can_place_on) {
+    for (const auto &v2 : obj.can_place_on) { /*3.2*/
       len += 2;
       len += v2.length(); /*: pstring*/ /*4.1*/
     }
     len += 4; /*1.3*/
-    for (const auto &v2 : obj.can_destroy) {
+    for (const auto &v2 : obj.can_destroy) { /*3.2*/
       len += 2;
       len += v2.length(); /*: pstring*/ /*4.1*/
     }
@@ -5864,14 +5864,14 @@ size_t Itemstates(pdef::Stream &stream, const pdef::proto::Itemstates &obj) {
   }
   size_t ItemLegacy(pdef::Stream &stream, const pdef::proto::ItemLegacy &obj) {
     size_t len = 0;
-    const int &network_id = obj.network_id; /*0.1*/
-    if (network_id == 0) { /*8.2*/
+    const int &V_network_id = obj.network_id; /*0.1*/
+    if (V_network_id == 0) { /*8.2*/
     }
     else {
         len += 2; /*0.2*/
         len += stream.sizeOfVarInt(obj.metadata); /*0.2*/
         len += stream.sizeOfZigZagVarInt(obj.block_runtime_id); /*0.2*/
-        if (network_id == pdef::proto::ShieldItemID) { /*8.4*/
+        if (V_network_id == pdef::proto::ShieldItemID) { /*8.4*/
           len += 1; /*0.2*/
         }
         else {
@@ -5882,20 +5882,20 @@ size_t Itemstates(pdef::Stream &stream, const pdef::proto::Itemstates &obj) {
   }
   size_t Item(pdef::Stream &stream, const pdef::proto::Item &obj) {
     size_t len = 0;
-    const int &network_id = obj.network_id; /*0.1*/
-    if (network_id == 0) { /*8.2*/
+    const int &V_network_id = obj.network_id; /*0.1*/
+    if (V_network_id == 0) { /*8.2*/
     }
     else {
         len += 2; /*0.2*/
         len += stream.sizeOfVarInt(obj.metadata); /*0.2*/
-        const uint8_t &has_stack_id = obj.has_stack_id; /*0.1*/
-        if (has_stack_id == 0) { /*8.2*/
+        const uint8_t &V_has_stack_id = obj.has_stack_id; /*0.1*/
+        if (V_has_stack_id == 0) { /*8.2*/
         }
         else {
           len += stream.sizeOfZigZagVarInt(obj.stack_id); /*0.2*/
         }
         len += stream.sizeOfZigZagVarInt(obj.block_runtime_id); /*0.2*/
-        if (network_id == pdef::proto::ShieldItemID) { /*8.4*/
+        if (V_network_id == pdef::proto::ShieldItemID) { /*8.4*/
           len += 1; /*0.2*/
         }
         else {
@@ -5933,11 +5933,11 @@ size_t Itemstates(pdef::Stream &stream, const pdef::proto::Itemstates &obj) {
   }
 size_t MetadataDictionary(pdef::Stream &stream, const pdef::proto::MetadataDictionary &obj) {
   size_t len = 0;
-    const pdef::proto::MetadataDictionary::Key &key = obj.key; /*0.3*/
+    const pdef::proto::MetadataDictionary::Key &V_key = obj.key; /*0.3*/
     len += stream.sizeOfVarInt((int&)obj.key); /*key^: varint*/ /*7.0*/
-    const pdef::proto::MetadataDictionary::Type &type = obj.type; /*0.3*/
+    const pdef::proto::MetadataDictionary::Type &V_type = obj.type; /*0.3*/
     len += stream.sizeOfVarInt((int&)obj.type); /*type^: varint*/ /*7.0*/
-    switch (key) { /*8.0*/
+    switch (V_key) { /*8.0*/
       case pdef::proto::MetadataDictionary::Key::Flags: { /*8.5*/
         int64_t value_MetadataFlags1_val = 0; /*X*/
         value_MetadataFlags1_val |= (int64_t)obj.value_MetadataFlags1.onfire << 0;
@@ -6055,7 +6055,7 @@ size_t MetadataDictionary(pdef::Stream &stream, const pdef::proto::MetadataDicti
         break;
       } /*8.7*/
       default: { /*8.3*/
-        switch (type) { /*8.0*/
+        switch (V_type) { /*8.0*/
           case pdef::proto::MetadataDictionary::Type::Byte: { /*8.5*/
             len += 1; /*0.2*/
             break;
@@ -6156,9 +6156,9 @@ size_t PlayerAttributes(pdef::Stream &stream, const pdef::proto::PlayerAttribute
   }
 size_t TransactionActions(pdef::Stream &stream, const pdef::proto::TransactionActions &obj) {
   size_t len = 0;
-    const pdef::proto::TransactionActions::SourceType &source_type = obj.source_type; /*0.3*/
+    const pdef::proto::TransactionActions::SourceType &V_source_type = obj.source_type; /*0.3*/
     len += stream.sizeOfVarInt((int&)obj.source_type); /*source_type^: varint*/ /*7.0*/
-    switch (source_type) { /*8.0*/
+    switch (V_source_type) { /*8.0*/
       case pdef::proto::TransactionActions::SourceType::Container: { /*8.5*/
           len += stream.sizeOfVarInt((int&)obj.inventory_id); /*inventory_id: varint*/ /*7.0*/
         break;
@@ -6184,8 +6184,8 @@ size_t TransactionActions(pdef::Stream &stream, const pdef::proto::TransactionAc
 }
   size_t TransactionLegacy(pdef::Stream &stream, const pdef::proto::TransactionLegacy &obj) {
     size_t len = 0;
-    const int &legacy_request_id = obj.legacy_request_id; /*0.1*/
-    if (legacy_request_id == 0) { /*8.2*/
+    const int &V_legacy_request_id = obj.legacy_request_id; /*0.1*/
+    if (V_legacy_request_id == 0) { /*8.2*/
     }
     else {
       len += stream.sizeOfVarInt(obj.legacy_transactions.size()); /*1.3*/
@@ -6202,11 +6202,11 @@ size_t TransactionActions(pdef::Stream &stream, const pdef::proto::TransactionAc
   size_t Transaction(pdef::Stream &stream, const pdef::proto::Transaction &obj) {
     size_t len = 0;
     size_t len_8 = pdef::proto::size::TransactionLegacy(stream, obj.legacy); EXPECT_OR_BAIL(len_8); len += len_8; /*legacy*/ /*4.4*/
-    const pdef::proto::Transaction::TransactionType &transaction_type = obj.transaction_type; /*0.3*/
+    const pdef::proto::Transaction::TransactionType &V_transaction_type = obj.transaction_type; /*0.3*/
     len += stream.sizeOfVarInt((int&)obj.transaction_type); /*transaction_type^: varint*/ /*7.0*/
     len += stream.sizeOfVarInt(obj.actions.size()); /*2.4*/
     for (const auto &v : obj.actions) { size_t len_9 = pdef::proto::size::TransactionActions(stream, v); EXPECT_OR_BAIL(len_9); len += len_9; } /*2.5*/
-    switch (transaction_type) { /*8.0*/
+    switch (V_transaction_type) { /*8.0*/
       case pdef::proto::Transaction::TransactionType::Normal: { /*8.5*/
         break;
       } /*8.7*/
@@ -6241,8 +6241,8 @@ size_t TransactionActions(pdef::Stream &stream, const pdef::proto::TransactionAc
   }
   size_t RecipeIngredient(pdef::Stream &stream, const pdef::proto::RecipeIngredient &obj) {
     size_t len = 0;
-    const int &network_id = obj.network_id; /*0.1*/
-    if (network_id == 0) { /*8.2*/
+    const int &V_network_id = obj.network_id; /*0.1*/
+    if (V_network_id == 0) { /*8.2*/
     }
     else {
         len += stream.sizeOfZigZagVarInt(obj.network_data); /*0.2*/
@@ -6269,19 +6269,19 @@ size_t PotionContainerChangeRecipes(pdef::Stream &stream, const pdef::proto::Pot
 }
 size_t Recipes(pdef::Stream &stream, const pdef::proto::Recipes &obj) {
   size_t len = 0;
-    const pdef::proto::Recipes::Type &type = obj.type; /*0.3*/
+    const pdef::proto::Recipes::Type &V_type = obj.type; /*0.3*/
     len += stream.sizeOfZigZagVarInt((int&)obj.type); /*type^: zigzag32*/ /*7.0*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::Recipes::Type::Shapeless: { /*8.5*/
         EXPECT_OR_BAIL(obj.recipe_shapeless_or_shulker_box_or_shapeless_chemistry); const pdef::proto::Recipes::RecipeShapelessOrShulkerBoxOrShapelessChemistry &v2 = *obj.recipe_shapeless_or_shulker_box_or_shapeless_chemistry; /*8.6*/
           len += stream.sizeOfVarInt(v2.recipe_id.length());
           len += v2.recipe_id.length(); /*recipe_id: pstring*/ /*4.1*/
           len += stream.sizeOfVarInt(v2.input.size()); /*1.3*/
-          for (const auto &v5 : v2.input) {
+          for (const auto &v5 : v2.input) { /*3.2*/
             size_t len_16 = pdef::proto::size::RecipeIngredient(stream, v5); EXPECT_OR_BAIL(len_16); len += len_16; /**/ /*4.4*/
           }
           len += stream.sizeOfVarInt(v2.output.size()); /*1.3*/
-          for (const auto &v5 : v2.output) {
+          for (const auto &v5 : v2.output) { /*3.2*/
             size_t len_17 = pdef::proto::size::ItemLegacy(stream, v5); EXPECT_OR_BAIL(len_17); len += len_17; /**/ /*4.4*/
           }
           len += 8; /*0.2*/
@@ -6296,11 +6296,11 @@ size_t Recipes(pdef::Stream &stream, const pdef::proto::Recipes &obj) {
           len += stream.sizeOfVarInt(v2.recipe_id.length());
           len += v2.recipe_id.length(); /*recipe_id: pstring*/ /*4.1*/
           len += stream.sizeOfVarInt(v2.input.size()); /*1.3*/
-          for (const auto &v5 : v2.input) {
+          for (const auto &v5 : v2.input) { /*3.2*/
             size_t len_18 = pdef::proto::size::RecipeIngredient(stream, v5); EXPECT_OR_BAIL(len_18); len += len_18; /**/ /*4.4*/
           }
           len += stream.sizeOfVarInt(v2.output.size()); /*1.3*/
-          for (const auto &v5 : v2.output) {
+          for (const auto &v5 : v2.output) { /*3.2*/
             size_t len_19 = pdef::proto::size::ItemLegacy(stream, v5); EXPECT_OR_BAIL(len_19); len += len_19; /**/ /*4.4*/
           }
           len += 8; /*0.2*/
@@ -6315,11 +6315,11 @@ size_t Recipes(pdef::Stream &stream, const pdef::proto::Recipes &obj) {
           len += stream.sizeOfVarInt(v2.recipe_id.length());
           len += v2.recipe_id.length(); /*recipe_id: pstring*/ /*4.1*/
           len += stream.sizeOfVarInt(v2.input.size()); /*1.3*/
-          for (const auto &v5 : v2.input) {
+          for (const auto &v5 : v2.input) { /*3.2*/
             size_t len_20 = pdef::proto::size::RecipeIngredient(stream, v5); EXPECT_OR_BAIL(len_20); len += len_20; /**/ /*4.4*/
           }
           len += stream.sizeOfVarInt(v2.output.size()); /*1.3*/
-          for (const auto &v5 : v2.output) {
+          for (const auto &v5 : v2.output) { /*3.2*/
             size_t len_21 = pdef::proto::size::ItemLegacy(stream, v5); EXPECT_OR_BAIL(len_21); len += len_21; /**/ /*4.4*/
           }
           len += 8; /*0.2*/
@@ -6333,17 +6333,17 @@ size_t Recipes(pdef::Stream &stream, const pdef::proto::Recipes &obj) {
         EXPECT_OR_BAIL(obj.recipe_shaped_or_shaped_chemistry); const pdef::proto::Recipes::RecipeShapedOrShapedChemistry &v2 = *obj.recipe_shaped_or_shaped_chemistry; /*8.6*/
           len += stream.sizeOfVarInt(v2.recipe_id.length());
           len += v2.recipe_id.length(); /*recipe_id: pstring*/ /*4.1*/
-          const int &width = v2.width; /*0.1*/
-          const int &height = v2.height; /*0.1*/
-          len += stream.sizeOfZigZagVarInt(width); /*1.1*/
+          const int &V_width = v2.width; /*0.1*/
+          const int &V_height = v2.height; /*0.1*/
+          len += stream.sizeOfZigZagVarInt(V_width); /*1.1*/
           for (const auto &v : v2.input) { /*5.1*/
-            len += stream.sizeOfZigZagVarInt(height); /*5.3*/
+            len += stream.sizeOfZigZagVarInt(V_height); /*5.3*/
             for (const auto &v : v) { /*5.10*/
               size_t len_22 = pdef::proto::size::RecipeIngredient(stream, v); EXPECT_OR_BAIL(len_22); len += len_22; /**/ /*4.4*/
             }
           }
           len += stream.sizeOfVarInt(v2.output.size()); /*1.3*/
-          for (const auto &v5 : v2.output) {
+          for (const auto &v5 : v2.output) { /*3.2*/
             size_t len_23 = pdef::proto::size::ItemLegacy(stream, v5); EXPECT_OR_BAIL(len_23); len += len_23; /**/ /*4.4*/
           }
           len += 8; /*0.2*/
@@ -6357,17 +6357,17 @@ size_t Recipes(pdef::Stream &stream, const pdef::proto::Recipes &obj) {
         EXPECT_OR_BAIL(obj.recipe_shaped_or_shaped_chemistry); const pdef::proto::Recipes::RecipeShapedOrShapedChemistry &v2 = *obj.recipe_shaped_or_shaped_chemistry; /*8.6*/
           len += stream.sizeOfVarInt(v2.recipe_id.length());
           len += v2.recipe_id.length(); /*recipe_id: pstring*/ /*4.1*/
-          const int &width = v2.width; /*0.1*/
-          const int &height = v2.height; /*0.1*/
-          len += stream.sizeOfZigZagVarInt(width); /*1.1*/
+          const int &V_width = v2.width; /*0.1*/
+          const int &V_height = v2.height; /*0.1*/
+          len += stream.sizeOfZigZagVarInt(V_width); /*1.1*/
           for (const auto &v : v2.input) { /*5.1*/
-            len += stream.sizeOfZigZagVarInt(height); /*5.3*/
+            len += stream.sizeOfZigZagVarInt(V_height); /*5.3*/
             for (const auto &v : v) { /*5.10*/
               size_t len_24 = pdef::proto::size::RecipeIngredient(stream, v); EXPECT_OR_BAIL(len_24); len += len_24; /**/ /*4.4*/
             }
           }
           len += stream.sizeOfVarInt(v2.output.size()); /*1.3*/
-          for (const auto &v5 : v2.output) {
+          for (const auto &v5 : v2.output) { /*3.2*/
             size_t len_25 = pdef::proto::size::ItemLegacy(stream, v5); EXPECT_OR_BAIL(len_25); len += len_25; /**/ /*4.4*/
           }
           len += 8; /*0.2*/
@@ -6460,7 +6460,7 @@ size_t Recipes(pdef::Stream &stream, const pdef::proto::Recipes &obj) {
       len += stream.sizeOfVarInt(v2.piece_type.length());
       len += v2.piece_type.length(); /*piece_type: pstring*/ /*4.1*/
       len += 4; /*1.3*/
-      for (const auto &v3 : v2.colors) {
+      for (const auto &v3 : v2.colors) { /*3.2*/
         len += stream.sizeOfVarInt(v3.length());
         len += v3.length(); /*: pstring*/ /*4.1*/
       }
@@ -6473,10 +6473,10 @@ size_t Recipes(pdef::Stream &stream, const pdef::proto::Recipes &obj) {
   }
   size_t PlayerRecords(pdef::Stream &stream, const pdef::proto::PlayerRecords &obj) {
     size_t len = 0;
-    const pdef::proto::PlayerRecords::Type &type = obj.type; /*0.3*/
+    const pdef::proto::PlayerRecords::Type &V_type = obj.type; /*0.3*/
     len += 1; /*type^: u8*/ /*7.0*/
-    const int &records_count = obj.records_count; /*0.1*/
-    switch (type) { /*8.0*/
+    const int &V_records_count = obj.records_count; /*0.1*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::PlayerRecords::Type::Add: { /*8.5*/
         EXPECT_OR_BAIL(obj.records_add); const pdef::proto::PlayerRecords::RecordsAdd &v2 = *obj.records_add; /*8.6*/
           len += 8; /*0.2*/
@@ -6500,10 +6500,10 @@ size_t Recipes(pdef::Stream &stream, const pdef::proto::Recipes &obj) {
       } /*8.7*/
       default: break; /*avoid unhandled case warning*/
     } /*8.8*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::PlayerRecords::Type::Add: { /*8.5*/
-        len += stream.sizeOfVarInt(records_count); /*1.1*/
-        for (const auto &v4 : obj.verified) {
+        len += stream.sizeOfVarInt(V_records_count); /*1.1*/
+        for (const auto &v4 : obj.verified) { /*3.2*/
           len += 1; /*0.2*/
         }
         break;
@@ -6523,15 +6523,15 @@ size_t Recipes(pdef::Stream &stream, const pdef::proto::Recipes &obj) {
     len += stream.sizeOfVarInt(obj.cost); /*0.2*/
     len += 4; /*0.2*/
     len += stream.sizeOfVarInt(obj.equip_enchants.size()); /*1.3*/
-    for (const auto &v2 : obj.equip_enchants) {
+    for (const auto &v2 : obj.equip_enchants) { /*3.2*/
       size_t len_32 = pdef::proto::size::Enchant(stream, v2); EXPECT_OR_BAIL(len_32); len += len_32; /**/ /*4.4*/
     }
     len += stream.sizeOfVarInt(obj.held_enchants.size()); /*1.3*/
-    for (const auto &v2 : obj.held_enchants) {
+    for (const auto &v2 : obj.held_enchants) { /*3.2*/
       size_t len_33 = pdef::proto::size::Enchant(stream, v2); EXPECT_OR_BAIL(len_33); len += len_33; /**/ /*4.4*/
     }
     len += stream.sizeOfVarInt(obj.self_enchants.size()); /*1.3*/
-    for (const auto &v2 : obj.self_enchants) {
+    for (const auto &v2 : obj.self_enchants) { /*3.2*/
       size_t len_34 = pdef::proto::size::Enchant(stream, v2); EXPECT_OR_BAIL(len_34); len += len_34; /**/ /*4.4*/
     }
     len += stream.sizeOfVarInt(obj.name.length());
@@ -6551,9 +6551,9 @@ size_t Recipes(pdef::Stream &stream, const pdef::proto::Recipes &obj) {
     len += stream.sizeOfZigZagVarInt(obj.request_id); /*0.2*/
     len += stream.sizeOfVarInt(obj.actions.size()); /*1.3*/
     for (const auto &v2 : obj.actions) { /*5.20*/
-      const pdef::proto::ItemStackRequest::Actions::TypeId &type_id = v2.type_id; /*0.3*/
+      const pdef::proto::ItemStackRequest::Actions::TypeId &V_type_id = v2.type_id; /*0.3*/
       len += 1; /*type_id^: u8*/ /*7.0*/
-      switch (type_id) { /*8.0*/
+      switch (V_type_id) { /*8.0*/
         case pdef::proto::ItemStackRequest::Actions::TypeId::Take: { /*8.5*/
             len += 1; /*0.2*/
             EXPECT_OR_BAIL(v2.source); size_t len_35 = pdef::proto::size::StackRequestSlotInfo(stream, *v2.source); EXPECT_OR_BAIL(len_35); len += len_35; /*source*/ /*4.4*/
@@ -6634,7 +6634,7 @@ size_t Recipes(pdef::Stream &stream, const pdef::proto::Recipes &obj) {
         } /*8.7*/
         case pdef::proto::ItemStackRequest::Actions::TypeId::ResultsDeprecated: { /*8.5*/
             len += stream.sizeOfVarInt(v2.result_items.size()); /*1.3*/
-            for (const auto &v6 : v2.result_items) {
+            for (const auto &v6 : v2.result_items) { /*3.2*/
               size_t len_44 = pdef::proto::size::ItemLegacy(stream, v6); EXPECT_OR_BAIL(len_44); len += len_44; /**/ /*4.4*/
             }
             len += 1; /*0.2*/
@@ -6644,7 +6644,7 @@ size_t Recipes(pdef::Stream &stream, const pdef::proto::Recipes &obj) {
       } /*8.8*/
     }
     len += stream.sizeOfVarInt(obj.custom_names.size()); /*1.3*/
-    for (const auto &v2 : obj.custom_names) {
+    for (const auto &v2 : obj.custom_names) { /*3.2*/
       len += stream.sizeOfVarInt(v2.length());
       len += v2.length(); /*: pstring*/ /*4.1*/
     }
@@ -6652,10 +6652,10 @@ size_t Recipes(pdef::Stream &stream, const pdef::proto::Recipes &obj) {
   }
 size_t ItemStackResponses(pdef::Stream &stream, const pdef::proto::ItemStackResponses &obj) {
   size_t len = 0;
-    const pdef::proto::ItemStackResponses::Status &status = obj.status; /*0.3*/
+    const pdef::proto::ItemStackResponses::Status &V_status = obj.status; /*0.3*/
     len += 1; /*status^: u8*/ /*7.0*/
     len += stream.sizeOfZigZagVarInt(obj.request_id); /*0.2*/
-    switch (status) { /*8.0*/
+    switch (V_status) { /*8.0*/
       case pdef::proto::ItemStackResponses::Status::Ok: { /*8.5*/
           len += stream.sizeOfVarInt(obj.containers.size()); /*1.3*/
           for (const auto &v5 : obj.containers) { /*5.20*/
@@ -6686,12 +6686,12 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
 }
   size_t CommandOrigin(pdef::Stream &stream, const pdef::proto::CommandOrigin &obj) {
     size_t len = 0;
-    const pdef::proto::CommandOrigin::Type &type = obj.type; /*0.3*/
+    const pdef::proto::CommandOrigin::Type &V_type = obj.type; /*0.3*/
     len += stream.sizeOfVarInt((int&)obj.type); /*type^: varint*/ /*7.0*/
     len += 8; /*0.2*/
     len += stream.sizeOfVarInt(obj.request_id.length());
     len += obj.request_id.length(); /*request_id: pstring*/ /*4.1*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::CommandOrigin::Type::DevConsole: { /*8.5*/
         EXPECT_OR_BAIL(obj.player_entity_id); const pdef::proto::CommandOrigin::PlayerEntityId &v2 = *obj.player_entity_id; /*8.6*/
           len += stream.sizeOfZigZagVarLong(v2.player_entity_id); /*0.2*/
@@ -6708,16 +6708,16 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   }
   size_t TrackedObject(pdef::Stream &stream, const pdef::proto::TrackedObject &obj) {
     size_t len = 0;
-    const pdef::proto::TrackedObject::Type &type = obj.type; /*0.3*/
+    const pdef::proto::TrackedObject::Type &V_type = obj.type; /*0.3*/
     len += 4; /*type^: li32*/ /*7.0*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::TrackedObject::Type::Entity: { /*8.5*/
         len += stream.sizeOfZigZagVarLong(obj.entity_unique_id); /*0.2*/
         break;
       } /*8.7*/
       default: break; /*avoid unhandled case warning*/
     } /*8.8*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::TrackedObject::Type::Block: { /*8.5*/
         EXPECT_OR_BAIL(obj.block_position); size_t len_45 = pdef::proto::size::BlockCoordinates(stream, *obj.block_position); EXPECT_OR_BAIL(len_45); len += len_45; /*block_position*/ /*4.4*/
         break;
@@ -6844,7 +6844,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += stream.sizeOfVarInt(obj.game_version.length());
     len += obj.game_version.length(); /*game_version: pstring*/ /*4.1*/
     len += 4; /*1.3*/
-    for (const auto &v2 : obj.experiments) {
+    for (const auto &v2 : obj.experiments) { /*3.2*/
       size_t len_54 = pdef::proto::size::Experiment(stream, v2); EXPECT_OR_BAIL(len_54); len += len_54; /**/ /*4.4*/
     }
     len += 1; /*0.2*/
@@ -6854,7 +6854,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     len += 1; /*response_status: u8*/ /*7.0*/
     len += 2; /*1.3*/
-    for (const auto &v2 : obj.resourcepackids) {
+    for (const auto &v2 : obj.resourcepackids) { /*3.2*/
       len += stream.sizeOfVarInt(v2.length());
       len += v2.length(); /*: pstring*/ /*4.1*/
     }
@@ -6862,10 +6862,10 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   }
   size_t packet_text(pdef::Stream &stream, const pdef::proto::packet_text &obj) {
     size_t len = 0;
-    const pdef::proto::packet_text::Type &type = obj.type; /*0.3*/
+    const pdef::proto::packet_text::Type &V_type = obj.type; /*0.3*/
     len += 1; /*type^: u8*/ /*7.0*/
     len += 1; /*0.2*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::packet_text::Type::Chat: { /*8.5*/
           len += stream.sizeOfVarInt(obj.source_name.length());
           len += obj.source_name.length(); /*source_name: pstring*/ /*4.1*/
@@ -6916,7 +6916,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
           len += stream.sizeOfVarInt(obj.message.length());
           len += obj.message.length(); /*message: pstring*/ /*4.1*/
           len += stream.sizeOfVarInt(obj.parameters.size()); /*1.3*/
-          for (const auto &v5 : obj.parameters) {
+          for (const auto &v5 : obj.parameters) { /*3.2*/
             len += stream.sizeOfVarInt(v5.length());
             len += v5.length(); /*: pstring*/ /*4.1*/
           }
@@ -6926,7 +6926,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
           len += stream.sizeOfVarInt(obj.message.length());
           len += obj.message.length(); /*message: pstring*/ /*4.1*/
           len += stream.sizeOfVarInt(obj.parameters.size()); /*1.3*/
-          for (const auto &v5 : obj.parameters) {
+          for (const auto &v5 : obj.parameters) { /*3.2*/
             len += stream.sizeOfVarInt(v5.length());
             len += v5.length(); /*: pstring*/ /*4.1*/
           }
@@ -6936,7 +6936,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
           len += stream.sizeOfVarInt(obj.message.length());
           len += obj.message.length(); /*message: pstring*/ /*4.1*/
           len += stream.sizeOfVarInt(obj.parameters.size()); /*1.3*/
-          for (const auto &v5 : obj.parameters) {
+          for (const auto &v5 : obj.parameters) { /*3.2*/
             len += stream.sizeOfVarInt(v5.length());
             len += v5.length(); /*: pstring*/ /*4.1*/
           }
@@ -6987,11 +6987,11 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += 1; /*0.2*/
     len += 1; /*0.2*/
     len += stream.sizeOfVarInt(obj.gamerules.size()); /*1.3*/
-    for (const auto &v2 : obj.gamerules) {
+    for (const auto &v2 : obj.gamerules) { /*3.2*/
       size_t len_58 = pdef::proto::size::GameRule(stream, v2); EXPECT_OR_BAIL(len_58); len += len_58; /**/ /*4.4*/
     }
     len += 4; /*1.3*/
-    for (const auto &v2 : obj.experiments) {
+    for (const auto &v2 : obj.experiments) { /*3.2*/
       size_t len_59 = pdef::proto::size::Experiment(stream, v2); EXPECT_OR_BAIL(len_59); len += len_59; /**/ /*4.4*/
     }
     len += 1; /*0.2*/
@@ -7064,7 +7064,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += stream.sizeOfVarInt(obj.custom_stored_permissions); /*0.2*/
     len += 8; /*0.2*/
     len += stream.sizeOfVarInt(obj.links.size()); /*1.3*/
-    for (const auto &v2 : obj.links) {
+    for (const auto &v2 : obj.links) { /*3.2*/
       size_t len_67 = pdef::proto::size::Link(stream, v2); EXPECT_OR_BAIL(len_67); len += len_67; /**/ /*4.4*/
     }
     len += stream.sizeOfVarInt(obj.device_id.length());
@@ -7088,7 +7088,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += stream.sizeOfVarInt(obj.metadata.size()); /*2.4*/
     for (const auto &v : obj.metadata) { size_t len_71 = pdef::proto::size::MetadataDictionary(stream, v); EXPECT_OR_BAIL(len_71); len += len_71; } /*2.5*/
     len += stream.sizeOfVarInt(obj.links.size()); /*1.3*/
-    for (const auto &v2 : obj.links) {
+    for (const auto &v2 : obj.links) { /*3.2*/
       size_t len_72 = pdef::proto::size::Link(stream, v2); EXPECT_OR_BAIL(len_72); len += len_72; /**/ /*4.4*/
     }
     PDEF_SIZE_DBG; return len;
@@ -7131,11 +7131,11 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += 4; /*0.2*/
     len += 4; /*0.2*/
     len += 4; /*0.2*/
-    const pdef::proto::packet_move_player::Mode &mode = obj.mode; /*0.3*/
+    const pdef::proto::packet_move_player::Mode &V_mode = obj.mode; /*0.3*/
     len += 1; /*mode^: u8*/ /*7.0*/
     len += 1; /*0.2*/
     len += stream.sizeOfVarInt(obj.ridden_runtime_id); /*0.2*/
-    switch (mode) { /*8.0*/
+    switch (V_mode) { /*8.0*/
       case pdef::proto::packet_move_player::Mode::Teleport: { /*8.5*/
         EXPECT_OR_BAIL(obj.teleport); const pdef::proto::packet_move_player::Teleport &v2 = *obj.teleport; /*8.6*/
           len += 4; /*cause: li32*/ /*7.0*/
@@ -7256,10 +7256,10 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   }
   size_t packet_interact(pdef::Stream &stream, const pdef::proto::packet_interact &obj) {
     size_t len = 0;
-    const pdef::proto::packet_interact::ActionId &action_id = obj.action_id; /*0.3*/
+    const pdef::proto::packet_interact::ActionId &V_action_id = obj.action_id; /*0.3*/
     len += 1; /*action_id^: u8*/ /*7.0*/
     len += stream.sizeOfVarInt64(obj.target_entity_id); /*0.2*/
-    switch (action_id) { /*8.0*/
+    switch (V_action_id) { /*8.0*/
       case pdef::proto::packet_interact::ActionId::MouseOverEntity: { /*8.5*/
         EXPECT_OR_BAIL(obj.position); size_t len_92 = pdef::proto::size::vec3f(stream, *obj.position); EXPECT_OR_BAIL(len_92); len += len_92; /*position*/ /*4.4*/
         break;
@@ -7338,10 +7338,10 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   }
   size_t packet_animate(pdef::Stream &stream, const pdef::proto::packet_animate &obj) {
     size_t len = 0;
-    const pdef::proto::packet_animate::ActionId &action_id = obj.action_id; /*0.3*/
+    const pdef::proto::packet_animate::ActionId &V_action_id = obj.action_id; /*0.3*/
     len += stream.sizeOfZigZagVarInt((int&)obj.action_id); /*action_id^: zigzag32*/ /*7.0*/
     len += stream.sizeOfVarInt64(obj.runtime_entity_id); /*0.2*/
-    switch (action_id) { /*8.0*/
+    switch (V_action_id) { /*8.0*/
       case pdef::proto::packet_animate::ActionId::RowRight: { /*8.5*/
           len += 4; /*0.2*/
         break;
@@ -7386,7 +7386,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     len += stream.sizeOfVarInt((int&)obj.window_id); /*window_id: varint*/ /*7.0*/
     len += stream.sizeOfVarInt(obj.input.size()); /*1.3*/
-    for (const auto &v2 : obj.input) {
+    for (const auto &v2 : obj.input) { /*3.2*/
       size_t len_103 = pdef::proto::size::Item(stream, v2); EXPECT_OR_BAIL(len_103); len += len_103; /**/ /*4.4*/
     }
     PDEF_SIZE_DBG; return len;
@@ -7414,7 +7414,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += stream.sizeOfVarInt(obj.potion_container_recipes.size()); /*2.4*/
     for (const auto &v : obj.potion_container_recipes) { size_t len_107 = pdef::proto::size::PotionContainerChangeRecipes(stream, v); EXPECT_OR_BAIL(len_107); len += len_107; } /*2.5*/
     len += stream.sizeOfVarInt(obj.material_reducers.size()); /*1.3*/
-    for (const auto &v2 : obj.material_reducers) {
+    for (const auto &v2 : obj.material_reducers) { /*3.2*/
       size_t len_108 = pdef::proto::size::MaterialReducer(stream, v2); EXPECT_OR_BAIL(len_108); len += len_108; /**/ /*4.4*/
     }
     len += 1; /*0.2*/
@@ -7426,11 +7426,11 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += stream.sizeOfZigZagVarInt((int&)obj.recipe_type); /*recipe_type: zigzag32*/ /*7.0*/
     len += 8; /*0.2*/
     len += stream.sizeOfVarInt(obj.input.size()); /*1.3*/
-    for (const auto &v2 : obj.input) {
+    for (const auto &v2 : obj.input) { /*3.2*/
       size_t len_109 = pdef::proto::size::Item(stream, v2); EXPECT_OR_BAIL(len_109); len += len_109; /**/ /*4.4*/
     }
     len += stream.sizeOfVarInt(obj.result.size()); /*1.3*/
-    for (const auto &v2 : obj.result) {
+    for (const auto &v2 : obj.result) { /*3.2*/
       size_t len_110 = pdef::proto::size::Item(stream, v2); EXPECT_OR_BAIL(len_110); len += len_110; /**/ /*4.4*/
     }
     PDEF_SIZE_DBG; return len;
@@ -7491,15 +7491,15 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     len += stream.sizeOfZigZagVarInt(obj.x); /*0.2*/
     len += stream.sizeOfZigZagVarInt(obj.z); /*0.2*/
-    const int &sub_chunk_count = obj.sub_chunk_count; /*0.1*/
-    if (sub_chunk_count == -2) { /*8.2*/
+    const int &V_sub_chunk_count = obj.sub_chunk_count; /*0.1*/
+    if (V_sub_chunk_count == -2) { /*8.2*/
       len += 2; /*0.2*/
     }
-    const bool &cache_enabled = obj.cache_enabled; /*0.1*/
-    if (cache_enabled == true) { /*8.1*/
+    const bool &V_cache_enabled = obj.cache_enabled; /*0.1*/
+    if (V_cache_enabled == true) { /*8.1*/
         EXPECT_OR_BAIL(obj.blobs); const pdef::proto::packet_level_chunk::Blobs &v2 = *obj.blobs; /*8.6*/
         len += stream.sizeOfVarInt(v2.hashes.size()); /*1.3*/
-        for (const auto &v4 : v2.hashes) {
+        for (const auto &v4 : v2.hashes) { /*3.2*/
           len += 8; /*0.2*/
         }
     }
@@ -7562,37 +7562,37 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     update_flags_val |= (int)obj.update_flags.decoration << 2;
     update_flags_val |= (int)obj.update_flags.initialisation << 3;
     len += stream.sizeOfVarInt(update_flags_val); /*update_flags^: bitflags*/ /*4.1*/
-    const pdef::proto::packet_clientbound_map_item_data::update_flags_t &update_flags = obj.update_flags; /*4.7*/
+    const pdef::proto::packet_clientbound_map_item_data::update_flags_t &V_update_flags = obj.update_flags; /*4.7*/
     len += 1; /*0.2*/
     len += 1; /*0.2*/
-    if (update_flags.initialisation == true) { /*8.2*/
+    if (V_update_flags.initialisation == true) { /*8.2*/
       len += stream.sizeOfVarInt(obj.included_in.size()); /*1.3*/
-      for (const auto &v3 : obj.included_in) {
+      for (const auto &v3 : obj.included_in) { /*3.2*/
         len += stream.sizeOfZigZagVarLong(v3); /*0.2*/
       }
     }
-    if ((update_flags.initialisation || update_flags.decoration || update_flags.texture) == true) { /*8.2*/
+    if ((V_update_flags.initialisation || V_update_flags.decoration || V_update_flags.texture) == true) { /*8.2*/
       len += 1; /*0.2*/
     }
-    if (update_flags.decoration == true) { /*8.2*/
+    if (V_update_flags.decoration == true) { /*8.2*/
         EXPECT_OR_BAIL(obj.tracked); const pdef::proto::packet_clientbound_map_item_data::Tracked &v2 = *obj.tracked; /*8.6*/
         len += stream.sizeOfVarInt(v2.objects.size()); /*1.3*/
-        for (const auto &v4 : v2.objects) {
+        for (const auto &v4 : v2.objects) { /*3.2*/
           size_t len_115 = pdef::proto::size::TrackedObject(stream, v4); EXPECT_OR_BAIL(len_115); len += len_115; /**/ /*4.4*/
         }
         len += stream.sizeOfVarInt(v2.decorations.size()); /*1.3*/
-        for (const auto &v4 : v2.decorations) {
+        for (const auto &v4 : v2.decorations) { /*3.2*/
           size_t len_116 = pdef::proto::size::MapDecoration(stream, v4); EXPECT_OR_BAIL(len_116); len += len_116; /**/ /*4.4*/
         }
     }
-    if (update_flags.texture == true) { /*8.2*/
+    if (V_update_flags.texture == true) { /*8.2*/
         EXPECT_OR_BAIL(obj.texture); const pdef::proto::packet_clientbound_map_item_data::Texture &v2 = *obj.texture; /*8.6*/
         len += stream.sizeOfZigZagVarInt(v2.width); /*0.2*/
         len += stream.sizeOfZigZagVarInt(v2.height); /*0.2*/
         len += stream.sizeOfZigZagVarInt(v2.x_offset); /*0.2*/
         len += stream.sizeOfZigZagVarInt(v2.y_offset); /*0.2*/
         len += stream.sizeOfVarInt(v2.pixels.size()); /*1.3*/
-        for (const auto &v4 : v2.pixels) {
+        for (const auto &v4 : v2.pixels) { /*3.2*/
           len += stream.sizeOfVarInt(v4); /*0.2*/
         }
     }
@@ -7621,7 +7621,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   size_t packet_game_rules_changed(pdef::Stream &stream, const pdef::proto::packet_game_rules_changed &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.rules.size()); /*1.3*/
-    for (const auto &v2 : obj.rules) {
+    for (const auto &v2 : obj.rules) { /*3.2*/
       size_t len_118 = pdef::proto::size::GameRule(stream, v2); EXPECT_OR_BAIL(len_118); len += len_118; /**/ /*4.4*/
     }
     PDEF_SIZE_DBG; return len;
@@ -7635,9 +7635,9 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   size_t packet_boss_event(pdef::Stream &stream, const pdef::proto::packet_boss_event &obj) {
     size_t len = 0;
     len += stream.sizeOfZigZagVarLong(obj.boss_entity_id); /*0.2*/
-    const pdef::proto::packet_boss_event::Type &type = obj.type; /*0.3*/
+    const pdef::proto::packet_boss_event::Type &V_type = obj.type; /*0.3*/
     len += stream.sizeOfVarInt((int&)obj.type); /*type^: varint*/ /*7.0*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::packet_boss_event::Type::ShowBar: { /*8.5*/
           len += stream.sizeOfVarInt(obj.title.length());
           len += obj.title.length(); /*title: pstring*/ /*4.1*/
@@ -7691,15 +7691,15 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   }
   size_t packet_available_commands(pdef::Stream &stream, const pdef::proto::packet_available_commands &obj) {
     size_t len = 0;
-    const int &values_len = obj.values_len; /*0.1*/
-    pdef::proto::packet_available_commands::_EnumType _enum_type; if (values_len <= 0xff) { _enum_type = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (values_len <= 0xffff) { _enum_type = pdef::proto::packet_available_commands::_EnumType::Short; } else { _enum_type = pdef::proto::packet_available_commands::_EnumType::Int; } /*_enum_type^: enum_size_based_on_values_len*/ /*4.1*/
-    len += stream.sizeOfVarInt(values_len); /*1.1*/
-    for (const auto &v2 : obj.enum_values) {
+    const int &V_values_len = obj.values_len; /*0.1*/
+    pdef::proto::packet_available_commands::_EnumType V__enum_type; if (V_values_len <= 0xff) { V__enum_type = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (V_values_len <= 0xffff) { V__enum_type = pdef::proto::packet_available_commands::_EnumType::Short; } else { V__enum_type = pdef::proto::packet_available_commands::_EnumType::Int; } /*_enum_type^: enum_size_based_on_values_len*/ /*4.1*/
+    len += stream.sizeOfVarInt(V_values_len); /*1.1*/
+    for (const auto &v2 : obj.enum_values) { /*3.2*/
       len += stream.sizeOfVarInt(v2.length());
       len += v2.length(); /*: pstring*/ /*4.1*/
     }
     len += stream.sizeOfVarInt(obj.suffixes.size()); /*1.3*/
-    for (const auto &v2 : obj.suffixes) {
+    for (const auto &v2 : obj.suffixes) { /*3.2*/
       len += stream.sizeOfVarInt(v2.length());
       len += v2.length(); /*: pstring*/ /*4.1*/
     }
@@ -7707,13 +7707,13 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     for (const auto &v2 : obj.enums) { /*5.20*/
       len += stream.sizeOfVarInt(v2.name.length());
       len += v2.name.length(); /*name: pstring*/ /*4.1*/
-      if (_enum_type == pdef::proto::packet_available_commands::_EnumType::Byte) { /*8.5*/
+      if (V__enum_type == pdef::proto::packet_available_commands::_EnumType::Byte) { /*8.5*/
         len += 1; /*0.2*/
       }
-      else if (_enum_type == pdef::proto::packet_available_commands::_EnumType::Short) { /*8.5*/
+      else if (V__enum_type == pdef::proto::packet_available_commands::_EnumType::Short) { /*8.5*/
         len += 2; /*0.2*/
       }
-      else if (_enum_type == pdef::proto::packet_available_commands::_EnumType::Int) { /*8.5*/
+      else if (V__enum_type == pdef::proto::packet_available_commands::_EnumType::Int) { /*8.5*/
         len += 4; /*0.2*/
       }
     }
@@ -7744,7 +7744,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
       len += stream.sizeOfVarInt(v2.name.length());
       len += v2.name.length(); /*name: pstring*/ /*4.1*/
       len += stream.sizeOfVarInt(v2.values.size()); /*1.3*/
-      for (const auto &v3 : v2.values) {
+      for (const auto &v3 : v2.values) { /*3.2*/
         len += stream.sizeOfVarInt(v3.length());
         len += v3.length(); /*: pstring*/ /*4.1*/
       }
@@ -7770,14 +7770,14 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   }
   size_t packet_command_block_update(pdef::Stream &stream, const pdef::proto::packet_command_block_update &obj) {
     size_t len = 0;
-    const bool &is_block = obj.is_block; /*0.1*/
-    if (is_block == true) { /*8.1*/
+    const bool &V_is_block = obj.is_block; /*0.1*/
+    if (V_is_block == true) { /*8.1*/
         EXPECT_OR_BAIL(obj.position); size_t len_120 = pdef::proto::size::BlockCoordinates(stream, *obj.position); EXPECT_OR_BAIL(len_120); len += len_120; /*position*/ /*4.4*/
         len += stream.sizeOfVarInt((int&)obj.mode); /*mode: varint*/ /*7.0*/
         len += 1; /*0.2*/
         len += 1; /*0.2*/
     }
-    else if (is_block == false) { /*8.1*/
+    else if (V_is_block == false) { /*8.1*/
         len += stream.sizeOfVarInt64(obj.minecart_entity_runtime_id); /*0.2*/
     }
     len += stream.sizeOfVarInt(obj.command.length());
@@ -7794,7 +7794,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   size_t packet_command_output(pdef::Stream &stream, const pdef::proto::packet_command_output &obj) {
     size_t len = 0;
     size_t len_121 = pdef::proto::size::CommandOrigin(stream, obj.origin); EXPECT_OR_BAIL(len_121); len += len_121; /*origin*/ /*4.4*/
-    const pdef::proto::packet_command_output::OutputType &output_type = obj.output_type; /*0.3*/
+    const pdef::proto::packet_command_output::OutputType &V_output_type = obj.output_type; /*0.3*/
     len += 1; /*output_type^: i8*/ /*7.0*/
     len += stream.sizeOfVarInt(obj.success_count); /*0.2*/
     len += stream.sizeOfVarInt(obj.output.size()); /*1.3*/
@@ -7803,12 +7803,12 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
       len += stream.sizeOfVarInt(v2.message_id.length());
       len += v2.message_id.length(); /*message_id: pstring*/ /*4.1*/
       len += stream.sizeOfVarInt(v2.parameters.size()); /*1.3*/
-      for (const auto &v3 : v2.parameters) {
+      for (const auto &v3 : v2.parameters) { /*3.2*/
         len += stream.sizeOfVarInt(v3.length());
         len += v3.length(); /*: pstring*/ /*4.1*/
       }
     }
-    switch (output_type) { /*8.0*/
+    switch (V_output_type) { /*8.0*/
       case pdef::proto::packet_command_output::OutputType::DataSet: { /*8.5*/
         len += stream.sizeOfVarInt(obj.data_set.length());
         len += obj.data_set.length(); /*data_set: pstring*/ /*4.1*/
@@ -7940,7 +7940,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   size_t packet_purchase_receipt(pdef::Stream &stream, const pdef::proto::packet_purchase_receipt &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.receipts.size()); /*1.3*/
-    for (const auto &v2 : obj.receipts) {
+    for (const auto &v2 : obj.receipts) { /*3.2*/
       len += stream.sizeOfVarInt(v2.length());
       len += v2.length(); /*: pstring*/ /*4.1*/
     }
@@ -7975,10 +7975,10 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   }
   size_t packet_book_edit(pdef::Stream &stream, const pdef::proto::packet_book_edit &obj) {
     size_t len = 0;
-    const pdef::proto::packet_book_edit::Type &type = obj.type; /*0.3*/
+    const pdef::proto::packet_book_edit::Type &V_type = obj.type; /*0.3*/
     len += 1; /*type^: u8*/ /*7.0*/
     len += 1; /*0.2*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::packet_book_edit::Type::ReplacePage: { /*8.5*/
           len += 1; /*0.2*/
           len += stream.sizeOfVarInt(obj.text.length());
@@ -8100,7 +8100,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   }
   size_t packet_set_score(pdef::Stream &stream, const pdef::proto::packet_set_score &obj) {
     size_t len = 0;
-    const pdef::proto::packet_set_score::Action &action = obj.action; /*0.3*/
+    const pdef::proto::packet_set_score::Action &V_action = obj.action; /*0.3*/
     len += 1; /*action^: u8*/ /*7.0*/
     len += stream.sizeOfVarInt(obj.entries.size()); /*1.3*/
     for (const auto &v2 : obj.entries) { /*5.20*/
@@ -8108,11 +8108,11 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
       len += stream.sizeOfVarInt(v2.objective_name.length());
       len += v2.objective_name.length(); /*objective_name: pstring*/ /*4.1*/
       len += 4; /*0.2*/
-      switch (action) { /*8.0*/
+      switch (V_action) { /*8.0*/
         case pdef::proto::packet_set_score::Action::Change: { /*8.5*/
-            const pdef::proto::packet_set_score::Entries::EntryType &entry_type = v2.entry_type; /*0.3*/
+            const pdef::proto::packet_set_score::Entries::EntryType &V_entry_type = v2.entry_type; /*0.3*/
             len += 1; /*entry_type^: i8*/ /*7.0*/
-            switch (entry_type) { /*8.0*/
+            switch (V_entry_type) { /*8.0*/
               case pdef::proto::packet_set_score::Entries::EntryType::Player: { /*8.5*/
                 len += stream.sizeOfZigZagVarLong(v2.entity_unique_id); /*0.2*/
                 break;
@@ -8123,7 +8123,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
               } /*8.7*/
               default: break; /*avoid unhandled case warning*/
             } /*8.8*/
-            switch (entry_type) { /*8.0*/
+            switch (V_entry_type) { /*8.0*/
               case pdef::proto::packet_set_score::Entries::EntryType::FakePlayer: { /*8.5*/
                 len += stream.sizeOfVarInt(v2.custom_name.length());
                 len += v2.custom_name.length(); /*custom_name: pstring*/ /*4.1*/
@@ -8175,35 +8175,35 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     if (obj.flags.teleport) flags_val |= 128;
     if (obj.flags.force_move) flags_val |= 256;
     len += 2; /*flags^: bitflags*/ /*4.1*/
-    const pdef::proto::packet_move_entity_delta::flags_t &flags = obj.flags; /*4.7*/
-    if (flags.has_x == true) { /*8.2*/
+    const pdef::proto::packet_move_entity_delta::flags_t &V_flags = obj.flags; /*4.7*/
+    if (V_flags.has_x == true) { /*8.2*/
       len += 4; /*0.2*/
     }
-    if (flags.has_y == true) { /*8.2*/
+    if (V_flags.has_y == true) { /*8.2*/
       len += 4; /*0.2*/
     }
-    if (flags.has_z == true) { /*8.2*/
+    if (V_flags.has_z == true) { /*8.2*/
       len += 4; /*0.2*/
     }
-    if (flags.has_rot_x == true) { /*8.2*/
+    if (V_flags.has_rot_x == true) { /*8.2*/
       len += 1; /*0.2*/
     }
-    if (flags.has_rot_y == true) { /*8.2*/
+    if (V_flags.has_rot_y == true) { /*8.2*/
       len += 1; /*0.2*/
     }
-    if (flags.has_rot_z == true) { /*8.2*/
+    if (V_flags.has_rot_z == true) { /*8.2*/
       len += 1; /*0.2*/
     }
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_set_scoreboard_identity(pdef::Stream &stream, const pdef::proto::packet_set_scoreboard_identity &obj) {
     size_t len = 0;
-    const pdef::proto::packet_set_scoreboard_identity::Action &action = obj.action; /*0.3*/
+    const pdef::proto::packet_set_scoreboard_identity::Action &V_action = obj.action; /*0.3*/
     len += 1; /*action^: i8*/ /*7.0*/
     len += stream.sizeOfVarInt(obj.entries.size()); /*1.3*/
     for (const auto &v2 : obj.entries) { /*5.20*/
       len += stream.sizeOfZigZagVarLong(v2.scoreboard_id); /*0.2*/
-      switch (action) { /*8.0*/
+      switch (V_action) { /*8.0*/
         case pdef::proto::packet_set_scoreboard_identity::Action::RegisterIdentity: { /*8.5*/
           len += stream.sizeOfZigZagVarLong(v2.entity_unique_id); /*0.2*/
           break;
@@ -8223,7 +8223,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += stream.sizeOfVarInt(obj.enum_type.length());
     len += obj.enum_type.length(); /*enum_type: pstring*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.options.size()); /*1.3*/
-    for (const auto &v2 : obj.options) {
+    for (const auto &v2 : obj.options) { /*3.2*/
       len += stream.sizeOfVarInt(v2.length());
       len += v2.length(); /*: pstring*/ /*4.1*/
     }
@@ -8356,8 +8356,8 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.name.length());
     len += obj.name.length(); /*name: pstring*/ /*4.1*/
-    const bool &success = obj.success; /*0.1*/
-    if (success == true) { /*8.1*/
+    const bool &V_success = obj.success; /*0.1*/
+    if (V_success == true) { /*8.1*/
       len += 1; /*0.2*/
     }
     len += 1; /*response_type: u8*/ /*7.0*/
@@ -8370,14 +8370,14 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   }
   size_t packet_client_cache_blob_status(pdef::Stream &stream, const pdef::proto::packet_client_cache_blob_status &obj) {
     size_t len = 0;
-    const int &misses = obj.misses; /*0.1*/
-    const int &haves = obj.haves; /*0.1*/
-    len += stream.sizeOfVarInt(misses); /*1.1*/
-    for (const auto &v2 : obj.missing) {
+    const int &V_misses = obj.misses; /*0.1*/
+    const int &V_haves = obj.haves; /*0.1*/
+    len += stream.sizeOfVarInt(V_misses); /*1.1*/
+    for (const auto &v2 : obj.missing) { /*3.2*/
       len += 8; /*0.2*/
     }
-    len += stream.sizeOfVarInt(haves); /*1.1*/
-    for (const auto &v2 : obj.have) {
+    len += stream.sizeOfVarInt(V_haves); /*1.1*/
+    for (const auto &v2 : obj.have) { /*3.2*/
       len += 8; /*0.2*/
     }
     PDEF_SIZE_DBG; return len;
@@ -8385,7 +8385,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   size_t packet_client_cache_miss_response(pdef::Stream &stream, const pdef::proto::packet_client_cache_miss_response &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.blobs.size()); /*1.3*/
-    for (const auto &v2 : obj.blobs) {
+    for (const auto &v2 : obj.blobs) { /*3.2*/
       size_t len_135 = pdef::proto::size::Blob(stream, v2); EXPECT_OR_BAIL(len_135); len += len_135; /**/ /*4.4*/
     }
     PDEF_SIZE_DBG; return len;
@@ -8402,20 +8402,20 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += obj.post_process_filter.length(); /*post_process_filter: pstring*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.screenshot_border_path.length());
     len += obj.screenshot_border_path.length(); /*screenshot_border_path: pstring*/ /*4.1*/
-    const bool &has_agent_capabilities = obj.has_agent_capabilities; /*0.1*/
-    if (has_agent_capabilities == true) { /*8.1*/
+    const bool &V_has_agent_capabilities = obj.has_agent_capabilities; /*0.1*/
+    if (V_has_agent_capabilities == true) { /*8.1*/
         EXPECT_OR_BAIL(obj.agent_capabilities); const pdef::proto::packet_education_settings::AgentCapabilities &v2 = *obj.agent_capabilities; /*8.6*/
         len += 1; /*0.2*/
         len += 1; /*0.2*/
     }
-    const bool &HasOverrideURI = obj.HasOverrideURI; /*0.1*/
-    if (HasOverrideURI == true) { /*8.1*/
+    const bool &V_HasOverrideURI = obj.HasOverrideURI; /*0.1*/
+    if (V_HasOverrideURI == true) { /*8.1*/
       len += stream.sizeOfVarInt(obj.OverrideURI.length());
       len += obj.OverrideURI.length(); /*OverrideURI: pstring*/ /*4.1*/
     }
     len += 1; /*0.2*/
-    const bool &has_external_link_settings = obj.has_external_link_settings; /*0.1*/
-    if (has_external_link_settings == true) { /*8.1*/
+    const bool &V_has_external_link_settings = obj.has_external_link_settings; /*0.1*/
+    if (V_has_external_link_settings == true) { /*8.1*/
         EXPECT_OR_BAIL(obj.external_link_settings); const pdef::proto::packet_education_settings::ExternalLinkSettings &v2 = *obj.external_link_settings; /*8.6*/
         len += 1; /*0.2*/
         len += stream.sizeOfVarInt(v2.url.length());
@@ -8508,12 +8508,12 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     input_data_val |= (int64_t)obj.input_data.block_action << 35;
     input_data_val |= (int64_t)obj.input_data.item_stack_request << 36;
     len += stream.sizeOfVarInt64(input_data_val); /*input_data^: bitflags*/ /*4.1*/
-    const pdef::proto::packet_player_auth_input::input_data_t &input_data = obj.input_data; /*4.7*/
+    const pdef::proto::packet_player_auth_input::input_data_t &V_input_data = obj.input_data; /*4.7*/
     len += stream.sizeOfVarInt((int&)obj.input_mode); /*input_mode: varint*/ /*7.0*/
-    const pdef::proto::packet_player_auth_input::PlayMode &play_mode = obj.play_mode; /*0.3*/
+    const pdef::proto::packet_player_auth_input::PlayMode &V_play_mode = obj.play_mode; /*0.3*/
     len += stream.sizeOfVarInt((int&)obj.play_mode); /*play_mode^: varint*/ /*7.0*/
     len += stream.sizeOfZigZagVarInt((int&)obj.interaction_model); /*interaction_model: zigzag32*/ /*7.0*/
-    switch (play_mode) { /*8.0*/
+    switch (V_play_mode) { /*8.0*/
       case pdef::proto::packet_player_auth_input::PlayMode::Reality: { /*8.5*/
         EXPECT_OR_BAIL(obj.gaze_direction); size_t len_139 = pdef::proto::size::vec3f(stream, *obj.gaze_direction); EXPECT_OR_BAIL(len_139); len += len_139; /*gaze_direction*/ /*4.4*/
         break;
@@ -8522,38 +8522,38 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     } /*8.8*/
     len += stream.sizeOfVarInt64(obj.tick); /*0.2*/
     size_t len_140 = pdef::proto::size::vec3f(stream, obj.delta); EXPECT_OR_BAIL(len_140); len += len_140; /*delta*/ /*4.4*/
-    if (input_data.item_interact == true) { /*8.2*/
+    if (V_input_data.item_interact == true) { /*8.2*/
         EXPECT_OR_BAIL(obj.transaction); const pdef::proto::packet_player_auth_input::Transaction &v2 = *obj.transaction; /*8.6*/
         size_t len_141 = pdef::proto::size::TransactionLegacy(stream, v2.legacy); EXPECT_OR_BAIL(len_141); len += len_141; /*legacy*/ /*4.4*/
         len += stream.sizeOfVarInt(v2.actions.size()); /*2.4*/
         for (const auto &v : v2.actions) { size_t len_142 = pdef::proto::size::TransactionActions(stream, v); EXPECT_OR_BAIL(len_142); len += len_142; } /*2.5*/
         size_t len_143 = pdef::proto::size::TransactionUseItem(stream, v2.data); EXPECT_OR_BAIL(len_143); len += len_143; /*data*/ /*4.4*/
     }
-    if (input_data.item_stack_request == true) { /*8.2*/
+    if (V_input_data.item_stack_request == true) { /*8.2*/
       EXPECT_OR_BAIL(obj.item_stack_request); size_t len_144 = pdef::proto::size::ItemStackRequest(stream, *obj.item_stack_request); EXPECT_OR_BAIL(len_144); len += len_144; /*item_stack_request*/ /*4.4*/
     }
-    if (input_data.block_action == true) { /*8.2*/
+    if (V_input_data.block_action == true) { /*8.2*/
       len += stream.sizeOfZigZagVarInt(obj.block_action.size()); /*1.3*/
       for (const auto &v3 : obj.block_action) { /*5.20*/
-        const pdef::proto::packet_player_auth_input::BlockAction::Action &action = v3.action; /*0.3*/
+        const pdef::proto::packet_player_auth_input::BlockAction::Action &V_action = v3.action; /*0.3*/
         len += stream.sizeOfZigZagVarInt((int&)v3.action); /*action^: zigzag32*/ /*7.0*/
-        if (action == pdef::proto::packet_player_auth_input::BlockAction::Action::StartBreak) { /*8.5*/
+        if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::StartBreak) { /*8.5*/
             EXPECT_OR_BAIL(v3.position); size_t len_145 = pdef::proto::size::vec3i(stream, *v3.position); EXPECT_OR_BAIL(len_145); len += len_145; /*position*/ /*4.4*/
             len += stream.sizeOfZigZagVarInt(v3.face); /*0.2*/
         }
-        else if (action == pdef::proto::packet_player_auth_input::BlockAction::Action::AbortBreak) { /*8.5*/
+        else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::AbortBreak) { /*8.5*/
             EXPECT_OR_BAIL(v3.position); size_t len_146 = pdef::proto::size::vec3i(stream, *v3.position); EXPECT_OR_BAIL(len_146); len += len_146; /*position*/ /*4.4*/
             len += stream.sizeOfZigZagVarInt(v3.face); /*0.2*/
         }
-        else if (action == pdef::proto::packet_player_auth_input::BlockAction::Action::CrackBreak) { /*8.5*/
+        else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::CrackBreak) { /*8.5*/
             EXPECT_OR_BAIL(v3.position); size_t len_147 = pdef::proto::size::vec3i(stream, *v3.position); EXPECT_OR_BAIL(len_147); len += len_147; /*position*/ /*4.4*/
             len += stream.sizeOfZigZagVarInt(v3.face); /*0.2*/
         }
-        else if (action == pdef::proto::packet_player_auth_input::BlockAction::Action::PredictBreak) { /*8.5*/
+        else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::PredictBreak) { /*8.5*/
             EXPECT_OR_BAIL(v3.position); size_t len_148 = pdef::proto::size::vec3i(stream, *v3.position); EXPECT_OR_BAIL(len_148); len += len_148; /*position*/ /*4.4*/
             len += stream.sizeOfZigZagVarInt(v3.face); /*0.2*/
         }
-        else if (action == pdef::proto::packet_player_auth_input::BlockAction::Action::ContinueBreak) { /*8.5*/
+        else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::ContinueBreak) { /*8.5*/
             EXPECT_OR_BAIL(v3.position); size_t len_149 = pdef::proto::size::vec3i(stream, *v3.position); EXPECT_OR_BAIL(len_149); len += len_149; /*position*/ /*4.4*/
             len += stream.sizeOfZigZagVarInt(v3.face); /*0.2*/
         }
@@ -8573,7 +8573,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   size_t packet_player_enchant_options(pdef::Stream &stream, const pdef::proto::packet_player_enchant_options &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.options.size()); /*1.3*/
-    for (const auto &v2 : obj.options) {
+    for (const auto &v2 : obj.options) { /*3.2*/
       size_t len_151 = pdef::proto::size::EnchantOption(stream, v2); EXPECT_OR_BAIL(len_151); len += len_151; /**/ /*4.4*/
     }
     PDEF_SIZE_DBG; return len;
@@ -8581,7 +8581,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   size_t packet_item_stack_request(pdef::Stream &stream, const pdef::proto::packet_item_stack_request &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.requests.size()); /*1.3*/
-    for (const auto &v2 : obj.requests) {
+    for (const auto &v2 : obj.requests) { /*3.2*/
       size_t len_152 = pdef::proto::size::ItemStackRequest(stream, v2); EXPECT_OR_BAIL(len_152); len += len_152; /**/ /*4.4*/
     }
     PDEF_SIZE_DBG; return len;
@@ -8600,17 +8600,17 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     if (obj.type.legs) type_val |= 4;
     if (obj.type.feet) type_val |= 8;
     len += 1; /*type^: bitflags*/ /*4.1*/
-    const pdef::proto::packet_player_armor_damage::type_t &type = obj.type; /*4.7*/
-    if (type.head == true) { /*8.2*/
+    const pdef::proto::packet_player_armor_damage::type_t &V_type = obj.type; /*4.7*/
+    if (V_type.head == true) { /*8.2*/
       len += stream.sizeOfZigZagVarInt(obj.helmet_damage); /*0.2*/
     }
-    if (type.chest == true) { /*8.2*/
+    if (V_type.chest == true) { /*8.2*/
       len += stream.sizeOfZigZagVarInt(obj.chestplate_damage); /*0.2*/
     }
-    if (type.legs == true) { /*8.2*/
+    if (V_type.legs == true) { /*8.2*/
       len += stream.sizeOfZigZagVarInt(obj.leggings_damage); /*0.2*/
     }
-    if (type.feet == true) { /*8.2*/
+    if (V_type.feet == true) { /*8.2*/
       len += stream.sizeOfZigZagVarInt(obj.boots_damage); /*0.2*/
     }
     PDEF_SIZE_DBG; return len;
@@ -8625,7 +8625,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     len += stream.sizeOfVarInt64(obj.player_id); /*0.2*/
     len += stream.sizeOfVarInt(obj.emote_pieces.size()); /*1.3*/
-    for (const auto &v2 : obj.emote_pieces) {
+    for (const auto &v2 : obj.emote_pieces) { /*3.2*/
       len += 8; /*0.2*/
     }
     PDEF_SIZE_DBG; return len;
@@ -8672,7 +8672,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += obj.controller.length(); /*controller: pstring*/ /*4.1*/
     len += 4; /*0.2*/
     len += stream.sizeOfVarInt(obj.runtime_entity_ids.size()); /*1.3*/
-    for (const auto &v2 : obj.runtime_entity_ids) {
+    for (const auto &v2 : obj.runtime_entity_ids) { /*3.2*/
       len += stream.sizeOfVarInt64(v2); /*0.2*/
     }
     PDEF_SIZE_DBG; return len;
@@ -8688,7 +8688,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   size_t packet_player_fog(pdef::Stream &stream, const pdef::proto::packet_player_fog &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.stack.size()); /*1.3*/
-    for (const auto &v2 : obj.stack) {
+    for (const auto &v2 : obj.stack) { /*3.2*/
       len += stream.sizeOfVarInt(v2.length());
       len += v2.length(); /*: pstring*/ /*4.1*/
     }
@@ -8717,9 +8717,9 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   }
   size_t packet_debug_renderer(pdef::Stream &stream, const pdef::proto::packet_debug_renderer &obj) {
     size_t len = 0;
-    const pdef::proto::packet_debug_renderer::Type &type = obj.type; /*0.3*/
+    const pdef::proto::packet_debug_renderer::Type &V_type = obj.type; /*0.3*/
     len += 4; /*type^: li32*/ /*7.0*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::packet_debug_renderer::Type::Clear: { /*8.5*/
         break;
       } /*8.7*/
@@ -8801,11 +8801,11 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += stream.sizeOfZigZagVarInt(obj.y); /*0.2*/
     len += stream.sizeOfZigZagVarInt(obj.z); /*0.2*/
     len += stream.sizeOfVarInt(obj.blocks.size()); /*1.3*/
-    for (const auto &v2 : obj.blocks) {
+    for (const auto &v2 : obj.blocks) { /*3.2*/
       size_t len_160 = pdef::proto::size::BlockUpdate(stream, v2); EXPECT_OR_BAIL(len_160); len += len_160; /**/ /*4.4*/
     }
     len += stream.sizeOfVarInt(obj.extra.size()); /*1.3*/
-    for (const auto &v2 : obj.extra) {
+    for (const auto &v2 : obj.extra) { /*3.2*/
       size_t len_161 = pdef::proto::size::BlockUpdate(stream, v2); EXPECT_OR_BAIL(len_161); len += len_161; /**/ /*4.4*/
     }
     PDEF_SIZE_DBG; return len;
@@ -8823,9 +8823,9 @@ size_t SubChunkEntryWithoutCaching(pdef::Stream &stream, const pdef::proto::SubC
     len += 1; /*result: u8*/ /*7.0*/
     len += stream.sizeOfVarInt(obj.payload.size());
     len += obj.payload.size(); /*payload: buffer*/ /*4.1*/
-    const pdef::proto::SubChunkEntryWithoutCaching::HeightmapType &heightmap_type = obj.heightmap_type; /*0.3*/
+    const pdef::proto::SubChunkEntryWithoutCaching::HeightmapType &V_heightmap_type = obj.heightmap_type; /*0.3*/
     len += 1; /*heightmap_type^: u8*/ /*7.0*/
-    switch (heightmap_type) { /*8.0*/
+    switch (V_heightmap_type) { /*8.0*/
       case pdef::proto::SubChunkEntryWithoutCaching::HeightmapType::HasData: { /*8.5*/
         len += 256; /*heightmap: buffer*/ /*4.1*/
         break;
@@ -8839,9 +8839,9 @@ size_t SubChunkEntryWithCaching(pdef::Stream &stream, const pdef::proto::SubChun
     len += 1; /*0.2*/
     len += 1; /*0.2*/
     len += 1; /*0.2*/
-    const pdef::proto::SubChunkEntryWithCaching::Result &result = obj.result; /*0.3*/
+    const pdef::proto::SubChunkEntryWithCaching::Result &V_result = obj.result; /*0.3*/
     len += 1; /*result^: u8*/ /*7.0*/
-    switch (result) { /*8.0*/
+    switch (V_result) { /*8.0*/
       case pdef::proto::SubChunkEntryWithCaching::Result::SuccessAllAir: { /*8.5*/
         break;
       } /*8.7*/
@@ -8851,9 +8851,9 @@ size_t SubChunkEntryWithCaching(pdef::Stream &stream, const pdef::proto::SubChun
         break;
       } /*8.7*/
     } /*8.8*/
-    const pdef::proto::SubChunkEntryWithCaching::HeightmapType &heightmap_type = obj.heightmap_type; /*0.3*/
+    const pdef::proto::SubChunkEntryWithCaching::HeightmapType &V_heightmap_type = obj.heightmap_type; /*0.3*/
     len += 1; /*heightmap_type^: u8*/ /*7.0*/
-    switch (heightmap_type) { /*8.0*/
+    switch (V_heightmap_type) { /*8.0*/
       case pdef::proto::SubChunkEntryWithCaching::HeightmapType::HasData: { /*8.5*/
         len += 256; /*heightmap: buffer*/ /*4.1*/
         break;
@@ -8865,14 +8865,14 @@ size_t SubChunkEntryWithCaching(pdef::Stream &stream, const pdef::proto::SubChun
 }
   size_t packet_subchunk(pdef::Stream &stream, const pdef::proto::packet_subchunk &obj) {
     size_t len = 0;
-    const bool &cache_enabled = obj.cache_enabled; /*0.1*/
+    const bool &V_cache_enabled = obj.cache_enabled; /*0.1*/
     len += stream.sizeOfZigZagVarInt(obj.dimension); /*0.2*/
     size_t len_162 = pdef::proto::size::vec3i(stream, obj.origin); EXPECT_OR_BAIL(len_162); len += len_162; /*origin*/ /*4.4*/
-    if (cache_enabled == true) { /*8.1*/
+    if (V_cache_enabled == true) { /*8.1*/
       len += 4; /*2.4*/
       for (const auto &v : obj.entries_SubChunkEntryWithCaching) { size_t len_163 = pdef::proto::size::SubChunkEntryWithCaching(stream, v); EXPECT_OR_BAIL(len_163); len += len_163; } /*2.5*/
     }
-    else if (cache_enabled == false) { /*8.1*/
+    else if (V_cache_enabled == false) { /*8.1*/
       len += 4; /*2.4*/
       for (const auto &v : obj.entries_SubChunkEntryWithoutCaching) { size_t len_164 = pdef::proto::size::SubChunkEntryWithoutCaching(stream, v); EXPECT_OR_BAIL(len_164); len += len_164; } /*2.5*/
     }
@@ -8993,9 +8993,9 @@ size_t SubChunkEntryWithCaching(pdef::Stream &stream, const pdef::proto::SubChun
   }
   size_t mcpe_packet(pdef::Stream &stream, const pdef::proto::mcpe_packet &obj) {
     size_t len = 0;
-    const pdef::proto::mcpe_packet::Name &name = obj.name; /*0.3*/
+    const pdef::proto::mcpe_packet::Name &V_name = obj.name; /*0.3*/
     len += stream.sizeOfVarInt((int&)obj.name); /*name^: varint*/ /*7.0*/
-    switch (name) { /*8.0*/
+    switch (V_name) { /*8.0*/
       case pdef::proto::mcpe_packet::Name::Login: { /*8.5*/
         EXPECT_OR_BAIL(obj.params_packet_login); size_t len_166 = pdef::proto::size::packet_login(stream, *obj.params_packet_login); EXPECT_OR_BAIL(len_166); len += len_166; /*params_packet_login*/ /*4.4*/
         break;
@@ -10014,9 +10014,9 @@ bool ResourcePackIdVersions(pdef::Stream &stream, const pdef::proto::ResourcePac
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.name.length());
     WRITE_OR_BAIL(writeString, obj.name); /*name: pstring*/ /*4.2*/
     WRITE_OR_BAIL(writeBool, (bool)obj.editable); /*0.4*/
-    const pdef::proto::GameRule::Type &type = obj.type; /*0.3*/
+    const pdef::proto::GameRule::Type &V_type = obj.type; /*0.3*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)(int&)obj.type); /*7.1*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::GameRule::Type::Bool: { /*8.5*/
         WRITE_OR_BAIL(writeBool, (bool)obj.value_bool); /*0.4*/
         break;
@@ -10057,9 +10057,9 @@ bool Itemstates(pdef::Stream &stream, const pdef::proto::Itemstates &obj, bool a
 }
   bool ItemExtraDataWithBlockingTick(pdef::Stream &stream, const pdef::proto::ItemExtraDataWithBlockingTick &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::ItemExtraDataWithBlockingTick(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const pdef::proto::ItemExtraDataWithBlockingTick::HasNbt &has_nbt = obj.has_nbt; /*0.3*/
+    const pdef::proto::ItemExtraDataWithBlockingTick::HasNbt &V_has_nbt = obj.has_nbt; /*0.3*/
     WRITE_OR_BAIL(writeUShortLE, (uint16_t)(uint16_t&)obj.has_nbt); /*7.1*/
-    switch (has_nbt) { /*8.0*/
+    switch (V_has_nbt) { /*8.0*/
       case pdef::proto::ItemExtraDataWithBlockingTick::HasNbt::True: { /*8.5*/
         const pdef::proto::ItemExtraDataWithBlockingTick::Nbt &v2 = *obj.nbt; /*8.5*/
           WRITE_OR_BAIL(writeUByte, (uint8_t)v2.version); /*0.4*/
@@ -10083,9 +10083,9 @@ bool Itemstates(pdef::Stream &stream, const pdef::proto::Itemstates &obj, bool a
   }
   bool ItemExtraDataWithoutBlockingTick(pdef::Stream &stream, const pdef::proto::ItemExtraDataWithoutBlockingTick &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::ItemExtraDataWithoutBlockingTick(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const pdef::proto::ItemExtraDataWithoutBlockingTick::HasNbt &has_nbt = obj.has_nbt; /*0.3*/
+    const pdef::proto::ItemExtraDataWithoutBlockingTick::HasNbt &V_has_nbt = obj.has_nbt; /*0.3*/
     WRITE_OR_BAIL(writeUShortLE, (uint16_t)(uint16_t&)obj.has_nbt); /*7.1*/
-    switch (has_nbt) { /*8.0*/
+    switch (V_has_nbt) { /*8.0*/
       case pdef::proto::ItemExtraDataWithoutBlockingTick::HasNbt::True: { /*8.5*/
         const pdef::proto::ItemExtraDataWithoutBlockingTick::Nbt &v2 = *obj.nbt; /*8.5*/
           WRITE_OR_BAIL(writeUByte, (uint8_t)v2.version); /*0.4*/
@@ -10108,15 +10108,15 @@ bool Itemstates(pdef::Stream &stream, const pdef::proto::Itemstates &obj, bool a
   }
   bool ItemLegacy(pdef::Stream &stream, const pdef::proto::ItemLegacy &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::ItemLegacy(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const int &network_id = obj.network_id; /*0.1*/
+    const int &V_network_id = obj.network_id; /*0.1*/
     WRITE_OR_BAIL(writeZigZagVarInt, (int)obj.network_id); /*0.4*/
-    if (network_id == 0) { /*8.2*/
+    if (V_network_id == 0) { /*8.2*/
     }
     else {
         WRITE_OR_BAIL(writeUShortLE, (uint16_t)obj.count); /*0.4*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.metadata); /*0.4*/
         WRITE_OR_BAIL(writeZigZagVarInt, (int)obj.block_runtime_id); /*0.4*/
-        if (network_id == pdef::proto::ShieldItemID) { /*8.4*/
+        if (V_network_id == pdef::proto::ShieldItemID) { /*8.4*/
           WRITE_OR_BAIL(writeByte, (int8_t)obj.extra__ShieldItemID); /*0.4*/
         }
         else {
@@ -10127,22 +10127,22 @@ bool Itemstates(pdef::Stream &stream, const pdef::proto::Itemstates &obj, bool a
   }
   bool Item(pdef::Stream &stream, const pdef::proto::Item &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::Item(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const int &network_id = obj.network_id; /*0.1*/
+    const int &V_network_id = obj.network_id; /*0.1*/
     WRITE_OR_BAIL(writeZigZagVarInt, (int)obj.network_id); /*0.4*/
-    if (network_id == 0) { /*8.2*/
+    if (V_network_id == 0) { /*8.2*/
     }
     else {
         WRITE_OR_BAIL(writeUShortLE, (uint16_t)obj.count); /*0.4*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.metadata); /*0.4*/
-        const uint8_t &has_stack_id = obj.has_stack_id; /*0.1*/
+        const uint8_t &V_has_stack_id = obj.has_stack_id; /*0.1*/
         WRITE_OR_BAIL(writeUByte, (uint8_t)obj.has_stack_id); /*0.4*/
-        if (has_stack_id == 0) { /*8.2*/
+        if (V_has_stack_id == 0) { /*8.2*/
         }
         else {
           WRITE_OR_BAIL(writeZigZagVarInt, (int)obj.stack_id); /*0.4*/
         }
         WRITE_OR_BAIL(writeZigZagVarInt, (int)obj.block_runtime_id); /*0.4*/
-        if (network_id == pdef::proto::ShieldItemID) { /*8.4*/
+        if (V_network_id == pdef::proto::ShieldItemID) { /*8.4*/
           WRITE_OR_BAIL(writeByte, (int8_t)obj.extra__ShieldItemID); /*0.4*/
         }
         else {
@@ -10180,11 +10180,11 @@ bool Itemstates(pdef::Stream &stream, const pdef::proto::Itemstates &obj, bool a
   }
 bool MetadataDictionary(pdef::Stream &stream, const pdef::proto::MetadataDictionary &obj, bool allocate = true) {
   if (allocate) { auto writeSize = pdef::proto::size::MetadataDictionary(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const pdef::proto::MetadataDictionary::Key &key = obj.key; /*0.3*/
+    const pdef::proto::MetadataDictionary::Key &V_key = obj.key; /*0.3*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)(int&)obj.key); /*7.1*/
-    const pdef::proto::MetadataDictionary::Type &type = obj.type; /*0.3*/
+    const pdef::proto::MetadataDictionary::Type &V_type = obj.type; /*0.3*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)(int&)obj.type); /*7.1*/
-    switch (key) { /*8.0*/
+    switch (V_key) { /*8.0*/
       case pdef::proto::MetadataDictionary::Key::Flags: { /*8.5*/
         int64_t value_MetadataFlags1_val = 0;
         value_MetadataFlags1_val |= (int64_t)obj.value_MetadataFlags1.onfire << 0;
@@ -10302,7 +10302,7 @@ bool MetadataDictionary(pdef::Stream &stream, const pdef::proto::MetadataDiction
         break;
       } /*8.7*/
       default: { /*8.3*/
-        switch (type) { /*8.0*/
+        switch (V_type) { /*8.0*/
           case pdef::proto::MetadataDictionary::Type::Byte: { /*8.5*/
             WRITE_OR_BAIL(writeByte, (int8_t)obj.value_i8); /*0.4*/
             break;
@@ -10403,9 +10403,9 @@ bool PlayerAttributes(pdef::Stream &stream, const pdef::proto::PlayerAttributes 
   }
 bool TransactionActions(pdef::Stream &stream, const pdef::proto::TransactionActions &obj, bool allocate = true) {
   if (allocate) { auto writeSize = pdef::proto::size::TransactionActions(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const pdef::proto::TransactionActions::SourceType &source_type = obj.source_type; /*0.3*/
+    const pdef::proto::TransactionActions::SourceType &V_source_type = obj.source_type; /*0.3*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)(int&)obj.source_type); /*7.1*/
-    switch (source_type) { /*8.0*/
+    switch (V_source_type) { /*8.0*/
       case pdef::proto::TransactionActions::SourceType::Container: { /*8.5*/
           WRITE_OR_BAIL(writeUnsignedVarInt, (int)(int&)obj.inventory_id); /*7.1*/
         break;
@@ -10431,9 +10431,9 @@ bool TransactionActions(pdef::Stream &stream, const pdef::proto::TransactionActi
 }
   bool TransactionLegacy(pdef::Stream &stream, const pdef::proto::TransactionLegacy &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::TransactionLegacy(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const int &legacy_request_id = obj.legacy_request_id; /*0.1*/
+    const int &V_legacy_request_id = obj.legacy_request_id; /*0.1*/
     WRITE_OR_BAIL(writeZigZagVarInt, (int)obj.legacy_request_id); /*0.4*/
-    if (legacy_request_id == 0) { /*8.2*/
+    if (V_legacy_request_id == 0) { /*8.2*/
     }
     else {
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.legacy_transactions.size()); /*1.4*/
@@ -10450,11 +10450,11 @@ bool TransactionActions(pdef::Stream &stream, const pdef::proto::TransactionActi
   bool Transaction(pdef::Stream &stream, const pdef::proto::Transaction &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::Transaction(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
     pdef::proto::encode::TransactionLegacy(stream, obj.legacy); /*TransactionLegacy*/ /*4.5*/
-    const pdef::proto::Transaction::TransactionType &transaction_type = obj.transaction_type; /*0.3*/
+    const pdef::proto::Transaction::TransactionType &V_transaction_type = obj.transaction_type; /*0.3*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)(int&)obj.transaction_type); /*7.1*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.actions.size()); /*2.1*/
     for (const auto &v : obj.actions) { pdef::proto::encode::TransactionActions(stream, v); } /*2.2*/
-    switch (transaction_type) { /*8.0*/
+    switch (V_transaction_type) { /*8.0*/
       case pdef::proto::Transaction::TransactionType::Normal: { /*8.5*/
         break;
       } /*8.7*/
@@ -10489,9 +10489,9 @@ bool TransactionActions(pdef::Stream &stream, const pdef::proto::TransactionActi
   }
   bool RecipeIngredient(pdef::Stream &stream, const pdef::proto::RecipeIngredient &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::RecipeIngredient(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const int &network_id = obj.network_id; /*0.1*/
+    const int &V_network_id = obj.network_id; /*0.1*/
     WRITE_OR_BAIL(writeZigZagVarInt, (int)obj.network_id); /*0.4*/
-    if (network_id == 0) { /*8.2*/
+    if (V_network_id == 0) { /*8.2*/
     }
     else {
         WRITE_OR_BAIL(writeZigZagVarInt, (int)obj.network_data); /*0.4*/
@@ -10518,9 +10518,9 @@ bool PotionContainerChangeRecipes(pdef::Stream &stream, const pdef::proto::Potio
 }
 bool Recipes(pdef::Stream &stream, const pdef::proto::Recipes &obj, bool allocate = true) {
   if (allocate) { auto writeSize = pdef::proto::size::Recipes(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const pdef::proto::Recipes::Type &type = obj.type; /*0.3*/
+    const pdef::proto::Recipes::Type &V_type = obj.type; /*0.3*/
     WRITE_OR_BAIL(writeZigZagVarInt, (int)(int&)obj.type); /*7.1*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::Recipes::Type::Shapeless: { /*8.5*/
         const pdef::proto::Recipes::RecipeShapelessOrShulkerBoxOrShapelessChemistry &v2 = *obj.recipe_shapeless_or_shulker_box_or_shapeless_chemistry; /*8.5*/
           WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.recipe_id.length());
@@ -10582,12 +10582,12 @@ bool Recipes(pdef::Stream &stream, const pdef::proto::Recipes &obj, bool allocat
         const pdef::proto::Recipes::RecipeShapedOrShapedChemistry &v2 = *obj.recipe_shaped_or_shaped_chemistry; /*8.5*/
           WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.recipe_id.length());
           WRITE_OR_BAIL(writeString, v2.recipe_id); /*recipe_id: pstring*/ /*4.2*/
-          const int &width = v2.width; /*0.1*/
+          const int &V_width = v2.width; /*0.1*/
           WRITE_OR_BAIL(writeZigZagVarInt, (int)v2.width); /*0.4*/
-          const int &height = v2.height; /*0.1*/
+          const int &V_height = v2.height; /*0.1*/
           WRITE_OR_BAIL(writeZigZagVarInt, (int)v2.height); /*0.4*/
           for (const auto &v : v2.input) { /*5.1*/
-            WRITE_OR_BAIL(writeZigZagVarInt, (int)height); /*5.4*/
+            WRITE_OR_BAIL(writeZigZagVarInt, (int)V_height); /*5.4*/
             for (const auto &v : v) { /*5.10*/
               pdef::proto::encode::RecipeIngredient(stream, v); /*RecipeIngredient*/ /*4.5*/
             }
@@ -10607,12 +10607,12 @@ bool Recipes(pdef::Stream &stream, const pdef::proto::Recipes &obj, bool allocat
         const pdef::proto::Recipes::RecipeShapedOrShapedChemistry &v2 = *obj.recipe_shaped_or_shaped_chemistry; /*8.5*/
           WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.recipe_id.length());
           WRITE_OR_BAIL(writeString, v2.recipe_id); /*recipe_id: pstring*/ /*4.2*/
-          const int &width = v2.width; /*0.1*/
+          const int &V_width = v2.width; /*0.1*/
           WRITE_OR_BAIL(writeZigZagVarInt, (int)v2.width); /*0.4*/
-          const int &height = v2.height; /*0.1*/
+          const int &V_height = v2.height; /*0.1*/
           WRITE_OR_BAIL(writeZigZagVarInt, (int)v2.height); /*0.4*/
           for (const auto &v : v2.input) { /*5.1*/
-            WRITE_OR_BAIL(writeZigZagVarInt, (int)height); /*5.4*/
+            WRITE_OR_BAIL(writeZigZagVarInt, (int)V_height); /*5.4*/
             for (const auto &v : v) { /*5.10*/
               pdef::proto::encode::RecipeIngredient(stream, v); /*RecipeIngredient*/ /*4.5*/
             }
@@ -10724,11 +10724,11 @@ bool Recipes(pdef::Stream &stream, const pdef::proto::Recipes &obj, bool allocat
   }
   bool PlayerRecords(pdef::Stream &stream, const pdef::proto::PlayerRecords &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::PlayerRecords(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const pdef::proto::PlayerRecords::Type &type = obj.type; /*0.3*/
+    const pdef::proto::PlayerRecords::Type &V_type = obj.type; /*0.3*/
     WRITE_OR_BAIL(writeUByte, (uint8_t)(uint8_t&)obj.type); /*7.1*/
-    const int &records_count = obj.records_count; /*0.1*/
+    const int &V_records_count = obj.records_count; /*0.1*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.records_count); /*0.4*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::PlayerRecords::Type::Add: { /*8.5*/
         const pdef::proto::PlayerRecords::RecordsAdd &v2 = *obj.records_add; /*8.5*/
           WRITE_OR_BAIL(writeULongBE, (uint64_t)v2.uuid); /*0.4*/
@@ -10752,7 +10752,7 @@ bool Recipes(pdef::Stream &stream, const pdef::proto::Recipes &obj, bool allocat
       } /*8.7*/
       default: break; /*avoid unhandled case warning*/
     } /*8.8*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::PlayerRecords::Type::Add: { /*8.5*/
         for (const auto &v4 : obj.verified) { /*3.1*/
           WRITE_OR_BAIL(writeBool, (bool)v4); /*0.4*/
@@ -10802,9 +10802,9 @@ bool Recipes(pdef::Stream &stream, const pdef::proto::Recipes &obj, bool allocat
     WRITE_OR_BAIL(writeZigZagVarInt, (int)obj.request_id); /*0.4*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.actions.size()); /*1.4*/
     for (const auto &v2 : obj.actions) { /*5.20*/
-      const pdef::proto::ItemStackRequest::Actions::TypeId &type_id = v2.type_id; /*0.3*/
+      const pdef::proto::ItemStackRequest::Actions::TypeId &V_type_id = v2.type_id; /*0.3*/
       WRITE_OR_BAIL(writeUByte, (uint8_t)(uint8_t&)v2.type_id); /*7.1*/
-      switch (type_id) { /*8.0*/
+      switch (V_type_id) { /*8.0*/
         case pdef::proto::ItemStackRequest::Actions::TypeId::Take: { /*8.5*/
             WRITE_OR_BAIL(writeUByte, (uint8_t)v2.count); /*0.4*/
             pdef::proto::encode::StackRequestSlotInfo(stream, *v2.source); /*StackRequestSlotInfo*/ /*4.5*/
@@ -10903,10 +10903,10 @@ bool Recipes(pdef::Stream &stream, const pdef::proto::Recipes &obj, bool allocat
   }
 bool ItemStackResponses(pdef::Stream &stream, const pdef::proto::ItemStackResponses &obj, bool allocate = true) {
   if (allocate) { auto writeSize = pdef::proto::size::ItemStackResponses(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const pdef::proto::ItemStackResponses::Status &status = obj.status; /*0.3*/
+    const pdef::proto::ItemStackResponses::Status &V_status = obj.status; /*0.3*/
     WRITE_OR_BAIL(writeUByte, (uint8_t)(uint8_t&)obj.status); /*7.1*/
     WRITE_OR_BAIL(writeZigZagVarInt, (int)obj.request_id); /*0.4*/
-    switch (status) { /*8.0*/
+    switch (V_status) { /*8.0*/
       case pdef::proto::ItemStackResponses::Status::Ok: { /*8.5*/
           WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.containers.size()); /*1.4*/
           for (const auto &v5 : obj.containers) { /*5.20*/
@@ -10937,12 +10937,12 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
 }
   bool CommandOrigin(pdef::Stream &stream, const pdef::proto::CommandOrigin &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::CommandOrigin(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const pdef::proto::CommandOrigin::Type &type = obj.type; /*0.3*/
+    const pdef::proto::CommandOrigin::Type &V_type = obj.type; /*0.3*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)(int&)obj.type); /*7.1*/
     WRITE_OR_BAIL(writeULongBE, (uint64_t)obj.uuid); /*0.4*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.request_id.length());
     WRITE_OR_BAIL(writeString, obj.request_id); /*request_id: pstring*/ /*4.2*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::CommandOrigin::Type::DevConsole: { /*8.5*/
         const pdef::proto::CommandOrigin::PlayerEntityId &v2 = *obj.player_entity_id; /*8.5*/
           WRITE_OR_BAIL(writeZigZagVarLong, (int64_t)v2.player_entity_id); /*0.4*/
@@ -10959,16 +10959,16 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
   }
   bool TrackedObject(pdef::Stream &stream, const pdef::proto::TrackedObject &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::TrackedObject(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const pdef::proto::TrackedObject::Type &type = obj.type; /*0.3*/
+    const pdef::proto::TrackedObject::Type &V_type = obj.type; /*0.3*/
     WRITE_OR_BAIL(writeIntLE, (int32_t)(int32_t&)obj.type); /*7.1*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::TrackedObject::Type::Entity: { /*8.5*/
         WRITE_OR_BAIL(writeZigZagVarLong, (int64_t)obj.entity_unique_id); /*0.4*/
         break;
       } /*8.7*/
       default: break; /*avoid unhandled case warning*/
     } /*8.8*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::TrackedObject::Type::Block: { /*8.5*/
         pdef::proto::encode::BlockCoordinates(stream, *obj.block_position); /*BlockCoordinates*/ /*4.5*/
         break;
@@ -11113,10 +11113,10 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
   }
   bool packet_text(pdef::Stream &stream, const pdef::proto::packet_text &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::packet_text(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const pdef::proto::packet_text::Type &type = obj.type; /*0.3*/
+    const pdef::proto::packet_text::Type &V_type = obj.type; /*0.3*/
     WRITE_OR_BAIL(writeUByte, (uint8_t)(uint8_t&)obj.type); /*7.1*/
     WRITE_OR_BAIL(writeBool, (bool)obj.needs_translation); /*0.4*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::packet_text::Type::Chat: { /*8.5*/
           WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.source_name.length());
           WRITE_OR_BAIL(writeString, obj.source_name); /*source_name: pstring*/ /*4.2*/
@@ -11382,11 +11382,11 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
     WRITE_OR_BAIL(writeFloatLE, (float)obj.pitch); /*0.4*/
     WRITE_OR_BAIL(writeFloatLE, (float)obj.yaw); /*0.4*/
     WRITE_OR_BAIL(writeFloatLE, (float)obj.head_yaw); /*0.4*/
-    const pdef::proto::packet_move_player::Mode &mode = obj.mode; /*0.3*/
+    const pdef::proto::packet_move_player::Mode &V_mode = obj.mode; /*0.3*/
     WRITE_OR_BAIL(writeUByte, (uint8_t)(uint8_t&)obj.mode); /*7.1*/
     WRITE_OR_BAIL(writeBool, (bool)obj.on_ground); /*0.4*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.ridden_runtime_id); /*0.4*/
-    switch (mode) { /*8.0*/
+    switch (V_mode) { /*8.0*/
       case pdef::proto::packet_move_player::Mode::Teleport: { /*8.5*/
         const pdef::proto::packet_move_player::Teleport &v2 = *obj.teleport; /*8.5*/
           WRITE_OR_BAIL(writeIntLE, (int32_t)(int32_t&)v2.cause); /*7.1*/
@@ -11507,10 +11507,10 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
   }
   bool packet_interact(pdef::Stream &stream, const pdef::proto::packet_interact &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::packet_interact(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const pdef::proto::packet_interact::ActionId &action_id = obj.action_id; /*0.3*/
+    const pdef::proto::packet_interact::ActionId &V_action_id = obj.action_id; /*0.3*/
     WRITE_OR_BAIL(writeUByte, (uint8_t)(uint8_t&)obj.action_id); /*7.1*/
     WRITE_OR_BAIL(writeUnsignedVarLong, (int64_t)obj.target_entity_id); /*0.4*/
-    switch (action_id) { /*8.0*/
+    switch (V_action_id) { /*8.0*/
       case pdef::proto::packet_interact::ActionId::MouseOverEntity: { /*8.5*/
         pdef::proto::encode::vec3f(stream, *obj.position); /*vec3f*/ /*4.5*/
         break;
@@ -11589,10 +11589,10 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
   }
   bool packet_animate(pdef::Stream &stream, const pdef::proto::packet_animate &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::packet_animate(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const pdef::proto::packet_animate::ActionId &action_id = obj.action_id; /*0.3*/
+    const pdef::proto::packet_animate::ActionId &V_action_id = obj.action_id; /*0.3*/
     WRITE_OR_BAIL(writeZigZagVarInt, (int)(int&)obj.action_id); /*7.1*/
     WRITE_OR_BAIL(writeUnsignedVarLong, (int64_t)obj.runtime_entity_id); /*0.4*/
-    switch (action_id) { /*8.0*/
+    switch (V_action_id) { /*8.0*/
       case pdef::proto::packet_animate::ActionId::RowRight: { /*8.5*/
           WRITE_OR_BAIL(writeFloatLE, (float)obj.boat_rowing_time); /*0.4*/
         break;
@@ -11742,14 +11742,14 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
     if (allocate) { auto writeSize = pdef::proto::size::packet_level_chunk(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
     WRITE_OR_BAIL(writeZigZagVarInt, (int)obj.x); /*0.4*/
     WRITE_OR_BAIL(writeZigZagVarInt, (int)obj.z); /*0.4*/
-    const int &sub_chunk_count = obj.sub_chunk_count; /*0.1*/
+    const int &V_sub_chunk_count = obj.sub_chunk_count; /*0.1*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.sub_chunk_count); /*0.4*/
-    if (sub_chunk_count == -2) { /*8.2*/
+    if (V_sub_chunk_count == -2) { /*8.2*/
       WRITE_OR_BAIL(writeUShortLE, (uint16_t)obj.highest_subchunk_count); /*0.4*/
     }
-    const bool &cache_enabled = obj.cache_enabled; /*0.1*/
+    const bool &V_cache_enabled = obj.cache_enabled; /*0.1*/
     WRITE_OR_BAIL(writeBool, (bool)obj.cache_enabled); /*0.4*/
-    if (cache_enabled == true) { /*8.1*/
+    if (V_cache_enabled == true) { /*8.1*/
         const pdef::proto::packet_level_chunk::Blobs &v2 = *obj.blobs; /*8.5*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.hashes.size()); /*1.4*/
         for (const auto &v4 : v2.hashes) { /*3.1*/
@@ -11815,19 +11815,19 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
     update_flags_val |= (int)obj.update_flags.decoration << 2;
     update_flags_val |= (int)obj.update_flags.initialisation << 3;
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)update_flags_val) /*update_flags: bitflags*/ /*4.2*/
-    const pdef::proto::packet_clientbound_map_item_data::update_flags_t &update_flags = obj.update_flags; /*4.7*/
+    const pdef::proto::packet_clientbound_map_item_data::update_flags_t &V_update_flags = obj.update_flags; /*4.7*/
     WRITE_OR_BAIL(writeUByte, (uint8_t)obj.dimension); /*0.4*/
     WRITE_OR_BAIL(writeBool, (bool)obj.locked); /*0.4*/
-    if (update_flags.initialisation == true) { /*8.2*/
+    if (V_update_flags.initialisation == true) { /*8.2*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.included_in.size()); /*1.4*/
       for (const auto &v3 : obj.included_in) { /*3.1*/
         WRITE_OR_BAIL(writeZigZagVarLong, (int64_t)v3); /*0.4*/
       }
     }
-    if ((update_flags.initialisation || update_flags.decoration || update_flags.texture) == true) { /*8.2*/
+    if ((V_update_flags.initialisation || V_update_flags.decoration || V_update_flags.texture) == true) { /*8.2*/
       WRITE_OR_BAIL(writeUByte, (uint8_t)obj.scale); /*0.4*/
     }
-    if (update_flags.decoration == true) { /*8.2*/
+    if (V_update_flags.decoration == true) { /*8.2*/
         const pdef::proto::packet_clientbound_map_item_data::Tracked &v2 = *obj.tracked; /*8.5*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.objects.size()); /*1.4*/
         for (const auto &v4 : v2.objects) { /*3.1*/
@@ -11838,7 +11838,7 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
           pdef::proto::encode::MapDecoration(stream, v4); /*MapDecoration*/ /*4.5*/
         }
     }
-    if (update_flags.texture == true) { /*8.2*/
+    if (V_update_flags.texture == true) { /*8.2*/
         const pdef::proto::packet_clientbound_map_item_data::Texture &v2 = *obj.texture; /*8.5*/
         WRITE_OR_BAIL(writeZigZagVarInt, (int)v2.width); /*0.4*/
         WRITE_OR_BAIL(writeZigZagVarInt, (int)v2.height); /*0.4*/
@@ -11888,9 +11888,9 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
   bool packet_boss_event(pdef::Stream &stream, const pdef::proto::packet_boss_event &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::packet_boss_event(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
     WRITE_OR_BAIL(writeZigZagVarLong, (int64_t)obj.boss_entity_id); /*0.4*/
-    const pdef::proto::packet_boss_event::Type &type = obj.type; /*0.3*/
+    const pdef::proto::packet_boss_event::Type &V_type = obj.type; /*0.3*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)(int&)obj.type); /*7.1*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::packet_boss_event::Type::ShowBar: { /*8.5*/
           WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.title.length());
           WRITE_OR_BAIL(writeString, obj.title); /*title: pstring*/ /*4.2*/
@@ -11944,9 +11944,9 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
   }
   bool packet_available_commands(pdef::Stream &stream, const pdef::proto::packet_available_commands &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::packet_available_commands(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const int &values_len = obj.values_len; /*0.1*/
+    const int &V_values_len = obj.values_len; /*0.1*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.values_len); /*0.4*/
-    pdef::proto::packet_available_commands::_EnumType _enum_type; if (values_len <= 0xff) { _enum_type = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (values_len <= 0xffff) { _enum_type = pdef::proto::packet_available_commands::_EnumType::Short; } else { _enum_type = pdef::proto::packet_available_commands::_EnumType::Int; } /*_enum_type: enum_size_based_on_values_len*/ /*4.2*/
+    pdef::proto::packet_available_commands::_EnumType V__enum_type; if (V_values_len <= 0xff) { V__enum_type = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (V_values_len <= 0xffff) { V__enum_type = pdef::proto::packet_available_commands::_EnumType::Short; } else { V__enum_type = pdef::proto::packet_available_commands::_EnumType::Int; } /*_enum_type: enum_size_based_on_values_len*/ /*4.2*/
     for (const auto &v2 : obj.enum_values) { /*3.1*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.length());
       WRITE_OR_BAIL(writeString, v2); /*: pstring*/ /*4.2*/
@@ -11960,13 +11960,13 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
     for (const auto &v2 : obj.enums) { /*5.20*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.name.length());
       WRITE_OR_BAIL(writeString, v2.name); /*name: pstring*/ /*4.2*/
-      if (_enum_type == pdef::proto::packet_available_commands::_EnumType::Byte) { /*8.5*/
+      if (V__enum_type == pdef::proto::packet_available_commands::_EnumType::Byte) { /*8.5*/
         WRITE_OR_BAIL(writeUByte, (uint8_t)v2.values_u8); /*0.4*/
       }
-      else if (_enum_type == pdef::proto::packet_available_commands::_EnumType::Short) { /*8.5*/
+      else if (V__enum_type == pdef::proto::packet_available_commands::_EnumType::Short) { /*8.5*/
         WRITE_OR_BAIL(writeUShortLE, (uint16_t)v2.values_lu16); /*0.4*/
       }
-      else if (_enum_type == pdef::proto::packet_available_commands::_EnumType::Int) { /*8.5*/
+      else if (V__enum_type == pdef::proto::packet_available_commands::_EnumType::Int) { /*8.5*/
         WRITE_OR_BAIL(writeUIntLE, (uint32_t)v2.values_lu32); /*0.4*/
       }
     }
@@ -12029,15 +12029,15 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
   }
   bool packet_command_block_update(pdef::Stream &stream, const pdef::proto::packet_command_block_update &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::packet_command_block_update(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const bool &is_block = obj.is_block; /*0.1*/
+    const bool &V_is_block = obj.is_block; /*0.1*/
     WRITE_OR_BAIL(writeBool, (bool)obj.is_block); /*0.4*/
-    if (is_block == true) { /*8.1*/
+    if (V_is_block == true) { /*8.1*/
         pdef::proto::encode::BlockCoordinates(stream, *obj.position); /*BlockCoordinates*/ /*4.5*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)(int&)obj.mode); /*7.1*/
         WRITE_OR_BAIL(writeBool, (bool)obj.needs_redstone); /*0.4*/
         WRITE_OR_BAIL(writeBool, (bool)obj.conditional); /*0.4*/
     }
-    else if (is_block == false) { /*8.1*/
+    else if (V_is_block == false) { /*8.1*/
         WRITE_OR_BAIL(writeUnsignedVarLong, (int64_t)obj.minecart_entity_runtime_id); /*0.4*/
     }
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.command.length());
@@ -12054,7 +12054,7 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
   bool packet_command_output(pdef::Stream &stream, const pdef::proto::packet_command_output &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::packet_command_output(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
     pdef::proto::encode::CommandOrigin(stream, obj.origin); /*CommandOrigin*/ /*4.5*/
-    const pdef::proto::packet_command_output::OutputType &output_type = obj.output_type; /*0.3*/
+    const pdef::proto::packet_command_output::OutputType &V_output_type = obj.output_type; /*0.3*/
     WRITE_OR_BAIL(writeByte, (int8_t)(int8_t&)obj.output_type); /*7.1*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.success_count); /*0.4*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.output.size()); /*1.4*/
@@ -12068,7 +12068,7 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
         WRITE_OR_BAIL(writeString, v3); /*: pstring*/ /*4.2*/
       }
     }
-    switch (output_type) { /*8.0*/
+    switch (V_output_type) { /*8.0*/
       case pdef::proto::packet_command_output::OutputType::DataSet: { /*8.5*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.data_set.length());
         WRITE_OR_BAIL(writeString, obj.data_set); /*data_set: pstring*/ /*4.2*/
@@ -12235,10 +12235,10 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
   }
   bool packet_book_edit(pdef::Stream &stream, const pdef::proto::packet_book_edit &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::packet_book_edit(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const pdef::proto::packet_book_edit::Type &type = obj.type; /*0.3*/
+    const pdef::proto::packet_book_edit::Type &V_type = obj.type; /*0.3*/
     WRITE_OR_BAIL(writeUByte, (uint8_t)(uint8_t&)obj.type); /*7.1*/
     WRITE_OR_BAIL(writeUByte, (uint8_t)obj.slot); /*0.4*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::packet_book_edit::Type::ReplacePage: { /*8.5*/
           WRITE_OR_BAIL(writeUByte, (uint8_t)obj.page_number); /*0.4*/
           WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.text.length());
@@ -12360,7 +12360,7 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
   }
   bool packet_set_score(pdef::Stream &stream, const pdef::proto::packet_set_score &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::packet_set_score(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const pdef::proto::packet_set_score::Action &action = obj.action; /*0.3*/
+    const pdef::proto::packet_set_score::Action &V_action = obj.action; /*0.3*/
     WRITE_OR_BAIL(writeUByte, (uint8_t)(uint8_t&)obj.action); /*7.1*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.entries.size()); /*1.4*/
     for (const auto &v2 : obj.entries) { /*5.20*/
@@ -12368,11 +12368,11 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.objective_name.length());
       WRITE_OR_BAIL(writeString, v2.objective_name); /*objective_name: pstring*/ /*4.2*/
       WRITE_OR_BAIL(writeIntLE, (int32_t)v2.score); /*0.4*/
-      switch (action) { /*8.0*/
+      switch (V_action) { /*8.0*/
         case pdef::proto::packet_set_score::Action::Change: { /*8.5*/
-            const pdef::proto::packet_set_score::Entries::EntryType &entry_type = v2.entry_type; /*0.3*/
+            const pdef::proto::packet_set_score::Entries::EntryType &V_entry_type = v2.entry_type; /*0.3*/
             WRITE_OR_BAIL(writeByte, (int8_t)(int8_t&)v2.entry_type); /*7.1*/
-            switch (entry_type) { /*8.0*/
+            switch (V_entry_type) { /*8.0*/
               case pdef::proto::packet_set_score::Entries::EntryType::Player: { /*8.5*/
                 WRITE_OR_BAIL(writeZigZagVarLong, (int64_t)v2.entity_unique_id); /*0.4*/
                 break;
@@ -12383,7 +12383,7 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
               } /*8.7*/
               default: break; /*avoid unhandled case warning*/
             } /*8.8*/
-            switch (entry_type) { /*8.0*/
+            switch (V_entry_type) { /*8.0*/
               case pdef::proto::packet_set_score::Entries::EntryType::FakePlayer: { /*8.5*/
                 WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.custom_name.length());
                 WRITE_OR_BAIL(writeString, v2.custom_name); /*custom_name: pstring*/ /*4.2*/
@@ -12435,35 +12435,35 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
     if (obj.flags.teleport) flags_val |= 128;
     if (obj.flags.force_move) flags_val |= 256;
     WRITE_OR_BAIL(writeUShortLE, (uint16_t)flags_val) /*flags: bitflags*/ /*4.2*/
-    const pdef::proto::packet_move_entity_delta::flags_t &flags = obj.flags; /*4.7*/
-    if (flags.has_x == true) { /*8.2*/
+    const pdef::proto::packet_move_entity_delta::flags_t &V_flags = obj.flags; /*4.7*/
+    if (V_flags.has_x == true) { /*8.2*/
       WRITE_OR_BAIL(writeFloatLE, (float)obj.x); /*0.4*/
     }
-    if (flags.has_y == true) { /*8.2*/
+    if (V_flags.has_y == true) { /*8.2*/
       WRITE_OR_BAIL(writeFloatLE, (float)obj.y); /*0.4*/
     }
-    if (flags.has_z == true) { /*8.2*/
+    if (V_flags.has_z == true) { /*8.2*/
       WRITE_OR_BAIL(writeFloatLE, (float)obj.z); /*0.4*/
     }
-    if (flags.has_rot_x == true) { /*8.2*/
+    if (V_flags.has_rot_x == true) { /*8.2*/
       WRITE_OR_BAIL(writeUByte, (uint8_t)obj.rot_x); /*0.4*/
     }
-    if (flags.has_rot_y == true) { /*8.2*/
+    if (V_flags.has_rot_y == true) { /*8.2*/
       WRITE_OR_BAIL(writeUByte, (uint8_t)obj.rot_y); /*0.4*/
     }
-    if (flags.has_rot_z == true) { /*8.2*/
+    if (V_flags.has_rot_z == true) { /*8.2*/
       WRITE_OR_BAIL(writeUByte, (uint8_t)obj.rot_z); /*0.4*/
     }
     return true;
   }
   bool packet_set_scoreboard_identity(pdef::Stream &stream, const pdef::proto::packet_set_scoreboard_identity &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::packet_set_scoreboard_identity(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const pdef::proto::packet_set_scoreboard_identity::Action &action = obj.action; /*0.3*/
+    const pdef::proto::packet_set_scoreboard_identity::Action &V_action = obj.action; /*0.3*/
     WRITE_OR_BAIL(writeByte, (int8_t)(int8_t&)obj.action); /*7.1*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.entries.size()); /*1.4*/
     for (const auto &v2 : obj.entries) { /*5.20*/
       WRITE_OR_BAIL(writeZigZagVarLong, (int64_t)v2.scoreboard_id); /*0.4*/
-      switch (action) { /*8.0*/
+      switch (V_action) { /*8.0*/
         case pdef::proto::packet_set_scoreboard_identity::Action::RegisterIdentity: { /*8.5*/
           WRITE_OR_BAIL(writeZigZagVarLong, (int64_t)v2.entity_unique_id); /*0.4*/
           break;
@@ -12616,9 +12616,9 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
     if (allocate) { auto writeSize = pdef::proto::size::packet_structure_template_data_export_response(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.name.length());
     WRITE_OR_BAIL(writeString, obj.name); /*name: pstring*/ /*4.2*/
-    const bool &success = obj.success; /*0.1*/
+    const bool &V_success = obj.success; /*0.1*/
     WRITE_OR_BAIL(writeBool, (bool)obj.success); /*0.4*/
-    if (success == true) { /*8.1*/
+    if (V_success == true) { /*8.1*/
       WRITE_OR_BAIL(writeByte, (int8_t)obj.nbt); /*0.4*/
     }
     WRITE_OR_BAIL(writeUByte, (uint8_t)(uint8_t&)obj.response_type); /*7.1*/
@@ -12631,9 +12631,9 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
   }
   bool packet_client_cache_blob_status(pdef::Stream &stream, const pdef::proto::packet_client_cache_blob_status &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::packet_client_cache_blob_status(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const int &misses = obj.misses; /*0.1*/
+    const int &V_misses = obj.misses; /*0.1*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.misses); /*0.4*/
-    const int &haves = obj.haves; /*0.1*/
+    const int &V_haves = obj.haves; /*0.1*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.haves); /*0.4*/
     for (const auto &v2 : obj.missing) { /*3.1*/
       WRITE_OR_BAIL(writeULongLE, (uint64_t)v2); /*0.4*/
@@ -12663,23 +12663,23 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
     WRITE_OR_BAIL(writeString, obj.post_process_filter); /*post_process_filter: pstring*/ /*4.2*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.screenshot_border_path.length());
     WRITE_OR_BAIL(writeString, obj.screenshot_border_path); /*screenshot_border_path: pstring*/ /*4.2*/
-    const bool &has_agent_capabilities = obj.has_agent_capabilities; /*0.1*/
+    const bool &V_has_agent_capabilities = obj.has_agent_capabilities; /*0.1*/
     WRITE_OR_BAIL(writeBool, (bool)obj.has_agent_capabilities); /*0.4*/
-    if (has_agent_capabilities == true) { /*8.1*/
+    if (V_has_agent_capabilities == true) { /*8.1*/
         const pdef::proto::packet_education_settings::AgentCapabilities &v2 = *obj.agent_capabilities; /*8.5*/
         WRITE_OR_BAIL(writeBool, (bool)v2.has); /*0.4*/
         WRITE_OR_BAIL(writeBool, (bool)v2.can_modify_blocks); /*0.4*/
     }
-    const bool &HasOverrideURI = obj.HasOverrideURI; /*0.1*/
+    const bool &V_HasOverrideURI = obj.HasOverrideURI; /*0.1*/
     WRITE_OR_BAIL(writeBool, (bool)obj.HasOverrideURI); /*0.4*/
-    if (HasOverrideURI == true) { /*8.1*/
+    if (V_HasOverrideURI == true) { /*8.1*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.OverrideURI.length());
       WRITE_OR_BAIL(writeString, obj.OverrideURI); /*OverrideURI: pstring*/ /*4.2*/
     }
     WRITE_OR_BAIL(writeBool, (bool)obj.HasQuiz); /*0.4*/
-    const bool &has_external_link_settings = obj.has_external_link_settings; /*0.1*/
+    const bool &V_has_external_link_settings = obj.has_external_link_settings; /*0.1*/
     WRITE_OR_BAIL(writeBool, (bool)obj.has_external_link_settings); /*0.4*/
-    if (has_external_link_settings == true) { /*8.1*/
+    if (V_has_external_link_settings == true) { /*8.1*/
         const pdef::proto::packet_education_settings::ExternalLinkSettings &v2 = *obj.external_link_settings; /*8.5*/
         WRITE_OR_BAIL(writeBool, (bool)v2.has); /*0.4*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.url.length());
@@ -12772,12 +12772,12 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
     input_data_val |= (int64_t)obj.input_data.block_action << 35;
     input_data_val |= (int64_t)obj.input_data.item_stack_request << 36;
     WRITE_OR_BAIL(writeUnsignedVarLong, (int64_t)input_data_val) /*input_data: bitflags*/ /*4.2*/
-    const pdef::proto::packet_player_auth_input::input_data_t &input_data = obj.input_data; /*4.7*/
+    const pdef::proto::packet_player_auth_input::input_data_t &V_input_data = obj.input_data; /*4.7*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)(int&)obj.input_mode); /*7.1*/
-    const pdef::proto::packet_player_auth_input::PlayMode &play_mode = obj.play_mode; /*0.3*/
+    const pdef::proto::packet_player_auth_input::PlayMode &V_play_mode = obj.play_mode; /*0.3*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)(int&)obj.play_mode); /*7.1*/
     WRITE_OR_BAIL(writeZigZagVarInt, (int)(int&)obj.interaction_model); /*7.1*/
-    switch (play_mode) { /*8.0*/
+    switch (V_play_mode) { /*8.0*/
       case pdef::proto::packet_player_auth_input::PlayMode::Reality: { /*8.5*/
         pdef::proto::encode::vec3f(stream, *obj.gaze_direction); /*vec3f*/ /*4.5*/
         break;
@@ -12786,38 +12786,38 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
     } /*8.8*/
     WRITE_OR_BAIL(writeUnsignedVarLong, (int64_t)obj.tick); /*0.4*/
     pdef::proto::encode::vec3f(stream, obj.delta); /*vec3f*/ /*4.5*/
-    if (input_data.item_interact == true) { /*8.2*/
+    if (V_input_data.item_interact == true) { /*8.2*/
         const pdef::proto::packet_player_auth_input::Transaction &v2 = *obj.transaction; /*8.5*/
         pdef::proto::encode::TransactionLegacy(stream, v2.legacy); /*TransactionLegacy*/ /*4.5*/
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.actions.size()); /*2.1*/
         for (const auto &v : v2.actions) { pdef::proto::encode::TransactionActions(stream, v); } /*2.2*/
         pdef::proto::encode::TransactionUseItem(stream, v2.data); /*TransactionUseItem*/ /*4.5*/
     }
-    if (input_data.item_stack_request == true) { /*8.2*/
+    if (V_input_data.item_stack_request == true) { /*8.2*/
       pdef::proto::encode::ItemStackRequest(stream, *obj.item_stack_request); /*ItemStackRequest*/ /*4.5*/
     }
-    if (input_data.block_action == true) { /*8.2*/
+    if (V_input_data.block_action == true) { /*8.2*/
       WRITE_OR_BAIL(writeZigZagVarInt, (int)obj.block_action.size()); /*1.4*/
       for (const auto &v3 : obj.block_action) { /*5.20*/
-        const pdef::proto::packet_player_auth_input::BlockAction::Action &action = v3.action; /*0.3*/
+        const pdef::proto::packet_player_auth_input::BlockAction::Action &V_action = v3.action; /*0.3*/
         WRITE_OR_BAIL(writeZigZagVarInt, (int)(int&)v3.action); /*7.1*/
-        if (action == pdef::proto::packet_player_auth_input::BlockAction::Action::StartBreak) { /*8.5*/
+        if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::StartBreak) { /*8.5*/
             pdef::proto::encode::vec3i(stream, *v3.position); /*vec3i*/ /*4.5*/
             WRITE_OR_BAIL(writeZigZagVarInt, (int)v3.face); /*0.4*/
         }
-        else if (action == pdef::proto::packet_player_auth_input::BlockAction::Action::AbortBreak) { /*8.5*/
+        else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::AbortBreak) { /*8.5*/
             pdef::proto::encode::vec3i(stream, *v3.position); /*vec3i*/ /*4.5*/
             WRITE_OR_BAIL(writeZigZagVarInt, (int)v3.face); /*0.4*/
         }
-        else if (action == pdef::proto::packet_player_auth_input::BlockAction::Action::CrackBreak) { /*8.5*/
+        else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::CrackBreak) { /*8.5*/
             pdef::proto::encode::vec3i(stream, *v3.position); /*vec3i*/ /*4.5*/
             WRITE_OR_BAIL(writeZigZagVarInt, (int)v3.face); /*0.4*/
         }
-        else if (action == pdef::proto::packet_player_auth_input::BlockAction::Action::PredictBreak) { /*8.5*/
+        else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::PredictBreak) { /*8.5*/
             pdef::proto::encode::vec3i(stream, *v3.position); /*vec3i*/ /*4.5*/
             WRITE_OR_BAIL(writeZigZagVarInt, (int)v3.face); /*0.4*/
         }
-        else if (action == pdef::proto::packet_player_auth_input::BlockAction::Action::ContinueBreak) { /*8.5*/
+        else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::ContinueBreak) { /*8.5*/
             pdef::proto::encode::vec3i(stream, *v3.position); /*vec3i*/ /*4.5*/
             WRITE_OR_BAIL(writeZigZagVarInt, (int)v3.face); /*0.4*/
         }
@@ -12864,17 +12864,17 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
     if (obj.type.legs) type_val |= 4;
     if (obj.type.feet) type_val |= 8;
     WRITE_OR_BAIL(writeUByte, (uint8_t)type_val) /*type: bitflags*/ /*4.2*/
-    const pdef::proto::packet_player_armor_damage::type_t &type = obj.type; /*4.7*/
-    if (type.head == true) { /*8.2*/
+    const pdef::proto::packet_player_armor_damage::type_t &V_type = obj.type; /*4.7*/
+    if (V_type.head == true) { /*8.2*/
       WRITE_OR_BAIL(writeZigZagVarInt, (int)obj.helmet_damage); /*0.4*/
     }
-    if (type.chest == true) { /*8.2*/
+    if (V_type.chest == true) { /*8.2*/
       WRITE_OR_BAIL(writeZigZagVarInt, (int)obj.chestplate_damage); /*0.4*/
     }
-    if (type.legs == true) { /*8.2*/
+    if (V_type.legs == true) { /*8.2*/
       WRITE_OR_BAIL(writeZigZagVarInt, (int)obj.leggings_damage); /*0.4*/
     }
-    if (type.feet == true) { /*8.2*/
+    if (V_type.feet == true) { /*8.2*/
       WRITE_OR_BAIL(writeZigZagVarInt, (int)obj.boots_damage); /*0.4*/
     }
     return true;
@@ -12981,9 +12981,9 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
   }
   bool packet_debug_renderer(pdef::Stream &stream, const pdef::proto::packet_debug_renderer &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::packet_debug_renderer(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const pdef::proto::packet_debug_renderer::Type &type = obj.type; /*0.3*/
+    const pdef::proto::packet_debug_renderer::Type &V_type = obj.type; /*0.3*/
     WRITE_OR_BAIL(writeIntLE, (int32_t)(int32_t&)obj.type); /*7.1*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::packet_debug_renderer::Type::Clear: { /*8.5*/
         break;
       } /*8.7*/
@@ -13087,9 +13087,9 @@ bool SubChunkEntryWithoutCaching(pdef::Stream &stream, const pdef::proto::SubChu
     WRITE_OR_BAIL(writeUByte, (uint8_t)(uint8_t&)obj.result); /*7.1*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.payload.size());
     WRITE_OR_BAIL(writeBuffer, obj.payload); /*payload: buffer*/ /*4.2*/
-    const pdef::proto::SubChunkEntryWithoutCaching::HeightmapType &heightmap_type = obj.heightmap_type; /*0.3*/
+    const pdef::proto::SubChunkEntryWithoutCaching::HeightmapType &V_heightmap_type = obj.heightmap_type; /*0.3*/
     WRITE_OR_BAIL(writeUByte, (uint8_t)(uint8_t&)obj.heightmap_type); /*7.1*/
-    switch (heightmap_type) { /*8.0*/
+    switch (V_heightmap_type) { /*8.0*/
       case pdef::proto::SubChunkEntryWithoutCaching::HeightmapType::HasData: { /*8.5*/
         WRITE_OR_BAIL(writeBuffer, obj.heightmap); /*heightmap: buffer*/ /*4.2*/
         break;
@@ -13103,9 +13103,9 @@ bool SubChunkEntryWithCaching(pdef::Stream &stream, const pdef::proto::SubChunkE
     WRITE_OR_BAIL(writeByte, (int8_t)obj.dx); /*0.4*/
     WRITE_OR_BAIL(writeByte, (int8_t)obj.dy); /*0.4*/
     WRITE_OR_BAIL(writeByte, (int8_t)obj.dz); /*0.4*/
-    const pdef::proto::SubChunkEntryWithCaching::Result &result = obj.result; /*0.3*/
+    const pdef::proto::SubChunkEntryWithCaching::Result &V_result = obj.result; /*0.3*/
     WRITE_OR_BAIL(writeUByte, (uint8_t)(uint8_t&)obj.result); /*7.1*/
-    switch (result) { /*8.0*/
+    switch (V_result) { /*8.0*/
       case pdef::proto::SubChunkEntryWithCaching::Result::SuccessAllAir: { /*8.5*/
         break;
       } /*8.7*/
@@ -13115,9 +13115,9 @@ bool SubChunkEntryWithCaching(pdef::Stream &stream, const pdef::proto::SubChunkE
         break;
       } /*8.7*/
     } /*8.8*/
-    const pdef::proto::SubChunkEntryWithCaching::HeightmapType &heightmap_type = obj.heightmap_type; /*0.3*/
+    const pdef::proto::SubChunkEntryWithCaching::HeightmapType &V_heightmap_type = obj.heightmap_type; /*0.3*/
     WRITE_OR_BAIL(writeUByte, (uint8_t)(uint8_t&)obj.heightmap_type); /*7.1*/
-    switch (heightmap_type) { /*8.0*/
+    switch (V_heightmap_type) { /*8.0*/
       case pdef::proto::SubChunkEntryWithCaching::HeightmapType::HasData: { /*8.5*/
         WRITE_OR_BAIL(writeBuffer, obj.heightmap); /*heightmap: buffer*/ /*4.2*/
         break;
@@ -13129,15 +13129,15 @@ bool SubChunkEntryWithCaching(pdef::Stream &stream, const pdef::proto::SubChunkE
 }
   bool packet_subchunk(pdef::Stream &stream, const pdef::proto::packet_subchunk &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::packet_subchunk(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const bool &cache_enabled = obj.cache_enabled; /*0.1*/
+    const bool &V_cache_enabled = obj.cache_enabled; /*0.1*/
     WRITE_OR_BAIL(writeBool, (bool)obj.cache_enabled); /*0.4*/
     WRITE_OR_BAIL(writeZigZagVarInt, (int)obj.dimension); /*0.4*/
     pdef::proto::encode::vec3i(stream, obj.origin); /*vec3i*/ /*4.5*/
-    if (cache_enabled == true) { /*8.1*/
+    if (V_cache_enabled == true) { /*8.1*/
       WRITE_OR_BAIL(writeUIntLE, (uint32_t)obj.entries_SubChunkEntryWithCaching.size()); /*2.1*/
       for (const auto &v : obj.entries_SubChunkEntryWithCaching) { pdef::proto::encode::SubChunkEntryWithCaching(stream, v); } /*2.2*/
     }
-    else if (cache_enabled == false) { /*8.1*/
+    else if (V_cache_enabled == false) { /*8.1*/
       WRITE_OR_BAIL(writeUIntLE, (uint32_t)obj.entries_SubChunkEntryWithoutCaching.size()); /*2.1*/
       for (const auto &v : obj.entries_SubChunkEntryWithoutCaching) { pdef::proto::encode::SubChunkEntryWithoutCaching(stream, v); } /*2.2*/
     }
@@ -13258,9 +13258,9 @@ bool SubChunkEntryWithCaching(pdef::Stream &stream, const pdef::proto::SubChunkE
   }
   bool mcpe_packet(pdef::Stream &stream, const pdef::proto::mcpe_packet &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::mcpe_packet(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
-    const pdef::proto::mcpe_packet::Name &name = obj.name; /*0.3*/
+    const pdef::proto::mcpe_packet::Name &V_name = obj.name; /*0.3*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)(int&)obj.name); /*7.1*/
-    switch (name) { /*8.0*/
+    switch (V_name) { /*8.0*/
       case pdef::proto::mcpe_packet::Name::Login: { /*8.5*/
         pdef::proto::encode::packet_login(stream, *obj.params_packet_login); /*packet_login*/ /*4.5*/
         break;
@@ -14275,8 +14275,8 @@ bool ResourcePackIdVersions(pdef::Stream &stream, pdef::proto::ResourcePackIdVer
     if (!stream.readString(obj.name, name_strlen)) return false; /*name: pstring*/ /*4.3*/
     READ_OR_BAIL(readBool, (bool&)obj.editable); /*0.5*/
     READ_OR_BAIL(readUnsignedVarInt, (int&)obj.type); /*7.2*/
-    const pdef::proto::GameRule::Type &type = obj.type; /*0.7*/
-    switch (type) { /*8.0*/
+    const pdef::proto::GameRule::Type &V_type = obj.type; /*0.7*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::GameRule::Type::Bool: { /*8.5*/
         READ_OR_BAIL(readBool, (bool&)obj.value_bool); /*0.5*/
         break;
@@ -14313,8 +14313,8 @@ bool Itemstates(pdef::Stream &stream, pdef::proto::Itemstates &obj) {
 }
   bool ItemExtraDataWithBlockingTick(pdef::Stream &stream, pdef::proto::ItemExtraDataWithBlockingTick &obj) {
     READ_OR_BAIL(readUShortLE, (uint16_t&)obj.has_nbt); /*7.2*/
-    const pdef::proto::ItemExtraDataWithBlockingTick::HasNbt &has_nbt = obj.has_nbt; /*0.7*/
-    switch (has_nbt) { /*8.0*/
+    const pdef::proto::ItemExtraDataWithBlockingTick::HasNbt &V_has_nbt = obj.has_nbt; /*0.7*/
+    switch (V_has_nbt) { /*8.0*/
       case pdef::proto::ItemExtraDataWithBlockingTick::HasNbt::True: { /*8.5*/
          obj.nbt = {}; pdef::proto::ItemExtraDataWithBlockingTick::Nbt &v2 = *obj.nbt; /*8.4*/
           READ_OR_BAIL(readUByte, v2.version); /*0.5*/
@@ -14325,14 +14325,14 @@ bool Itemstates(pdef::Stream &stream, pdef::proto::Itemstates &obj) {
     } /*8.8*/
     int32_t can_place_on_len; READ_OR_BAIL(readIntLE, can_place_on_len); /*1.5*/
     obj.can_place_on.resize(can_place_on_len); /*1.6*/
-    for (int i = 0; i < can_place_on_len; i++) {
+    for (int i = 0; i < can_place_on_len; i++) { /*3.3*/
       auto &v2 = obj.can_place_on[i]; /*3.4*/
       int16_t _strlen; READ_OR_BAIL(readShortLE, _strlen);
       if (!stream.readString(v2, _strlen)) return false; /*: pstring*/ /*4.3*/
     }
     int32_t can_destroy_len; READ_OR_BAIL(readIntLE, can_destroy_len); /*1.5*/
     obj.can_destroy.resize(can_destroy_len); /*1.6*/
-    for (int i = 0; i < can_destroy_len; i++) {
+    for (int i = 0; i < can_destroy_len; i++) { /*3.3*/
       auto &v2 = obj.can_destroy[i]; /*3.4*/
       int16_t _strlen; READ_OR_BAIL(readShortLE, _strlen);
       if (!stream.readString(v2, _strlen)) return false; /*: pstring*/ /*4.3*/
@@ -14342,8 +14342,8 @@ bool Itemstates(pdef::Stream &stream, pdef::proto::Itemstates &obj) {
   }
   bool ItemExtraDataWithoutBlockingTick(pdef::Stream &stream, pdef::proto::ItemExtraDataWithoutBlockingTick &obj) {
     READ_OR_BAIL(readUShortLE, (uint16_t&)obj.has_nbt); /*7.2*/
-    const pdef::proto::ItemExtraDataWithoutBlockingTick::HasNbt &has_nbt = obj.has_nbt; /*0.7*/
-    switch (has_nbt) { /*8.0*/
+    const pdef::proto::ItemExtraDataWithoutBlockingTick::HasNbt &V_has_nbt = obj.has_nbt; /*0.7*/
+    switch (V_has_nbt) { /*8.0*/
       case pdef::proto::ItemExtraDataWithoutBlockingTick::HasNbt::True: { /*8.5*/
          obj.nbt = {}; pdef::proto::ItemExtraDataWithoutBlockingTick::Nbt &v2 = *obj.nbt; /*8.4*/
           READ_OR_BAIL(readUByte, v2.version); /*0.5*/
@@ -14354,14 +14354,14 @@ bool Itemstates(pdef::Stream &stream, pdef::proto::Itemstates &obj) {
     } /*8.8*/
     int32_t can_place_on_len; READ_OR_BAIL(readIntLE, can_place_on_len); /*1.5*/
     obj.can_place_on.resize(can_place_on_len); /*1.6*/
-    for (int i = 0; i < can_place_on_len; i++) {
+    for (int i = 0; i < can_place_on_len; i++) { /*3.3*/
       auto &v2 = obj.can_place_on[i]; /*3.4*/
       int16_t _strlen; READ_OR_BAIL(readShortLE, _strlen);
       if (!stream.readString(v2, _strlen)) return false; /*: pstring*/ /*4.3*/
     }
     int32_t can_destroy_len; READ_OR_BAIL(readIntLE, can_destroy_len); /*1.5*/
     obj.can_destroy.resize(can_destroy_len); /*1.6*/
-    for (int i = 0; i < can_destroy_len; i++) {
+    for (int i = 0; i < can_destroy_len; i++) { /*3.3*/
       auto &v2 = obj.can_destroy[i]; /*3.4*/
       int16_t _strlen; READ_OR_BAIL(readShortLE, _strlen);
       if (!stream.readString(v2, _strlen)) return false; /*: pstring*/ /*4.3*/
@@ -14370,14 +14370,14 @@ bool Itemstates(pdef::Stream &stream, pdef::proto::Itemstates &obj) {
   }
   bool ItemLegacy(pdef::Stream &stream, pdef::proto::ItemLegacy &obj) {
     READ_OR_BAIL(readZigZagVarInt, obj.network_id); /*0.5*/
-    int &network_id = obj.network_id; /*0.6*/
-    if (network_id == 0) { /*8.2*/
+    int &V_network_id = obj.network_id; /*0.6*/
+    if (V_network_id == 0) { /*8.2*/
     }
     else {
         READ_OR_BAIL(readUShortLE, obj.count); /*0.5*/
         READ_OR_BAIL(readUnsignedVarInt, obj.metadata); /*0.5*/
         READ_OR_BAIL(readZigZagVarInt, obj.block_runtime_id); /*0.5*/
-        if (network_id == pdef::proto::ShieldItemID) { /*8.4*/
+        if (V_network_id == pdef::proto::ShieldItemID) { /*8.4*/
           READ_OR_BAIL(readByte, obj.extra__ShieldItemID); /*0.5*/
         }
         else {
@@ -14388,21 +14388,21 @@ bool Itemstates(pdef::Stream &stream, pdef::proto::Itemstates &obj) {
   }
   bool Item(pdef::Stream &stream, pdef::proto::Item &obj) {
     READ_OR_BAIL(readZigZagVarInt, obj.network_id); /*0.5*/
-    int &network_id = obj.network_id; /*0.6*/
-    if (network_id == 0) { /*8.2*/
+    int &V_network_id = obj.network_id; /*0.6*/
+    if (V_network_id == 0) { /*8.2*/
     }
     else {
         READ_OR_BAIL(readUShortLE, obj.count); /*0.5*/
         READ_OR_BAIL(readUnsignedVarInt, obj.metadata); /*0.5*/
         READ_OR_BAIL(readUByte, obj.has_stack_id); /*0.5*/
-        uint8_t &has_stack_id = obj.has_stack_id; /*0.6*/
-        if (has_stack_id == 0) { /*8.2*/
+        uint8_t &V_has_stack_id = obj.has_stack_id; /*0.6*/
+        if (V_has_stack_id == 0) { /*8.2*/
         }
         else {
           READ_OR_BAIL(readZigZagVarInt, obj.stack_id); /*0.5*/
         }
         READ_OR_BAIL(readZigZagVarInt, obj.block_runtime_id); /*0.5*/
-        if (network_id == pdef::proto::ShieldItemID) { /*8.4*/
+        if (V_network_id == pdef::proto::ShieldItemID) { /*8.4*/
           READ_OR_BAIL(readByte, obj.extra__ShieldItemID); /*0.5*/
         }
         else {
@@ -14436,10 +14436,10 @@ bool Itemstates(pdef::Stream &stream, pdef::proto::Itemstates &obj) {
   }
 bool MetadataDictionary(pdef::Stream &stream, pdef::proto::MetadataDictionary &obj) {
     READ_OR_BAIL(readUnsignedVarInt, (int&)obj.key); /*7.2*/
-    const pdef::proto::MetadataDictionary::Key &key = obj.key; /*0.7*/
+    const pdef::proto::MetadataDictionary::Key &V_key = obj.key; /*0.7*/
     READ_OR_BAIL(readUnsignedVarInt, (int&)obj.type); /*7.2*/
-    const pdef::proto::MetadataDictionary::Type &type = obj.type; /*0.7*/
-    switch (key) { /*8.0*/
+    const pdef::proto::MetadataDictionary::Type &V_type = obj.type; /*0.7*/
+    switch (V_key) { /*8.0*/
       case pdef::proto::MetadataDictionary::Key::Flags: { /*8.5*/
         int64_t value_MetadataFlags1_val;
         READ_OR_BAIL(readZigZagVarLong, value_MetadataFlags1_val);
@@ -14557,7 +14557,7 @@ bool MetadataDictionary(pdef::Stream &stream, pdef::proto::MetadataDictionary &o
         break;
       } /*8.7*/
       default: { /*8.3*/
-        switch (type) { /*8.0*/
+        switch (V_type) { /*8.0*/
           case pdef::proto::MetadataDictionary::Type::Byte: { /*8.5*/
             READ_OR_BAIL(readByte, obj.value_i8); /*0.5*/
             break;
@@ -14652,8 +14652,8 @@ bool PlayerAttributes(pdef::Stream &stream, pdef::proto::PlayerAttributes &obj) 
   }
 bool TransactionActions(pdef::Stream &stream, pdef::proto::TransactionActions &obj) {
     READ_OR_BAIL(readUnsignedVarInt, (int&)obj.source_type); /*7.2*/
-    const pdef::proto::TransactionActions::SourceType &source_type = obj.source_type; /*0.7*/
-    switch (source_type) { /*8.0*/
+    const pdef::proto::TransactionActions::SourceType &V_source_type = obj.source_type; /*0.7*/
+    switch (V_source_type) { /*8.0*/
       case pdef::proto::TransactionActions::SourceType::Container: { /*8.5*/
           READ_OR_BAIL(readUnsignedVarInt, (int&)obj.inventory_id); /*7.2*/
         break;
@@ -14679,8 +14679,8 @@ bool TransactionActions(pdef::Stream &stream, pdef::proto::TransactionActions &o
 }
   bool TransactionLegacy(pdef::Stream &stream, pdef::proto::TransactionLegacy &obj) {
     READ_OR_BAIL(readZigZagVarInt, obj.legacy_request_id); /*0.5*/
-    int &legacy_request_id = obj.legacy_request_id; /*0.6*/
-    if (legacy_request_id == 0) { /*8.2*/
+    int &V_legacy_request_id = obj.legacy_request_id; /*0.6*/
+    if (V_legacy_request_id == 0) { /*8.2*/
     }
     else {
       int legacy_transactions_len; READ_OR_BAIL(readUnsignedVarInt, legacy_transactions_len); /*1.5*/
@@ -14701,12 +14701,12 @@ bool TransactionActions(pdef::Stream &stream, pdef::proto::TransactionActions &o
   bool Transaction(pdef::Stream &stream, pdef::proto::Transaction &obj) {
     pdef::proto::decode::TransactionLegacy(stream, obj.legacy); /*obj*/ /*4.6*/
     READ_OR_BAIL(readUnsignedVarInt, (int&)obj.transaction_type); /*7.2*/
-    const pdef::proto::Transaction::TransactionType &transaction_type = obj.transaction_type; /*0.7*/
+    const pdef::proto::Transaction::TransactionType &V_transaction_type = obj.transaction_type; /*0.7*/
     int actions_len; /*2.3*/
     READ_OR_BAIL(readUnsignedVarInt, actions_len); /*2.6*/
     obj.actions.resize(actions_len); /*2.7*/
     for (int i = 0; i < actions_len; i++) { pdef::proto::decode::TransactionActions(stream, obj.actions[i]); } /*2.8*/
-    switch (transaction_type) { /*8.0*/
+    switch (V_transaction_type) { /*8.0*/
       case pdef::proto::Transaction::TransactionType::Normal: { /*8.5*/
         break;
       } /*8.7*/
@@ -14741,8 +14741,8 @@ bool TransactionActions(pdef::Stream &stream, pdef::proto::TransactionActions &o
   }
   bool RecipeIngredient(pdef::Stream &stream, pdef::proto::RecipeIngredient &obj) {
     READ_OR_BAIL(readZigZagVarInt, obj.network_id); /*0.5*/
-    int &network_id = obj.network_id; /*0.6*/
-    if (network_id == 0) { /*8.2*/
+    int &V_network_id = obj.network_id; /*0.6*/
+    if (V_network_id == 0) { /*8.2*/
     }
     else {
         READ_OR_BAIL(readZigZagVarInt, obj.network_data); /*0.5*/
@@ -14767,21 +14767,21 @@ bool PotionContainerChangeRecipes(pdef::Stream &stream, pdef::proto::PotionConta
 }
 bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
     READ_OR_BAIL(readZigZagVarInt, (int&)obj.type); /*7.2*/
-    const pdef::proto::Recipes::Type &type = obj.type; /*0.7*/
-    switch (type) { /*8.0*/
+    const pdef::proto::Recipes::Type &V_type = obj.type; /*0.7*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::Recipes::Type::Shapeless: { /*8.5*/
          obj.recipe_shapeless_or_shulker_box_or_shapeless_chemistry = {}; pdef::proto::Recipes::RecipeShapelessOrShulkerBoxOrShapelessChemistry &v2 = *obj.recipe_shapeless_or_shulker_box_or_shapeless_chemistry; /*8.4*/
           int recipe_id_strlen; READ_OR_BAIL(readUnsignedVarInt, recipe_id_strlen);
           if (!stream.readString(v2.recipe_id, recipe_id_strlen)) return false; /*recipe_id: pstring*/ /*4.3*/
           int input_len; READ_OR_BAIL(readUnsignedVarInt, input_len); /*1.5*/
           v2.input.resize(input_len); /*1.6*/
-          for (int i = 0; i < input_len; i++) {
+          for (int i = 0; i < input_len; i++) { /*3.3*/
             auto &v5 = v2.input[i]; /*3.4*/
             pdef::proto::decode::RecipeIngredient(stream, v5); /*v5*/ /*4.6*/
           }
           int output_len; READ_OR_BAIL(readUnsignedVarInt, output_len); /*1.5*/
           v2.output.resize(output_len); /*1.6*/
-          for (int i = 0; i < output_len; i++) {
+          for (int i = 0; i < output_len; i++) { /*3.3*/
             auto &v5 = v2.output[i]; /*3.4*/
             pdef::proto::decode::ItemLegacy(stream, v5); /*v5*/ /*4.6*/
           }
@@ -14798,13 +14798,13 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
           if (!stream.readString(v2.recipe_id, recipe_id_strlen)) return false; /*recipe_id: pstring*/ /*4.3*/
           int input_len; READ_OR_BAIL(readUnsignedVarInt, input_len); /*1.5*/
           v2.input.resize(input_len); /*1.6*/
-          for (int i = 0; i < input_len; i++) {
+          for (int i = 0; i < input_len; i++) { /*3.3*/
             auto &v5 = v2.input[i]; /*3.4*/
             pdef::proto::decode::RecipeIngredient(stream, v5); /*v5*/ /*4.6*/
           }
           int output_len; READ_OR_BAIL(readUnsignedVarInt, output_len); /*1.5*/
           v2.output.resize(output_len); /*1.6*/
-          for (int i = 0; i < output_len; i++) {
+          for (int i = 0; i < output_len; i++) { /*3.3*/
             auto &v5 = v2.output[i]; /*3.4*/
             pdef::proto::decode::ItemLegacy(stream, v5); /*v5*/ /*4.6*/
           }
@@ -14821,13 +14821,13 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
           if (!stream.readString(v2.recipe_id, recipe_id_strlen)) return false; /*recipe_id: pstring*/ /*4.3*/
           int input_len; READ_OR_BAIL(readUnsignedVarInt, input_len); /*1.5*/
           v2.input.resize(input_len); /*1.6*/
-          for (int i = 0; i < input_len; i++) {
+          for (int i = 0; i < input_len; i++) { /*3.3*/
             auto &v5 = v2.input[i]; /*3.4*/
             pdef::proto::decode::RecipeIngredient(stream, v5); /*v5*/ /*4.6*/
           }
           int output_len; READ_OR_BAIL(readUnsignedVarInt, output_len); /*1.5*/
           v2.output.resize(output_len); /*1.6*/
-          for (int i = 0; i < output_len; i++) {
+          for (int i = 0; i < output_len; i++) { /*3.3*/
             auto &v5 = v2.output[i]; /*3.4*/
             pdef::proto::decode::ItemLegacy(stream, v5); /*v5*/ /*4.6*/
           }
@@ -14843,21 +14843,21 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
           int recipe_id_strlen; READ_OR_BAIL(readUnsignedVarInt, recipe_id_strlen);
           if (!stream.readString(v2.recipe_id, recipe_id_strlen)) return false; /*recipe_id: pstring*/ /*4.3*/
           READ_OR_BAIL(readZigZagVarInt, v2.width); /*0.5*/
-          int &width = v2.width; /*0.6*/
+          int &V_width = v2.width; /*0.6*/
           READ_OR_BAIL(readZigZagVarInt, v2.height); /*0.5*/
-          int &height = v2.height; /*0.6*/
-          v2.input.resize(width); /*1.6*/
-          for (int i = 0; i < width; i++) { /*5.2*/
+          int &V_height = v2.height; /*0.6*/
+          v2.input.resize(V_width); /*1.6*/
+          for (int i = 0; i < V_width; i++) { /*5.2*/
             int input_len2; READ_OR_BAIL(readZigZagVarInt, input_len2); /*5.5*/
             v2.input[i].resize(input_len2); /*5.10*/
-            for (int j = 0; j < height; j++) { /*5.11*/
+            for (int j = 0; j < V_height; j++) { /*5.11*/
               auto &v = v2.input[i][j]; /*5.15*/
               pdef::proto::decode::RecipeIngredient(stream, v); /*v*/ /*4.6*/
             }
           }
           int output_len; READ_OR_BAIL(readUnsignedVarInt, output_len); /*1.5*/
           v2.output.resize(output_len); /*1.6*/
-          for (int i = 0; i < output_len; i++) {
+          for (int i = 0; i < output_len; i++) { /*3.3*/
             auto &v5 = v2.output[i]; /*3.4*/
             pdef::proto::decode::ItemLegacy(stream, v5); /*v5*/ /*4.6*/
           }
@@ -14873,21 +14873,21 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
           int recipe_id_strlen; READ_OR_BAIL(readUnsignedVarInt, recipe_id_strlen);
           if (!stream.readString(v2.recipe_id, recipe_id_strlen)) return false; /*recipe_id: pstring*/ /*4.3*/
           READ_OR_BAIL(readZigZagVarInt, v2.width); /*0.5*/
-          int &width = v2.width; /*0.6*/
+          int &V_width = v2.width; /*0.6*/
           READ_OR_BAIL(readZigZagVarInt, v2.height); /*0.5*/
-          int &height = v2.height; /*0.6*/
-          v2.input.resize(width); /*1.6*/
-          for (int i = 0; i < width; i++) { /*5.2*/
+          int &V_height = v2.height; /*0.6*/
+          v2.input.resize(V_width); /*1.6*/
+          for (int i = 0; i < V_width; i++) { /*5.2*/
             int input_len2; READ_OR_BAIL(readZigZagVarInt, input_len2); /*5.5*/
             v2.input[i].resize(input_len2); /*5.10*/
-            for (int j = 0; j < height; j++) { /*5.11*/
+            for (int j = 0; j < V_height; j++) { /*5.11*/
               auto &v = v2.input[i][j]; /*5.15*/
               pdef::proto::decode::RecipeIngredient(stream, v); /*v*/ /*4.6*/
             }
           }
           int output_len; READ_OR_BAIL(readUnsignedVarInt, output_len); /*1.5*/
           v2.output.resize(output_len); /*1.6*/
-          for (int i = 0; i < output_len; i++) {
+          for (int i = 0; i < output_len; i++) { /*3.3*/
             auto &v5 = v2.output[i]; /*3.4*/
             pdef::proto::decode::ItemLegacy(stream, v5); /*v5*/ /*4.6*/
           }
@@ -14985,7 +14985,7 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
       if (!stream.readString(v2.piece_type, piece_type_strlen)) return false; /*piece_type: pstring*/ /*4.3*/
       int32_t colors_len; READ_OR_BAIL(readIntLE, colors_len); /*1.5*/
       v2.colors.resize(colors_len); /*1.6*/
-      for (int i = 0; i < colors_len; i++) {
+      for (int i = 0; i < colors_len; i++) { /*3.3*/
         auto &v3 = v2.colors[i]; /*3.4*/
         int _strlen; READ_OR_BAIL(readUnsignedVarInt, _strlen);
         if (!stream.readString(v3, _strlen)) return false; /*: pstring*/ /*4.3*/
@@ -14999,10 +14999,10 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
   }
   bool PlayerRecords(pdef::Stream &stream, pdef::proto::PlayerRecords &obj) {
     READ_OR_BAIL(readUByte, (uint8_t&)obj.type); /*7.2*/
-    const pdef::proto::PlayerRecords::Type &type = obj.type; /*0.7*/
+    const pdef::proto::PlayerRecords::Type &V_type = obj.type; /*0.7*/
     READ_OR_BAIL(readUnsignedVarInt, obj.records_count); /*0.5*/
-    int &records_count = obj.records_count; /*0.6*/
-    switch (type) { /*8.0*/
+    int &V_records_count = obj.records_count; /*0.6*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::PlayerRecords::Type::Add: { /*8.5*/
          obj.records_add = {}; pdef::proto::PlayerRecords::RecordsAdd &v2 = *obj.records_add; /*8.4*/
           READ_OR_BAIL(readULongBE, v2.uuid); /*0.5*/
@@ -15026,10 +15026,10 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
       } /*8.7*/
       default: break; /*avoid unhandled case warning*/
     } /*8.8*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::PlayerRecords::Type::Add: { /*8.5*/
-        obj.verified.resize(records_count); /*1.6*/
-        for (int i = 0; i < records_count; i++) {
+        obj.verified.resize(V_records_count); /*1.6*/
+        for (int i = 0; i < V_records_count; i++) { /*3.3*/
           auto &v4 = obj.verified[i]; /*3.4*/
           READ_OR_BAIL(readBool, (bool&)v4); /*0.5*/
         }
@@ -15049,19 +15049,19 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
     READ_OR_BAIL(readIntLE, obj.slot_flags); /*0.5*/
     int equip_enchants_len; READ_OR_BAIL(readUnsignedVarInt, equip_enchants_len); /*1.5*/
     obj.equip_enchants.resize(equip_enchants_len); /*1.6*/
-    for (int i = 0; i < equip_enchants_len; i++) {
+    for (int i = 0; i < equip_enchants_len; i++) { /*3.3*/
       auto &v2 = obj.equip_enchants[i]; /*3.4*/
       pdef::proto::decode::Enchant(stream, v2); /*v2*/ /*4.6*/
     }
     int held_enchants_len; READ_OR_BAIL(readUnsignedVarInt, held_enchants_len); /*1.5*/
     obj.held_enchants.resize(held_enchants_len); /*1.6*/
-    for (int i = 0; i < held_enchants_len; i++) {
+    for (int i = 0; i < held_enchants_len; i++) { /*3.3*/
       auto &v2 = obj.held_enchants[i]; /*3.4*/
       pdef::proto::decode::Enchant(stream, v2); /*v2*/ /*4.6*/
     }
     int self_enchants_len; READ_OR_BAIL(readUnsignedVarInt, self_enchants_len); /*1.5*/
     obj.self_enchants.resize(self_enchants_len); /*1.6*/
-    for (int i = 0; i < self_enchants_len; i++) {
+    for (int i = 0; i < self_enchants_len; i++) { /*3.3*/
       auto &v2 = obj.self_enchants[i]; /*3.4*/
       pdef::proto::decode::Enchant(stream, v2); /*v2*/ /*4.6*/
     }
@@ -15083,8 +15083,8 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
     for (int i = 0; i < actions_len; i++) { /*5*/
       pdef::proto::ItemStackRequest::Actions &v2 = obj.actions[i]; /*5.23*/
       READ_OR_BAIL(readUByte, (uint8_t&)v2.type_id); /*7.2*/
-      const pdef::proto::ItemStackRequest::Actions::TypeId &type_id = v2.type_id; /*0.7*/
-      switch (type_id) { /*8.0*/
+      const pdef::proto::ItemStackRequest::Actions::TypeId &V_type_id = v2.type_id; /*0.7*/
+      switch (V_type_id) { /*8.0*/
         case pdef::proto::ItemStackRequest::Actions::TypeId::Take: { /*8.5*/
             READ_OR_BAIL(readUByte, v2.count); /*0.5*/
             v2.source = {}; pdef::proto::decode::StackRequestSlotInfo(stream, *v2.source); /*v2*/ /*4.6*/
@@ -15166,7 +15166,7 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
         case pdef::proto::ItemStackRequest::Actions::TypeId::ResultsDeprecated: { /*8.5*/
             int result_items_len; READ_OR_BAIL(readUnsignedVarInt, result_items_len); /*1.5*/
             v2.result_items.resize(result_items_len); /*1.6*/
-            for (int i = 0; i < result_items_len; i++) {
+            for (int i = 0; i < result_items_len; i++) { /*3.3*/
               auto &v6 = v2.result_items[i]; /*3.4*/
               pdef::proto::decode::ItemLegacy(stream, v6); /*v6*/ /*4.6*/
             }
@@ -15178,7 +15178,7 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
     }
     int custom_names_len; READ_OR_BAIL(readUnsignedVarInt, custom_names_len); /*1.5*/
     obj.custom_names.resize(custom_names_len); /*1.6*/
-    for (int i = 0; i < custom_names_len; i++) {
+    for (int i = 0; i < custom_names_len; i++) { /*3.3*/
       auto &v2 = obj.custom_names[i]; /*3.4*/
       int _strlen; READ_OR_BAIL(readUnsignedVarInt, _strlen);
       if (!stream.readString(v2, _strlen)) return false; /*: pstring*/ /*4.3*/
@@ -15187,9 +15187,9 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
   }
 bool ItemStackResponses(pdef::Stream &stream, pdef::proto::ItemStackResponses &obj) {
     READ_OR_BAIL(readUByte, (uint8_t&)obj.status); /*7.2*/
-    const pdef::proto::ItemStackResponses::Status &status = obj.status; /*0.7*/
+    const pdef::proto::ItemStackResponses::Status &V_status = obj.status; /*0.7*/
     READ_OR_BAIL(readZigZagVarInt, obj.request_id); /*0.5*/
-    switch (status) { /*8.0*/
+    switch (V_status) { /*8.0*/
       case pdef::proto::ItemStackResponses::Status::Ok: { /*8.5*/
           int containers_len; READ_OR_BAIL(readUnsignedVarInt, containers_len); /*1.5*/
           obj.containers.resize(containers_len); /*1.6*/
@@ -15223,11 +15223,11 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
 }
   bool CommandOrigin(pdef::Stream &stream, pdef::proto::CommandOrigin &obj) {
     READ_OR_BAIL(readUnsignedVarInt, (int&)obj.type); /*7.2*/
-    const pdef::proto::CommandOrigin::Type &type = obj.type; /*0.7*/
+    const pdef::proto::CommandOrigin::Type &V_type = obj.type; /*0.7*/
     READ_OR_BAIL(readULongBE, obj.uuid); /*0.5*/
     int request_id_strlen; READ_OR_BAIL(readUnsignedVarInt, request_id_strlen);
     if (!stream.readString(obj.request_id, request_id_strlen)) return false; /*request_id: pstring*/ /*4.3*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::CommandOrigin::Type::DevConsole: { /*8.5*/
          obj.player_entity_id = {}; pdef::proto::CommandOrigin::PlayerEntityId &v2 = *obj.player_entity_id; /*8.4*/
           READ_OR_BAIL(readZigZagVarLong, v2.player_entity_id); /*0.5*/
@@ -15244,15 +15244,15 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
   }
   bool TrackedObject(pdef::Stream &stream, pdef::proto::TrackedObject &obj) {
     READ_OR_BAIL(readIntLE, (int32_t&)obj.type); /*7.2*/
-    const pdef::proto::TrackedObject::Type &type = obj.type; /*0.7*/
-    switch (type) { /*8.0*/
+    const pdef::proto::TrackedObject::Type &V_type = obj.type; /*0.7*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::TrackedObject::Type::Entity: { /*8.5*/
         READ_OR_BAIL(readZigZagVarLong, obj.entity_unique_id); /*0.5*/
         break;
       } /*8.7*/
       default: break; /*avoid unhandled case warning*/
     } /*8.8*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::TrackedObject::Type::Block: { /*8.5*/
         obj.block_position = {}; pdef::proto::decode::BlockCoordinates(stream, *obj.block_position); /*obj*/ /*4.6*/
         break;
@@ -15374,7 +15374,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     if (!stream.readString(obj.game_version, game_version_strlen)) return false; /*game_version: pstring*/ /*4.3*/
     int32_t experiments_len; READ_OR_BAIL(readIntLE, experiments_len); /*1.5*/
     obj.experiments.resize(experiments_len); /*1.6*/
-    for (int i = 0; i < experiments_len; i++) {
+    for (int i = 0; i < experiments_len; i++) { /*3.3*/
       auto &v2 = obj.experiments[i]; /*3.4*/
       pdef::proto::decode::Experiment(stream, v2); /*v2*/ /*4.6*/
     }
@@ -15385,7 +15385,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     READ_OR_BAIL(readUByte, (uint8_t&)obj.response_status); /*7.2*/
     int16_t resourcepackids_len; READ_OR_BAIL(readShortLE, resourcepackids_len); /*1.5*/
     obj.resourcepackids.resize(resourcepackids_len); /*1.6*/
-    for (int i = 0; i < resourcepackids_len; i++) {
+    for (int i = 0; i < resourcepackids_len; i++) { /*3.3*/
       auto &v2 = obj.resourcepackids[i]; /*3.4*/
       int _strlen; READ_OR_BAIL(readUnsignedVarInt, _strlen);
       if (!stream.readString(v2, _strlen)) return false; /*: pstring*/ /*4.3*/
@@ -15394,9 +15394,9 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
   }
   bool packet_text(pdef::Stream &stream, pdef::proto::packet_text &obj) {
     READ_OR_BAIL(readUByte, (uint8_t&)obj.type); /*7.2*/
-    const pdef::proto::packet_text::Type &type = obj.type; /*0.7*/
+    const pdef::proto::packet_text::Type &V_type = obj.type; /*0.7*/
     READ_OR_BAIL(readBool, (bool&)obj.needs_translation); /*0.5*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::packet_text::Type::Chat: { /*8.5*/
           int source_name_strlen; READ_OR_BAIL(readUnsignedVarInt, source_name_strlen);
           if (!stream.readString(obj.source_name, source_name_strlen)) return false; /*source_name: pstring*/ /*4.3*/
@@ -15448,7 +15448,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
           if (!stream.readString(obj.message, message_strlen)) return false; /*message: pstring*/ /*4.3*/
           int parameters_len; READ_OR_BAIL(readUnsignedVarInt, parameters_len); /*1.5*/
           obj.parameters.resize(parameters_len); /*1.6*/
-          for (int i = 0; i < parameters_len; i++) {
+          for (int i = 0; i < parameters_len; i++) { /*3.3*/
             auto &v5 = obj.parameters[i]; /*3.4*/
             int _strlen; READ_OR_BAIL(readUnsignedVarInt, _strlen);
             if (!stream.readString(v5, _strlen)) return false; /*: pstring*/ /*4.3*/
@@ -15460,7 +15460,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
           if (!stream.readString(obj.message, message_strlen)) return false; /*message: pstring*/ /*4.3*/
           int parameters_len; READ_OR_BAIL(readUnsignedVarInt, parameters_len); /*1.5*/
           obj.parameters.resize(parameters_len); /*1.6*/
-          for (int i = 0; i < parameters_len; i++) {
+          for (int i = 0; i < parameters_len; i++) { /*3.3*/
             auto &v5 = obj.parameters[i]; /*3.4*/
             int _strlen; READ_OR_BAIL(readUnsignedVarInt, _strlen);
             if (!stream.readString(v5, _strlen)) return false; /*: pstring*/ /*4.3*/
@@ -15472,7 +15472,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
           if (!stream.readString(obj.message, message_strlen)) return false; /*message: pstring*/ /*4.3*/
           int parameters_len; READ_OR_BAIL(readUnsignedVarInt, parameters_len); /*1.5*/
           obj.parameters.resize(parameters_len); /*1.6*/
-          for (int i = 0; i < parameters_len; i++) {
+          for (int i = 0; i < parameters_len; i++) { /*3.3*/
             auto &v5 = obj.parameters[i]; /*3.4*/
             int _strlen; READ_OR_BAIL(readUnsignedVarInt, _strlen);
             if (!stream.readString(v5, _strlen)) return false; /*: pstring*/ /*4.3*/
@@ -15523,13 +15523,13 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     READ_OR_BAIL(readBool, (bool&)obj.is_texturepacks_required); /*0.5*/
     int gamerules_len; READ_OR_BAIL(readUnsignedVarInt, gamerules_len); /*1.5*/
     obj.gamerules.resize(gamerules_len); /*1.6*/
-    for (int i = 0; i < gamerules_len; i++) {
+    for (int i = 0; i < gamerules_len; i++) { /*3.3*/
       auto &v2 = obj.gamerules[i]; /*3.4*/
       pdef::proto::decode::GameRule(stream, v2); /*v2*/ /*4.6*/
     }
     int32_t experiments_len; READ_OR_BAIL(readIntLE, experiments_len); /*1.5*/
     obj.experiments.resize(experiments_len); /*1.6*/
-    for (int i = 0; i < experiments_len; i++) {
+    for (int i = 0; i < experiments_len; i++) { /*3.3*/
       auto &v2 = obj.experiments[i]; /*3.4*/
       pdef::proto::decode::Experiment(stream, v2); /*v2*/ /*4.6*/
     }
@@ -15609,7 +15609,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     READ_OR_BAIL(readLongLE, obj.user_id); /*0.5*/
     int links_len; READ_OR_BAIL(readUnsignedVarInt, links_len); /*1.5*/
     obj.links.resize(links_len); /*1.6*/
-    for (int i = 0; i < links_len; i++) {
+    for (int i = 0; i < links_len; i++) { /*3.3*/
       auto &v2 = obj.links[i]; /*3.4*/
       pdef::proto::decode::Link(stream, v2); /*v2*/ /*4.6*/
     }
@@ -15638,7 +15638,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     for (int i = 0; i < metadata_len; i++) { pdef::proto::decode::MetadataDictionary(stream, obj.metadata[i]); } /*2.8*/
     int links_len; READ_OR_BAIL(readUnsignedVarInt, links_len); /*1.5*/
     obj.links.resize(links_len); /*1.6*/
-    for (int i = 0; i < links_len; i++) {
+    for (int i = 0; i < links_len; i++) { /*3.3*/
       auto &v2 = obj.links[i]; /*3.4*/
       pdef::proto::decode::Link(stream, v2); /*v2*/ /*4.6*/
     }
@@ -15680,10 +15680,10 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     READ_OR_BAIL(readFloatLE, obj.yaw); /*0.5*/
     READ_OR_BAIL(readFloatLE, obj.head_yaw); /*0.5*/
     READ_OR_BAIL(readUByte, (uint8_t&)obj.mode); /*7.2*/
-    const pdef::proto::packet_move_player::Mode &mode = obj.mode; /*0.7*/
+    const pdef::proto::packet_move_player::Mode &V_mode = obj.mode; /*0.7*/
     READ_OR_BAIL(readBool, (bool&)obj.on_ground); /*0.5*/
     READ_OR_BAIL(readUnsignedVarInt, obj.ridden_runtime_id); /*0.5*/
-    switch (mode) { /*8.0*/
+    switch (V_mode) { /*8.0*/
       case pdef::proto::packet_move_player::Mode::Teleport: { /*8.5*/
          obj.teleport = {}; pdef::proto::packet_move_player::Teleport &v2 = *obj.teleport; /*8.4*/
           READ_OR_BAIL(readIntLE, (int32_t&)v2.cause); /*7.2*/
@@ -15793,9 +15793,9 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
   }
   bool packet_interact(pdef::Stream &stream, pdef::proto::packet_interact &obj) {
     READ_OR_BAIL(readUByte, (uint8_t&)obj.action_id); /*7.2*/
-    const pdef::proto::packet_interact::ActionId &action_id = obj.action_id; /*0.7*/
+    const pdef::proto::packet_interact::ActionId &V_action_id = obj.action_id; /*0.7*/
     READ_OR_BAIL(readUnsignedVarLong, obj.target_entity_id); /*0.5*/
-    switch (action_id) { /*8.0*/
+    switch (V_action_id) { /*8.0*/
       case pdef::proto::packet_interact::ActionId::MouseOverEntity: { /*8.5*/
         obj.position = {}; pdef::proto::decode::vec3f(stream, *obj.position); /*obj*/ /*4.6*/
         break;
@@ -15867,9 +15867,9 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
   }
   bool packet_animate(pdef::Stream &stream, pdef::proto::packet_animate &obj) {
     READ_OR_BAIL(readZigZagVarInt, (int&)obj.action_id); /*7.2*/
-    const pdef::proto::packet_animate::ActionId &action_id = obj.action_id; /*0.7*/
+    const pdef::proto::packet_animate::ActionId &V_action_id = obj.action_id; /*0.7*/
     READ_OR_BAIL(readUnsignedVarLong, obj.runtime_entity_id); /*0.5*/
-    switch (action_id) { /*8.0*/
+    switch (V_action_id) { /*8.0*/
       case pdef::proto::packet_animate::ActionId::RowRight: { /*8.5*/
           READ_OR_BAIL(readFloatLE, obj.boat_rowing_time); /*0.5*/
         break;
@@ -15910,7 +15910,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     READ_OR_BAIL(readUnsignedVarInt, (int&)obj.window_id); /*7.2*/
     int input_len; READ_OR_BAIL(readUnsignedVarInt, input_len); /*1.5*/
     obj.input.resize(input_len); /*1.6*/
-    for (int i = 0; i < input_len; i++) {
+    for (int i = 0; i < input_len; i++) { /*3.3*/
       auto &v2 = obj.input[i]; /*3.4*/
       pdef::proto::decode::Item(stream, v2); /*v2*/ /*4.6*/
     }
@@ -15943,7 +15943,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     for (int i = 0; i < potion_container_recipes_len; i++) { pdef::proto::decode::PotionContainerChangeRecipes(stream, obj.potion_container_recipes[i]); } /*2.8*/
     int material_reducers_len; READ_OR_BAIL(readUnsignedVarInt, material_reducers_len); /*1.5*/
     obj.material_reducers.resize(material_reducers_len); /*1.6*/
-    for (int i = 0; i < material_reducers_len; i++) {
+    for (int i = 0; i < material_reducers_len; i++) { /*3.3*/
       auto &v2 = obj.material_reducers[i]; /*3.4*/
       pdef::proto::decode::MaterialReducer(stream, v2); /*v2*/ /*4.6*/
     }
@@ -15956,13 +15956,13 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     READ_OR_BAIL(readULongBE, obj.recipe_id); /*0.5*/
     int input_len; READ_OR_BAIL(readUnsignedVarInt, input_len); /*1.5*/
     obj.input.resize(input_len); /*1.6*/
-    for (int i = 0; i < input_len; i++) {
+    for (int i = 0; i < input_len; i++) { /*3.3*/
       auto &v2 = obj.input[i]; /*3.4*/
       pdef::proto::decode::Item(stream, v2); /*v2*/ /*4.6*/
     }
     int result_len; READ_OR_BAIL(readUnsignedVarInt, result_len); /*1.5*/
     obj.result.resize(result_len); /*1.6*/
-    for (int i = 0; i < result_len; i++) {
+    for (int i = 0; i < result_len; i++) { /*3.3*/
       auto &v2 = obj.result[i]; /*3.4*/
       pdef::proto::decode::Item(stream, v2); /*v2*/ /*4.6*/
     }
@@ -16020,17 +16020,17 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     READ_OR_BAIL(readZigZagVarInt, obj.x); /*0.5*/
     READ_OR_BAIL(readZigZagVarInt, obj.z); /*0.5*/
     READ_OR_BAIL(readUnsignedVarInt, obj.sub_chunk_count); /*0.5*/
-    int &sub_chunk_count = obj.sub_chunk_count; /*0.6*/
-    if (sub_chunk_count == -2) { /*8.2*/
+    int &V_sub_chunk_count = obj.sub_chunk_count; /*0.6*/
+    if (V_sub_chunk_count == -2) { /*8.2*/
       READ_OR_BAIL(readUShortLE, obj.highest_subchunk_count); /*0.5*/
     }
     READ_OR_BAIL(readBool, (bool&)obj.cache_enabled); /*0.5*/
-    bool &cache_enabled = obj.cache_enabled; /*0.6*/
-    if (cache_enabled == true) { /*8.1*/
+    bool &V_cache_enabled = obj.cache_enabled; /*0.6*/
+    if (V_cache_enabled == true) { /*8.1*/
          obj.blobs = {}; pdef::proto::packet_level_chunk::Blobs &v2 = *obj.blobs; /*8.4*/
         int hashes_len; READ_OR_BAIL(readUnsignedVarInt, hashes_len); /*1.5*/
         v2.hashes.resize(hashes_len); /*1.6*/
-        for (int i = 0; i < hashes_len; i++) {
+        for (int i = 0; i < hashes_len; i++) { /*3.3*/
           auto &v4 = v2.hashes[i]; /*3.4*/
           READ_OR_BAIL(readULongLE, v4); /*0.5*/
         }
@@ -16084,36 +16084,36 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     obj.update_flags.texture = update_flags_val & ((int)1 << 1);
     obj.update_flags.decoration = update_flags_val & ((int)1 << 2);
     obj.update_flags.initialisation = update_flags_val & ((int)1 << 3); /*update_flags: bitflags*/ /*4.3*/
-    pdef::proto::packet_clientbound_map_item_data::update_flags_t &update_flags = obj.update_flags; /*4.8*/
+    pdef::proto::packet_clientbound_map_item_data::update_flags_t &V_update_flags = obj.update_flags; /*4.8*/
     READ_OR_BAIL(readUByte, obj.dimension); /*0.5*/
     READ_OR_BAIL(readBool, (bool&)obj.locked); /*0.5*/
-    if (update_flags.initialisation == true) { /*8.2*/
+    if (V_update_flags.initialisation == true) { /*8.2*/
       int included_in_len; READ_OR_BAIL(readUnsignedVarInt, included_in_len); /*1.5*/
       obj.included_in.resize(included_in_len); /*1.6*/
-      for (int i = 0; i < included_in_len; i++) {
+      for (int i = 0; i < included_in_len; i++) { /*3.3*/
         auto &v3 = obj.included_in[i]; /*3.4*/
         READ_OR_BAIL(readZigZagVarLong, v3); /*0.5*/
       }
     }
-    if ((update_flags.initialisation || update_flags.decoration || update_flags.texture) == true) { /*8.2*/
+    if ((V_update_flags.initialisation || V_update_flags.decoration || V_update_flags.texture) == true) { /*8.2*/
       READ_OR_BAIL(readUByte, obj.scale); /*0.5*/
     }
-    if (update_flags.decoration == true) { /*8.2*/
+    if (V_update_flags.decoration == true) { /*8.2*/
          obj.tracked = {}; pdef::proto::packet_clientbound_map_item_data::Tracked &v2 = *obj.tracked; /*8.4*/
         int objects_len; READ_OR_BAIL(readUnsignedVarInt, objects_len); /*1.5*/
         v2.objects.resize(objects_len); /*1.6*/
-        for (int i = 0; i < objects_len; i++) {
+        for (int i = 0; i < objects_len; i++) { /*3.3*/
           auto &v4 = v2.objects[i]; /*3.4*/
           pdef::proto::decode::TrackedObject(stream, v4); /*v4*/ /*4.6*/
         }
         int decorations_len; READ_OR_BAIL(readUnsignedVarInt, decorations_len); /*1.5*/
         v2.decorations.resize(decorations_len); /*1.6*/
-        for (int i = 0; i < decorations_len; i++) {
+        for (int i = 0; i < decorations_len; i++) { /*3.3*/
           auto &v4 = v2.decorations[i]; /*3.4*/
           pdef::proto::decode::MapDecoration(stream, v4); /*v4*/ /*4.6*/
         }
     }
-    if (update_flags.texture == true) { /*8.2*/
+    if (V_update_flags.texture == true) { /*8.2*/
          obj.texture = {}; pdef::proto::packet_clientbound_map_item_data::Texture &v2 = *obj.texture; /*8.4*/
         READ_OR_BAIL(readZigZagVarInt, v2.width); /*0.5*/
         READ_OR_BAIL(readZigZagVarInt, v2.height); /*0.5*/
@@ -16121,7 +16121,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
         READ_OR_BAIL(readZigZagVarInt, v2.y_offset); /*0.5*/
         int pixels_len; READ_OR_BAIL(readUnsignedVarInt, pixels_len); /*1.5*/
         v2.pixels.resize(pixels_len); /*1.6*/
-        for (int i = 0; i < pixels_len; i++) {
+        for (int i = 0; i < pixels_len; i++) { /*3.3*/
           auto &v4 = v2.pixels[i]; /*3.4*/
           READ_OR_BAIL(readUnsignedVarInt, v4); /*0.5*/
         }
@@ -16147,7 +16147,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
   bool packet_game_rules_changed(pdef::Stream &stream, pdef::proto::packet_game_rules_changed &obj) {
     int rules_len; READ_OR_BAIL(readUnsignedVarInt, rules_len); /*1.5*/
     obj.rules.resize(rules_len); /*1.6*/
-    for (int i = 0; i < rules_len; i++) {
+    for (int i = 0; i < rules_len; i++) { /*3.3*/
       auto &v2 = obj.rules[i]; /*3.4*/
       pdef::proto::decode::GameRule(stream, v2); /*v2*/ /*4.6*/
     }
@@ -16161,8 +16161,8 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
   bool packet_boss_event(pdef::Stream &stream, pdef::proto::packet_boss_event &obj) {
     READ_OR_BAIL(readZigZagVarLong, obj.boss_entity_id); /*0.5*/
     READ_OR_BAIL(readUnsignedVarInt, (int&)obj.type); /*7.2*/
-    const pdef::proto::packet_boss_event::Type &type = obj.type; /*0.7*/
-    switch (type) { /*8.0*/
+    const pdef::proto::packet_boss_event::Type &V_type = obj.type; /*0.7*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::packet_boss_event::Type::ShowBar: { /*8.5*/
           int title_strlen; READ_OR_BAIL(readUnsignedVarInt, title_strlen);
           if (!stream.readString(obj.title, title_strlen)) return false; /*title: pstring*/ /*4.3*/
@@ -16215,17 +16215,17 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
   }
   bool packet_available_commands(pdef::Stream &stream, pdef::proto::packet_available_commands &obj) {
     READ_OR_BAIL(readUnsignedVarInt, obj.values_len); /*0.5*/
-    int &values_len = obj.values_len; /*0.6*/
-    pdef::proto::packet_available_commands::_EnumType _enum_type; if (values_len <= 0xff) { _enum_type = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (values_len <= 0xffff) { _enum_type = pdef::proto::packet_available_commands::_EnumType::Short; } else { _enum_type = pdef::proto::packet_available_commands::_EnumType::Int; } /*_enum_type: enum_size_based_on_values_len*/ /*4.3*/
-    obj.enum_values.resize(values_len); /*1.6*/
-    for (int i = 0; i < values_len; i++) {
+    int &V_values_len = obj.values_len; /*0.6*/
+    pdef::proto::packet_available_commands::_EnumType V__enum_type; if (V_values_len <= 0xff) { V__enum_type = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (V_values_len <= 0xffff) { V__enum_type = pdef::proto::packet_available_commands::_EnumType::Short; } else { V__enum_type = pdef::proto::packet_available_commands::_EnumType::Int; } /*_enum_type: enum_size_based_on_values_len*/ /*4.3*/
+    obj.enum_values.resize(V_values_len); /*1.6*/
+    for (int i = 0; i < V_values_len; i++) { /*3.3*/
       auto &v2 = obj.enum_values[i]; /*3.4*/
       int _strlen; READ_OR_BAIL(readUnsignedVarInt, _strlen);
       if (!stream.readString(v2, _strlen)) return false; /*: pstring*/ /*4.3*/
     }
     int suffixes_len; READ_OR_BAIL(readUnsignedVarInt, suffixes_len); /*1.5*/
     obj.suffixes.resize(suffixes_len); /*1.6*/
-    for (int i = 0; i < suffixes_len; i++) {
+    for (int i = 0; i < suffixes_len; i++) { /*3.3*/
       auto &v2 = obj.suffixes[i]; /*3.4*/
       int _strlen; READ_OR_BAIL(readUnsignedVarInt, _strlen);
       if (!stream.readString(v2, _strlen)) return false; /*: pstring*/ /*4.3*/
@@ -16236,13 +16236,13 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
       pdef::proto::packet_available_commands::Enums &v2 = obj.enums[i]; /*5.23*/
       int name_strlen; READ_OR_BAIL(readUnsignedVarInt, name_strlen);
       if (!stream.readString(v2.name, name_strlen)) return false; /*name: pstring*/ /*4.3*/
-      if (_enum_type == pdef::proto::packet_available_commands::_EnumType::Byte) { /*8.5*/
+      if (V__enum_type == pdef::proto::packet_available_commands::_EnumType::Byte) { /*8.5*/
         READ_OR_BAIL(readUByte, v2.values_u8); /*0.5*/
       }
-      else if (_enum_type == pdef::proto::packet_available_commands::_EnumType::Short) { /*8.5*/
+      else if (V__enum_type == pdef::proto::packet_available_commands::_EnumType::Short) { /*8.5*/
         READ_OR_BAIL(readUShortLE, v2.values_lu16); /*0.5*/
       }
-      else if (_enum_type == pdef::proto::packet_available_commands::_EnumType::Int) { /*8.5*/
+      else if (V__enum_type == pdef::proto::packet_available_commands::_EnumType::Int) { /*8.5*/
         READ_OR_BAIL(readUIntLE, v2.values_lu32); /*0.5*/
       }
     }
@@ -16288,7 +16288,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
       if (!stream.readString(v2.name, name_strlen)) return false; /*name: pstring*/ /*4.3*/
       int values_len; READ_OR_BAIL(readUnsignedVarInt, values_len); /*1.5*/
       v2.values.resize(values_len); /*1.6*/
-      for (int i = 0; i < values_len; i++) {
+      for (int i = 0; i < values_len; i++) { /*3.3*/
         auto &v3 = v2.values[i]; /*3.4*/
         int _strlen; READ_OR_BAIL(readUnsignedVarInt, _strlen);
         if (!stream.readString(v3, _strlen)) return false; /*: pstring*/ /*4.3*/
@@ -16318,14 +16318,14 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
   }
   bool packet_command_block_update(pdef::Stream &stream, pdef::proto::packet_command_block_update &obj) {
     READ_OR_BAIL(readBool, (bool&)obj.is_block); /*0.5*/
-    bool &is_block = obj.is_block; /*0.6*/
-    if (is_block == true) { /*8.1*/
+    bool &V_is_block = obj.is_block; /*0.6*/
+    if (V_is_block == true) { /*8.1*/
         obj.position = {}; pdef::proto::decode::BlockCoordinates(stream, *obj.position); /*obj*/ /*4.6*/
         READ_OR_BAIL(readUnsignedVarInt, (int&)obj.mode); /*7.2*/
         READ_OR_BAIL(readBool, (bool&)obj.needs_redstone); /*0.5*/
         READ_OR_BAIL(readBool, (bool&)obj.conditional); /*0.5*/
     }
-    else if (is_block == false) { /*8.1*/
+    else if (V_is_block == false) { /*8.1*/
         READ_OR_BAIL(readUnsignedVarLong, obj.minecart_entity_runtime_id); /*0.5*/
     }
     int command_strlen; READ_OR_BAIL(readUnsignedVarInt, command_strlen);
@@ -16342,7 +16342,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
   bool packet_command_output(pdef::Stream &stream, pdef::proto::packet_command_output &obj) {
     pdef::proto::decode::CommandOrigin(stream, obj.origin); /*obj*/ /*4.6*/
     READ_OR_BAIL(readByte, (int8_t&)obj.output_type); /*7.2*/
-    const pdef::proto::packet_command_output::OutputType &output_type = obj.output_type; /*0.7*/
+    const pdef::proto::packet_command_output::OutputType &V_output_type = obj.output_type; /*0.7*/
     READ_OR_BAIL(readUnsignedVarInt, obj.success_count); /*0.5*/
     int output_len; READ_OR_BAIL(readUnsignedVarInt, output_len); /*1.5*/
     obj.output.resize(output_len); /*1.6*/
@@ -16353,13 +16353,13 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
       if (!stream.readString(v2.message_id, message_id_strlen)) return false; /*message_id: pstring*/ /*4.3*/
       int parameters_len; READ_OR_BAIL(readUnsignedVarInt, parameters_len); /*1.5*/
       v2.parameters.resize(parameters_len); /*1.6*/
-      for (int i = 0; i < parameters_len; i++) {
+      for (int i = 0; i < parameters_len; i++) { /*3.3*/
         auto &v3 = v2.parameters[i]; /*3.4*/
         int _strlen; READ_OR_BAIL(readUnsignedVarInt, _strlen);
         if (!stream.readString(v3, _strlen)) return false; /*: pstring*/ /*4.3*/
       }
     }
-    switch (output_type) { /*8.0*/
+    switch (V_output_type) { /*8.0*/
       case pdef::proto::packet_command_output::OutputType::DataSet: { /*8.5*/
         int data_set_strlen; READ_OR_BAIL(readUnsignedVarInt, data_set_strlen);
         if (!stream.readString(obj.data_set, data_set_strlen)) return false; /*data_set: pstring*/ /*4.3*/
@@ -16477,7 +16477,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
   bool packet_purchase_receipt(pdef::Stream &stream, pdef::proto::packet_purchase_receipt &obj) {
     int receipts_len; READ_OR_BAIL(readUnsignedVarInt, receipts_len); /*1.5*/
     obj.receipts.resize(receipts_len); /*1.6*/
-    for (int i = 0; i < receipts_len; i++) {
+    for (int i = 0; i < receipts_len; i++) { /*3.3*/
       auto &v2 = obj.receipts[i]; /*3.4*/
       int _strlen; READ_OR_BAIL(readUnsignedVarInt, _strlen);
       if (!stream.readString(v2, _strlen)) return false; /*: pstring*/ /*4.3*/
@@ -16509,9 +16509,9 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
   }
   bool packet_book_edit(pdef::Stream &stream, pdef::proto::packet_book_edit &obj) {
     READ_OR_BAIL(readUByte, (uint8_t&)obj.type); /*7.2*/
-    const pdef::proto::packet_book_edit::Type &type = obj.type; /*0.7*/
+    const pdef::proto::packet_book_edit::Type &V_type = obj.type; /*0.7*/
     READ_OR_BAIL(readUByte, obj.slot); /*0.5*/
-    switch (type) { /*8.0*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::packet_book_edit::Type::ReplacePage: { /*8.5*/
           READ_OR_BAIL(readUByte, obj.page_number); /*0.5*/
           int text_strlen; READ_OR_BAIL(readUnsignedVarInt, text_strlen);
@@ -16623,7 +16623,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
   }
   bool packet_set_score(pdef::Stream &stream, pdef::proto::packet_set_score &obj) {
     READ_OR_BAIL(readUByte, (uint8_t&)obj.action); /*7.2*/
-    const pdef::proto::packet_set_score::Action &action = obj.action; /*0.7*/
+    const pdef::proto::packet_set_score::Action &V_action = obj.action; /*0.7*/
     int entries_len; READ_OR_BAIL(readUnsignedVarInt, entries_len); /*1.5*/
     obj.entries.resize(entries_len); /*1.6*/
     for (int i = 0; i < entries_len; i++) { /*5*/
@@ -16632,11 +16632,11 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
       int objective_name_strlen; READ_OR_BAIL(readUnsignedVarInt, objective_name_strlen);
       if (!stream.readString(v2.objective_name, objective_name_strlen)) return false; /*objective_name: pstring*/ /*4.3*/
       READ_OR_BAIL(readIntLE, v2.score); /*0.5*/
-      switch (action) { /*8.0*/
+      switch (V_action) { /*8.0*/
         case pdef::proto::packet_set_score::Action::Change: { /*8.5*/
             READ_OR_BAIL(readByte, (int8_t&)v2.entry_type); /*7.2*/
-            const pdef::proto::packet_set_score::Entries::EntryType &entry_type = v2.entry_type; /*0.7*/
-            switch (entry_type) { /*8.0*/
+            const pdef::proto::packet_set_score::Entries::EntryType &V_entry_type = v2.entry_type; /*0.7*/
+            switch (V_entry_type) { /*8.0*/
               case pdef::proto::packet_set_score::Entries::EntryType::Player: { /*8.5*/
                 READ_OR_BAIL(readZigZagVarLong, v2.entity_unique_id); /*0.5*/
                 break;
@@ -16647,7 +16647,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
               } /*8.7*/
               default: break; /*avoid unhandled case warning*/
             } /*8.8*/
-            switch (entry_type) { /*8.0*/
+            switch (V_entry_type) { /*8.0*/
               case pdef::proto::packet_set_score::Entries::EntryType::FakePlayer: { /*8.5*/
                 int custom_name_strlen; READ_OR_BAIL(readUnsignedVarInt, custom_name_strlen);
                 if (!stream.readString(v2.custom_name, custom_name_strlen)) return false; /*custom_name: pstring*/ /*4.3*/
@@ -16696,36 +16696,36 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     obj.flags.on_ground = (flags_val & 64) == 64;
     obj.flags.teleport = (flags_val & 128) == 128;
     obj.flags.force_move = (flags_val & 256) == 256; /*flags: bitflags*/ /*4.3*/
-    pdef::proto::packet_move_entity_delta::flags_t &flags = obj.flags; /*4.8*/
-    if (flags.has_x == true) { /*8.2*/
+    pdef::proto::packet_move_entity_delta::flags_t &V_flags = obj.flags; /*4.8*/
+    if (V_flags.has_x == true) { /*8.2*/
       READ_OR_BAIL(readFloatLE, obj.x); /*0.5*/
     }
-    if (flags.has_y == true) { /*8.2*/
+    if (V_flags.has_y == true) { /*8.2*/
       READ_OR_BAIL(readFloatLE, obj.y); /*0.5*/
     }
-    if (flags.has_z == true) { /*8.2*/
+    if (V_flags.has_z == true) { /*8.2*/
       READ_OR_BAIL(readFloatLE, obj.z); /*0.5*/
     }
-    if (flags.has_rot_x == true) { /*8.2*/
+    if (V_flags.has_rot_x == true) { /*8.2*/
       READ_OR_BAIL(readUByte, obj.rot_x); /*0.5*/
     }
-    if (flags.has_rot_y == true) { /*8.2*/
+    if (V_flags.has_rot_y == true) { /*8.2*/
       READ_OR_BAIL(readUByte, obj.rot_y); /*0.5*/
     }
-    if (flags.has_rot_z == true) { /*8.2*/
+    if (V_flags.has_rot_z == true) { /*8.2*/
       READ_OR_BAIL(readUByte, obj.rot_z); /*0.5*/
     }
     return true;
   }
   bool packet_set_scoreboard_identity(pdef::Stream &stream, pdef::proto::packet_set_scoreboard_identity &obj) {
     READ_OR_BAIL(readByte, (int8_t&)obj.action); /*7.2*/
-    const pdef::proto::packet_set_scoreboard_identity::Action &action = obj.action; /*0.7*/
+    const pdef::proto::packet_set_scoreboard_identity::Action &V_action = obj.action; /*0.7*/
     int entries_len; READ_OR_BAIL(readUnsignedVarInt, entries_len); /*1.5*/
     obj.entries.resize(entries_len); /*1.6*/
     for (int i = 0; i < entries_len; i++) { /*5*/
       pdef::proto::packet_set_scoreboard_identity::Entries &v2 = obj.entries[i]; /*5.23*/
       READ_OR_BAIL(readZigZagVarLong, v2.scoreboard_id); /*0.5*/
-      switch (action) { /*8.0*/
+      switch (V_action) { /*8.0*/
         case pdef::proto::packet_set_scoreboard_identity::Action::RegisterIdentity: { /*8.5*/
           READ_OR_BAIL(readZigZagVarLong, v2.entity_unique_id); /*0.5*/
           break;
@@ -16744,7 +16744,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     if (!stream.readString(obj.enum_type, enum_type_strlen)) return false; /*enum_type: pstring*/ /*4.3*/
     int options_len; READ_OR_BAIL(readUnsignedVarInt, options_len); /*1.5*/
     obj.options.resize(options_len); /*1.6*/
-    for (int i = 0; i < options_len; i++) {
+    for (int i = 0; i < options_len; i++) { /*3.3*/
       auto &v2 = obj.options[i]; /*3.4*/
       int _strlen; READ_OR_BAIL(readUnsignedVarInt, _strlen);
       if (!stream.readString(v2, _strlen)) return false; /*: pstring*/ /*4.3*/
@@ -16860,8 +16860,8 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     int name_strlen; READ_OR_BAIL(readUnsignedVarInt, name_strlen);
     if (!stream.readString(obj.name, name_strlen)) return false; /*name: pstring*/ /*4.3*/
     READ_OR_BAIL(readBool, (bool&)obj.success); /*0.5*/
-    bool &success = obj.success; /*0.6*/
-    if (success == true) { /*8.1*/
+    bool &V_success = obj.success; /*0.6*/
+    if (V_success == true) { /*8.1*/
       READ_OR_BAIL(readByte, obj.nbt); /*0.5*/
     }
     READ_OR_BAIL(readUByte, (uint8_t&)obj.response_type); /*7.2*/
@@ -16873,16 +16873,16 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
   }
   bool packet_client_cache_blob_status(pdef::Stream &stream, pdef::proto::packet_client_cache_blob_status &obj) {
     READ_OR_BAIL(readUnsignedVarInt, obj.misses); /*0.5*/
-    int &misses = obj.misses; /*0.6*/
+    int &V_misses = obj.misses; /*0.6*/
     READ_OR_BAIL(readUnsignedVarInt, obj.haves); /*0.5*/
-    int &haves = obj.haves; /*0.6*/
-    obj.missing.resize(misses); /*1.6*/
-    for (int i = 0; i < misses; i++) {
+    int &V_haves = obj.haves; /*0.6*/
+    obj.missing.resize(V_misses); /*1.6*/
+    for (int i = 0; i < V_misses; i++) { /*3.3*/
       auto &v2 = obj.missing[i]; /*3.4*/
       READ_OR_BAIL(readULongLE, v2); /*0.5*/
     }
-    obj.have.resize(haves); /*1.6*/
-    for (int i = 0; i < haves; i++) {
+    obj.have.resize(V_haves); /*1.6*/
+    for (int i = 0; i < V_haves; i++) { /*3.3*/
       auto &v2 = obj.have[i]; /*3.4*/
       READ_OR_BAIL(readULongLE, v2); /*0.5*/
     }
@@ -16891,7 +16891,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
   bool packet_client_cache_miss_response(pdef::Stream &stream, pdef::proto::packet_client_cache_miss_response &obj) {
     int blobs_len; READ_OR_BAIL(readUnsignedVarInt, blobs_len); /*1.5*/
     obj.blobs.resize(blobs_len); /*1.6*/
-    for (int i = 0; i < blobs_len; i++) {
+    for (int i = 0; i < blobs_len; i++) { /*3.3*/
       auto &v2 = obj.blobs[i]; /*3.4*/
       pdef::proto::decode::Blob(stream, v2); /*v2*/ /*4.6*/
     }
@@ -16909,22 +16909,22 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     int screenshot_border_path_strlen; READ_OR_BAIL(readUnsignedVarInt, screenshot_border_path_strlen);
     if (!stream.readString(obj.screenshot_border_path, screenshot_border_path_strlen)) return false; /*screenshot_border_path: pstring*/ /*4.3*/
     READ_OR_BAIL(readBool, (bool&)obj.has_agent_capabilities); /*0.5*/
-    bool &has_agent_capabilities = obj.has_agent_capabilities; /*0.6*/
-    if (has_agent_capabilities == true) { /*8.1*/
+    bool &V_has_agent_capabilities = obj.has_agent_capabilities; /*0.6*/
+    if (V_has_agent_capabilities == true) { /*8.1*/
          obj.agent_capabilities = {}; pdef::proto::packet_education_settings::AgentCapabilities &v2 = *obj.agent_capabilities; /*8.4*/
         READ_OR_BAIL(readBool, (bool&)v2.has); /*0.5*/
         READ_OR_BAIL(readBool, (bool&)v2.can_modify_blocks); /*0.5*/
     }
     READ_OR_BAIL(readBool, (bool&)obj.HasOverrideURI); /*0.5*/
-    bool &HasOverrideURI = obj.HasOverrideURI; /*0.6*/
-    if (HasOverrideURI == true) { /*8.1*/
+    bool &V_HasOverrideURI = obj.HasOverrideURI; /*0.6*/
+    if (V_HasOverrideURI == true) { /*8.1*/
       int OverrideURI_strlen; READ_OR_BAIL(readUnsignedVarInt, OverrideURI_strlen);
       if (!stream.readString(obj.OverrideURI, OverrideURI_strlen)) return false; /*OverrideURI: pstring*/ /*4.3*/
     }
     READ_OR_BAIL(readBool, (bool&)obj.HasQuiz); /*0.5*/
     READ_OR_BAIL(readBool, (bool&)obj.has_external_link_settings); /*0.5*/
-    bool &has_external_link_settings = obj.has_external_link_settings; /*0.6*/
-    if (has_external_link_settings == true) { /*8.1*/
+    bool &V_has_external_link_settings = obj.has_external_link_settings; /*0.6*/
+    if (V_has_external_link_settings == true) { /*8.1*/
          obj.external_link_settings = {}; pdef::proto::packet_education_settings::ExternalLinkSettings &v2 = *obj.external_link_settings; /*8.4*/
         READ_OR_BAIL(readBool, (bool&)v2.has); /*0.5*/
         int url_strlen; READ_OR_BAIL(readUnsignedVarInt, url_strlen);
@@ -17010,12 +17010,12 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     obj.input_data.item_interact = input_data_val & ((int64_t)1 << 34);
     obj.input_data.block_action = input_data_val & ((int64_t)1 << 35);
     obj.input_data.item_stack_request = input_data_val & ((int64_t)1 << 36); /*input_data: bitflags*/ /*4.3*/
-    pdef::proto::packet_player_auth_input::input_data_t &input_data = obj.input_data; /*4.8*/
+    pdef::proto::packet_player_auth_input::input_data_t &V_input_data = obj.input_data; /*4.8*/
     READ_OR_BAIL(readUnsignedVarInt, (int&)obj.input_mode); /*7.2*/
     READ_OR_BAIL(readUnsignedVarInt, (int&)obj.play_mode); /*7.2*/
-    const pdef::proto::packet_player_auth_input::PlayMode &play_mode = obj.play_mode; /*0.7*/
+    const pdef::proto::packet_player_auth_input::PlayMode &V_play_mode = obj.play_mode; /*0.7*/
     READ_OR_BAIL(readZigZagVarInt, (int&)obj.interaction_model); /*7.2*/
-    switch (play_mode) { /*8.0*/
+    switch (V_play_mode) { /*8.0*/
       case pdef::proto::packet_player_auth_input::PlayMode::Reality: { /*8.5*/
         obj.gaze_direction = {}; pdef::proto::decode::vec3f(stream, *obj.gaze_direction); /*obj*/ /*4.6*/
         break;
@@ -17024,7 +17024,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     } /*8.8*/
     READ_OR_BAIL(readUnsignedVarLong, obj.tick); /*0.5*/
     pdef::proto::decode::vec3f(stream, obj.delta); /*obj*/ /*4.6*/
-    if (input_data.item_interact == true) { /*8.2*/
+    if (V_input_data.item_interact == true) { /*8.2*/
          obj.transaction = {}; pdef::proto::packet_player_auth_input::Transaction &v2 = *obj.transaction; /*8.4*/
         pdef::proto::decode::TransactionLegacy(stream, v2.legacy); /*v2*/ /*4.6*/
         int actions_len; /*2.3*/
@@ -17033,33 +17033,33 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
         for (int i = 0; i < actions_len; i++) { pdef::proto::decode::TransactionActions(stream, v2.actions[i]); } /*2.8*/
         pdef::proto::decode::TransactionUseItem(stream, v2.data); /*v2*/ /*4.6*/
     }
-    if (input_data.item_stack_request == true) { /*8.2*/
+    if (V_input_data.item_stack_request == true) { /*8.2*/
       obj.item_stack_request = {}; pdef::proto::decode::ItemStackRequest(stream, *obj.item_stack_request); /*obj*/ /*4.6*/
     }
-    if (input_data.block_action == true) { /*8.2*/
+    if (V_input_data.block_action == true) { /*8.2*/
       int block_action_len; READ_OR_BAIL(readZigZagVarInt, block_action_len); /*1.5*/
       obj.block_action.resize(block_action_len); /*1.6*/
       for (int i = 0; i < block_action_len; i++) { /*5*/
         pdef::proto::packet_player_auth_input::BlockAction &v3 = obj.block_action[i]; /*5.23*/
         READ_OR_BAIL(readZigZagVarInt, (int&)v3.action); /*7.2*/
-        const pdef::proto::packet_player_auth_input::BlockAction::Action &action = v3.action; /*0.7*/
-        if (action == pdef::proto::packet_player_auth_input::BlockAction::Action::StartBreak) { /*8.5*/
+        const pdef::proto::packet_player_auth_input::BlockAction::Action &V_action = v3.action; /*0.7*/
+        if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::StartBreak) { /*8.5*/
             v3.position = {}; pdef::proto::decode::vec3i(stream, *v3.position); /*v3*/ /*4.6*/
             READ_OR_BAIL(readZigZagVarInt, v3.face); /*0.5*/
         }
-        else if (action == pdef::proto::packet_player_auth_input::BlockAction::Action::AbortBreak) { /*8.5*/
+        else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::AbortBreak) { /*8.5*/
             v3.position = {}; pdef::proto::decode::vec3i(stream, *v3.position); /*v3*/ /*4.6*/
             READ_OR_BAIL(readZigZagVarInt, v3.face); /*0.5*/
         }
-        else if (action == pdef::proto::packet_player_auth_input::BlockAction::Action::CrackBreak) { /*8.5*/
+        else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::CrackBreak) { /*8.5*/
             v3.position = {}; pdef::proto::decode::vec3i(stream, *v3.position); /*v3*/ /*4.6*/
             READ_OR_BAIL(readZigZagVarInt, v3.face); /*0.5*/
         }
-        else if (action == pdef::proto::packet_player_auth_input::BlockAction::Action::PredictBreak) { /*8.5*/
+        else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::PredictBreak) { /*8.5*/
             v3.position = {}; pdef::proto::decode::vec3i(stream, *v3.position); /*v3*/ /*4.6*/
             READ_OR_BAIL(readZigZagVarInt, v3.face); /*0.5*/
         }
-        else if (action == pdef::proto::packet_player_auth_input::BlockAction::Action::ContinueBreak) { /*8.5*/
+        else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::ContinueBreak) { /*8.5*/
             v3.position = {}; pdef::proto::decode::vec3i(stream, *v3.position); /*v3*/ /*4.6*/
             READ_OR_BAIL(readZigZagVarInt, v3.face); /*0.5*/
         }
@@ -17080,7 +17080,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
   bool packet_player_enchant_options(pdef::Stream &stream, pdef::proto::packet_player_enchant_options &obj) {
     int options_len; READ_OR_BAIL(readUnsignedVarInt, options_len); /*1.5*/
     obj.options.resize(options_len); /*1.6*/
-    for (int i = 0; i < options_len; i++) {
+    for (int i = 0; i < options_len; i++) { /*3.3*/
       auto &v2 = obj.options[i]; /*3.4*/
       pdef::proto::decode::EnchantOption(stream, v2); /*v2*/ /*4.6*/
     }
@@ -17089,7 +17089,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
   bool packet_item_stack_request(pdef::Stream &stream, pdef::proto::packet_item_stack_request &obj) {
     int requests_len; READ_OR_BAIL(readUnsignedVarInt, requests_len); /*1.5*/
     obj.requests.resize(requests_len); /*1.6*/
-    for (int i = 0; i < requests_len; i++) {
+    for (int i = 0; i < requests_len; i++) { /*3.3*/
       auto &v2 = obj.requests[i]; /*3.4*/
       pdef::proto::decode::ItemStackRequest(stream, v2); /*v2*/ /*4.6*/
     }
@@ -17109,17 +17109,17 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     obj.type.chest = (type_val & 2) == 2;
     obj.type.legs = (type_val & 4) == 4;
     obj.type.feet = (type_val & 8) == 8; /*type: bitflags*/ /*4.3*/
-    pdef::proto::packet_player_armor_damage::type_t &type = obj.type; /*4.8*/
-    if (type.head == true) { /*8.2*/
+    pdef::proto::packet_player_armor_damage::type_t &V_type = obj.type; /*4.8*/
+    if (V_type.head == true) { /*8.2*/
       READ_OR_BAIL(readZigZagVarInt, obj.helmet_damage); /*0.5*/
     }
-    if (type.chest == true) { /*8.2*/
+    if (V_type.chest == true) { /*8.2*/
       READ_OR_BAIL(readZigZagVarInt, obj.chestplate_damage); /*0.5*/
     }
-    if (type.legs == true) { /*8.2*/
+    if (V_type.legs == true) { /*8.2*/
       READ_OR_BAIL(readZigZagVarInt, obj.leggings_damage); /*0.5*/
     }
-    if (type.feet == true) { /*8.2*/
+    if (V_type.feet == true) { /*8.2*/
       READ_OR_BAIL(readZigZagVarInt, obj.boots_damage); /*0.5*/
     }
     return true;
@@ -17133,7 +17133,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     READ_OR_BAIL(readUnsignedVarLong, obj.player_id); /*0.5*/
     int emote_pieces_len; READ_OR_BAIL(readUnsignedVarInt, emote_pieces_len); /*1.5*/
     obj.emote_pieces.resize(emote_pieces_len); /*1.6*/
-    for (int i = 0; i < emote_pieces_len; i++) {
+    for (int i = 0; i < emote_pieces_len; i++) { /*3.3*/
       auto &v2 = obj.emote_pieces[i]; /*3.4*/
       READ_OR_BAIL(readULongBE, v2); /*0.5*/
     }
@@ -17177,7 +17177,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     READ_OR_BAIL(readFloatLE, obj.blend_out_time); /*0.5*/
     int runtime_entity_ids_len; READ_OR_BAIL(readUnsignedVarInt, runtime_entity_ids_len); /*1.5*/
     obj.runtime_entity_ids.resize(runtime_entity_ids_len); /*1.6*/
-    for (int i = 0; i < runtime_entity_ids_len; i++) {
+    for (int i = 0; i < runtime_entity_ids_len; i++) { /*3.3*/
       auto &v2 = obj.runtime_entity_ids[i]; /*3.4*/
       READ_OR_BAIL(readUnsignedVarLong, v2); /*0.5*/
     }
@@ -17193,7 +17193,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
   bool packet_player_fog(pdef::Stream &stream, pdef::proto::packet_player_fog &obj) {
     int stack_len; READ_OR_BAIL(readUnsignedVarInt, stack_len); /*1.5*/
     obj.stack.resize(stack_len); /*1.6*/
-    for (int i = 0; i < stack_len; i++) {
+    for (int i = 0; i < stack_len; i++) { /*3.3*/
       auto &v2 = obj.stack[i]; /*3.4*/
       int _strlen; READ_OR_BAIL(readUnsignedVarInt, _strlen);
       if (!stream.readString(v2, _strlen)) return false; /*: pstring*/ /*4.3*/
@@ -17222,8 +17222,8 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
   }
   bool packet_debug_renderer(pdef::Stream &stream, pdef::proto::packet_debug_renderer &obj) {
     READ_OR_BAIL(readIntLE, (int32_t&)obj.type); /*7.2*/
-    const pdef::proto::packet_debug_renderer::Type &type = obj.type; /*0.7*/
-    switch (type) { /*8.0*/
+    const pdef::proto::packet_debug_renderer::Type &V_type = obj.type; /*0.7*/
+    switch (V_type) { /*8.0*/
       case pdef::proto::packet_debug_renderer::Type::Clear: { /*8.5*/
         break;
       } /*8.7*/
@@ -17298,13 +17298,13 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     READ_OR_BAIL(readZigZagVarInt, obj.z); /*0.5*/
     int blocks_len; READ_OR_BAIL(readUnsignedVarInt, blocks_len); /*1.5*/
     obj.blocks.resize(blocks_len); /*1.6*/
-    for (int i = 0; i < blocks_len; i++) {
+    for (int i = 0; i < blocks_len; i++) { /*3.3*/
       auto &v2 = obj.blocks[i]; /*3.4*/
       pdef::proto::decode::BlockUpdate(stream, v2); /*v2*/ /*4.6*/
     }
     int extra_len; READ_OR_BAIL(readUnsignedVarInt, extra_len); /*1.5*/
     obj.extra.resize(extra_len); /*1.6*/
-    for (int i = 0; i < extra_len; i++) {
+    for (int i = 0; i < extra_len; i++) { /*3.3*/
       auto &v2 = obj.extra[i]; /*3.4*/
       pdef::proto::decode::BlockUpdate(stream, v2); /*v2*/ /*4.6*/
     }
@@ -17321,8 +17321,8 @@ bool SubChunkEntryWithoutCaching(pdef::Stream &stream, pdef::proto::SubChunkEntr
     READ_OR_BAIL(readUByte, (uint8_t&)obj.result); /*7.2*/
     int payload_len; READ_OR_BAIL(readUnsignedVarInt, payload_len);if (!stream.readBuffer(obj.payload, payload_len)) return false; /*payload: buffer*/ /*4.3*/
     READ_OR_BAIL(readUByte, (uint8_t&)obj.heightmap_type); /*7.2*/
-    const pdef::proto::SubChunkEntryWithoutCaching::HeightmapType &heightmap_type = obj.heightmap_type; /*0.7*/
-    switch (heightmap_type) { /*8.0*/
+    const pdef::proto::SubChunkEntryWithoutCaching::HeightmapType &V_heightmap_type = obj.heightmap_type; /*0.7*/
+    switch (V_heightmap_type) { /*8.0*/
       case pdef::proto::SubChunkEntryWithoutCaching::HeightmapType::HasData: { /*8.5*/
         if (!stream.readBuffer(obj.heightmap, 256)) return false; /*heightmap: buffer*/ /*4.3*/
         break;
@@ -17336,8 +17336,8 @@ bool SubChunkEntryWithCaching(pdef::Stream &stream, pdef::proto::SubChunkEntryWi
     READ_OR_BAIL(readByte, obj.dy); /*0.5*/
     READ_OR_BAIL(readByte, obj.dz); /*0.5*/
     READ_OR_BAIL(readUByte, (uint8_t&)obj.result); /*7.2*/
-    const pdef::proto::SubChunkEntryWithCaching::Result &result = obj.result; /*0.7*/
-    switch (result) { /*8.0*/
+    const pdef::proto::SubChunkEntryWithCaching::Result &V_result = obj.result; /*0.7*/
+    switch (V_result) { /*8.0*/
       case pdef::proto::SubChunkEntryWithCaching::Result::SuccessAllAir: { /*8.5*/
         break;
       } /*8.7*/
@@ -17347,8 +17347,8 @@ bool SubChunkEntryWithCaching(pdef::Stream &stream, pdef::proto::SubChunkEntryWi
       } /*8.7*/
     } /*8.8*/
     READ_OR_BAIL(readUByte, (uint8_t&)obj.heightmap_type); /*7.2*/
-    const pdef::proto::SubChunkEntryWithCaching::HeightmapType &heightmap_type = obj.heightmap_type; /*0.7*/
-    switch (heightmap_type) { /*8.0*/
+    const pdef::proto::SubChunkEntryWithCaching::HeightmapType &V_heightmap_type = obj.heightmap_type; /*0.7*/
+    switch (V_heightmap_type) { /*8.0*/
       case pdef::proto::SubChunkEntryWithCaching::HeightmapType::HasData: { /*8.5*/
         if (!stream.readBuffer(obj.heightmap, 256)) return false; /*heightmap: buffer*/ /*4.3*/
         break;
@@ -17360,16 +17360,16 @@ bool SubChunkEntryWithCaching(pdef::Stream &stream, pdef::proto::SubChunkEntryWi
 }
   bool packet_subchunk(pdef::Stream &stream, pdef::proto::packet_subchunk &obj) {
     READ_OR_BAIL(readBool, (bool&)obj.cache_enabled); /*0.5*/
-    bool &cache_enabled = obj.cache_enabled; /*0.6*/
+    bool &V_cache_enabled = obj.cache_enabled; /*0.6*/
     READ_OR_BAIL(readZigZagVarInt, obj.dimension); /*0.5*/
     pdef::proto::decode::vec3i(stream, obj.origin); /*obj*/ /*4.6*/
-    if (cache_enabled == true) { /*8.1*/
+    if (V_cache_enabled == true) { /*8.1*/
       uint32_t entries_SubChunkEntryWithCaching_len; /*2.3*/
       READ_OR_BAIL(readUIntLE, entries_SubChunkEntryWithCaching_len); /*2.6*/
       obj.entries_SubChunkEntryWithCaching.resize(entries_SubChunkEntryWithCaching_len); /*2.7*/
       for (int i = 0; i < entries_SubChunkEntryWithCaching_len; i++) { pdef::proto::decode::SubChunkEntryWithCaching(stream, obj.entries_SubChunkEntryWithCaching[i]); } /*2.8*/
     }
-    else if (cache_enabled == false) { /*8.1*/
+    else if (V_cache_enabled == false) { /*8.1*/
       uint32_t entries_SubChunkEntryWithoutCaching_len; /*2.3*/
       READ_OR_BAIL(readUIntLE, entries_SubChunkEntryWithoutCaching_len); /*2.6*/
       obj.entries_SubChunkEntryWithoutCaching.resize(entries_SubChunkEntryWithoutCaching_len); /*2.7*/
@@ -17484,8 +17484,8 @@ bool SubChunkEntryWithCaching(pdef::Stream &stream, pdef::proto::SubChunkEntryWi
   }
   bool mcpe_packet(pdef::Stream &stream, pdef::proto::mcpe_packet &obj) {
     READ_OR_BAIL(readUnsignedVarInt, (int&)obj.name); /*7.2*/
-    const pdef::proto::mcpe_packet::Name &name = obj.name; /*0.7*/
-    switch (name) { /*8.0*/
+    const pdef::proto::mcpe_packet::Name &V_name = obj.name; /*0.7*/
+    switch (V_name) { /*8.0*/
       case pdef::proto::mcpe_packet::Name::Login: { /*8.5*/
         obj.params_packet_login = {}; pdef::proto::decode::packet_login(stream, *obj.params_packet_login); /*obj*/ /*4.6*/
         break;

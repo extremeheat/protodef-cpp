@@ -329,15 +329,20 @@ function toSafeVar (name) {
   return name
 }
 // this is for switch statements where we need to use the variable name as a case
-function toSafeVarSwitch (name) {
-  for (const ill of illegal) {
-    if (name.includes('.' + ill + ' ')) {
-      name = name.replaceAll('.' + ill + ' ', '.' + ill + '_')
-    } else if (name.endsWith('.' + ill)) {
-      name = name + '_'
+function toSafeVarSwitch (name, tokens) {
+  if (tokens) {
+    let str = ''
+    for (const token of tokens) {
+      if (Array.isArray(token)) {
+        str += 'V_' + token.map(toSafeVar).join('.')
+      } else {
+        str += ' ' + token + ' '
+      }
     }
+    return str
+  } else {
+    return 'V_' + toSafeVar(name)
   }
-  return name
 }
 
 const filterNull = (arr) => (Array.isArray(arr[0]) ? arr[0] : arr).filter(x => !!x)
@@ -606,14 +611,14 @@ function visitRoot (root, mode, customTypes, specialVars, logging) {
     const builtinEncodeFn = protodefTypeToCppEncode[typeName]
     if (builtinEncodeFn) {
       if (fieldName.endsWith('^')) {
-        pushSizeEncode(`  const ${typePropName} &${n} = ${structPropName}; /*0.1*/`)
+        pushSizeEncode(`  const ${typePropName} &V_${n} = ${structPropName}; /*0.1*/`)
       } else {
         pushSize(`  ${makeSizeStr(typeName, [objName, n])}; /*0.2*/`)
       }
       pushEncode('  ' + makeEncodeStr(typeName, [objName, n]) + '; /*0.4*/')
       pushDecode('  ' + makeDecodeStr(typeName, [objName, n], isAnon) + '; /*0.5*/')
       // .... this ^ needs to be similarly handled in each case below for read/write/size
-      if (fieldName.endsWith('^')) pushDecode(`  ${typePropName} &${n} = ${structPropName}; /*0.6*/`)
+      if (fieldName.endsWith('^')) pushDecode(`  ${typePropName} &V_${n} = ${structPropName}; /*0.6*/`)
     } else if (isRootArray && !shouldInlineFromRoot) {
       // A root array can be its own container. We only inline if the type is an array of primitives.
       // So, here we consider the type to be a structure that already has compiled read/write/size functions.
@@ -646,10 +651,10 @@ function visitRoot (root, mode, customTypes, specialVars, logging) {
         if (lengthVar) {
           // console.log('lengthVar', fieldType, lengthVar)
           const [lengthVariable, lengthTyp] = lengthVar
-          pushSize(`  ${makeSizeStr(lengthTyp, [lengthVariable])}; /*1.1*/`)
+          pushSize(`  ${makeSizeStr(lengthTyp, ['V_' + lengthVariable])}; /*1.1*/`)
           // pushEncode(`  ${makeEncodeStr(lengthTyp, [lengthVariable])}; /*1.2*/`)
           // Resize the std::vector so it has enough space to fit length
-          pushDecode(`  ${structPropName}.resize(${lengthVariable}); /*1.6*/`)
+          pushDecode(`  ${structPropName}.resize(${'V_' + lengthVariable}); /*1.6*/`)
         } else {
           pushSize(`  ${makeSizeStr(lengthType, [objName, n, 'size()'], isAnon)}; /*1.3*/`)
           pushEncode(`  ${makeEncodeStr(lengthType, [objName, n, 'size()'], isAnon)}; /*1.4*/`)
@@ -682,12 +687,12 @@ function visitRoot (root, mode, customTypes, specialVars, logging) {
             throw new Error('TODO: Only up to 2D arrays are supported')
           } else { // 2D array
             pushSizeEncode(`  for (const auto &v : ${structPropName}) { /*5.1*/`)
-            if (lengthVar) pushDecode(`  for (int i = 0; i < ${lengthVar[0]}; i++) { /*5.2*/`)
+            if (lengthVar) pushDecode(`  for (int i = 0; i < V_${lengthVar[0]}; i++) { /*5.2*/`)
             else pushDecode(`  for (int i = 0; i < ${n}_len; i++) { /*5.2*/`)
             if (actualLengthVar) {
               const [actualLengthVariable, actualLengthTyp] = actualLengthVar
-              pushSize(`    ${makeSizeStr(actualLengthTyp, [actualLengthVariable])}; /*5.3*/`)
-              pushEncode(`    ${makeEncodeStr(actualLengthTyp, [actualLengthVariable])}; /*5.4*/`)
+              pushSize(`    ${makeSizeStr(actualLengthTyp, ['V_' + actualLengthVariable])}; /*5.3*/`)
+              pushEncode(`    ${makeEncodeStr(actualLengthTyp, ['V_' + actualLengthVariable])}; /*5.4*/`)
               const typeStr = protodefTypeToCpp[actualLengthTyp] || 'int'
               pushDecode(`    ${typeStr} ${n}_len2; ${makeDecodeStr(actualLengthTyp, [n + '_len2'])}; /*5.5*/`)
               pushDecode(`    ${structPropName}[i].resize(${n}_len2); /*5.10*/`)
@@ -699,7 +704,7 @@ function visitRoot (root, mode, customTypes, specialVars, logging) {
               pushDecode(`    ${structPropName}[i].resize(${n}_len2); /*5.9*/`)
             }
             pushSizeEncode('    for (const auto &v : v) { /*5.10*/')
-            if (actualLengthVar) pushDecode(`    for (int j = 0; j < ${actualLengthVar[0]}; j++) { /*5.11*/`)
+            if (actualLengthVar) pushDecode(`    for (int j = 0; j < V_${actualLengthVar[0]}; j++) { /*5.11*/`)
             else pushDecode(`    for (int j = 0; j < ${n}_len2; j++) { /*5.11*/`)
             pushDecode(`      auto &v = ${structPropName}[i][j]; /*5.15*/`)
             if (actualActualType[0] === 'container') {
@@ -723,9 +728,9 @@ function visitRoot (root, mode, customTypes, specialVars, logging) {
         } else {
           const vName = 'v' + (structPaddingLevel + 1)
           pushEncode(`  for (const auto &${vName} : ${structPropName}) { /*3.1*/`)
-          pushSize(`  for (const auto &${vName} : ${structPropName}) {`)
-          if (lengthVar) pushDecode(`  for (int i = 0; i < ${lengthVar[0]}; i++) {`)
-          else pushDecode(`  for (int i = 0; i < ${n}_len; i++) {`)
+          pushSize(`  for (const auto &${vName} : ${structPropName}) { /*3.2*/`)
+          if (lengthVar) pushDecode(`  for (int i = 0; i < V_${lengthVar[0]}; i++) { /*3.3*/`)
+          else pushDecode(`  for (int i = 0; i < ${n}_len; i++) { /*3.3*/`)
           pushDecode(`    auto &${vName} = ${structPropName}[i]; /*3.4*/`)
           // visitType('', actualType, structPaddingLevel + 1, objPath.concat(n), true)
           // fieldName, fieldType, structPaddingLevel = 0, objPath, objectName
@@ -735,7 +740,10 @@ function visitRoot (root, mode, customTypes, specialVars, logging) {
           pushDecode('  }')
         }
       } else if (typeName === 'switch') {
-        const compareTo = Array.isArray(fieldType[1]) ? fieldType[1][2] : fieldType[1]
+        // compareTo holds a string that we branch against. It can contain OR or AND ops
+        const compareTo = Array.isArray(fieldType[1]) ? fieldType[1][1] : fieldType[1]
+        // If we contain OR or AND ops, we need to know all the variables in the expression:
+        const compareToTokens = Array.isArray(fieldType[1]) ? fieldType[1][0] : null
         const [levelsUp, _compareToType] = parseCompareToType(fieldType[2])
         const pathToCompareTo = (levelsUp ? objPath.slice(0, -levelsUp) : objPath) // + `/*${objPath.join(',')}*/`
         const compareToType = (_compareToType && _compareToType !== 'mapper') ? _compareToType : promoteToPascalOrSuffix(compareTo)
@@ -752,7 +760,7 @@ function visitRoot (root, mode, customTypes, specialVars, logging) {
         for (const [caseName] of Object.entries(cases)) {
           if (caseName.startsWith('/')) canBeSwitch = false
         }
-        if (canBeSwitch) pushAll(`  switch (${toSafeVarSwitch(compareTo)}) { /*8.0*/`)
+        if (canBeSwitch) pushAll(`  switch (${toSafeVarSwitch(compareTo, compareToTokens)}) { /*8.0*/`)
         let firstCase = true
         function pushCaseStart (matchCase, caseBody) {
           const ifStatement = firstCase ? 'if' : 'else if'
@@ -761,7 +769,7 @@ function visitRoot (root, mode, customTypes, specialVars, logging) {
             else pushAll(firstCase ? '  {' : '  else {')
           } else {
             if (canBeSwitch) pushAll(`    case ${matchCase}: { ` + caseBody)
-            else pushAll(`  ${ifStatement} (${wrapWithParenIfNeeded(toSafeVarSwitch(compareTo))} == ${wrapWithParenIfNeeded(matchCase)}) { ` + caseBody)
+            else pushAll(`  ${ifStatement} (${wrapWithParenIfNeeded(toSafeVarSwitch(compareTo, compareToTokens))} == ${wrapWithParenIfNeeded(matchCase)}) { ` + caseBody)
           }
           firstCase = false
         }
@@ -812,14 +820,14 @@ function visitRoot (root, mode, customTypes, specialVars, logging) {
       } else if (typeName === 'mapper') {
         const actualType = fieldType[1]
         if (fieldName.endsWith('^')) {
-          pushSizeEncode(`  const pdef::proto::${colonJoin(objPath)}::${promoteToPascalOrSuffix(fieldName)} &${n} = ${structPropName}; /*0.3*/`)
+          pushSizeEncode(`  const pdef::proto::${colonJoin(objPath)}::${promoteToPascalOrSuffix(fieldName)} &V_${n} = ${structPropName}; /*0.3*/`)
         }
         const castStr = `(${protodefTypeToCpp[actualType]}&)`
         pushSize(`  ${makeSizeStr(actualType, [castStr + objName, n])}; /*${fieldName}: ${actualType}*/ /*7.0*/`)
         pushEncode(`  ${makeEncodeStr(actualType, [castStr + objName, n])}; /*7.1*/`)
         pushDecode(`  ${makeDecodeStr(actualType, [castStr + objName, n])}; /*7.2*/`)
         if (fieldName.endsWith('^')) {
-          pushDecode(`  const pdef::proto::${colonJoin(objPath)}::${promoteToPascalOrSuffix(fieldName)} &${n} = ${structPropName}; /*0.7*/`)
+          pushDecode(`  const pdef::proto::${colonJoin(objPath)}::${promoteToPascalOrSuffix(fieldName)} &V_${n} = ${structPropName}; /*0.7*/`)
         }
       } else if (typeName === 'container') {
         const structureName = promoteToPascalOrSuffix(fieldName)
@@ -865,8 +873,8 @@ function visitRoot (root, mode, customTypes, specialVars, logging) {
             const typename = isAPrimitiveCppType(varType)
               ? varType
               : protodefTypeToCpp[varType] || `pdef::proto::${colonJoin(objPath)}::${varType}`
-            pushSizeEncode(`  const ${typename} &${n} = ${structPropName}; /*4.7*/`)
-            pushDecode(`  ${typename} &${n} = ${structPropName}; /*4.8*/`)
+            pushSizeEncode(`  const ${typename} &V_${n} = ${structPropName}; /*4.7*/`)
+            pushDecode(`  ${typename} &V_${n} = ${structPropName}; /*4.8*/`)
           }
         }
       }
@@ -980,25 +988,3 @@ function visit (ir, userDefinedCustomTypes, globalVars, namespace) {
 }
 
 module.exports = { addAliasType, compile: visit }
-
-if (!module.parent) {
-  // some stubs
-  addAliasType('nbt', 'i8')
-  addAliasType('lnbt', 'i8')
-  addAliasType('nbtLoop', 'i8')
-  addAliasType('uuid', 'u64')
-  addAliasType('encapsulated', 'i8')
-  addAliasType('slot', 'i8')
-  addAliasType('byterot', 'i8')
-  addAliasType('restBuffer', 'i8')
-  const ir = require('./__tmp/redone.json')
-  // ir = {
-  //   // ItemLegacy: ir.ItemLegacy,
-  //   packet_emote_list: ir.packet_emote_list,
-  //   // string: ir.string,
-  //   // packet_available_commands: ir.packet_available_commands,
-  //   // packet_education_settings: ir.packet_education_settings,
-  // }
-  const compiled = visit(ir)
-  fs.writeFileSync('structs.h', compiled.structLines + '\n' + compiled.sizeLines + '\n' + compiled.encodeLines + '\n' + compiled.decodeLines)
-}
