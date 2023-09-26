@@ -18,8 +18,12 @@
     "url": "git+https://github.com/extremeheat/protodef-cpp.git"
   },
   "keywords": [
-    "prismarine",
-    "template"
+    "protodef",
+    "deserialize",
+    "serialize",
+    "binary",
+    "compiler",
+    "c++"
   ],
   "author": "Romain Beaumont",
   "license": "MIT",

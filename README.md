@@ -4,7 +4,7 @@
 [![Try it on gitpod](https://img.shields.io/static/v1.svg?label=try&message=on%20gitpod&color=brightgreen&logo=gitpod)](https://gitpod.io/#https://github.com/extremeheat/protodef-cpp)
 [![Official Discord](https://img.shields.io/static/v1.svg?label=PrismarineJS&message=Discord&color=blue&logo=discord)](https://discord.gg/GsEFRM8)
 
-C++ compiler for ProtoDef schemas, a lighter and more versatile alternative to Google Protocol Buffers or FlatBuffers that can support any binary format.
+C++ compiler for ProtoDef schemas, a lighter and more versatile alternative to Protocol Buffers or FlatBuffers that can support any binary format.
 
 See the ProtoDef specification at https://github.com/ProtoDef-io/ProtoDef.
 
@@ -34,7 +34,7 @@ Options:
   --namespace   What namespace to use, useful if you have multiple protocols.  (default: proto)
 ```
 
-If you have multiple protocols specified inside one JSON file, please use the programmatic API instead.
+If you have multiple protocols specified inside one JSON file, please use the programmatic API instead ([example](https://github.com/extremeheat/protodef-cpp/blob/master/examples/mcpc-protocol/main.js)).
 
 ### via code / programmatic API
 
@@ -101,7 +101,7 @@ module.exports = {
 ```
 </details> -->
 
-Example:
+Command line:
 ```cmd
 npx protodef-cpp -i protocol.yml --lang cpp
 ```
@@ -125,3 +125,5 @@ int main () {
   return 0;
 }
 ```
+
+See [examples/](https://github.com/extremeheat/protodef-cpp/tree/master/examples) for more examples.

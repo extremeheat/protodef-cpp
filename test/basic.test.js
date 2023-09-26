@@ -21,7 +21,9 @@ describe('c++ compile tests', () => {
     console.log('WD', newWd)
     for (const file of fs.readdirSync('./build')) {
       if (!file.endsWith('.h')) continue
-      cp.execSync(`clang++ ./build/${file} -std=c++20 -ferror-limit=9999`, {
+      const cmd = `clang++ ./build/${file} -std=c++20 -ferror-limit=9999`
+      console.log('>', cmd)
+      cp.execSync(cmd, {
         cwd: newWd,
         stdio: 'inherit'
       })

@@ -332,6 +332,20 @@ function processSchema (bloatedSchema, logging) {
     return type
   }
 
+  function processBitField (args) {
+    const totalBitSize = args.reduce((acc, cur) => (acc += cur.size, acc), 0)
+    const bit2ProtodefType = {
+      8: 'u8',
+      16: 'u16',
+      32: 'u32',
+      64: 'u64'
+    }
+    const pdefType = bit2ProtodefType[totalBitSize]
+    if (!pdefType) throw new Error('Bitfield size not supported, must be multiple of 8 not greater than 64: ' + totalBitSize)
+    const type = ['bitfield', { fields: args, type: pdefType }]
+    return type
+  }
+
   function visit (root, simplified, isAnonIteration = false) {
     // debugLog('Visiting...', JSON.stringify(root), isAnonIteration ? '(anon)' : '')
 
@@ -398,6 +412,9 @@ function processSchema (bloatedSchema, logging) {
               }
               children.finish()
             }
+          } else if (_actualType === 'bitfield') {
+            next.add(field, processBitField(_args))
+            sharedScope.add(field, processBitField(_args))
           } else {
             debugLog('Unknown type', _actualType, _args)
             sharedScope.add(field, [_actualType, _args])
@@ -450,6 +467,8 @@ function processSchema (bloatedSchema, logging) {
             children.finish()
           }
         }
+      } else if (actualType === 'bitfield') {
+        addToScope(newName, processBitField(args))
       } else {
         // console.warn('! Unknown type', actualType, args)
         addToScope(newName, [actualType, args])
