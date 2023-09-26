@@ -607,11 +607,11 @@ function postprocess (schema) {
 }
 
 module.exports = {
-  generate (schema) {
+  generate (schema, namespace) {
     const pp = preprocess(schema)
     const from = processSchema(pp)
     const cloned = JSON.parse(JSON.stringify(from))
-    // fs.writeFileSync('tmp.json', JSON.stringify(cloned, null, 2))
+    // fs.writeFileSync(namespace + '.ir.json', JSON.stringify(cloned, null, 2))
     const final = postprocess(cloned)
     return final
   }

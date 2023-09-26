@@ -14,7 +14,7 @@ function compile ({ lang, inputJSON, inputFile, outputFolder, typeAliases, custo
   }
   const generatedIR = ir.generate(typeof inputJSON === 'string'
     ? JSON.parse(inputJSON)
-    : inputJSON)
+    : inputJSON, namespace)
 
   if (typeAliases) {
     for (const [a, b] of typeAliases) {

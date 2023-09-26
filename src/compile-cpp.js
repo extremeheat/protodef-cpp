@@ -87,6 +87,9 @@ const specialVars = {
 }
 const customTypes = {
   pstring: {
+    type () {
+      return 'std::string'
+    },
     struct (args, name, makeCallingCode) {
       return makeCallingCode('std::string', name)
     },
@@ -114,6 +117,9 @@ len += ${refName}.length();
     }
   },
   buffer: {
+    type () {
+      return 'std::vector<uint8_t>'
+    },
     struct (args, name, makeCallingCode) {
       return makeCallingCode('std::vector<uint8_t>', name)
     },
@@ -217,9 +223,13 @@ len += ${refName}.size();
   },
   // bitfield is read as a u8 encapsulating many fields of variable bit size
   // "bitfield", [ { "name": "unused", "size": 1, "signed": false }, { "name": "collapse_enum", "size": 1, "signed": false }, { "name": "has_semantic_constraint", "size": 1, "signed": false }, { "name": "as_chained_command", "size": 1, "signed": false }, { "name": "unknown2", "size": 4, "signed": false } ] ],
+  // TODO: support signed field
   bitfield: {
+    type (args, name) {
+      return `${name}_t`
+    },
     struct (args, name, makeCallingCode) {
-      let s = 'struct {\n'
+      let s = `struct ${name}_t {\n`
       for (const v of args) {
         s += `  int ${v.name} = 0;\n`
       }
@@ -261,6 +271,10 @@ function addAliasType (newType, baseType) {
   protodefTypeToCppDecode[newType] = protodefTypeToCppDecode[baseType]
   protodefTypeSizes[newType] = protodefTypeSizes[baseType]
   if (customTypes[baseType]) customTypes[newType] = customTypes[baseType]
+}
+
+function isAPrimitiveCppType (key) {
+  return Object.values(protodefTypeToCpp).includes(key)
 }
 
 function unickify (objOrArr) {
@@ -680,13 +694,12 @@ function visitRoot (root, mode, customTypes, specialVars, logging) {
             pushSizeEncode('    for (const auto &v : v) { /*5.10*/')
             if (actualLengthVar) pushDecode(`    for (int j = 0; j < ${actualLengthVar[0]}; j++) { /*5.11*/`)
             else pushDecode(`    for (int j = 0; j < ${n}_len2; j++) { /*5.11*/`)
-
+            pushDecode(`      auto &v = ${structPropName}[i][j]; /*5.15*/`)
             if (actualActualType[0] === 'container') {
+              pushAll('// Untested! Container')
               encodingFromContainer(newName, actualActualType[1], structPaddingLevel + 2, structPaddingLevel === 0 ? objPath.concat('') : objPath.concat(promoteToPascalOrSuffix(n)), true)
             } else {
-              pushSize(`      ${makeSizeStr(actualActualType[0], 'v')}; /*5.12*/`)
-              pushEncode(`      ${makeEncodeStr(actualActualType[0], 'v')}; /*5.13*/`)
-              pushDecode(`      ${makeDecodeStr(actualActualType[0], [objName, n + '[i][j]'])}; /*5.14*/`)
+              encodeType('', actualActualType, structPaddingLevel + 2, objPath.concat(n), undefined, 'v')
             }
             pushSizeEncode('    }')
             pushDecode('    }')
@@ -723,7 +736,7 @@ function visitRoot (root, mode, customTypes, specialVars, logging) {
         const cases = fieldType[3]
 
         // Clang warns us on switches for booleans, so we need to use if/else instead
-        let canBeSwitch = _compareToType === 'mapper'
+        let canBeSwitch = _compareToType === 'mapper' || !isNaN(compareTo)
         // if we branch on a dynamic value, we can't use a switch
         const allCases = Object.entries(cases)
         if (!allCases.length) return // empty switch
@@ -747,7 +760,9 @@ function visitRoot (root, mode, customTypes, specialVars, logging) {
         }
 
         for (const [caseName, caseType] of Object.entries(cases)) {
-          if (compareToType === 'bool') {
+          if (compareToType === 'string') {
+            pushCaseStart(`"${caseName}"`, '/*8.0*/')
+          } else if (compareToType === 'bool') {
             pushCaseStart(caseName, '/*8.1*/')
           } else if ((['true', 'false'].includes(caseName) && (_compareToType !== 'mapper')) || !isNaN(caseName)) {
             pushCaseStart(caseName, '/*8.2*/')
@@ -761,18 +776,21 @@ function visitRoot (root, mode, customTypes, specialVars, logging) {
           // encodingFromContainer(caseName, caseType, structPaddingLevel + 2, objName)
           let realName = isAnon ? null : caseType[5] || caseType['*name']
           const isScoped = isAnon ? false : !Array.isArray(caseType)
+          let vName = objectName
           if (realName) {
             realName = deanonymizeStr(realName)
             // TODO: handle optional fields
             const structureName = promoteToPascalOrSuffix(realName)
+
             if (!Array.isArray(caseType)) {
-              pushDecode(`       ${objName}.${realName} = {}; pdef::proto::${colonJoin(objPath)}::${structureName} &v = *${objName}.${realName}; /*8.4*/`)
+              vName = 'v' + (structPaddingLevel + 1)
+              pushDecode(`       ${objName}.${realName} = {}; pdef::proto::${colonJoin(objPath)}::${structureName} &${vName} = *${objName}.${realName}; /*8.4*/`)
               // "expect or bail" is not needed here because we already checked the switch case
-              pushEncode(`      const pdef::proto::${colonJoin(objPath)}::${structureName} &v = *${objName}.${realName}; /*8.5*/`)
-              pushSize(`      EXPECT_OR_BAIL(${objName}.${realName}); const pdef::proto::${colonJoin(objPath)}::${structureName} &v = *${objName}.${realName}; /*8.6*/`)
+              pushEncode(`      const pdef::proto::${colonJoin(objPath)}::${structureName} &${vName} = *${objName}.${realName}; /*8.5*/`)
+              pushSize(`      EXPECT_OR_BAIL(${objName}.${realName}); const pdef::proto::${colonJoin(objPath)}::${structureName} &${vName} = *${objName}.${realName}; /*8.6*/`)
             }
           }
-          visitType(n, caseType, structPaddingLevel + 1 + (canBeSwitch), (isScoped && realName) ? objPath.concat(promoteToPascalOrSuffix(realName)) : objPath, true, objectName)
+          visitType(n, caseType, structPaddingLevel + 1 + (canBeSwitch), (isScoped && realName) ? objPath.concat(promoteToPascalOrSuffix(realName)) : objPath, true, vName)
           if (canBeSwitch) {
             pushAll('      break;')
             pushAll('    } /*8.7*/')
@@ -834,9 +852,14 @@ function visitRoot (root, mode, customTypes, specialVars, logging) {
         if (fieldName.endsWith('^')) {
           const varType = structVarType ?? typeName
           if (varType) { // structVarType being '' means scoping is not needed, maybe handled
-            const typename = protodefTypeToCpp[varType] || `pdef::proto::${colonJoin(objPath)}::${varType}`
-            pushSizeEncode(`  const ${typename} &${n} = ${structPropName}; /*0.1*/`)
-            pushDecode(`  ${typename} &${n} = ${structPropName}; /*0.7*/`)
+            if (!protodefTypeToCpp[varType] && !structVarType) {
+              throw new Error('Custom ProtoDef type needs to define a C++ type: ' + varType)
+            }
+            const typename = isAPrimitiveCppType(varType)
+              ? varType
+              : protodefTypeToCpp[varType] || `pdef::proto::${colonJoin(objPath)}::${varType}`
+            pushSizeEncode(`  const ${typename} &${n} = ${structPropName}; /*4.7*/`)
+            pushDecode(`  ${typename} &${n} = ${structPropName}; /*4.8*/`)
           }
         }
       }

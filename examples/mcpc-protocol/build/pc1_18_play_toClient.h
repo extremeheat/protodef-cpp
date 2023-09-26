@@ -231,14 +231,14 @@ struct packet;
     };
     std::optional<Data35> data_35; /*3.2*/
     struct Data36 {
-      struct { /*6.0*/
+      struct origin_t { /*6.0*/
         int x = 0; /*6.0*/
         int z = 0; /*6.0*/
         int y = 0; /*6.0*/
       } origin; /*6.0*/
       std::string positionType; /*6.0*/
       int ticks; /*0.0*/
-      struct { /*6.0*/
+      struct destination_position_t { /*6.0*/
         int x = 0; /*6.0*/
         int z = 0; /*6.0*/
         int y = 0; /*6.0*/
@@ -263,7 +263,7 @@ struct packet;
     std::vector<int /*0.0*/> entries; /*3.0*/
   };
   struct chunkBlockEntity {
-    struct { /*6.0*/
+    struct _3_t { /*6.0*/
       int x = 0; /*6.0*/
       int z = 0; /*6.0*/
     } _3; /*6.0*/
@@ -272,7 +272,7 @@ struct packet;
     int8_t nbtData; /*0.0*/
   };
   struct command_node {
-    struct { /*6.0*/
+    struct flags_t { /*6.0*/
       int unused = 0; /*6.0*/
       int has_custom_suggestions = 0; /*6.0*/
       int has_redirect_node = 0; /*6.0*/
@@ -288,7 +288,7 @@ struct packet;
       std::string name; /*6.0*/
       std::string parser; /*6.0*/
       struct PropertiesBrigadierFloat {
-        struct { /*6.0*/
+        struct flags_t { /*6.0*/
           int unused = 0; /*6.0*/
           int max_present = 0; /*6.0*/
           int min_present = 0; /*6.0*/
@@ -298,7 +298,7 @@ struct packet;
       };
       std::optional<PropertiesBrigadierFloat> properties_brigadier_float; /*3.2*/
       struct PropertiesBrigadierDouble {
-        struct { /*6.0*/
+        struct flags_t { /*6.0*/
           int unused = 0; /*6.0*/
           int max_present = 0; /*6.0*/
           int min_present = 0; /*6.0*/
@@ -308,7 +308,7 @@ struct packet;
       };
       std::optional<PropertiesBrigadierDouble> properties_brigadier_double; /*3.2*/
       struct PropertiesBrigadierInteger {
-        struct { /*6.0*/
+        struct flags_t { /*6.0*/
           int unused = 0; /*6.0*/
           int max_present = 0; /*6.0*/
           int min_present = 0; /*6.0*/
@@ -318,7 +318,7 @@ struct packet;
       };
       std::optional<PropertiesBrigadierInteger> properties_brigadier_integer; /*3.2*/
       struct PropertiesBrigadierLong {
-        struct { /*6.0*/
+        struct flags_t { /*6.0*/
           int unused = 0; /*6.0*/
           int max_present = 0; /*6.0*/
           int min_present = 0; /*6.0*/
@@ -333,12 +333,12 @@ struct packet;
         GREEDY_PHRASE = 2,
       };
       PropertiesMapper properties_mapper; /*3.2*/
-      struct { /*6.0*/
+      struct properties_minecraft_entity_t { /*6.0*/
         int unused = 0; /*6.0*/
         int onlyAllowPlayers = 0; /*6.0*/
         int onlyAllowEntities = 0; /*6.0*/
       } properties_minecraft_entity; /*6.0*/
-      struct { /*6.0*/
+      struct properties_minecraft_score_holder_t { /*6.0*/
         int unused = 0; /*6.0*/
         int allowMultiple = 0; /*6.0*/
       } properties_minecraft_score_holder; /*6.0*/
@@ -394,7 +394,7 @@ struct packet;
     int entityId; /*0.0*/
     uint64_t entityUUID; /*0.0*/
     int title; /*0.0*/
-    struct { /*6.0*/
+    struct location_t { /*6.0*/
       int x = 0; /*6.0*/
       int z = 0; /*6.0*/
       int y = 0; /*6.0*/
@@ -439,7 +439,7 @@ struct packet;
             std::string description; /*6.0*/
             int8_t icon; /*0.0*/
             int frameType; /*0.0*/
-            struct { /*6.0*/
+            struct flags_t { /*6.0*/
               int _unused = 0; /*6.0*/
               int hidden = 0; /*6.0*/
               int show_toast = 0; /*6.0*/
@@ -478,7 +478,7 @@ struct packet;
   };
   struct packet_block_break_animation {
     int entityId; /*0.0*/
-    struct { /*6.0*/
+    struct location_t { /*6.0*/
       int x = 0; /*6.0*/
       int z = 0; /*6.0*/
       int y = 0; /*6.0*/
@@ -486,7 +486,7 @@ struct packet;
     int8_t destroyStage; /*0.0*/
   };
   struct packet_tile_entity_data {
-    struct { /*6.0*/
+    struct location_t { /*6.0*/
       int x = 0; /*6.0*/
       int z = 0; /*6.0*/
       int y = 0; /*6.0*/
@@ -495,7 +495,7 @@ struct packet;
     int8_t nbtData; /*0.0*/
   };
   struct packet_block_action {
-    struct { /*6.0*/
+    struct location_t { /*6.0*/
       int x = 0; /*6.0*/
       int z = 0; /*6.0*/
       int y = 0; /*6.0*/
@@ -505,7 +505,7 @@ struct packet;
     int blockId; /*0.0*/
   };
   struct packet_block_change {
-    struct { /*6.0*/
+    struct location_t { /*6.0*/
       int x = 0; /*6.0*/
       int z = 0; /*6.0*/
       int y = 0; /*6.0*/
@@ -562,7 +562,7 @@ struct packet;
     uint64_t sender; /*0.0*/
   };
   struct packet_multi_block_change {
-    struct { /*6.0*/
+    struct chunkCoordinates_t { /*6.0*/
       int x = 0; /*6.0*/
       int z = 0; /*6.0*/
       int y = 0; /*6.0*/
@@ -666,7 +666,7 @@ struct packet;
   };
   struct packet_world_event {
     int32_t effectId; /*0.0*/
-    struct { /*6.0*/
+    struct location_t { /*6.0*/
       int x = 0; /*6.0*/
       int z = 0; /*6.0*/
       int y = 0; /*6.0*/
@@ -707,14 +707,14 @@ struct packet;
     };
     std::optional<Data35> data_35; /*3.2*/
     struct Data36 {
-      struct { /*6.0*/
+      struct origin_t { /*6.0*/
         int x = 0; /*6.0*/
         int z = 0; /*6.0*/
         int y = 0; /*6.0*/
       } origin; /*6.0*/
       std::string positionType; /*6.0*/
       int ticks; /*0.0*/
-      struct { /*6.0*/
+      struct destination_position_t { /*6.0*/
         int x = 0; /*6.0*/
         int z = 0; /*6.0*/
         int y = 0; /*6.0*/
@@ -839,7 +839,7 @@ struct packet;
     int hand; /*0.0*/
   };
   struct packet_open_sign_entity {
-    struct { /*6.0*/
+    struct location_t { /*6.0*/
       int x = 0; /*6.0*/
       int z = 0; /*6.0*/
       int y = 0; /*6.0*/
@@ -1018,7 +1018,7 @@ struct packet;
     int value; /*0.0*/
   };
   struct packet_spawn_position {
-    struct { /*6.0*/
+    struct location_t { /*6.0*/
       int x = 0; /*6.0*/
       int z = 0; /*6.0*/
       int y = 0; /*6.0*/
@@ -1138,7 +1138,7 @@ struct packet;
     std::vector<Tags /*3.2*/> tags; /*3.0*/
   };
   struct packet_acknowledge_player_digging {
-    struct { /*6.0*/
+    struct location_t { /*6.0*/
       int x = 0; /*6.0*/
       int z = 0; /*6.0*/
       int y = 0; /*6.0*/
@@ -1148,14 +1148,14 @@ struct packet;
     bool successful; /*0.0*/
   };
   struct packet_sculk_vibration_signal {
-    struct { /*6.0*/
+    struct sourcePosition_t { /*6.0*/
       int x = 0; /*6.0*/
       int z = 0; /*6.0*/
       int y = 0; /*6.0*/
     } sourcePosition; /*6.0*/
     std::string destinationIdentifier; /*6.0*/
     int arrivalTicks; /*0.0*/
-    struct { /*6.0*/
+    struct destination_position_t { /*6.0*/
       int x = 0; /*6.0*/
       int z = 0; /*6.0*/
       int y = 0; /*6.0*/
@@ -1556,22 +1556,22 @@ size_t packet(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet &ob
     size_t len = 0;
     const int &particleId = obj.particleId; /*0.1*/
     if (particleId == 2) { /*8.2*/
-        EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.6*/
-        len += stream.sizeOfVarInt(v.blockState); /*0.2*/
+        EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.6*/
+        len += stream.sizeOfVarInt(v2.blockState); /*0.2*/
     }
     else if (particleId == 3) { /*8.2*/
-        EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.6*/
-        len += stream.sizeOfVarInt(v.blockState); /*0.2*/
+        EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.6*/
+        len += stream.sizeOfVarInt(v2.blockState); /*0.2*/
     }
     else if (particleId == 14) { /*8.2*/
-        EXPECT_OR_BAIL(obj.data_14); const pdef::pc1_18_play_toClient::particle::Data14 &v = *obj.data_14; /*8.6*/
+        EXPECT_OR_BAIL(obj.data_14); const pdef::pc1_18_play_toClient::particle::Data14 &v2 = *obj.data_14; /*8.6*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
     }
     else if (particleId == 15) { /*8.2*/
-        EXPECT_OR_BAIL(obj.data_15); const pdef::pc1_18_play_toClient::particle::Data15 &v = *obj.data_15; /*8.6*/
+        EXPECT_OR_BAIL(obj.data_15); const pdef::pc1_18_play_toClient::particle::Data15 &v2 = *obj.data_15; /*8.6*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
@@ -1581,26 +1581,26 @@ size_t packet(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet &ob
         len += 4; /*0.2*/
     }
     else if (particleId == 24) { /*8.2*/
-        EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.6*/
-        len += stream.sizeOfVarInt(v.blockState); /*0.2*/
+        EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.6*/
+        len += stream.sizeOfVarInt(v2.blockState); /*0.2*/
     }
     else if (particleId == 35) { /*8.2*/
-        EXPECT_OR_BAIL(obj.data_35); const pdef::pc1_18_play_toClient::particle::Data35 &v = *obj.data_35; /*8.6*/
+        EXPECT_OR_BAIL(obj.data_35); const pdef::pc1_18_play_toClient::particle::Data35 &v2 = *obj.data_35; /*8.6*/
         len += 1; /*0.2*/
     }
     else if (particleId == 36) { /*8.2*/
-        EXPECT_OR_BAIL(obj.data_36); const pdef::pc1_18_play_toClient::particle::Data36 &v = *obj.data_36; /*8.6*/
+        EXPECT_OR_BAIL(obj.data_36); const pdef::pc1_18_play_toClient::particle::Data36 &v2 = *obj.data_36; /*8.6*/
         len += 1; /*origin: bitfield*/ /*4.1*/
-        len += stream.sizeOfVarInt(v.positionType.length());
-        len += v.positionType.length(); /*positionType^: pstring*/ /*4.1*/
-        const pdef::pc1_18_play_toClient::particle::Data36::pstring &positionType = v.positionType; /*0.1*/
-        if (positionType == pdef::pc1_18_play_toClient::particle::Data36::PositionType::MinecraftBlock) { /*8.5*/
+        len += stream.sizeOfVarInt(v2.positionType.length());
+        len += v2.positionType.length(); /*positionType^: pstring*/ /*4.1*/
+        const std::string &positionType = v2.positionType; /*4.7*/
+        if (positionType == "minecraft:block") { /*8.0*/
           len += 1; /*destination: bitfield*/ /*4.1*/
         }
-        else if (positionType == pdef::pc1_18_play_toClient::particle::Data36::PositionType::MinecraftEntity) { /*8.5*/
-          len += stream.sizeOfVarInt(v.destination_varint); /*0.2*/
+        else if (positionType == "minecraft:entity") { /*8.0*/
+          len += stream.sizeOfVarInt(v2.destination_varint); /*0.2*/
         }
-        len += stream.sizeOfVarInt(v.ticks); /*0.2*/
+        len += stream.sizeOfVarInt(v2.ticks); /*0.2*/
     }
     DBG_PRINT("%s: sized at %lld\n", __func__, len); return len;
   }
@@ -1638,7 +1638,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   size_t command_node(pdef::Stream &stream, const pdef::pc1_18_play_toClient::command_node &obj) {
     size_t len = 0;
     len += 1; /*flags^: bitfield*/ /*4.1*/
-    const pdef::pc1_18_play_toClient::command_node::bitfield &flags = obj.flags; /*0.1*/
+    const pdef::pc1_18_play_toClient::command_node::flags_t &flags = obj.flags; /*4.7*/
     len += stream.sizeOfVarInt(obj.children.size()); /*1.3*/
     for (const auto &v2 : obj.children) {
       len += stream.sizeOfVarInt(v2); /*0.2*/
@@ -1649,23 +1649,23 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     if (flags.command_node_type == 0) { /*8.2*/
     }
     else if (flags.command_node_type == 1) { /*8.2*/
-        EXPECT_OR_BAIL(obj.extraNodeData_1); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData1 &v = *obj.extraNodeData_1; /*8.6*/
-        len += stream.sizeOfVarInt(v.name.length());
-        len += v.name.length(); /*name: pstring*/ /*4.1*/
+        EXPECT_OR_BAIL(obj.extraNodeData_1); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData1 &v2 = *obj.extraNodeData_1; /*8.6*/
+        len += stream.sizeOfVarInt(v2.name.length());
+        len += v2.name.length(); /*name: pstring*/ /*4.1*/
     }
     else if (flags.command_node_type == 2) { /*8.2*/
-        EXPECT_OR_BAIL(obj.extraNodeData_2); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2 &v = *obj.extraNodeData_2; /*8.6*/
-        len += stream.sizeOfVarInt(v.name.length());
-        len += v.name.length(); /*name: pstring*/ /*4.1*/
-        len += stream.sizeOfVarInt(v.parser.length());
-        len += v.parser.length(); /*parser^: pstring*/ /*4.1*/
-        const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::pstring &parser = v.parser; /*0.1*/
-        if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::BrigadierBool) { /*8.5*/
+        EXPECT_OR_BAIL(obj.extraNodeData_2); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2 &v2 = *obj.extraNodeData_2; /*8.6*/
+        len += stream.sizeOfVarInt(v2.name.length());
+        len += v2.name.length(); /*name: pstring*/ /*4.1*/
+        len += stream.sizeOfVarInt(v2.parser.length());
+        len += v2.parser.length(); /*parser^: pstring*/ /*4.1*/
+        const std::string &parser = v2.parser; /*4.7*/
+        if (parser == "brigadier:bool") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::BrigadierFloat) { /*8.5*/
-            EXPECT_OR_BAIL(v.properties_brigadier_float); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat &v = *v.properties_brigadier_float; /*8.6*/
+        else if (parser == "brigadier:float") { /*8.0*/
+            EXPECT_OR_BAIL(v2.properties_brigadier_float); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat &v4 = *v2.properties_brigadier_float; /*8.6*/
             len += 1; /*flags^: bitfield*/ /*4.1*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat::bitfield &flags = v.flags; /*0.1*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat::flags_t &flags = v4.flags; /*4.7*/
             if (flags.min_present == 1) { /*8.2*/
               len += 4; /*0.2*/
             }
@@ -1673,10 +1673,10 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
               len += 4; /*0.2*/
             }
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::BrigadierDouble) { /*8.5*/
-            EXPECT_OR_BAIL(v.properties_brigadier_double); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble &v = *v.properties_brigadier_double; /*8.6*/
+        else if (parser == "brigadier:double") { /*8.0*/
+            EXPECT_OR_BAIL(v2.properties_brigadier_double); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble &v4 = *v2.properties_brigadier_double; /*8.6*/
             len += 1; /*flags^: bitfield*/ /*4.1*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble::bitfield &flags = v.flags; /*0.1*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble::flags_t &flags = v4.flags; /*4.7*/
             if (flags.min_present == 1) { /*8.2*/
               len += 8; /*0.2*/
             }
@@ -1684,10 +1684,10 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
               len += 8; /*0.2*/
             }
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::BrigadierInteger) { /*8.5*/
-            EXPECT_OR_BAIL(v.properties_brigadier_integer); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger &v = *v.properties_brigadier_integer; /*8.6*/
+        else if (parser == "brigadier:integer") { /*8.0*/
+            EXPECT_OR_BAIL(v2.properties_brigadier_integer); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger &v4 = *v2.properties_brigadier_integer; /*8.6*/
             len += 1; /*flags^: bitfield*/ /*4.1*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger::bitfield &flags = v.flags; /*0.1*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger::flags_t &flags = v4.flags; /*4.7*/
             if (flags.min_present == 1) { /*8.2*/
               len += 4; /*0.2*/
             }
@@ -1695,10 +1695,10 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
               len += 4; /*0.2*/
             }
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::BrigadierLong) { /*8.5*/
-            EXPECT_OR_BAIL(v.properties_brigadier_long); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong &v = *v.properties_brigadier_long; /*8.6*/
+        else if (parser == "brigadier:long") { /*8.0*/
+            EXPECT_OR_BAIL(v2.properties_brigadier_long); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong &v4 = *v2.properties_brigadier_long; /*8.6*/
             len += 1; /*flags^: bitfield*/ /*4.1*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong::bitfield &flags = v.flags; /*0.1*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong::flags_t &flags = v4.flags; /*4.7*/
             if (flags.min_present == 1) { /*8.2*/
               len += 8; /*0.2*/
             }
@@ -1706,103 +1706,103 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
               len += 8; /*0.2*/
             }
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::BrigadierString) { /*8.5*/
+        else if (parser == "brigadier:string") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftEntity) { /*8.5*/
+        else if (parser == "minecraft:entity") { /*8.0*/
           len += 1; /*properties: bitfield*/ /*4.1*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftGameProfile) { /*8.5*/
+        else if (parser == "minecraft:game_profile") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftBlockPos) { /*8.5*/
+        else if (parser == "minecraft:block_pos") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftColumnPos) { /*8.5*/
+        else if (parser == "minecraft:column_pos") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftVec3) { /*8.5*/
+        else if (parser == "minecraft:vec3") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftVec2) { /*8.5*/
+        else if (parser == "minecraft:vec2") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftBlockState) { /*8.5*/
+        else if (parser == "minecraft:block_state") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftBlockPredicate) { /*8.5*/
+        else if (parser == "minecraft:block_predicate") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftItemStack) { /*8.5*/
+        else if (parser == "minecraft:item_stack") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftItemPredicate) { /*8.5*/
+        else if (parser == "minecraft:item_predicate") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftColor) { /*8.5*/
+        else if (parser == "minecraft:color") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftComponent) { /*8.5*/
+        else if (parser == "minecraft:component") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftMessage) { /*8.5*/
+        else if (parser == "minecraft:message") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftNbt) { /*8.5*/
+        else if (parser == "minecraft:nbt") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftNbtPath) { /*8.5*/
+        else if (parser == "minecraft:nbt_path") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftObjective) { /*8.5*/
+        else if (parser == "minecraft:objective") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftObjectiveCriteria) { /*8.5*/
+        else if (parser == "minecraft:objective_criteria") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftOperation) { /*8.5*/
+        else if (parser == "minecraft:operation") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftParticle) { /*8.5*/
+        else if (parser == "minecraft:particle") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftAngle) { /*8.5*/
+        else if (parser == "minecraft:angle") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftRotation) { /*8.5*/
+        else if (parser == "minecraft:rotation") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftScoreboardSlot) { /*8.5*/
+        else if (parser == "minecraft:scoreboard_slot") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftScoreHolder) { /*8.5*/
+        else if (parser == "minecraft:score_holder") { /*8.0*/
           len += 1; /*properties: bitfield*/ /*4.1*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftSwizzle) { /*8.5*/
+        else if (parser == "minecraft:swizzle") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftTeam) { /*8.5*/
+        else if (parser == "minecraft:team") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftItemSlot) { /*8.5*/
+        else if (parser == "minecraft:item_slot") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftResourceLocation) { /*8.5*/
+        else if (parser == "minecraft:resource_location") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftMobEffect) { /*8.5*/
+        else if (parser == "minecraft:mob_effect") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftFunction) { /*8.5*/
+        else if (parser == "minecraft:function") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftEntityAnchor) { /*8.5*/
+        else if (parser == "minecraft:entity_anchor") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftRange) { /*8.5*/
-            EXPECT_OR_BAIL(v.properties_minecraft_range); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftRange &v = *v.properties_minecraft_range; /*8.6*/
+        else if (parser == "minecraft:range") { /*8.0*/
+            EXPECT_OR_BAIL(v2.properties_minecraft_range); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftRange &v4 = *v2.properties_minecraft_range; /*8.6*/
             len += 1; /*0.2*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftIntRange) { /*8.5*/
+        else if (parser == "minecraft:int_range") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftFloatRange) { /*8.5*/
+        else if (parser == "minecraft:float_range") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftItemEnchantment) { /*8.5*/
+        else if (parser == "minecraft:item_enchantment") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftEntitySummon) { /*8.5*/
+        else if (parser == "minecraft:entity_summon") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftDimension) { /*8.5*/
+        else if (parser == "minecraft:dimension") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftNbtCompoundTag) { /*8.5*/
+        else if (parser == "minecraft:nbt_compound_tag") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftTime) { /*8.5*/
+        else if (parser == "minecraft:time") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftResourceOrTag) { /*8.5*/
-            EXPECT_OR_BAIL(v.properties_minecraft_resource_or_tag_or_minecraft_resource); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v = *v.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.6*/
-            len += stream.sizeOfVarInt(v.registry.length());
-            len += v.registry.length(); /*registry: pstring*/ /*4.1*/
+        else if (parser == "minecraft:resource_or_tag") { /*8.0*/
+            EXPECT_OR_BAIL(v2.properties_minecraft_resource_or_tag_or_minecraft_resource); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.6*/
+            len += stream.sizeOfVarInt(v4.registry.length());
+            len += v4.registry.length(); /*registry: pstring*/ /*4.1*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftResource) { /*8.5*/
-            EXPECT_OR_BAIL(v.properties_minecraft_resource_or_tag_or_minecraft_resource); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v = *v.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.6*/
-            len += stream.sizeOfVarInt(v.registry.length());
-            len += v.registry.length(); /*registry: pstring*/ /*4.1*/
+        else if (parser == "minecraft:resource") { /*8.0*/
+            EXPECT_OR_BAIL(v2.properties_minecraft_resource_or_tag_or_minecraft_resource); const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.6*/
+            len += stream.sizeOfVarInt(v4.registry.length());
+            len += v4.registry.length(); /*registry: pstring*/ /*4.1*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftUuid) { /*8.5*/
+        else if (parser == "minecraft:uuid") { /*8.0*/
         }
         if (flags.has_custom_suggestions == 1) { /*8.2*/
-          len += stream.sizeOfVarInt(v.suggestionType.length());
-          len += v.suggestionType.length(); /*suggestionType: pstring*/ /*4.1*/
+          len += stream.sizeOfVarInt(v2.suggestionType.length());
+          len += v2.suggestionType.length(); /*suggestionType: pstring*/ /*4.1*/
         }
     }
     DBG_PRINT("%s: sized at %lld\n", __func__, len); return len;
@@ -2194,14 +2194,14 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     for (const auto &v : obj.skyLight) { /*5.1*/
       len += stream.sizeOfVarInt(obj.skyLight.size()); /*5.6*/
       for (const auto &v : v) { /*5.10*/
-        len += 1; /*5.12*/
+        len += 1; /*0.2*/
       }
     }
     len += stream.sizeOfVarInt(obj.blockLight.size()); /*1.3*/
     for (const auto &v : obj.blockLight) { /*5.1*/
       len += stream.sizeOfVarInt(obj.blockLight.size()); /*5.6*/
       for (const auto &v : v) { /*5.10*/
-        len += 1; /*5.12*/
+        len += 1; /*0.2*/
       }
     }
     DBG_PRINT("%s: sized at %lld\n", __func__, len); return len;
@@ -2227,22 +2227,22 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     len += 4; /*0.2*/
     len += 4; /*0.2*/
     if (particleId == 2) { /*8.2*/
-        EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.6*/
-        len += stream.sizeOfVarInt(v.blockState); /*0.2*/
+        EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.6*/
+        len += stream.sizeOfVarInt(v2.blockState); /*0.2*/
     }
     else if (particleId == 3) { /*8.2*/
-        EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.6*/
-        len += stream.sizeOfVarInt(v.blockState); /*0.2*/
+        EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.6*/
+        len += stream.sizeOfVarInt(v2.blockState); /*0.2*/
     }
     else if (particleId == 14) { /*8.2*/
-        EXPECT_OR_BAIL(obj.data_14); const pdef::pc1_18_play_toClient::packet_world_particles::Data14 &v = *obj.data_14; /*8.6*/
+        EXPECT_OR_BAIL(obj.data_14); const pdef::pc1_18_play_toClient::packet_world_particles::Data14 &v2 = *obj.data_14; /*8.6*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
     }
     else if (particleId == 15) { /*8.2*/
-        EXPECT_OR_BAIL(obj.data_15); const pdef::pc1_18_play_toClient::packet_world_particles::Data15 &v = *obj.data_15; /*8.6*/
+        EXPECT_OR_BAIL(obj.data_15); const pdef::pc1_18_play_toClient::packet_world_particles::Data15 &v2 = *obj.data_15; /*8.6*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
@@ -2252,26 +2252,26 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
         len += 4; /*0.2*/
     }
     else if (particleId == 24) { /*8.2*/
-        EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.6*/
-        len += stream.sizeOfVarInt(v.blockState); /*0.2*/
+        EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.6*/
+        len += stream.sizeOfVarInt(v2.blockState); /*0.2*/
     }
     else if (particleId == 35) { /*8.2*/
-        EXPECT_OR_BAIL(obj.data_35); const pdef::pc1_18_play_toClient::packet_world_particles::Data35 &v = *obj.data_35; /*8.6*/
+        EXPECT_OR_BAIL(obj.data_35); const pdef::pc1_18_play_toClient::packet_world_particles::Data35 &v2 = *obj.data_35; /*8.6*/
         len += 1; /*0.2*/
     }
     else if (particleId == 36) { /*8.2*/
-        EXPECT_OR_BAIL(obj.data_36); const pdef::pc1_18_play_toClient::packet_world_particles::Data36 &v = *obj.data_36; /*8.6*/
+        EXPECT_OR_BAIL(obj.data_36); const pdef::pc1_18_play_toClient::packet_world_particles::Data36 &v2 = *obj.data_36; /*8.6*/
         len += 1; /*origin: bitfield*/ /*4.1*/
-        len += stream.sizeOfVarInt(v.positionType.length());
-        len += v.positionType.length(); /*positionType^: pstring*/ /*4.1*/
-        const pdef::pc1_18_play_toClient::packet_world_particles::Data36::pstring &positionType = v.positionType; /*0.1*/
-        if (positionType == pdef::pc1_18_play_toClient::packet_world_particles::Data36::PositionType::MinecraftBlock) { /*8.5*/
+        len += stream.sizeOfVarInt(v2.positionType.length());
+        len += v2.positionType.length(); /*positionType^: pstring*/ /*4.1*/
+        const std::string &positionType = v2.positionType; /*4.7*/
+        if (positionType == "minecraft:block") { /*8.0*/
           len += 1; /*destination: bitfield*/ /*4.1*/
         }
-        else if (positionType == pdef::pc1_18_play_toClient::packet_world_particles::Data36::PositionType::MinecraftEntity) { /*8.5*/
-          len += stream.sizeOfVarInt(v.destination_varint); /*0.2*/
+        else if (positionType == "minecraft:entity") { /*8.0*/
+          len += stream.sizeOfVarInt(v2.destination_varint); /*0.2*/
         }
-        len += stream.sizeOfVarInt(v.ticks); /*0.2*/
+        len += stream.sizeOfVarInt(v2.ticks); /*0.2*/
     }
     DBG_PRINT("%s: sized at %lld\n", __func__, len); return len;
   }
@@ -2300,14 +2300,14 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     for (const auto &v : obj.skyLight) { /*5.1*/
       len += stream.sizeOfVarInt(obj.skyLight.size()); /*5.6*/
       for (const auto &v : v) { /*5.10*/
-        len += 1; /*5.12*/
+        len += 1; /*0.2*/
       }
     }
     len += stream.sizeOfVarInt(obj.blockLight.size()); /*1.3*/
     for (const auto &v : obj.blockLight) { /*5.1*/
       len += stream.sizeOfVarInt(obj.blockLight.size()); /*5.6*/
       for (const auto &v : v) { /*5.10*/
-        len += 1; /*5.12*/
+        len += 1; /*0.2*/
       }
     }
     DBG_PRINT("%s: sized at %lld\n", __func__, len); return len;
@@ -2501,19 +2501,19 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
         len += stream.sizeOfVarInt(v2.ping); /*0.2*/
       }
       if (action == 0) { /*8.2*/
-          EXPECT_OR_BAIL(v2.displayName); const pdef::pc1_18_play_toClient::packet_player_info::Data::DisplayName &v = *v2.displayName; /*8.6*/
-          const bool &has = v2.has; /*0.1*/
+          EXPECT_OR_BAIL(v2.displayName); const pdef::pc1_18_play_toClient::packet_player_info::Data::DisplayName &v3 = *v2.displayName; /*8.6*/
+          const bool &has = v3.has; /*0.1*/
           if (has == true) { /*8.1*/
-            len += stream.sizeOfVarInt(v2.value.length());
-            len += v2.value.length(); /*value: pstring*/ /*4.1*/
+            len += stream.sizeOfVarInt(v3.value.length());
+            len += v3.value.length(); /*value: pstring*/ /*4.1*/
           }
       }
       else if (action == 3) { /*8.2*/
-          EXPECT_OR_BAIL(v2.displayName); const pdef::pc1_18_play_toClient::packet_player_info::Data::DisplayName &v = *v2.displayName; /*8.6*/
-          const bool &has = v2.has; /*0.1*/
+          EXPECT_OR_BAIL(v2.displayName); const pdef::pc1_18_play_toClient::packet_player_info::Data::DisplayName &v3 = *v2.displayName; /*8.6*/
+          const bool &has = v3.has; /*0.1*/
           if (has == true) { /*8.1*/
-            len += stream.sizeOfVarInt(v2.value.length());
-            len += v2.value.length(); /*value: pstring*/ /*4.1*/
+            len += stream.sizeOfVarInt(v3.value.length());
+            len += v3.value.length(); /*value: pstring*/ /*4.1*/
           }
       }
     }
@@ -2905,15 +2905,15 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     for (const auto &v2 : obj.recipes) { /*5.20*/
       len += stream.sizeOfVarInt(v2.type.length());
       len += v2.type.length(); /*type^: pstring*/ /*4.1*/
-      const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::pstring &type = v2.type; /*0.1*/
+      const std::string &type = v2.type; /*4.7*/
       len += stream.sizeOfVarInt(v2.recipeId.length());
       len += v2.recipeId.length(); /*recipeId: pstring*/ /*4.1*/
-      if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingShapeless) { /*8.5*/
-          EXPECT_OR_BAIL(v2.data_minecraft_crafting_shapeless); const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftCraftingShapeless &v = *v2.data_minecraft_crafting_shapeless; /*8.6*/
-          len += stream.sizeOfVarInt(v2.group.length());
-          len += v2.group.length(); /*group: pstring*/ /*4.1*/
-          len += stream.sizeOfVarInt(v2.ingredients.size()); /*1.3*/
-          for (const auto &v5 : v2.ingredients) {
+      if (type == "minecraft:crafting_shapeless") { /*8.0*/
+          EXPECT_OR_BAIL(v2.data_minecraft_crafting_shapeless); const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftCraftingShapeless &v3 = *v2.data_minecraft_crafting_shapeless; /*8.6*/
+          len += stream.sizeOfVarInt(v3.group.length());
+          len += v3.group.length(); /*group: pstring*/ /*4.1*/
+          len += stream.sizeOfVarInt(v3.ingredients.size()); /*1.3*/
+          for (const auto &v5 : v3.ingredients) {
             len += stream.sizeOfVarInt(v5.size()); /*1.3*/
             for (const auto &v6 : v5) {
               len += 1; /*0.2*/
@@ -2921,79 +2921,82 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
           }
           len += 1; /*0.2*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingShaped) { /*8.5*/
-          EXPECT_OR_BAIL(v2.data_minecraft_crafting_shaped); const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftCraftingShaped &v = *v2.data_minecraft_crafting_shaped; /*8.6*/
-          const int &width = v2.width; /*0.1*/
-          const int &height = v2.height; /*0.1*/
-          len += stream.sizeOfVarInt(v2.group.length());
-          len += v2.group.length(); /*group: pstring*/ /*4.1*/
+      else if (type == "minecraft:crafting_shaped") { /*8.0*/
+          EXPECT_OR_BAIL(v2.data_minecraft_crafting_shaped); const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftCraftingShaped &v3 = *v2.data_minecraft_crafting_shaped; /*8.6*/
+          const int &width = v3.width; /*0.1*/
+          const int &height = v3.height; /*0.1*/
+          len += stream.sizeOfVarInt(v3.group.length());
+          len += v3.group.length(); /*group: pstring*/ /*4.1*/
           len += stream.sizeOfVarInt(width); /*1.1*/
-          for (const auto &v : v2.ingredients) { /*5.1*/
+          for (const auto &v : v3.ingredients) { /*5.1*/
             len += stream.sizeOfVarInt(height); /*5.3*/
             for (const auto &v : v) { /*5.10*/
-              size_t len_2 = pdef::pc1_18_play_toClient::size::ingredient(stream, v); EXPECT_OR_BAIL(len_2); len += len_2; /*5.12*/
+              len += stream.sizeOfVarInt(v.size()); /*1.3*/
+              for (const auto &v7 : v) {
+                len += 1; /*0.2*/
+              }
             }
           }
           len += 1; /*0.2*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialArmordye) { /*8.5*/
+      else if (type == "minecraft:crafting_special_armordye") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialBookcloning) { /*8.5*/
+      else if (type == "minecraft:crafting_special_bookcloning") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialMapcloning) { /*8.5*/
+      else if (type == "minecraft:crafting_special_mapcloning") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialMapextending) { /*8.5*/
+      else if (type == "minecraft:crafting_special_mapextending") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialFireworkRocket) { /*8.5*/
+      else if (type == "minecraft:crafting_special_firework_rocket") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialFireworkStar) { /*8.5*/
+      else if (type == "minecraft:crafting_special_firework_star") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialFireworkStarFade) { /*8.5*/
+      else if (type == "minecraft:crafting_special_firework_star_fade") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialRepairitem) { /*8.5*/
+      else if (type == "minecraft:crafting_special_repairitem") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialTippedarrow) { /*8.5*/
+      else if (type == "minecraft:crafting_special_tippedarrow") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialBannerduplicate) { /*8.5*/
+      else if (type == "minecraft:crafting_special_bannerduplicate") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialBanneraddpattern) { /*8.5*/
+      else if (type == "minecraft:crafting_special_banneraddpattern") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialShielddecoration) { /*8.5*/
+      else if (type == "minecraft:crafting_special_shielddecoration") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialShulkerboxcoloring) { /*8.5*/
+      else if (type == "minecraft:crafting_special_shulkerboxcoloring") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialSuspiciousstew) { /*8.5*/
+      else if (type == "minecraft:crafting_special_suspiciousstew") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftSmelting) { /*8.5*/
+      else if (type == "minecraft:smelting") { /*8.0*/
+        EXPECT_OR_BAIL(v2.data_minecraft_smelting_format); size_t len_2 = pdef::pc1_18_play_toClient::size::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); EXPECT_OR_BAIL(len_2); len += len_2; /*data_minecraft_smelting_format*/ /*4.4*/
+      }
+      else if (type == "minecraft:blasting") { /*8.0*/
         EXPECT_OR_BAIL(v2.data_minecraft_smelting_format); size_t len_3 = pdef::pc1_18_play_toClient::size::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); EXPECT_OR_BAIL(len_3); len += len_3; /*data_minecraft_smelting_format*/ /*4.4*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftBlasting) { /*8.5*/
+      else if (type == "minecraft:smoking") { /*8.0*/
         EXPECT_OR_BAIL(v2.data_minecraft_smelting_format); size_t len_4 = pdef::pc1_18_play_toClient::size::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); EXPECT_OR_BAIL(len_4); len += len_4; /*data_minecraft_smelting_format*/ /*4.4*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftSmoking) { /*8.5*/
+      else if (type == "minecraft:campfire_cooking") { /*8.0*/
         EXPECT_OR_BAIL(v2.data_minecraft_smelting_format); size_t len_5 = pdef::pc1_18_play_toClient::size::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); EXPECT_OR_BAIL(len_5); len += len_5; /*data_minecraft_smelting_format*/ /*4.4*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCampfireCooking) { /*8.5*/
-        EXPECT_OR_BAIL(v2.data_minecraft_smelting_format); size_t len_6 = pdef::pc1_18_play_toClient::size::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); EXPECT_OR_BAIL(len_6); len += len_6; /*data_minecraft_smelting_format*/ /*4.4*/
-      }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftStonecutting) { /*8.5*/
-          EXPECT_OR_BAIL(v2.data_minecraft_stonecutting); const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftStonecutting &v = *v2.data_minecraft_stonecutting; /*8.6*/
-          len += stream.sizeOfVarInt(v2.group.length());
-          len += v2.group.length(); /*group: pstring*/ /*4.1*/
-          len += stream.sizeOfVarInt(v2.ingredient.size()); /*1.3*/
-          for (const auto &v5 : v2.ingredient) {
+      else if (type == "minecraft:stonecutting") { /*8.0*/
+          EXPECT_OR_BAIL(v2.data_minecraft_stonecutting); const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftStonecutting &v3 = *v2.data_minecraft_stonecutting; /*8.6*/
+          len += stream.sizeOfVarInt(v3.group.length());
+          len += v3.group.length(); /*group: pstring*/ /*4.1*/
+          len += stream.sizeOfVarInt(v3.ingredient.size()); /*1.3*/
+          for (const auto &v5 : v3.ingredient) {
             len += 1; /*0.2*/
           }
           len += 1; /*0.2*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftSmithing) { /*8.5*/
-          EXPECT_OR_BAIL(v2.data_minecraft_smithing); const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftSmithing &v = *v2.data_minecraft_smithing; /*8.6*/
-          len += stream.sizeOfVarInt(v2.base.size()); /*1.3*/
-          for (const auto &v5 : v2.base) {
+      else if (type == "minecraft:smithing") { /*8.0*/
+          EXPECT_OR_BAIL(v2.data_minecraft_smithing); const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftSmithing &v3 = *v2.data_minecraft_smithing; /*8.6*/
+          len += stream.sizeOfVarInt(v3.base.size()); /*1.3*/
+          for (const auto &v5 : v3.base) {
             len += 1; /*0.2*/
           }
-          len += stream.sizeOfVarInt(v2.addition.size()); /*1.3*/
-          for (const auto &v5 : v2.addition) {
+          len += stream.sizeOfVarInt(v3.addition.size()); /*1.3*/
+          for (const auto &v5 : v3.addition) {
             len += 1; /*0.2*/
           }
           len += 1; /*0.2*/
@@ -3008,7 +3011,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
       len += stream.sizeOfVarInt(v2.tagType.length());
       len += v2.tagType.length(); /*tagType: pstring*/ /*4.1*/
       len += stream.sizeOfVarInt(v2.tags.size()); /*2.4*/
-      for (const auto &v : v2.tags) { size_t len_7 = pdef::pc1_18_play_toClient::size::tags(stream, v); EXPECT_OR_BAIL(len_7); len += len_7; } /*2.5*/
+      for (const auto &v : v2.tags) { size_t len_6 = pdef::pc1_18_play_toClient::size::tags(stream, v); EXPECT_OR_BAIL(len_6); len += len_6; } /*2.5*/
     }
     DBG_PRINT("%s: sized at %lld\n", __func__, len); return len;
   }
@@ -3025,11 +3028,11 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     len += 1; /*sourcePosition: bitfield*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.destinationIdentifier.length());
     len += obj.destinationIdentifier.length(); /*destinationIdentifier^: pstring*/ /*4.1*/
-    const pdef::pc1_18_play_toClient::packet_sculk_vibration_signal::pstring &destinationIdentifier = obj.destinationIdentifier; /*0.1*/
-    if (destinationIdentifier == pdef::pc1_18_play_toClient::packet_sculk_vibration_signal::DestinationIdentifier::Block) { /*8.5*/
+    const std::string &destinationIdentifier = obj.destinationIdentifier; /*4.7*/
+    if (destinationIdentifier == "block") { /*8.0*/
       len += 1; /*destination: bitfield*/ /*4.1*/
     }
-    else if (destinationIdentifier == pdef::pc1_18_play_toClient::packet_sculk_vibration_signal::DestinationIdentifier::EntityId) { /*8.5*/
+    else if (destinationIdentifier == "entityId") { /*8.0*/
       len += stream.sizeOfVarInt(obj.destination_varint); /*0.2*/
     }
     len += stream.sizeOfVarInt(obj.arrivalTicks); /*0.2*/
@@ -3121,419 +3124,419 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     len += stream.sizeOfVarInt((int&)obj.name); /*name^: varint*/ /*7.0*/
     switch (name) { /*8.0*/
       case pdef::pc1_18_play_toClient::packet::Name::SpawnEntity: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_spawn_entity); size_t len_8 = pdef::pc1_18_play_toClient::size::packet_spawn_entity(stream, *obj.params_packet_spawn_entity); EXPECT_OR_BAIL(len_8); len += len_8; /*params_packet_spawn_entity*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_spawn_entity); size_t len_7 = pdef::pc1_18_play_toClient::size::packet_spawn_entity(stream, *obj.params_packet_spawn_entity); EXPECT_OR_BAIL(len_7); len += len_7; /*params_packet_spawn_entity*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SpawnEntityExperienceOrb: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_spawn_entity_experience_orb); size_t len_9 = pdef::pc1_18_play_toClient::size::packet_spawn_entity_experience_orb(stream, *obj.params_packet_spawn_entity_experience_orb); EXPECT_OR_BAIL(len_9); len += len_9; /*params_packet_spawn_entity_experience_orb*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_spawn_entity_experience_orb); size_t len_8 = pdef::pc1_18_play_toClient::size::packet_spawn_entity_experience_orb(stream, *obj.params_packet_spawn_entity_experience_orb); EXPECT_OR_BAIL(len_8); len += len_8; /*params_packet_spawn_entity_experience_orb*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SpawnEntityLiving: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_spawn_entity_living); size_t len_10 = pdef::pc1_18_play_toClient::size::packet_spawn_entity_living(stream, *obj.params_packet_spawn_entity_living); EXPECT_OR_BAIL(len_10); len += len_10; /*params_packet_spawn_entity_living*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_spawn_entity_living); size_t len_9 = pdef::pc1_18_play_toClient::size::packet_spawn_entity_living(stream, *obj.params_packet_spawn_entity_living); EXPECT_OR_BAIL(len_9); len += len_9; /*params_packet_spawn_entity_living*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SpawnEntityPainting: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_spawn_entity_painting); size_t len_11 = pdef::pc1_18_play_toClient::size::packet_spawn_entity_painting(stream, *obj.params_packet_spawn_entity_painting); EXPECT_OR_BAIL(len_11); len += len_11; /*params_packet_spawn_entity_painting*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_spawn_entity_painting); size_t len_10 = pdef::pc1_18_play_toClient::size::packet_spawn_entity_painting(stream, *obj.params_packet_spawn_entity_painting); EXPECT_OR_BAIL(len_10); len += len_10; /*params_packet_spawn_entity_painting*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::NamedEntitySpawn: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_named_entity_spawn); size_t len_12 = pdef::pc1_18_play_toClient::size::packet_named_entity_spawn(stream, *obj.params_packet_named_entity_spawn); EXPECT_OR_BAIL(len_12); len += len_12; /*params_packet_named_entity_spawn*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_named_entity_spawn); size_t len_11 = pdef::pc1_18_play_toClient::size::packet_named_entity_spawn(stream, *obj.params_packet_named_entity_spawn); EXPECT_OR_BAIL(len_11); len += len_11; /*params_packet_named_entity_spawn*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Animation: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_animation); size_t len_13 = pdef::pc1_18_play_toClient::size::packet_animation(stream, *obj.params_packet_animation); EXPECT_OR_BAIL(len_13); len += len_13; /*params_packet_animation*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_animation); size_t len_12 = pdef::pc1_18_play_toClient::size::packet_animation(stream, *obj.params_packet_animation); EXPECT_OR_BAIL(len_12); len += len_12; /*params_packet_animation*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Statistics: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_statistics); size_t len_14 = pdef::pc1_18_play_toClient::size::packet_statistics(stream, *obj.params_packet_statistics); EXPECT_OR_BAIL(len_14); len += len_14; /*params_packet_statistics*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_statistics); size_t len_13 = pdef::pc1_18_play_toClient::size::packet_statistics(stream, *obj.params_packet_statistics); EXPECT_OR_BAIL(len_13); len += len_13; /*params_packet_statistics*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Advancements: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_advancements); size_t len_15 = pdef::pc1_18_play_toClient::size::packet_advancements(stream, *obj.params_packet_advancements); EXPECT_OR_BAIL(len_15); len += len_15; /*params_packet_advancements*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_advancements); size_t len_14 = pdef::pc1_18_play_toClient::size::packet_advancements(stream, *obj.params_packet_advancements); EXPECT_OR_BAIL(len_14); len += len_14; /*params_packet_advancements*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::BlockBreakAnimation: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_block_break_animation); size_t len_16 = pdef::pc1_18_play_toClient::size::packet_block_break_animation(stream, *obj.params_packet_block_break_animation); EXPECT_OR_BAIL(len_16); len += len_16; /*params_packet_block_break_animation*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_block_break_animation); size_t len_15 = pdef::pc1_18_play_toClient::size::packet_block_break_animation(stream, *obj.params_packet_block_break_animation); EXPECT_OR_BAIL(len_15); len += len_15; /*params_packet_block_break_animation*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::TileEntityData: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_tile_entity_data); size_t len_17 = pdef::pc1_18_play_toClient::size::packet_tile_entity_data(stream, *obj.params_packet_tile_entity_data); EXPECT_OR_BAIL(len_17); len += len_17; /*params_packet_tile_entity_data*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_tile_entity_data); size_t len_16 = pdef::pc1_18_play_toClient::size::packet_tile_entity_data(stream, *obj.params_packet_tile_entity_data); EXPECT_OR_BAIL(len_16); len += len_16; /*params_packet_tile_entity_data*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::BlockAction: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_block_action); size_t len_18 = pdef::pc1_18_play_toClient::size::packet_block_action(stream, *obj.params_packet_block_action); EXPECT_OR_BAIL(len_18); len += len_18; /*params_packet_block_action*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_block_action); size_t len_17 = pdef::pc1_18_play_toClient::size::packet_block_action(stream, *obj.params_packet_block_action); EXPECT_OR_BAIL(len_17); len += len_17; /*params_packet_block_action*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::BlockChange: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_block_change); size_t len_19 = pdef::pc1_18_play_toClient::size::packet_block_change(stream, *obj.params_packet_block_change); EXPECT_OR_BAIL(len_19); len += len_19; /*params_packet_block_change*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_block_change); size_t len_18 = pdef::pc1_18_play_toClient::size::packet_block_change(stream, *obj.params_packet_block_change); EXPECT_OR_BAIL(len_18); len += len_18; /*params_packet_block_change*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::BossBar: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_boss_bar); size_t len_20 = pdef::pc1_18_play_toClient::size::packet_boss_bar(stream, *obj.params_packet_boss_bar); EXPECT_OR_BAIL(len_20); len += len_20; /*params_packet_boss_bar*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_boss_bar); size_t len_19 = pdef::pc1_18_play_toClient::size::packet_boss_bar(stream, *obj.params_packet_boss_bar); EXPECT_OR_BAIL(len_19); len += len_19; /*params_packet_boss_bar*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Difficulty: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_difficulty); size_t len_21 = pdef::pc1_18_play_toClient::size::packet_difficulty(stream, *obj.params_packet_difficulty); EXPECT_OR_BAIL(len_21); len += len_21; /*params_packet_difficulty*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_difficulty); size_t len_20 = pdef::pc1_18_play_toClient::size::packet_difficulty(stream, *obj.params_packet_difficulty); EXPECT_OR_BAIL(len_20); len += len_20; /*params_packet_difficulty*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::TabComplete: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_tab_complete); size_t len_22 = pdef::pc1_18_play_toClient::size::packet_tab_complete(stream, *obj.params_packet_tab_complete); EXPECT_OR_BAIL(len_22); len += len_22; /*params_packet_tab_complete*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_tab_complete); size_t len_21 = pdef::pc1_18_play_toClient::size::packet_tab_complete(stream, *obj.params_packet_tab_complete); EXPECT_OR_BAIL(len_21); len += len_21; /*params_packet_tab_complete*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::DeclareCommands: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_declare_commands); size_t len_23 = pdef::pc1_18_play_toClient::size::packet_declare_commands(stream, *obj.params_packet_declare_commands); EXPECT_OR_BAIL(len_23); len += len_23; /*params_packet_declare_commands*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_declare_commands); size_t len_22 = pdef::pc1_18_play_toClient::size::packet_declare_commands(stream, *obj.params_packet_declare_commands); EXPECT_OR_BAIL(len_22); len += len_22; /*params_packet_declare_commands*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::FacePlayer: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_face_player); size_t len_24 = pdef::pc1_18_play_toClient::size::packet_face_player(stream, *obj.params_packet_face_player); EXPECT_OR_BAIL(len_24); len += len_24; /*params_packet_face_player*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_face_player); size_t len_23 = pdef::pc1_18_play_toClient::size::packet_face_player(stream, *obj.params_packet_face_player); EXPECT_OR_BAIL(len_23); len += len_23; /*params_packet_face_player*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::NbtQueryResponse: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_nbt_query_response); size_t len_25 = pdef::pc1_18_play_toClient::size::packet_nbt_query_response(stream, *obj.params_packet_nbt_query_response); EXPECT_OR_BAIL(len_25); len += len_25; /*params_packet_nbt_query_response*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_nbt_query_response); size_t len_24 = pdef::pc1_18_play_toClient::size::packet_nbt_query_response(stream, *obj.params_packet_nbt_query_response); EXPECT_OR_BAIL(len_24); len += len_24; /*params_packet_nbt_query_response*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Chat: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_chat); size_t len_26 = pdef::pc1_18_play_toClient::size::packet_chat(stream, *obj.params_packet_chat); EXPECT_OR_BAIL(len_26); len += len_26; /*params_packet_chat*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_chat); size_t len_25 = pdef::pc1_18_play_toClient::size::packet_chat(stream, *obj.params_packet_chat); EXPECT_OR_BAIL(len_25); len += len_25; /*params_packet_chat*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::MultiBlockChange: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_multi_block_change); size_t len_27 = pdef::pc1_18_play_toClient::size::packet_multi_block_change(stream, *obj.params_packet_multi_block_change); EXPECT_OR_BAIL(len_27); len += len_27; /*params_packet_multi_block_change*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_multi_block_change); size_t len_26 = pdef::pc1_18_play_toClient::size::packet_multi_block_change(stream, *obj.params_packet_multi_block_change); EXPECT_OR_BAIL(len_26); len += len_26; /*params_packet_multi_block_change*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::CloseWindow: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_close_window); size_t len_28 = pdef::pc1_18_play_toClient::size::packet_close_window(stream, *obj.params_packet_close_window); EXPECT_OR_BAIL(len_28); len += len_28; /*params_packet_close_window*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_close_window); size_t len_27 = pdef::pc1_18_play_toClient::size::packet_close_window(stream, *obj.params_packet_close_window); EXPECT_OR_BAIL(len_27); len += len_27; /*params_packet_close_window*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::OpenWindow: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_open_window); size_t len_29 = pdef::pc1_18_play_toClient::size::packet_open_window(stream, *obj.params_packet_open_window); EXPECT_OR_BAIL(len_29); len += len_29; /*params_packet_open_window*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_open_window); size_t len_28 = pdef::pc1_18_play_toClient::size::packet_open_window(stream, *obj.params_packet_open_window); EXPECT_OR_BAIL(len_28); len += len_28; /*params_packet_open_window*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::WindowItems: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_window_items); size_t len_30 = pdef::pc1_18_play_toClient::size::packet_window_items(stream, *obj.params_packet_window_items); EXPECT_OR_BAIL(len_30); len += len_30; /*params_packet_window_items*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_window_items); size_t len_29 = pdef::pc1_18_play_toClient::size::packet_window_items(stream, *obj.params_packet_window_items); EXPECT_OR_BAIL(len_29); len += len_29; /*params_packet_window_items*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::CraftProgressBar: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_craft_progress_bar); size_t len_31 = pdef::pc1_18_play_toClient::size::packet_craft_progress_bar(stream, *obj.params_packet_craft_progress_bar); EXPECT_OR_BAIL(len_31); len += len_31; /*params_packet_craft_progress_bar*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_craft_progress_bar); size_t len_30 = pdef::pc1_18_play_toClient::size::packet_craft_progress_bar(stream, *obj.params_packet_craft_progress_bar); EXPECT_OR_BAIL(len_30); len += len_30; /*params_packet_craft_progress_bar*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SetSlot: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_set_slot); size_t len_32 = pdef::pc1_18_play_toClient::size::packet_set_slot(stream, *obj.params_packet_set_slot); EXPECT_OR_BAIL(len_32); len += len_32; /*params_packet_set_slot*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_set_slot); size_t len_31 = pdef::pc1_18_play_toClient::size::packet_set_slot(stream, *obj.params_packet_set_slot); EXPECT_OR_BAIL(len_31); len += len_31; /*params_packet_set_slot*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SetCooldown: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_set_cooldown); size_t len_33 = pdef::pc1_18_play_toClient::size::packet_set_cooldown(stream, *obj.params_packet_set_cooldown); EXPECT_OR_BAIL(len_33); len += len_33; /*params_packet_set_cooldown*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_set_cooldown); size_t len_32 = pdef::pc1_18_play_toClient::size::packet_set_cooldown(stream, *obj.params_packet_set_cooldown); EXPECT_OR_BAIL(len_32); len += len_32; /*params_packet_set_cooldown*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::CustomPayload: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_custom_payload); size_t len_34 = pdef::pc1_18_play_toClient::size::packet_custom_payload(stream, *obj.params_packet_custom_payload); EXPECT_OR_BAIL(len_34); len += len_34; /*params_packet_custom_payload*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_custom_payload); size_t len_33 = pdef::pc1_18_play_toClient::size::packet_custom_payload(stream, *obj.params_packet_custom_payload); EXPECT_OR_BAIL(len_33); len += len_33; /*params_packet_custom_payload*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::NamedSoundEffect: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_named_sound_effect); size_t len_35 = pdef::pc1_18_play_toClient::size::packet_named_sound_effect(stream, *obj.params_packet_named_sound_effect); EXPECT_OR_BAIL(len_35); len += len_35; /*params_packet_named_sound_effect*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_named_sound_effect); size_t len_34 = pdef::pc1_18_play_toClient::size::packet_named_sound_effect(stream, *obj.params_packet_named_sound_effect); EXPECT_OR_BAIL(len_34); len += len_34; /*params_packet_named_sound_effect*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::KickDisconnect: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_kick_disconnect); size_t len_36 = pdef::pc1_18_play_toClient::size::packet_kick_disconnect(stream, *obj.params_packet_kick_disconnect); EXPECT_OR_BAIL(len_36); len += len_36; /*params_packet_kick_disconnect*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_kick_disconnect); size_t len_35 = pdef::pc1_18_play_toClient::size::packet_kick_disconnect(stream, *obj.params_packet_kick_disconnect); EXPECT_OR_BAIL(len_35); len += len_35; /*params_packet_kick_disconnect*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntityStatus: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_entity_status); size_t len_37 = pdef::pc1_18_play_toClient::size::packet_entity_status(stream, *obj.params_packet_entity_status); EXPECT_OR_BAIL(len_37); len += len_37; /*params_packet_entity_status*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_entity_status); size_t len_36 = pdef::pc1_18_play_toClient::size::packet_entity_status(stream, *obj.params_packet_entity_status); EXPECT_OR_BAIL(len_36); len += len_36; /*params_packet_entity_status*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Explosion: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_explosion); size_t len_38 = pdef::pc1_18_play_toClient::size::packet_explosion(stream, *obj.params_packet_explosion); EXPECT_OR_BAIL(len_38); len += len_38; /*params_packet_explosion*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_explosion); size_t len_37 = pdef::pc1_18_play_toClient::size::packet_explosion(stream, *obj.params_packet_explosion); EXPECT_OR_BAIL(len_37); len += len_37; /*params_packet_explosion*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::UnloadChunk: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_unload_chunk); size_t len_39 = pdef::pc1_18_play_toClient::size::packet_unload_chunk(stream, *obj.params_packet_unload_chunk); EXPECT_OR_BAIL(len_39); len += len_39; /*params_packet_unload_chunk*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_unload_chunk); size_t len_38 = pdef::pc1_18_play_toClient::size::packet_unload_chunk(stream, *obj.params_packet_unload_chunk); EXPECT_OR_BAIL(len_38); len += len_38; /*params_packet_unload_chunk*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::GameStateChange: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_game_state_change); size_t len_40 = pdef::pc1_18_play_toClient::size::packet_game_state_change(stream, *obj.params_packet_game_state_change); EXPECT_OR_BAIL(len_40); len += len_40; /*params_packet_game_state_change*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_game_state_change); size_t len_39 = pdef::pc1_18_play_toClient::size::packet_game_state_change(stream, *obj.params_packet_game_state_change); EXPECT_OR_BAIL(len_39); len += len_39; /*params_packet_game_state_change*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::OpenHorseWindow: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_open_horse_window); size_t len_41 = pdef::pc1_18_play_toClient::size::packet_open_horse_window(stream, *obj.params_packet_open_horse_window); EXPECT_OR_BAIL(len_41); len += len_41; /*params_packet_open_horse_window*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_open_horse_window); size_t len_40 = pdef::pc1_18_play_toClient::size::packet_open_horse_window(stream, *obj.params_packet_open_horse_window); EXPECT_OR_BAIL(len_40); len += len_40; /*params_packet_open_horse_window*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::KeepAlive: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_keep_alive); size_t len_42 = pdef::pc1_18_play_toClient::size::packet_keep_alive(stream, *obj.params_packet_keep_alive); EXPECT_OR_BAIL(len_42); len += len_42; /*params_packet_keep_alive*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_keep_alive); size_t len_41 = pdef::pc1_18_play_toClient::size::packet_keep_alive(stream, *obj.params_packet_keep_alive); EXPECT_OR_BAIL(len_41); len += len_41; /*params_packet_keep_alive*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::MapChunk: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_map_chunk); size_t len_43 = pdef::pc1_18_play_toClient::size::packet_map_chunk(stream, *obj.params_packet_map_chunk); EXPECT_OR_BAIL(len_43); len += len_43; /*params_packet_map_chunk*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_map_chunk); size_t len_42 = pdef::pc1_18_play_toClient::size::packet_map_chunk(stream, *obj.params_packet_map_chunk); EXPECT_OR_BAIL(len_42); len += len_42; /*params_packet_map_chunk*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::WorldEvent: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_world_event); size_t len_44 = pdef::pc1_18_play_toClient::size::packet_world_event(stream, *obj.params_packet_world_event); EXPECT_OR_BAIL(len_44); len += len_44; /*params_packet_world_event*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_world_event); size_t len_43 = pdef::pc1_18_play_toClient::size::packet_world_event(stream, *obj.params_packet_world_event); EXPECT_OR_BAIL(len_43); len += len_43; /*params_packet_world_event*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::WorldParticles: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_world_particles); size_t len_45 = pdef::pc1_18_play_toClient::size::packet_world_particles(stream, *obj.params_packet_world_particles); EXPECT_OR_BAIL(len_45); len += len_45; /*params_packet_world_particles*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_world_particles); size_t len_44 = pdef::pc1_18_play_toClient::size::packet_world_particles(stream, *obj.params_packet_world_particles); EXPECT_OR_BAIL(len_44); len += len_44; /*params_packet_world_particles*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::UpdateLight: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_update_light); size_t len_46 = pdef::pc1_18_play_toClient::size::packet_update_light(stream, *obj.params_packet_update_light); EXPECT_OR_BAIL(len_46); len += len_46; /*params_packet_update_light*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_update_light); size_t len_45 = pdef::pc1_18_play_toClient::size::packet_update_light(stream, *obj.params_packet_update_light); EXPECT_OR_BAIL(len_45); len += len_45; /*params_packet_update_light*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Login: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_login); size_t len_47 = pdef::pc1_18_play_toClient::size::packet_login(stream, *obj.params_packet_login); EXPECT_OR_BAIL(len_47); len += len_47; /*params_packet_login*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_login); size_t len_46 = pdef::pc1_18_play_toClient::size::packet_login(stream, *obj.params_packet_login); EXPECT_OR_BAIL(len_46); len += len_46; /*params_packet_login*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Map: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_map); size_t len_48 = pdef::pc1_18_play_toClient::size::packet_map(stream, *obj.params_packet_map); EXPECT_OR_BAIL(len_48); len += len_48; /*params_packet_map*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_map); size_t len_47 = pdef::pc1_18_play_toClient::size::packet_map(stream, *obj.params_packet_map); EXPECT_OR_BAIL(len_47); len += len_47; /*params_packet_map*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::TradeList: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_trade_list); size_t len_49 = pdef::pc1_18_play_toClient::size::packet_trade_list(stream, *obj.params_packet_trade_list); EXPECT_OR_BAIL(len_49); len += len_49; /*params_packet_trade_list*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_trade_list); size_t len_48 = pdef::pc1_18_play_toClient::size::packet_trade_list(stream, *obj.params_packet_trade_list); EXPECT_OR_BAIL(len_48); len += len_48; /*params_packet_trade_list*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::RelEntityMove: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_rel_entity_move); size_t len_50 = pdef::pc1_18_play_toClient::size::packet_rel_entity_move(stream, *obj.params_packet_rel_entity_move); EXPECT_OR_BAIL(len_50); len += len_50; /*params_packet_rel_entity_move*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_rel_entity_move); size_t len_49 = pdef::pc1_18_play_toClient::size::packet_rel_entity_move(stream, *obj.params_packet_rel_entity_move); EXPECT_OR_BAIL(len_49); len += len_49; /*params_packet_rel_entity_move*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntityMoveLook: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_entity_move_look); size_t len_51 = pdef::pc1_18_play_toClient::size::packet_entity_move_look(stream, *obj.params_packet_entity_move_look); EXPECT_OR_BAIL(len_51); len += len_51; /*params_packet_entity_move_look*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_entity_move_look); size_t len_50 = pdef::pc1_18_play_toClient::size::packet_entity_move_look(stream, *obj.params_packet_entity_move_look); EXPECT_OR_BAIL(len_50); len += len_50; /*params_packet_entity_move_look*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntityLook: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_entity_look); size_t len_52 = pdef::pc1_18_play_toClient::size::packet_entity_look(stream, *obj.params_packet_entity_look); EXPECT_OR_BAIL(len_52); len += len_52; /*params_packet_entity_look*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_entity_look); size_t len_51 = pdef::pc1_18_play_toClient::size::packet_entity_look(stream, *obj.params_packet_entity_look); EXPECT_OR_BAIL(len_51); len += len_51; /*params_packet_entity_look*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::VehicleMove: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_vehicle_move); size_t len_53 = pdef::pc1_18_play_toClient::size::packet_vehicle_move(stream, *obj.params_packet_vehicle_move); EXPECT_OR_BAIL(len_53); len += len_53; /*params_packet_vehicle_move*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_vehicle_move); size_t len_52 = pdef::pc1_18_play_toClient::size::packet_vehicle_move(stream, *obj.params_packet_vehicle_move); EXPECT_OR_BAIL(len_52); len += len_52; /*params_packet_vehicle_move*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::OpenBook: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_open_book); size_t len_54 = pdef::pc1_18_play_toClient::size::packet_open_book(stream, *obj.params_packet_open_book); EXPECT_OR_BAIL(len_54); len += len_54; /*params_packet_open_book*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_open_book); size_t len_53 = pdef::pc1_18_play_toClient::size::packet_open_book(stream, *obj.params_packet_open_book); EXPECT_OR_BAIL(len_53); len += len_53; /*params_packet_open_book*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::OpenSignEntity: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_open_sign_entity); size_t len_55 = pdef::pc1_18_play_toClient::size::packet_open_sign_entity(stream, *obj.params_packet_open_sign_entity); EXPECT_OR_BAIL(len_55); len += len_55; /*params_packet_open_sign_entity*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_open_sign_entity); size_t len_54 = pdef::pc1_18_play_toClient::size::packet_open_sign_entity(stream, *obj.params_packet_open_sign_entity); EXPECT_OR_BAIL(len_54); len += len_54; /*params_packet_open_sign_entity*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::CraftRecipeResponse: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_craft_recipe_response); size_t len_56 = pdef::pc1_18_play_toClient::size::packet_craft_recipe_response(stream, *obj.params_packet_craft_recipe_response); EXPECT_OR_BAIL(len_56); len += len_56; /*params_packet_craft_recipe_response*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_craft_recipe_response); size_t len_55 = pdef::pc1_18_play_toClient::size::packet_craft_recipe_response(stream, *obj.params_packet_craft_recipe_response); EXPECT_OR_BAIL(len_55); len += len_55; /*params_packet_craft_recipe_response*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Abilities: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_abilities); size_t len_57 = pdef::pc1_18_play_toClient::size::packet_abilities(stream, *obj.params_packet_abilities); EXPECT_OR_BAIL(len_57); len += len_57; /*params_packet_abilities*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_abilities); size_t len_56 = pdef::pc1_18_play_toClient::size::packet_abilities(stream, *obj.params_packet_abilities); EXPECT_OR_BAIL(len_56); len += len_56; /*params_packet_abilities*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EndCombatEvent: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_end_combat_event); size_t len_58 = pdef::pc1_18_play_toClient::size::packet_end_combat_event(stream, *obj.params_packet_end_combat_event); EXPECT_OR_BAIL(len_58); len += len_58; /*params_packet_end_combat_event*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_end_combat_event); size_t len_57 = pdef::pc1_18_play_toClient::size::packet_end_combat_event(stream, *obj.params_packet_end_combat_event); EXPECT_OR_BAIL(len_57); len += len_57; /*params_packet_end_combat_event*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EnterCombatEvent: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_enter_combat_event); size_t len_59 = pdef::pc1_18_play_toClient::size::packet_enter_combat_event(stream, *obj.params_packet_enter_combat_event); EXPECT_OR_BAIL(len_59); len += len_59; /*params_packet_enter_combat_event*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_enter_combat_event); size_t len_58 = pdef::pc1_18_play_toClient::size::packet_enter_combat_event(stream, *obj.params_packet_enter_combat_event); EXPECT_OR_BAIL(len_58); len += len_58; /*params_packet_enter_combat_event*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::DeathCombatEvent: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_death_combat_event); size_t len_60 = pdef::pc1_18_play_toClient::size::packet_death_combat_event(stream, *obj.params_packet_death_combat_event); EXPECT_OR_BAIL(len_60); len += len_60; /*params_packet_death_combat_event*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_death_combat_event); size_t len_59 = pdef::pc1_18_play_toClient::size::packet_death_combat_event(stream, *obj.params_packet_death_combat_event); EXPECT_OR_BAIL(len_59); len += len_59; /*params_packet_death_combat_event*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::PlayerInfo: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_player_info); size_t len_61 = pdef::pc1_18_play_toClient::size::packet_player_info(stream, *obj.params_packet_player_info); EXPECT_OR_BAIL(len_61); len += len_61; /*params_packet_player_info*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_player_info); size_t len_60 = pdef::pc1_18_play_toClient::size::packet_player_info(stream, *obj.params_packet_player_info); EXPECT_OR_BAIL(len_60); len += len_60; /*params_packet_player_info*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Position: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_position); size_t len_62 = pdef::pc1_18_play_toClient::size::packet_position(stream, *obj.params_packet_position); EXPECT_OR_BAIL(len_62); len += len_62; /*params_packet_position*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_position); size_t len_61 = pdef::pc1_18_play_toClient::size::packet_position(stream, *obj.params_packet_position); EXPECT_OR_BAIL(len_61); len += len_61; /*params_packet_position*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::UnlockRecipes: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_unlock_recipes); size_t len_63 = pdef::pc1_18_play_toClient::size::packet_unlock_recipes(stream, *obj.params_packet_unlock_recipes); EXPECT_OR_BAIL(len_63); len += len_63; /*params_packet_unlock_recipes*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_unlock_recipes); size_t len_62 = pdef::pc1_18_play_toClient::size::packet_unlock_recipes(stream, *obj.params_packet_unlock_recipes); EXPECT_OR_BAIL(len_62); len += len_62; /*params_packet_unlock_recipes*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntityDestroy: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_entity_destroy); size_t len_64 = pdef::pc1_18_play_toClient::size::packet_entity_destroy(stream, *obj.params_packet_entity_destroy); EXPECT_OR_BAIL(len_64); len += len_64; /*params_packet_entity_destroy*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_entity_destroy); size_t len_63 = pdef::pc1_18_play_toClient::size::packet_entity_destroy(stream, *obj.params_packet_entity_destroy); EXPECT_OR_BAIL(len_63); len += len_63; /*params_packet_entity_destroy*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::RemoveEntityEffect: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_remove_entity_effect); size_t len_65 = pdef::pc1_18_play_toClient::size::packet_remove_entity_effect(stream, *obj.params_packet_remove_entity_effect); EXPECT_OR_BAIL(len_65); len += len_65; /*params_packet_remove_entity_effect*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_remove_entity_effect); size_t len_64 = pdef::pc1_18_play_toClient::size::packet_remove_entity_effect(stream, *obj.params_packet_remove_entity_effect); EXPECT_OR_BAIL(len_64); len += len_64; /*params_packet_remove_entity_effect*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::ResourcePackSend: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_resource_pack_send); size_t len_66 = pdef::pc1_18_play_toClient::size::packet_resource_pack_send(stream, *obj.params_packet_resource_pack_send); EXPECT_OR_BAIL(len_66); len += len_66; /*params_packet_resource_pack_send*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_resource_pack_send); size_t len_65 = pdef::pc1_18_play_toClient::size::packet_resource_pack_send(stream, *obj.params_packet_resource_pack_send); EXPECT_OR_BAIL(len_65); len += len_65; /*params_packet_resource_pack_send*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Respawn: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_respawn); size_t len_67 = pdef::pc1_18_play_toClient::size::packet_respawn(stream, *obj.params_packet_respawn); EXPECT_OR_BAIL(len_67); len += len_67; /*params_packet_respawn*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_respawn); size_t len_66 = pdef::pc1_18_play_toClient::size::packet_respawn(stream, *obj.params_packet_respawn); EXPECT_OR_BAIL(len_66); len += len_66; /*params_packet_respawn*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntityUpdateAttributes: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_entity_update_attributes); size_t len_68 = pdef::pc1_18_play_toClient::size::packet_entity_update_attributes(stream, *obj.params_packet_entity_update_attributes); EXPECT_OR_BAIL(len_68); len += len_68; /*params_packet_entity_update_attributes*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_entity_update_attributes); size_t len_67 = pdef::pc1_18_play_toClient::size::packet_entity_update_attributes(stream, *obj.params_packet_entity_update_attributes); EXPECT_OR_BAIL(len_67); len += len_67; /*params_packet_entity_update_attributes*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Camera: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_camera); size_t len_69 = pdef::pc1_18_play_toClient::size::packet_camera(stream, *obj.params_packet_camera); EXPECT_OR_BAIL(len_69); len += len_69; /*params_packet_camera*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_camera); size_t len_68 = pdef::pc1_18_play_toClient::size::packet_camera(stream, *obj.params_packet_camera); EXPECT_OR_BAIL(len_68); len += len_68; /*params_packet_camera*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::HeldItemSlot: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_held_item_slot); size_t len_70 = pdef::pc1_18_play_toClient::size::packet_held_item_slot(stream, *obj.params_packet_held_item_slot); EXPECT_OR_BAIL(len_70); len += len_70; /*params_packet_held_item_slot*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_held_item_slot); size_t len_69 = pdef::pc1_18_play_toClient::size::packet_held_item_slot(stream, *obj.params_packet_held_item_slot); EXPECT_OR_BAIL(len_69); len += len_69; /*params_packet_held_item_slot*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::UpdateViewPosition: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_update_view_position); size_t len_71 = pdef::pc1_18_play_toClient::size::packet_update_view_position(stream, *obj.params_packet_update_view_position); EXPECT_OR_BAIL(len_71); len += len_71; /*params_packet_update_view_position*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_update_view_position); size_t len_70 = pdef::pc1_18_play_toClient::size::packet_update_view_position(stream, *obj.params_packet_update_view_position); EXPECT_OR_BAIL(len_70); len += len_70; /*params_packet_update_view_position*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::UpdateViewDistance: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_update_view_distance); size_t len_72 = pdef::pc1_18_play_toClient::size::packet_update_view_distance(stream, *obj.params_packet_update_view_distance); EXPECT_OR_BAIL(len_72); len += len_72; /*params_packet_update_view_distance*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_update_view_distance); size_t len_71 = pdef::pc1_18_play_toClient::size::packet_update_view_distance(stream, *obj.params_packet_update_view_distance); EXPECT_OR_BAIL(len_71); len += len_71; /*params_packet_update_view_distance*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::ScoreboardDisplayObjective: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_scoreboard_display_objective); size_t len_73 = pdef::pc1_18_play_toClient::size::packet_scoreboard_display_objective(stream, *obj.params_packet_scoreboard_display_objective); EXPECT_OR_BAIL(len_73); len += len_73; /*params_packet_scoreboard_display_objective*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_scoreboard_display_objective); size_t len_72 = pdef::pc1_18_play_toClient::size::packet_scoreboard_display_objective(stream, *obj.params_packet_scoreboard_display_objective); EXPECT_OR_BAIL(len_72); len += len_72; /*params_packet_scoreboard_display_objective*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntityMetadata: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_entity_metadata); size_t len_74 = pdef::pc1_18_play_toClient::size::packet_entity_metadata(stream, *obj.params_packet_entity_metadata); EXPECT_OR_BAIL(len_74); len += len_74; /*params_packet_entity_metadata*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_entity_metadata); size_t len_73 = pdef::pc1_18_play_toClient::size::packet_entity_metadata(stream, *obj.params_packet_entity_metadata); EXPECT_OR_BAIL(len_73); len += len_73; /*params_packet_entity_metadata*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::AttachEntity: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_attach_entity); size_t len_75 = pdef::pc1_18_play_toClient::size::packet_attach_entity(stream, *obj.params_packet_attach_entity); EXPECT_OR_BAIL(len_75); len += len_75; /*params_packet_attach_entity*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_attach_entity); size_t len_74 = pdef::pc1_18_play_toClient::size::packet_attach_entity(stream, *obj.params_packet_attach_entity); EXPECT_OR_BAIL(len_74); len += len_74; /*params_packet_attach_entity*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntityVelocity: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_entity_velocity); size_t len_76 = pdef::pc1_18_play_toClient::size::packet_entity_velocity(stream, *obj.params_packet_entity_velocity); EXPECT_OR_BAIL(len_76); len += len_76; /*params_packet_entity_velocity*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_entity_velocity); size_t len_75 = pdef::pc1_18_play_toClient::size::packet_entity_velocity(stream, *obj.params_packet_entity_velocity); EXPECT_OR_BAIL(len_75); len += len_75; /*params_packet_entity_velocity*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntityEquipment: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_entity_equipment); size_t len_77 = pdef::pc1_18_play_toClient::size::packet_entity_equipment(stream, *obj.params_packet_entity_equipment); EXPECT_OR_BAIL(len_77); len += len_77; /*params_packet_entity_equipment*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_entity_equipment); size_t len_76 = pdef::pc1_18_play_toClient::size::packet_entity_equipment(stream, *obj.params_packet_entity_equipment); EXPECT_OR_BAIL(len_76); len += len_76; /*params_packet_entity_equipment*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Experience: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_experience); size_t len_78 = pdef::pc1_18_play_toClient::size::packet_experience(stream, *obj.params_packet_experience); EXPECT_OR_BAIL(len_78); len += len_78; /*params_packet_experience*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_experience); size_t len_77 = pdef::pc1_18_play_toClient::size::packet_experience(stream, *obj.params_packet_experience); EXPECT_OR_BAIL(len_77); len += len_77; /*params_packet_experience*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::UpdateHealth: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_update_health); size_t len_79 = pdef::pc1_18_play_toClient::size::packet_update_health(stream, *obj.params_packet_update_health); EXPECT_OR_BAIL(len_79); len += len_79; /*params_packet_update_health*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_update_health); size_t len_78 = pdef::pc1_18_play_toClient::size::packet_update_health(stream, *obj.params_packet_update_health); EXPECT_OR_BAIL(len_78); len += len_78; /*params_packet_update_health*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::ScoreboardObjective: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_scoreboard_objective); size_t len_80 = pdef::pc1_18_play_toClient::size::packet_scoreboard_objective(stream, *obj.params_packet_scoreboard_objective); EXPECT_OR_BAIL(len_80); len += len_80; /*params_packet_scoreboard_objective*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_scoreboard_objective); size_t len_79 = pdef::pc1_18_play_toClient::size::packet_scoreboard_objective(stream, *obj.params_packet_scoreboard_objective); EXPECT_OR_BAIL(len_79); len += len_79; /*params_packet_scoreboard_objective*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SetPassengers: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_set_passengers); size_t len_81 = pdef::pc1_18_play_toClient::size::packet_set_passengers(stream, *obj.params_packet_set_passengers); EXPECT_OR_BAIL(len_81); len += len_81; /*params_packet_set_passengers*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_set_passengers); size_t len_80 = pdef::pc1_18_play_toClient::size::packet_set_passengers(stream, *obj.params_packet_set_passengers); EXPECT_OR_BAIL(len_80); len += len_80; /*params_packet_set_passengers*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Teams: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_teams); size_t len_82 = pdef::pc1_18_play_toClient::size::packet_teams(stream, *obj.params_packet_teams); EXPECT_OR_BAIL(len_82); len += len_82; /*params_packet_teams*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_teams); size_t len_81 = pdef::pc1_18_play_toClient::size::packet_teams(stream, *obj.params_packet_teams); EXPECT_OR_BAIL(len_81); len += len_81; /*params_packet_teams*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::ScoreboardScore: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_scoreboard_score); size_t len_83 = pdef::pc1_18_play_toClient::size::packet_scoreboard_score(stream, *obj.params_packet_scoreboard_score); EXPECT_OR_BAIL(len_83); len += len_83; /*params_packet_scoreboard_score*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_scoreboard_score); size_t len_82 = pdef::pc1_18_play_toClient::size::packet_scoreboard_score(stream, *obj.params_packet_scoreboard_score); EXPECT_OR_BAIL(len_82); len += len_82; /*params_packet_scoreboard_score*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SimulationDistance: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_simulation_distance); size_t len_84 = pdef::pc1_18_play_toClient::size::packet_simulation_distance(stream, *obj.params_packet_simulation_distance); EXPECT_OR_BAIL(len_84); len += len_84; /*params_packet_simulation_distance*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_simulation_distance); size_t len_83 = pdef::pc1_18_play_toClient::size::packet_simulation_distance(stream, *obj.params_packet_simulation_distance); EXPECT_OR_BAIL(len_83); len += len_83; /*params_packet_simulation_distance*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SpawnPosition: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_spawn_position); size_t len_85 = pdef::pc1_18_play_toClient::size::packet_spawn_position(stream, *obj.params_packet_spawn_position); EXPECT_OR_BAIL(len_85); len += len_85; /*params_packet_spawn_position*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_spawn_position); size_t len_84 = pdef::pc1_18_play_toClient::size::packet_spawn_position(stream, *obj.params_packet_spawn_position); EXPECT_OR_BAIL(len_84); len += len_84; /*params_packet_spawn_position*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::UpdateTime: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_update_time); size_t len_86 = pdef::pc1_18_play_toClient::size::packet_update_time(stream, *obj.params_packet_update_time); EXPECT_OR_BAIL(len_86); len += len_86; /*params_packet_update_time*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_update_time); size_t len_85 = pdef::pc1_18_play_toClient::size::packet_update_time(stream, *obj.params_packet_update_time); EXPECT_OR_BAIL(len_85); len += len_85; /*params_packet_update_time*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntitySoundEffect: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_entity_sound_effect); size_t len_87 = pdef::pc1_18_play_toClient::size::packet_entity_sound_effect(stream, *obj.params_packet_entity_sound_effect); EXPECT_OR_BAIL(len_87); len += len_87; /*params_packet_entity_sound_effect*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_entity_sound_effect); size_t len_86 = pdef::pc1_18_play_toClient::size::packet_entity_sound_effect(stream, *obj.params_packet_entity_sound_effect); EXPECT_OR_BAIL(len_86); len += len_86; /*params_packet_entity_sound_effect*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::StopSound: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_stop_sound); size_t len_88 = pdef::pc1_18_play_toClient::size::packet_stop_sound(stream, *obj.params_packet_stop_sound); EXPECT_OR_BAIL(len_88); len += len_88; /*params_packet_stop_sound*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_stop_sound); size_t len_87 = pdef::pc1_18_play_toClient::size::packet_stop_sound(stream, *obj.params_packet_stop_sound); EXPECT_OR_BAIL(len_87); len += len_87; /*params_packet_stop_sound*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SoundEffect: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_sound_effect); size_t len_89 = pdef::pc1_18_play_toClient::size::packet_sound_effect(stream, *obj.params_packet_sound_effect); EXPECT_OR_BAIL(len_89); len += len_89; /*params_packet_sound_effect*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_sound_effect); size_t len_88 = pdef::pc1_18_play_toClient::size::packet_sound_effect(stream, *obj.params_packet_sound_effect); EXPECT_OR_BAIL(len_88); len += len_88; /*params_packet_sound_effect*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::PlayerlistHeader: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_playerlist_header); size_t len_90 = pdef::pc1_18_play_toClient::size::packet_playerlist_header(stream, *obj.params_packet_playerlist_header); EXPECT_OR_BAIL(len_90); len += len_90; /*params_packet_playerlist_header*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_playerlist_header); size_t len_89 = pdef::pc1_18_play_toClient::size::packet_playerlist_header(stream, *obj.params_packet_playerlist_header); EXPECT_OR_BAIL(len_89); len += len_89; /*params_packet_playerlist_header*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Collect: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_collect); size_t len_91 = pdef::pc1_18_play_toClient::size::packet_collect(stream, *obj.params_packet_collect); EXPECT_OR_BAIL(len_91); len += len_91; /*params_packet_collect*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_collect); size_t len_90 = pdef::pc1_18_play_toClient::size::packet_collect(stream, *obj.params_packet_collect); EXPECT_OR_BAIL(len_90); len += len_90; /*params_packet_collect*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntityTeleport: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_entity_teleport); size_t len_92 = pdef::pc1_18_play_toClient::size::packet_entity_teleport(stream, *obj.params_packet_entity_teleport); EXPECT_OR_BAIL(len_92); len += len_92; /*params_packet_entity_teleport*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_entity_teleport); size_t len_91 = pdef::pc1_18_play_toClient::size::packet_entity_teleport(stream, *obj.params_packet_entity_teleport); EXPECT_OR_BAIL(len_91); len += len_91; /*params_packet_entity_teleport*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntityHeadRotation: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_entity_head_rotation); size_t len_93 = pdef::pc1_18_play_toClient::size::packet_entity_head_rotation(stream, *obj.params_packet_entity_head_rotation); EXPECT_OR_BAIL(len_93); len += len_93; /*params_packet_entity_head_rotation*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_entity_head_rotation); size_t len_92 = pdef::pc1_18_play_toClient::size::packet_entity_head_rotation(stream, *obj.params_packet_entity_head_rotation); EXPECT_OR_BAIL(len_92); len += len_92; /*params_packet_entity_head_rotation*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntityEffect: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_entity_effect); size_t len_94 = pdef::pc1_18_play_toClient::size::packet_entity_effect(stream, *obj.params_packet_entity_effect); EXPECT_OR_BAIL(len_94); len += len_94; /*params_packet_entity_effect*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_entity_effect); size_t len_93 = pdef::pc1_18_play_toClient::size::packet_entity_effect(stream, *obj.params_packet_entity_effect); EXPECT_OR_BAIL(len_93); len += len_93; /*params_packet_entity_effect*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SelectAdvancementTab: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_select_advancement_tab); size_t len_95 = pdef::pc1_18_play_toClient::size::packet_select_advancement_tab(stream, *obj.params_packet_select_advancement_tab); EXPECT_OR_BAIL(len_95); len += len_95; /*params_packet_select_advancement_tab*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_select_advancement_tab); size_t len_94 = pdef::pc1_18_play_toClient::size::packet_select_advancement_tab(stream, *obj.params_packet_select_advancement_tab); EXPECT_OR_BAIL(len_94); len += len_94; /*params_packet_select_advancement_tab*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::DeclareRecipes: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_declare_recipes); size_t len_96 = pdef::pc1_18_play_toClient::size::packet_declare_recipes(stream, *obj.params_packet_declare_recipes); EXPECT_OR_BAIL(len_96); len += len_96; /*params_packet_declare_recipes*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_declare_recipes); size_t len_95 = pdef::pc1_18_play_toClient::size::packet_declare_recipes(stream, *obj.params_packet_declare_recipes); EXPECT_OR_BAIL(len_95); len += len_95; /*params_packet_declare_recipes*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Tags: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_tags); size_t len_97 = pdef::pc1_18_play_toClient::size::packet_tags(stream, *obj.params_packet_tags); EXPECT_OR_BAIL(len_97); len += len_97; /*params_packet_tags*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_tags); size_t len_96 = pdef::pc1_18_play_toClient::size::packet_tags(stream, *obj.params_packet_tags); EXPECT_OR_BAIL(len_96); len += len_96; /*params_packet_tags*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::AcknowledgePlayerDigging: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_acknowledge_player_digging); size_t len_98 = pdef::pc1_18_play_toClient::size::packet_acknowledge_player_digging(stream, *obj.params_packet_acknowledge_player_digging); EXPECT_OR_BAIL(len_98); len += len_98; /*params_packet_acknowledge_player_digging*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_acknowledge_player_digging); size_t len_97 = pdef::pc1_18_play_toClient::size::packet_acknowledge_player_digging(stream, *obj.params_packet_acknowledge_player_digging); EXPECT_OR_BAIL(len_97); len += len_97; /*params_packet_acknowledge_player_digging*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SculkVibrationSignal: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_sculk_vibration_signal); size_t len_99 = pdef::pc1_18_play_toClient::size::packet_sculk_vibration_signal(stream, *obj.params_packet_sculk_vibration_signal); EXPECT_OR_BAIL(len_99); len += len_99; /*params_packet_sculk_vibration_signal*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_sculk_vibration_signal); size_t len_98 = pdef::pc1_18_play_toClient::size::packet_sculk_vibration_signal(stream, *obj.params_packet_sculk_vibration_signal); EXPECT_OR_BAIL(len_98); len += len_98; /*params_packet_sculk_vibration_signal*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::ClearTitles: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_clear_titles); size_t len_100 = pdef::pc1_18_play_toClient::size::packet_clear_titles(stream, *obj.params_packet_clear_titles); EXPECT_OR_BAIL(len_100); len += len_100; /*params_packet_clear_titles*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_clear_titles); size_t len_99 = pdef::pc1_18_play_toClient::size::packet_clear_titles(stream, *obj.params_packet_clear_titles); EXPECT_OR_BAIL(len_99); len += len_99; /*params_packet_clear_titles*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::InitializeWorldBorder: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_initialize_world_border); size_t len_101 = pdef::pc1_18_play_toClient::size::packet_initialize_world_border(stream, *obj.params_packet_initialize_world_border); EXPECT_OR_BAIL(len_101); len += len_101; /*params_packet_initialize_world_border*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_initialize_world_border); size_t len_100 = pdef::pc1_18_play_toClient::size::packet_initialize_world_border(stream, *obj.params_packet_initialize_world_border); EXPECT_OR_BAIL(len_100); len += len_100; /*params_packet_initialize_world_border*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::ActionBar: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_action_bar); size_t len_102 = pdef::pc1_18_play_toClient::size::packet_action_bar(stream, *obj.params_packet_action_bar); EXPECT_OR_BAIL(len_102); len += len_102; /*params_packet_action_bar*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_action_bar); size_t len_101 = pdef::pc1_18_play_toClient::size::packet_action_bar(stream, *obj.params_packet_action_bar); EXPECT_OR_BAIL(len_101); len += len_101; /*params_packet_action_bar*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::WorldBorderCenter: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_world_border_center); size_t len_103 = pdef::pc1_18_play_toClient::size::packet_world_border_center(stream, *obj.params_packet_world_border_center); EXPECT_OR_BAIL(len_103); len += len_103; /*params_packet_world_border_center*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_world_border_center); size_t len_102 = pdef::pc1_18_play_toClient::size::packet_world_border_center(stream, *obj.params_packet_world_border_center); EXPECT_OR_BAIL(len_102); len += len_102; /*params_packet_world_border_center*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::WorldBorderLerpSize: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_world_border_lerp_size); size_t len_104 = pdef::pc1_18_play_toClient::size::packet_world_border_lerp_size(stream, *obj.params_packet_world_border_lerp_size); EXPECT_OR_BAIL(len_104); len += len_104; /*params_packet_world_border_lerp_size*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_world_border_lerp_size); size_t len_103 = pdef::pc1_18_play_toClient::size::packet_world_border_lerp_size(stream, *obj.params_packet_world_border_lerp_size); EXPECT_OR_BAIL(len_103); len += len_103; /*params_packet_world_border_lerp_size*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::WorldBorderSize: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_world_border_size); size_t len_105 = pdef::pc1_18_play_toClient::size::packet_world_border_size(stream, *obj.params_packet_world_border_size); EXPECT_OR_BAIL(len_105); len += len_105; /*params_packet_world_border_size*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_world_border_size); size_t len_104 = pdef::pc1_18_play_toClient::size::packet_world_border_size(stream, *obj.params_packet_world_border_size); EXPECT_OR_BAIL(len_104); len += len_104; /*params_packet_world_border_size*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::WorldBorderWarningDelay: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_world_border_warning_delay); size_t len_106 = pdef::pc1_18_play_toClient::size::packet_world_border_warning_delay(stream, *obj.params_packet_world_border_warning_delay); EXPECT_OR_BAIL(len_106); len += len_106; /*params_packet_world_border_warning_delay*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_world_border_warning_delay); size_t len_105 = pdef::pc1_18_play_toClient::size::packet_world_border_warning_delay(stream, *obj.params_packet_world_border_warning_delay); EXPECT_OR_BAIL(len_105); len += len_105; /*params_packet_world_border_warning_delay*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::WorldBorderWarningReach: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_world_border_warning_reach); size_t len_107 = pdef::pc1_18_play_toClient::size::packet_world_border_warning_reach(stream, *obj.params_packet_world_border_warning_reach); EXPECT_OR_BAIL(len_107); len += len_107; /*params_packet_world_border_warning_reach*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_world_border_warning_reach); size_t len_106 = pdef::pc1_18_play_toClient::size::packet_world_border_warning_reach(stream, *obj.params_packet_world_border_warning_reach); EXPECT_OR_BAIL(len_106); len += len_106; /*params_packet_world_border_warning_reach*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Ping: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_ping); size_t len_108 = pdef::pc1_18_play_toClient::size::packet_ping(stream, *obj.params_packet_ping); EXPECT_OR_BAIL(len_108); len += len_108; /*params_packet_ping*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_ping); size_t len_107 = pdef::pc1_18_play_toClient::size::packet_ping(stream, *obj.params_packet_ping); EXPECT_OR_BAIL(len_107); len += len_107; /*params_packet_ping*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SetTitleSubtitle: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_set_title_subtitle); size_t len_109 = pdef::pc1_18_play_toClient::size::packet_set_title_subtitle(stream, *obj.params_packet_set_title_subtitle); EXPECT_OR_BAIL(len_109); len += len_109; /*params_packet_set_title_subtitle*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_set_title_subtitle); size_t len_108 = pdef::pc1_18_play_toClient::size::packet_set_title_subtitle(stream, *obj.params_packet_set_title_subtitle); EXPECT_OR_BAIL(len_108); len += len_108; /*params_packet_set_title_subtitle*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SetTitleText: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_set_title_text); size_t len_110 = pdef::pc1_18_play_toClient::size::packet_set_title_text(stream, *obj.params_packet_set_title_text); EXPECT_OR_BAIL(len_110); len += len_110; /*params_packet_set_title_text*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_set_title_text); size_t len_109 = pdef::pc1_18_play_toClient::size::packet_set_title_text(stream, *obj.params_packet_set_title_text); EXPECT_OR_BAIL(len_109); len += len_109; /*params_packet_set_title_text*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SetTitleTime: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_set_title_time); size_t len_111 = pdef::pc1_18_play_toClient::size::packet_set_title_time(stream, *obj.params_packet_set_title_time); EXPECT_OR_BAIL(len_111); len += len_111; /*params_packet_set_title_time*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_set_title_time); size_t len_110 = pdef::pc1_18_play_toClient::size::packet_set_title_time(stream, *obj.params_packet_set_title_time); EXPECT_OR_BAIL(len_110); len += len_110; /*params_packet_set_title_time*/ /*4.4*/
         break;
       } /*8.7*/
       default: break; /*avoid unhandled case warning*/
@@ -3672,59 +3675,59 @@ bool packet(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet &obj,
     const int &particleId = obj.particleId; /*0.1*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.particleId); /*0.4*/
     if (particleId == 2) { /*8.2*/
-        const pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.5*/
-        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.blockState); /*0.4*/
+        const pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.5*/
+        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.blockState); /*0.4*/
     }
     else if (particleId == 3) { /*8.2*/
-        const pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.5*/
-        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.blockState); /*0.4*/
+        const pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.5*/
+        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.blockState); /*0.4*/
     }
     else if (particleId == 14) { /*8.2*/
-        const pdef::pc1_18_play_toClient::particle::Data14 &v = *obj.data_14; /*8.5*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.red); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.green); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.blue); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.scale); /*0.4*/
+        const pdef::pc1_18_play_toClient::particle::Data14 &v2 = *obj.data_14; /*8.5*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.red); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.green); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.blue); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.scale); /*0.4*/
     }
     else if (particleId == 15) { /*8.2*/
-        const pdef::pc1_18_play_toClient::particle::Data15 &v = *obj.data_15; /*8.5*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.fromRed); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.fromGreen); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.fromBlue); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.scale); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.toRed); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.toGreen); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.toBlue); /*0.4*/
+        const pdef::pc1_18_play_toClient::particle::Data15 &v2 = *obj.data_15; /*8.5*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.fromRed); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.fromGreen); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.fromBlue); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.scale); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.toRed); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.toGreen); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.toBlue); /*0.4*/
     }
     else if (particleId == 24) { /*8.2*/
-        const pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.5*/
-        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.blockState); /*0.4*/
+        const pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.5*/
+        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.blockState); /*0.4*/
     }
     else if (particleId == 35) { /*8.2*/
-        const pdef::pc1_18_play_toClient::particle::Data35 &v = *obj.data_35; /*8.5*/
-        WRITE_OR_BAIL(writeByte, (int8_t)v.item); /*0.4*/
+        const pdef::pc1_18_play_toClient::particle::Data35 &v2 = *obj.data_35; /*8.5*/
+        WRITE_OR_BAIL(writeByte, (int8_t)v2.item); /*0.4*/
     }
     else if (particleId == 36) { /*8.2*/
-        const pdef::pc1_18_play_toClient::particle::Data36 &v = *obj.data_36; /*8.5*/
+        const pdef::pc1_18_play_toClient::particle::Data36 &v2 = *obj.data_36; /*8.5*/
         uint8_t origin_val = 0;
-        origin_val |= v.origin.x << 0;
-        origin_val |= v.origin.z << 26;
-        origin_val |= v.origin.y << 52;
+        origin_val |= v2.origin.x << 0;
+        origin_val |= v2.origin.z << 26;
+        origin_val |= v2.origin.y << 52;
         WRITE_OR_BAIL(writeUByte, origin_val); /*origin: bitfield*/ /*4.2*/
-        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.positionType.length());
-        WRITE_OR_BAIL(writeString, v.positionType); /*positionType: pstring*/ /*4.2*/
-        const pdef::pc1_18_play_toClient::particle::Data36::pstring &positionType = v.positionType; /*0.1*/
-        if (positionType == pdef::pc1_18_play_toClient::particle::Data36::PositionType::MinecraftBlock) { /*8.5*/
+        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.positionType.length());
+        WRITE_OR_BAIL(writeString, v2.positionType); /*positionType: pstring*/ /*4.2*/
+        const std::string &positionType = v2.positionType; /*4.7*/
+        if (positionType == "minecraft:block") { /*8.0*/
           uint8_t destination_position_val = 0;
-          destination_position_val |= v.destination_position.x << 0;
-          destination_position_val |= v.destination_position.z << 26;
-          destination_position_val |= v.destination_position.y << 52;
+          destination_position_val |= v2.destination_position.x << 0;
+          destination_position_val |= v2.destination_position.z << 26;
+          destination_position_val |= v2.destination_position.y << 52;
           WRITE_OR_BAIL(writeUByte, destination_position_val); /*destination_position: bitfield*/ /*4.2*/
         }
-        else if (positionType == pdef::pc1_18_play_toClient::particle::Data36::PositionType::MinecraftEntity) { /*8.5*/
-          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.destination_varint); /*0.4*/
+        else if (positionType == "minecraft:entity") { /*8.0*/
+          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.destination_varint); /*0.4*/
         }
-        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.ticks); /*0.4*/
+        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.ticks); /*0.4*/
     }
     return true;
   }
@@ -3771,7 +3774,7 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
     flags_val |= obj.flags.has_command << 5;
     flags_val |= obj.flags.command_node_type << 6;
     WRITE_OR_BAIL(writeUByte, flags_val); /*flags: bitfield*/ /*4.2*/
-    const pdef::pc1_18_play_toClient::command_node::bitfield &flags = obj.flags; /*0.1*/
+    const pdef::pc1_18_play_toClient::command_node::flags_t &flags = obj.flags; /*4.7*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.children.size()); /*1.4*/
     for (const auto &v2 : obj.children) { /*3.1*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2); /*0.4*/
@@ -3782,183 +3785,183 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
     if (flags.command_node_type == 0) { /*8.2*/
     }
     else if (flags.command_node_type == 1) { /*8.2*/
-        const pdef::pc1_18_play_toClient::command_node::ExtraNodeData1 &v = *obj.extraNodeData_1; /*8.5*/
-        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.name.length());
-        WRITE_OR_BAIL(writeString, v.name); /*name: pstring*/ /*4.2*/
+        const pdef::pc1_18_play_toClient::command_node::ExtraNodeData1 &v2 = *obj.extraNodeData_1; /*8.5*/
+        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.name.length());
+        WRITE_OR_BAIL(writeString, v2.name); /*name: pstring*/ /*4.2*/
     }
     else if (flags.command_node_type == 2) { /*8.2*/
-        const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2 &v = *obj.extraNodeData_2; /*8.5*/
-        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.name.length());
-        WRITE_OR_BAIL(writeString, v.name); /*name: pstring*/ /*4.2*/
-        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.parser.length());
-        WRITE_OR_BAIL(writeString, v.parser); /*parser: pstring*/ /*4.2*/
-        const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::pstring &parser = v.parser; /*0.1*/
-        if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::BrigadierBool) { /*8.5*/
+        const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2 &v2 = *obj.extraNodeData_2; /*8.5*/
+        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.name.length());
+        WRITE_OR_BAIL(writeString, v2.name); /*name: pstring*/ /*4.2*/
+        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.parser.length());
+        WRITE_OR_BAIL(writeString, v2.parser); /*parser: pstring*/ /*4.2*/
+        const std::string &parser = v2.parser; /*4.7*/
+        if (parser == "brigadier:bool") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::BrigadierFloat) { /*8.5*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat &v = *v.properties_brigadier_float; /*8.5*/
+        else if (parser == "brigadier:float") { /*8.0*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat &v4 = *v2.properties_brigadier_float; /*8.5*/
             uint8_t flags_val = 0;
-            flags_val |= v.flags.unused << 0;
-            flags_val |= v.flags.max_present << 6;
-            flags_val |= v.flags.min_present << 7;
+            flags_val |= v4.flags.unused << 0;
+            flags_val |= v4.flags.max_present << 6;
+            flags_val |= v4.flags.min_present << 7;
             WRITE_OR_BAIL(writeUByte, flags_val); /*flags: bitfield*/ /*4.2*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat::bitfield &flags = v.flags; /*0.1*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat::flags_t &flags = v4.flags; /*4.7*/
             if (flags.min_present == 1) { /*8.2*/
-              WRITE_OR_BAIL(writeFloatBE, (float)v.min); /*0.4*/
+              WRITE_OR_BAIL(writeFloatBE, (float)v4.min); /*0.4*/
             }
             if (flags.max_present == 1) { /*8.2*/
-              WRITE_OR_BAIL(writeFloatBE, (float)v.max); /*0.4*/
+              WRITE_OR_BAIL(writeFloatBE, (float)v4.max); /*0.4*/
             }
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::BrigadierDouble) { /*8.5*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble &v = *v.properties_brigadier_double; /*8.5*/
+        else if (parser == "brigadier:double") { /*8.0*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble &v4 = *v2.properties_brigadier_double; /*8.5*/
             uint8_t flags_val = 0;
-            flags_val |= v.flags.unused << 0;
-            flags_val |= v.flags.max_present << 6;
-            flags_val |= v.flags.min_present << 7;
+            flags_val |= v4.flags.unused << 0;
+            flags_val |= v4.flags.max_present << 6;
+            flags_val |= v4.flags.min_present << 7;
             WRITE_OR_BAIL(writeUByte, flags_val); /*flags: bitfield*/ /*4.2*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble::bitfield &flags = v.flags; /*0.1*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble::flags_t &flags = v4.flags; /*4.7*/
             if (flags.min_present == 1) { /*8.2*/
-              WRITE_OR_BAIL(writeDoubleBE, (double)v.min); /*0.4*/
+              WRITE_OR_BAIL(writeDoubleBE, (double)v4.min); /*0.4*/
             }
             if (flags.max_present == 1) { /*8.2*/
-              WRITE_OR_BAIL(writeDoubleBE, (double)v.max); /*0.4*/
+              WRITE_OR_BAIL(writeDoubleBE, (double)v4.max); /*0.4*/
             }
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::BrigadierInteger) { /*8.5*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger &v = *v.properties_brigadier_integer; /*8.5*/
+        else if (parser == "brigadier:integer") { /*8.0*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger &v4 = *v2.properties_brigadier_integer; /*8.5*/
             uint8_t flags_val = 0;
-            flags_val |= v.flags.unused << 0;
-            flags_val |= v.flags.max_present << 6;
-            flags_val |= v.flags.min_present << 7;
+            flags_val |= v4.flags.unused << 0;
+            flags_val |= v4.flags.max_present << 6;
+            flags_val |= v4.flags.min_present << 7;
             WRITE_OR_BAIL(writeUByte, flags_val); /*flags: bitfield*/ /*4.2*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger::bitfield &flags = v.flags; /*0.1*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger::flags_t &flags = v4.flags; /*4.7*/
             if (flags.min_present == 1) { /*8.2*/
-              WRITE_OR_BAIL(writeIntBE, (int32_t)v.min); /*0.4*/
+              WRITE_OR_BAIL(writeIntBE, (int32_t)v4.min); /*0.4*/
             }
             if (flags.max_present == 1) { /*8.2*/
-              WRITE_OR_BAIL(writeIntBE, (int32_t)v.max); /*0.4*/
+              WRITE_OR_BAIL(writeIntBE, (int32_t)v4.max); /*0.4*/
             }
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::BrigadierLong) { /*8.5*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong &v = *v.properties_brigadier_long; /*8.5*/
+        else if (parser == "brigadier:long") { /*8.0*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong &v4 = *v2.properties_brigadier_long; /*8.5*/
             uint8_t flags_val = 0;
-            flags_val |= v.flags.unused << 0;
-            flags_val |= v.flags.max_present << 6;
-            flags_val |= v.flags.min_present << 7;
+            flags_val |= v4.flags.unused << 0;
+            flags_val |= v4.flags.max_present << 6;
+            flags_val |= v4.flags.min_present << 7;
             WRITE_OR_BAIL(writeUByte, flags_val); /*flags: bitfield*/ /*4.2*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong::bitfield &flags = v.flags; /*0.1*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong::flags_t &flags = v4.flags; /*4.7*/
             if (flags.min_present == 1) { /*8.2*/
-              WRITE_OR_BAIL(writeLongBE, (int64_t)v.min); /*0.4*/
+              WRITE_OR_BAIL(writeLongBE, (int64_t)v4.min); /*0.4*/
             }
             if (flags.max_present == 1) { /*8.2*/
-              WRITE_OR_BAIL(writeLongBE, (int64_t)v.max); /*0.4*/
+              WRITE_OR_BAIL(writeLongBE, (int64_t)v4.max); /*0.4*/
             }
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::BrigadierString) { /*8.5*/
+        else if (parser == "brigadier:string") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftEntity) { /*8.5*/
+        else if (parser == "minecraft:entity") { /*8.0*/
           uint8_t properties_minecraft_entity_val = 0;
-          properties_minecraft_entity_val |= v.properties_minecraft_entity.unused << 0;
-          properties_minecraft_entity_val |= v.properties_minecraft_entity.onlyAllowPlayers << 6;
-          properties_minecraft_entity_val |= v.properties_minecraft_entity.onlyAllowEntities << 7;
+          properties_minecraft_entity_val |= v2.properties_minecraft_entity.unused << 0;
+          properties_minecraft_entity_val |= v2.properties_minecraft_entity.onlyAllowPlayers << 6;
+          properties_minecraft_entity_val |= v2.properties_minecraft_entity.onlyAllowEntities << 7;
           WRITE_OR_BAIL(writeUByte, properties_minecraft_entity_val); /*properties_minecraft_entity: bitfield*/ /*4.2*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftGameProfile) { /*8.5*/
+        else if (parser == "minecraft:game_profile") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftBlockPos) { /*8.5*/
+        else if (parser == "minecraft:block_pos") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftColumnPos) { /*8.5*/
+        else if (parser == "minecraft:column_pos") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftVec3) { /*8.5*/
+        else if (parser == "minecraft:vec3") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftVec2) { /*8.5*/
+        else if (parser == "minecraft:vec2") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftBlockState) { /*8.5*/
+        else if (parser == "minecraft:block_state") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftBlockPredicate) { /*8.5*/
+        else if (parser == "minecraft:block_predicate") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftItemStack) { /*8.5*/
+        else if (parser == "minecraft:item_stack") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftItemPredicate) { /*8.5*/
+        else if (parser == "minecraft:item_predicate") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftColor) { /*8.5*/
+        else if (parser == "minecraft:color") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftComponent) { /*8.5*/
+        else if (parser == "minecraft:component") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftMessage) { /*8.5*/
+        else if (parser == "minecraft:message") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftNbt) { /*8.5*/
+        else if (parser == "minecraft:nbt") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftNbtPath) { /*8.5*/
+        else if (parser == "minecraft:nbt_path") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftObjective) { /*8.5*/
+        else if (parser == "minecraft:objective") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftObjectiveCriteria) { /*8.5*/
+        else if (parser == "minecraft:objective_criteria") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftOperation) { /*8.5*/
+        else if (parser == "minecraft:operation") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftParticle) { /*8.5*/
+        else if (parser == "minecraft:particle") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftAngle) { /*8.5*/
+        else if (parser == "minecraft:angle") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftRotation) { /*8.5*/
+        else if (parser == "minecraft:rotation") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftScoreboardSlot) { /*8.5*/
+        else if (parser == "minecraft:scoreboard_slot") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftScoreHolder) { /*8.5*/
+        else if (parser == "minecraft:score_holder") { /*8.0*/
           uint8_t properties_minecraft_score_holder_val = 0;
-          properties_minecraft_score_holder_val |= v.properties_minecraft_score_holder.unused << 0;
-          properties_minecraft_score_holder_val |= v.properties_minecraft_score_holder.allowMultiple << 7;
+          properties_minecraft_score_holder_val |= v2.properties_minecraft_score_holder.unused << 0;
+          properties_minecraft_score_holder_val |= v2.properties_minecraft_score_holder.allowMultiple << 7;
           WRITE_OR_BAIL(writeUByte, properties_minecraft_score_holder_val); /*properties_minecraft_score_holder: bitfield*/ /*4.2*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftSwizzle) { /*8.5*/
+        else if (parser == "minecraft:swizzle") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftTeam) { /*8.5*/
+        else if (parser == "minecraft:team") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftItemSlot) { /*8.5*/
+        else if (parser == "minecraft:item_slot") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftResourceLocation) { /*8.5*/
+        else if (parser == "minecraft:resource_location") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftMobEffect) { /*8.5*/
+        else if (parser == "minecraft:mob_effect") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftFunction) { /*8.5*/
+        else if (parser == "minecraft:function") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftEntityAnchor) { /*8.5*/
+        else if (parser == "minecraft:entity_anchor") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftRange) { /*8.5*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftRange &v = *v.properties_minecraft_range; /*8.5*/
-            WRITE_OR_BAIL(writeBool, (bool)v.allowDecimals); /*0.4*/
+        else if (parser == "minecraft:range") { /*8.0*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftRange &v4 = *v2.properties_minecraft_range; /*8.5*/
+            WRITE_OR_BAIL(writeBool, (bool)v4.allowDecimals); /*0.4*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftIntRange) { /*8.5*/
+        else if (parser == "minecraft:int_range") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftFloatRange) { /*8.5*/
+        else if (parser == "minecraft:float_range") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftItemEnchantment) { /*8.5*/
+        else if (parser == "minecraft:item_enchantment") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftEntitySummon) { /*8.5*/
+        else if (parser == "minecraft:entity_summon") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftDimension) { /*8.5*/
+        else if (parser == "minecraft:dimension") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftNbtCompoundTag) { /*8.5*/
+        else if (parser == "minecraft:nbt_compound_tag") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftTime) { /*8.5*/
+        else if (parser == "minecraft:time") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftResourceOrTag) { /*8.5*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v = *v.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.5*/
-            WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.registry.length());
-            WRITE_OR_BAIL(writeString, v.registry); /*registry: pstring*/ /*4.2*/
+        else if (parser == "minecraft:resource_or_tag") { /*8.0*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.5*/
+            WRITE_OR_BAIL(writeUnsignedVarInt, (int)v4.registry.length());
+            WRITE_OR_BAIL(writeString, v4.registry); /*registry: pstring*/ /*4.2*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftResource) { /*8.5*/
-            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v = *v.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.5*/
-            WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.registry.length());
-            WRITE_OR_BAIL(writeString, v.registry); /*registry: pstring*/ /*4.2*/
+        else if (parser == "minecraft:resource") { /*8.0*/
+            const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.5*/
+            WRITE_OR_BAIL(writeUnsignedVarInt, (int)v4.registry.length());
+            WRITE_OR_BAIL(writeString, v4.registry); /*registry: pstring*/ /*4.2*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftUuid) { /*8.5*/
+        else if (parser == "minecraft:uuid") { /*8.0*/
         }
         if (flags.has_custom_suggestions == 1) { /*8.2*/
-          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.suggestionType.length());
-          WRITE_OR_BAIL(writeString, v.suggestionType); /*suggestionType: pstring*/ /*4.2*/
+          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.suggestionType.length());
+          WRITE_OR_BAIL(writeString, v2.suggestionType); /*suggestionType: pstring*/ /*4.2*/
         }
     }
     return true;
@@ -4376,14 +4379,14 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
     for (const auto &v : obj.skyLight) { /*5.1*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.skyLight.size()); /*5.7*/
       for (const auto &v : v) { /*5.10*/
-        WRITE_OR_BAIL(writeUByte, (uint8_t)v); /*5.13*/
+        WRITE_OR_BAIL(writeUByte, (uint8_t)v); /*0.4*/
       }
     }
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.blockLight.size()); /*1.4*/
     for (const auto &v : obj.blockLight) { /*5.1*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.blockLight.size()); /*5.7*/
       for (const auto &v : v) { /*5.10*/
-        WRITE_OR_BAIL(writeUByte, (uint8_t)v); /*5.13*/
+        WRITE_OR_BAIL(writeUByte, (uint8_t)v); /*0.4*/
       }
     }
     return true;
@@ -4414,59 +4417,59 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
     WRITE_OR_BAIL(writeFloatBE, (float)obj.particleData); /*0.4*/
     WRITE_OR_BAIL(writeIntBE, (int32_t)obj.particles); /*0.4*/
     if (particleId == 2) { /*8.2*/
-        const pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.5*/
-        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.blockState); /*0.4*/
+        const pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.5*/
+        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.blockState); /*0.4*/
     }
     else if (particleId == 3) { /*8.2*/
-        const pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.5*/
-        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.blockState); /*0.4*/
+        const pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.5*/
+        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.blockState); /*0.4*/
     }
     else if (particleId == 14) { /*8.2*/
-        const pdef::pc1_18_play_toClient::packet_world_particles::Data14 &v = *obj.data_14; /*8.5*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.red); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.green); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.blue); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.scale); /*0.4*/
+        const pdef::pc1_18_play_toClient::packet_world_particles::Data14 &v2 = *obj.data_14; /*8.5*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.red); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.green); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.blue); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.scale); /*0.4*/
     }
     else if (particleId == 15) { /*8.2*/
-        const pdef::pc1_18_play_toClient::packet_world_particles::Data15 &v = *obj.data_15; /*8.5*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.fromRed); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.fromGreen); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.fromBlue); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.scale); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.toRed); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.toGreen); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.toBlue); /*0.4*/
+        const pdef::pc1_18_play_toClient::packet_world_particles::Data15 &v2 = *obj.data_15; /*8.5*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.fromRed); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.fromGreen); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.fromBlue); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.scale); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.toRed); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.toGreen); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.toBlue); /*0.4*/
     }
     else if (particleId == 24) { /*8.2*/
-        const pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.5*/
-        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.blockState); /*0.4*/
+        const pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.5*/
+        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.blockState); /*0.4*/
     }
     else if (particleId == 35) { /*8.2*/
-        const pdef::pc1_18_play_toClient::packet_world_particles::Data35 &v = *obj.data_35; /*8.5*/
-        WRITE_OR_BAIL(writeByte, (int8_t)v.item); /*0.4*/
+        const pdef::pc1_18_play_toClient::packet_world_particles::Data35 &v2 = *obj.data_35; /*8.5*/
+        WRITE_OR_BAIL(writeByte, (int8_t)v2.item); /*0.4*/
     }
     else if (particleId == 36) { /*8.2*/
-        const pdef::pc1_18_play_toClient::packet_world_particles::Data36 &v = *obj.data_36; /*8.5*/
+        const pdef::pc1_18_play_toClient::packet_world_particles::Data36 &v2 = *obj.data_36; /*8.5*/
         uint8_t origin_val = 0;
-        origin_val |= v.origin.x << 0;
-        origin_val |= v.origin.z << 26;
-        origin_val |= v.origin.y << 52;
+        origin_val |= v2.origin.x << 0;
+        origin_val |= v2.origin.z << 26;
+        origin_val |= v2.origin.y << 52;
         WRITE_OR_BAIL(writeUByte, origin_val); /*origin: bitfield*/ /*4.2*/
-        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.positionType.length());
-        WRITE_OR_BAIL(writeString, v.positionType); /*positionType: pstring*/ /*4.2*/
-        const pdef::pc1_18_play_toClient::packet_world_particles::Data36::pstring &positionType = v.positionType; /*0.1*/
-        if (positionType == pdef::pc1_18_play_toClient::packet_world_particles::Data36::PositionType::MinecraftBlock) { /*8.5*/
+        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.positionType.length());
+        WRITE_OR_BAIL(writeString, v2.positionType); /*positionType: pstring*/ /*4.2*/
+        const std::string &positionType = v2.positionType; /*4.7*/
+        if (positionType == "minecraft:block") { /*8.0*/
           uint8_t destination_position_val = 0;
-          destination_position_val |= v.destination_position.x << 0;
-          destination_position_val |= v.destination_position.z << 26;
-          destination_position_val |= v.destination_position.y << 52;
+          destination_position_val |= v2.destination_position.x << 0;
+          destination_position_val |= v2.destination_position.z << 26;
+          destination_position_val |= v2.destination_position.y << 52;
           WRITE_OR_BAIL(writeUByte, destination_position_val); /*destination_position: bitfield*/ /*4.2*/
         }
-        else if (positionType == pdef::pc1_18_play_toClient::packet_world_particles::Data36::PositionType::MinecraftEntity) { /*8.5*/
-          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.destination_varint); /*0.4*/
+        else if (positionType == "minecraft:entity") { /*8.0*/
+          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.destination_varint); /*0.4*/
         }
-        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.ticks); /*0.4*/
+        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.ticks); /*0.4*/
     }
     return true;
   }
@@ -4495,14 +4498,14 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
     for (const auto &v : obj.skyLight) { /*5.1*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.skyLight.size()); /*5.7*/
       for (const auto &v : v) { /*5.10*/
-        WRITE_OR_BAIL(writeUByte, (uint8_t)v); /*5.13*/
+        WRITE_OR_BAIL(writeUByte, (uint8_t)v); /*0.4*/
       }
     }
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.blockLight.size()); /*1.4*/
     for (const auto &v : obj.blockLight) { /*5.1*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.blockLight.size()); /*5.7*/
       for (const auto &v : v) { /*5.10*/
-        WRITE_OR_BAIL(writeUByte, (uint8_t)v); /*5.13*/
+        WRITE_OR_BAIL(writeUByte, (uint8_t)v); /*0.4*/
       }
     }
     return true;
@@ -4702,21 +4705,21 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
         WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.ping); /*0.4*/
       }
       if (action == 0) { /*8.2*/
-          const pdef::pc1_18_play_toClient::packet_player_info::Data::DisplayName &v = *v2.displayName; /*8.5*/
-          const bool &has = v2.has; /*0.1*/
-          WRITE_OR_BAIL(writeBool, (bool)v2.has); /*0.4*/
+          const pdef::pc1_18_play_toClient::packet_player_info::Data::DisplayName &v3 = *v2.displayName; /*8.5*/
+          const bool &has = v3.has; /*0.1*/
+          WRITE_OR_BAIL(writeBool, (bool)v3.has); /*0.4*/
           if (has == true) { /*8.1*/
-            WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.value.length());
-            WRITE_OR_BAIL(writeString, v2.value); /*value: pstring*/ /*4.2*/
+            WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.value.length());
+            WRITE_OR_BAIL(writeString, v3.value); /*value: pstring*/ /*4.2*/
           }
       }
       else if (action == 3) { /*8.2*/
-          const pdef::pc1_18_play_toClient::packet_player_info::Data::DisplayName &v = *v2.displayName; /*8.5*/
-          const bool &has = v2.has; /*0.1*/
-          WRITE_OR_BAIL(writeBool, (bool)v2.has); /*0.4*/
+          const pdef::pc1_18_play_toClient::packet_player_info::Data::DisplayName &v3 = *v2.displayName; /*8.5*/
+          const bool &has = v3.has; /*0.1*/
+          WRITE_OR_BAIL(writeBool, (bool)v3.has); /*0.4*/
           if (has == true) { /*8.1*/
-            WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.value.length());
-            WRITE_OR_BAIL(writeString, v2.value); /*value: pstring*/ /*4.2*/
+            WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.value.length());
+            WRITE_OR_BAIL(writeString, v3.value); /*value: pstring*/ /*4.2*/
           }
       }
     }
@@ -5117,99 +5120,102 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
     for (const auto &v2 : obj.recipes) { /*5.20*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.type.length());
       WRITE_OR_BAIL(writeString, v2.type); /*type: pstring*/ /*4.2*/
-      const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::pstring &type = v2.type; /*0.1*/
+      const std::string &type = v2.type; /*4.7*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.recipeId.length());
       WRITE_OR_BAIL(writeString, v2.recipeId); /*recipeId: pstring*/ /*4.2*/
-      if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingShapeless) { /*8.5*/
-          const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftCraftingShapeless &v = *v2.data_minecraft_crafting_shapeless; /*8.5*/
-          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.group.length());
-          WRITE_OR_BAIL(writeString, v2.group); /*group: pstring*/ /*4.2*/
-          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.ingredients.size()); /*1.4*/
-          for (const auto &v5 : v2.ingredients) { /*3.1*/
+      if (type == "minecraft:crafting_shapeless") { /*8.0*/
+          const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftCraftingShapeless &v3 = *v2.data_minecraft_crafting_shapeless; /*8.5*/
+          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.group.length());
+          WRITE_OR_BAIL(writeString, v3.group); /*group: pstring*/ /*4.2*/
+          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.ingredients.size()); /*1.4*/
+          for (const auto &v5 : v3.ingredients) { /*3.1*/
             WRITE_OR_BAIL(writeUnsignedVarInt, (int)v5.size()); /*1.4*/
             for (const auto &v6 : v5) { /*3.1*/
               WRITE_OR_BAIL(writeByte, (int8_t)v6); /*0.4*/
             }
           }
-          WRITE_OR_BAIL(writeByte, (int8_t)v2.result); /*0.4*/
+          WRITE_OR_BAIL(writeByte, (int8_t)v3.result); /*0.4*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingShaped) { /*8.5*/
-          const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftCraftingShaped &v = *v2.data_minecraft_crafting_shaped; /*8.5*/
-          const int &width = v2.width; /*0.1*/
-          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.width); /*0.4*/
-          const int &height = v2.height; /*0.1*/
-          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.height); /*0.4*/
-          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.group.length());
-          WRITE_OR_BAIL(writeString, v2.group); /*group: pstring*/ /*4.2*/
-          for (const auto &v : v2.ingredients) { /*5.1*/
+      else if (type == "minecraft:crafting_shaped") { /*8.0*/
+          const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftCraftingShaped &v3 = *v2.data_minecraft_crafting_shaped; /*8.5*/
+          const int &width = v3.width; /*0.1*/
+          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.width); /*0.4*/
+          const int &height = v3.height; /*0.1*/
+          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.height); /*0.4*/
+          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.group.length());
+          WRITE_OR_BAIL(writeString, v3.group); /*group: pstring*/ /*4.2*/
+          for (const auto &v : v3.ingredients) { /*5.1*/
             WRITE_OR_BAIL(writeUnsignedVarInt, (int)height); /*5.4*/
             for (const auto &v : v) { /*5.10*/
-              pdef::pc1_18_play_toClient::encode::ingredient(stream, v); /*5.13*/
+              WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.size()); /*1.4*/
+              for (const auto &v7 : v) { /*3.1*/
+                WRITE_OR_BAIL(writeByte, (int8_t)v7); /*0.4*/
+              }
             }
           }
-          WRITE_OR_BAIL(writeByte, (int8_t)v2.result); /*0.4*/
+          WRITE_OR_BAIL(writeByte, (int8_t)v3.result); /*0.4*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialArmordye) { /*8.5*/
+      else if (type == "minecraft:crafting_special_armordye") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialBookcloning) { /*8.5*/
+      else if (type == "minecraft:crafting_special_bookcloning") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialMapcloning) { /*8.5*/
+      else if (type == "minecraft:crafting_special_mapcloning") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialMapextending) { /*8.5*/
+      else if (type == "minecraft:crafting_special_mapextending") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialFireworkRocket) { /*8.5*/
+      else if (type == "minecraft:crafting_special_firework_rocket") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialFireworkStar) { /*8.5*/
+      else if (type == "minecraft:crafting_special_firework_star") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialFireworkStarFade) { /*8.5*/
+      else if (type == "minecraft:crafting_special_firework_star_fade") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialRepairitem) { /*8.5*/
+      else if (type == "minecraft:crafting_special_repairitem") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialTippedarrow) { /*8.5*/
+      else if (type == "minecraft:crafting_special_tippedarrow") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialBannerduplicate) { /*8.5*/
+      else if (type == "minecraft:crafting_special_bannerduplicate") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialBanneraddpattern) { /*8.5*/
+      else if (type == "minecraft:crafting_special_banneraddpattern") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialShielddecoration) { /*8.5*/
+      else if (type == "minecraft:crafting_special_shielddecoration") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialShulkerboxcoloring) { /*8.5*/
+      else if (type == "minecraft:crafting_special_shulkerboxcoloring") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialSuspiciousstew) { /*8.5*/
+      else if (type == "minecraft:crafting_special_suspiciousstew") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftSmelting) { /*8.5*/
+      else if (type == "minecraft:smelting") { /*8.0*/
         pdef::pc1_18_play_toClient::encode::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); /*minecraft_smelting_format*/ /*4.5*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftBlasting) { /*8.5*/
+      else if (type == "minecraft:blasting") { /*8.0*/
         pdef::pc1_18_play_toClient::encode::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); /*minecraft_smelting_format*/ /*4.5*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftSmoking) { /*8.5*/
+      else if (type == "minecraft:smoking") { /*8.0*/
         pdef::pc1_18_play_toClient::encode::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); /*minecraft_smelting_format*/ /*4.5*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCampfireCooking) { /*8.5*/
+      else if (type == "minecraft:campfire_cooking") { /*8.0*/
         pdef::pc1_18_play_toClient::encode::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); /*minecraft_smelting_format*/ /*4.5*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftStonecutting) { /*8.5*/
-          const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftStonecutting &v = *v2.data_minecraft_stonecutting; /*8.5*/
-          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.group.length());
-          WRITE_OR_BAIL(writeString, v2.group); /*group: pstring*/ /*4.2*/
-          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.ingredient.size()); /*1.4*/
-          for (const auto &v5 : v2.ingredient) { /*3.1*/
+      else if (type == "minecraft:stonecutting") { /*8.0*/
+          const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftStonecutting &v3 = *v2.data_minecraft_stonecutting; /*8.5*/
+          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.group.length());
+          WRITE_OR_BAIL(writeString, v3.group); /*group: pstring*/ /*4.2*/
+          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.ingredient.size()); /*1.4*/
+          for (const auto &v5 : v3.ingredient) { /*3.1*/
             WRITE_OR_BAIL(writeByte, (int8_t)v5); /*0.4*/
           }
-          WRITE_OR_BAIL(writeByte, (int8_t)v2.result); /*0.4*/
+          WRITE_OR_BAIL(writeByte, (int8_t)v3.result); /*0.4*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftSmithing) { /*8.5*/
-          const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftSmithing &v = *v2.data_minecraft_smithing; /*8.5*/
-          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.base.size()); /*1.4*/
-          for (const auto &v5 : v2.base) { /*3.1*/
+      else if (type == "minecraft:smithing") { /*8.0*/
+          const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftSmithing &v3 = *v2.data_minecraft_smithing; /*8.5*/
+          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.base.size()); /*1.4*/
+          for (const auto &v5 : v3.base) { /*3.1*/
             WRITE_OR_BAIL(writeByte, (int8_t)v5); /*0.4*/
           }
-          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.addition.size()); /*1.4*/
-          for (const auto &v5 : v2.addition) { /*3.1*/
+          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v3.addition.size()); /*1.4*/
+          for (const auto &v5 : v3.addition) { /*3.1*/
             WRITE_OR_BAIL(writeByte, (int8_t)v5); /*0.4*/
           }
-          WRITE_OR_BAIL(writeByte, (int8_t)v2.result); /*0.4*/
+          WRITE_OR_BAIL(writeByte, (int8_t)v3.result); /*0.4*/
       }
     }
     return true;
@@ -5246,15 +5252,15 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj, boo
     WRITE_OR_BAIL(writeUByte, sourcePosition_val); /*sourcePosition: bitfield*/ /*4.2*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.destinationIdentifier.length());
     WRITE_OR_BAIL(writeString, obj.destinationIdentifier); /*destinationIdentifier: pstring*/ /*4.2*/
-    const pdef::pc1_18_play_toClient::packet_sculk_vibration_signal::pstring &destinationIdentifier = obj.destinationIdentifier; /*0.1*/
-    if (destinationIdentifier == pdef::pc1_18_play_toClient::packet_sculk_vibration_signal::DestinationIdentifier::Block) { /*8.5*/
+    const std::string &destinationIdentifier = obj.destinationIdentifier; /*4.7*/
+    if (destinationIdentifier == "block") { /*8.0*/
       uint8_t destination_position_val = 0;
       destination_position_val |= obj.destination_position.x << 0;
       destination_position_val |= obj.destination_position.z << 26;
       destination_position_val |= obj.destination_position.y << 52;
       WRITE_OR_BAIL(writeUByte, destination_position_val); /*destination_position: bitfield*/ /*4.2*/
     }
-    else if (destinationIdentifier == pdef::pc1_18_play_toClient::packet_sculk_vibration_signal::DestinationIdentifier::EntityId) { /*8.5*/
+    else if (destinationIdentifier == "entityId") { /*8.0*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.destination_varint); /*0.4*/
     }
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.arrivalTicks); /*0.4*/
@@ -5895,59 +5901,59 @@ bool packet(pdef::Stream &stream, pdef::pc1_18_play_toClient::packet &obj);
     READ_OR_BAIL(readUnsignedVarInt, obj.particleId); /*0.5*/
     int &particleId = obj.particleId; /*0.6*/
     if (particleId == 2) { /*8.2*/
-         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.4*/
-        READ_OR_BAIL(readUnsignedVarInt, v.blockState); /*0.5*/
+         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
+        READ_OR_BAIL(readUnsignedVarInt, v2.blockState); /*0.5*/
     }
     else if (particleId == 3) { /*8.2*/
-         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.4*/
-        READ_OR_BAIL(readUnsignedVarInt, v.blockState); /*0.5*/
+         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
+        READ_OR_BAIL(readUnsignedVarInt, v2.blockState); /*0.5*/
     }
     else if (particleId == 14) { /*8.2*/
-         obj.data_14 = {}; pdef::pc1_18_play_toClient::particle::Data14 &v = *obj.data_14; /*8.4*/
-        READ_OR_BAIL(readFloatBE, v.red); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.green); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.blue); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.scale); /*0.5*/
+         obj.data_14 = {}; pdef::pc1_18_play_toClient::particle::Data14 &v2 = *obj.data_14; /*8.4*/
+        READ_OR_BAIL(readFloatBE, v2.red); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.green); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.blue); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.scale); /*0.5*/
     }
     else if (particleId == 15) { /*8.2*/
-         obj.data_15 = {}; pdef::pc1_18_play_toClient::particle::Data15 &v = *obj.data_15; /*8.4*/
-        READ_OR_BAIL(readFloatBE, v.fromRed); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.fromGreen); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.fromBlue); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.scale); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.toRed); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.toGreen); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.toBlue); /*0.5*/
+         obj.data_15 = {}; pdef::pc1_18_play_toClient::particle::Data15 &v2 = *obj.data_15; /*8.4*/
+        READ_OR_BAIL(readFloatBE, v2.fromRed); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.fromGreen); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.fromBlue); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.scale); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.toRed); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.toGreen); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.toBlue); /*0.5*/
     }
     else if (particleId == 24) { /*8.2*/
-         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.4*/
-        READ_OR_BAIL(readUnsignedVarInt, v.blockState); /*0.5*/
+         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
+        READ_OR_BAIL(readUnsignedVarInt, v2.blockState); /*0.5*/
     }
     else if (particleId == 35) { /*8.2*/
-         obj.data_35 = {}; pdef::pc1_18_play_toClient::particle::Data35 &v = *obj.data_35; /*8.4*/
-        READ_OR_BAIL(readByte, v.item); /*0.5*/
+         obj.data_35 = {}; pdef::pc1_18_play_toClient::particle::Data35 &v2 = *obj.data_35; /*8.4*/
+        READ_OR_BAIL(readByte, v2.item); /*0.5*/
     }
     else if (particleId == 36) { /*8.2*/
-         obj.data_36 = {}; pdef::pc1_18_play_toClient::particle::Data36 &v = *obj.data_36; /*8.4*/
+         obj.data_36 = {}; pdef::pc1_18_play_toClient::particle::Data36 &v2 = *obj.data_36; /*8.4*/
         uint8_t origin_val;
         READ_OR_BAIL(readUByte, origin_val);
-        v.origin.x = origin_val >> 0 & 26;
-        v.origin.z = origin_val >> 26 & 26;
-        v.origin.y = origin_val >> 52 & 12; /*origin: bitfield*/ /*4.3*/
+        v2.origin.x = origin_val >> 0 & 26;
+        v2.origin.z = origin_val >> 26 & 26;
+        v2.origin.y = origin_val >> 52 & 12; /*origin: bitfield*/ /*4.3*/
         int positionType_strlen; READ_OR_BAIL(readUnsignedVarInt, positionType_strlen);
-        if (!stream.readString(v.positionType, positionType_strlen)) return false; /*positionType: pstring*/ /*4.3*/
-        pdef::pc1_18_play_toClient::particle::Data36::pstring &positionType = v.positionType; /*0.7*/
-        if (positionType == pdef::pc1_18_play_toClient::particle::Data36::PositionType::MinecraftBlock) { /*8.5*/
+        if (!stream.readString(v2.positionType, positionType_strlen)) return false; /*positionType: pstring*/ /*4.3*/
+        std::string &positionType = v2.positionType; /*4.8*/
+        if (positionType == "minecraft:block") { /*8.0*/
           uint8_t destination_position_val;
           READ_OR_BAIL(readUByte, destination_position_val);
-          v.destination_position.x = destination_position_val >> 0 & 26;
-          v.destination_position.z = destination_position_val >> 26 & 26;
-          v.destination_position.y = destination_position_val >> 52 & 12; /*destination_position: bitfield*/ /*4.3*/
+          v2.destination_position.x = destination_position_val >> 0 & 26;
+          v2.destination_position.z = destination_position_val >> 26 & 26;
+          v2.destination_position.y = destination_position_val >> 52 & 12; /*destination_position: bitfield*/ /*4.3*/
         }
-        else if (positionType == pdef::pc1_18_play_toClient::particle::Data36::PositionType::MinecraftEntity) { /*8.5*/
-          READ_OR_BAIL(readUnsignedVarInt, v.destination_varint); /*0.5*/
+        else if (positionType == "minecraft:entity") { /*8.0*/
+          READ_OR_BAIL(readUnsignedVarInt, v2.destination_varint); /*0.5*/
         }
-        READ_OR_BAIL(readUnsignedVarInt, v.ticks); /*0.5*/
+        READ_OR_BAIL(readUnsignedVarInt, v2.ticks); /*0.5*/
     }
     return true;
   }
@@ -5994,7 +6000,7 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
     obj.flags.has_redirect_node = flags_val >> 4 & 1;
     obj.flags.has_command = flags_val >> 5 & 1;
     obj.flags.command_node_type = flags_val >> 6 & 2; /*flags: bitfield*/ /*4.3*/
-    pdef::pc1_18_play_toClient::command_node::bitfield &flags = obj.flags; /*0.7*/
+    pdef::pc1_18_play_toClient::command_node::flags_t &flags = obj.flags; /*4.8*/
     int children_len; READ_OR_BAIL(readUnsignedVarInt, children_len); /*1.5*/
     obj.children.resize(children_len); /*1.6*/
     for (int i = 0; i < children_len; i++) {
@@ -6007,183 +6013,183 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
     if (flags.command_node_type == 0) { /*8.2*/
     }
     else if (flags.command_node_type == 1) { /*8.2*/
-         obj.extraNodeData_1 = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData1 &v = *obj.extraNodeData_1; /*8.4*/
+         obj.extraNodeData_1 = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData1 &v2 = *obj.extraNodeData_1; /*8.4*/
         int name_strlen; READ_OR_BAIL(readUnsignedVarInt, name_strlen);
-        if (!stream.readString(v.name, name_strlen)) return false; /*name: pstring*/ /*4.3*/
+        if (!stream.readString(v2.name, name_strlen)) return false; /*name: pstring*/ /*4.3*/
     }
     else if (flags.command_node_type == 2) { /*8.2*/
-         obj.extraNodeData_2 = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2 &v = *obj.extraNodeData_2; /*8.4*/
+         obj.extraNodeData_2 = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2 &v2 = *obj.extraNodeData_2; /*8.4*/
         int name_strlen; READ_OR_BAIL(readUnsignedVarInt, name_strlen);
-        if (!stream.readString(v.name, name_strlen)) return false; /*name: pstring*/ /*4.3*/
+        if (!stream.readString(v2.name, name_strlen)) return false; /*name: pstring*/ /*4.3*/
         int parser_strlen; READ_OR_BAIL(readUnsignedVarInt, parser_strlen);
-        if (!stream.readString(v.parser, parser_strlen)) return false; /*parser: pstring*/ /*4.3*/
-        pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::pstring &parser = v.parser; /*0.7*/
-        if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::BrigadierBool) { /*8.5*/
+        if (!stream.readString(v2.parser, parser_strlen)) return false; /*parser: pstring*/ /*4.3*/
+        std::string &parser = v2.parser; /*4.8*/
+        if (parser == "brigadier:bool") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::BrigadierFloat) { /*8.5*/
-             v.properties_brigadier_float = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat &v = *v.properties_brigadier_float; /*8.4*/
+        else if (parser == "brigadier:float") { /*8.0*/
+             v2.properties_brigadier_float = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat &v4 = *v2.properties_brigadier_float; /*8.4*/
             uint8_t flags_val;
             READ_OR_BAIL(readUByte, flags_val);
-            v.flags.unused = flags_val >> 0 & 6;
-            v.flags.max_present = flags_val >> 6 & 1;
-            v.flags.min_present = flags_val >> 7 & 1; /*flags: bitfield*/ /*4.3*/
-            pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat::bitfield &flags = v.flags; /*0.7*/
+            v4.flags.unused = flags_val >> 0 & 6;
+            v4.flags.max_present = flags_val >> 6 & 1;
+            v4.flags.min_present = flags_val >> 7 & 1; /*flags: bitfield*/ /*4.3*/
+            pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat::flags_t &flags = v4.flags; /*4.8*/
             if (flags.min_present == 1) { /*8.2*/
-              READ_OR_BAIL(readFloatBE, v.min); /*0.5*/
+              READ_OR_BAIL(readFloatBE, v4.min); /*0.5*/
             }
             if (flags.max_present == 1) { /*8.2*/
-              READ_OR_BAIL(readFloatBE, v.max); /*0.5*/
+              READ_OR_BAIL(readFloatBE, v4.max); /*0.5*/
             }
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::BrigadierDouble) { /*8.5*/
-             v.properties_brigadier_double = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble &v = *v.properties_brigadier_double; /*8.4*/
+        else if (parser == "brigadier:double") { /*8.0*/
+             v2.properties_brigadier_double = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble &v4 = *v2.properties_brigadier_double; /*8.4*/
             uint8_t flags_val;
             READ_OR_BAIL(readUByte, flags_val);
-            v.flags.unused = flags_val >> 0 & 6;
-            v.flags.max_present = flags_val >> 6 & 1;
-            v.flags.min_present = flags_val >> 7 & 1; /*flags: bitfield*/ /*4.3*/
-            pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble::bitfield &flags = v.flags; /*0.7*/
+            v4.flags.unused = flags_val >> 0 & 6;
+            v4.flags.max_present = flags_val >> 6 & 1;
+            v4.flags.min_present = flags_val >> 7 & 1; /*flags: bitfield*/ /*4.3*/
+            pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble::flags_t &flags = v4.flags; /*4.8*/
             if (flags.min_present == 1) { /*8.2*/
-              READ_OR_BAIL(readDoubleBE, v.min); /*0.5*/
+              READ_OR_BAIL(readDoubleBE, v4.min); /*0.5*/
             }
             if (flags.max_present == 1) { /*8.2*/
-              READ_OR_BAIL(readDoubleBE, v.max); /*0.5*/
+              READ_OR_BAIL(readDoubleBE, v4.max); /*0.5*/
             }
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::BrigadierInteger) { /*8.5*/
-             v.properties_brigadier_integer = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger &v = *v.properties_brigadier_integer; /*8.4*/
+        else if (parser == "brigadier:integer") { /*8.0*/
+             v2.properties_brigadier_integer = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger &v4 = *v2.properties_brigadier_integer; /*8.4*/
             uint8_t flags_val;
             READ_OR_BAIL(readUByte, flags_val);
-            v.flags.unused = flags_val >> 0 & 6;
-            v.flags.max_present = flags_val >> 6 & 1;
-            v.flags.min_present = flags_val >> 7 & 1; /*flags: bitfield*/ /*4.3*/
-            pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger::bitfield &flags = v.flags; /*0.7*/
+            v4.flags.unused = flags_val >> 0 & 6;
+            v4.flags.max_present = flags_val >> 6 & 1;
+            v4.flags.min_present = flags_val >> 7 & 1; /*flags: bitfield*/ /*4.3*/
+            pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger::flags_t &flags = v4.flags; /*4.8*/
             if (flags.min_present == 1) { /*8.2*/
-              READ_OR_BAIL(readIntBE, v.min); /*0.5*/
+              READ_OR_BAIL(readIntBE, v4.min); /*0.5*/
             }
             if (flags.max_present == 1) { /*8.2*/
-              READ_OR_BAIL(readIntBE, v.max); /*0.5*/
+              READ_OR_BAIL(readIntBE, v4.max); /*0.5*/
             }
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::BrigadierLong) { /*8.5*/
-             v.properties_brigadier_long = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong &v = *v.properties_brigadier_long; /*8.4*/
+        else if (parser == "brigadier:long") { /*8.0*/
+             v2.properties_brigadier_long = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong &v4 = *v2.properties_brigadier_long; /*8.4*/
             uint8_t flags_val;
             READ_OR_BAIL(readUByte, flags_val);
-            v.flags.unused = flags_val >> 0 & 6;
-            v.flags.max_present = flags_val >> 6 & 1;
-            v.flags.min_present = flags_val >> 7 & 1; /*flags: bitfield*/ /*4.3*/
-            pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong::bitfield &flags = v.flags; /*0.7*/
+            v4.flags.unused = flags_val >> 0 & 6;
+            v4.flags.max_present = flags_val >> 6 & 1;
+            v4.flags.min_present = flags_val >> 7 & 1; /*flags: bitfield*/ /*4.3*/
+            pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong::flags_t &flags = v4.flags; /*4.8*/
             if (flags.min_present == 1) { /*8.2*/
-              READ_OR_BAIL(readLongBE, v.min); /*0.5*/
+              READ_OR_BAIL(readLongBE, v4.min); /*0.5*/
             }
             if (flags.max_present == 1) { /*8.2*/
-              READ_OR_BAIL(readLongBE, v.max); /*0.5*/
+              READ_OR_BAIL(readLongBE, v4.max); /*0.5*/
             }
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::BrigadierString) { /*8.5*/
+        else if (parser == "brigadier:string") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftEntity) { /*8.5*/
+        else if (parser == "minecraft:entity") { /*8.0*/
           uint8_t properties_minecraft_entity_val;
           READ_OR_BAIL(readUByte, properties_minecraft_entity_val);
-          v.properties_minecraft_entity.unused = properties_minecraft_entity_val >> 0 & 6;
-          v.properties_minecraft_entity.onlyAllowPlayers = properties_minecraft_entity_val >> 6 & 1;
-          v.properties_minecraft_entity.onlyAllowEntities = properties_minecraft_entity_val >> 7 & 1; /*properties_minecraft_entity: bitfield*/ /*4.3*/
+          v2.properties_minecraft_entity.unused = properties_minecraft_entity_val >> 0 & 6;
+          v2.properties_minecraft_entity.onlyAllowPlayers = properties_minecraft_entity_val >> 6 & 1;
+          v2.properties_minecraft_entity.onlyAllowEntities = properties_minecraft_entity_val >> 7 & 1; /*properties_minecraft_entity: bitfield*/ /*4.3*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftGameProfile) { /*8.5*/
+        else if (parser == "minecraft:game_profile") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftBlockPos) { /*8.5*/
+        else if (parser == "minecraft:block_pos") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftColumnPos) { /*8.5*/
+        else if (parser == "minecraft:column_pos") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftVec3) { /*8.5*/
+        else if (parser == "minecraft:vec3") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftVec2) { /*8.5*/
+        else if (parser == "minecraft:vec2") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftBlockState) { /*8.5*/
+        else if (parser == "minecraft:block_state") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftBlockPredicate) { /*8.5*/
+        else if (parser == "minecraft:block_predicate") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftItemStack) { /*8.5*/
+        else if (parser == "minecraft:item_stack") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftItemPredicate) { /*8.5*/
+        else if (parser == "minecraft:item_predicate") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftColor) { /*8.5*/
+        else if (parser == "minecraft:color") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftComponent) { /*8.5*/
+        else if (parser == "minecraft:component") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftMessage) { /*8.5*/
+        else if (parser == "minecraft:message") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftNbt) { /*8.5*/
+        else if (parser == "minecraft:nbt") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftNbtPath) { /*8.5*/
+        else if (parser == "minecraft:nbt_path") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftObjective) { /*8.5*/
+        else if (parser == "minecraft:objective") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftObjectiveCriteria) { /*8.5*/
+        else if (parser == "minecraft:objective_criteria") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftOperation) { /*8.5*/
+        else if (parser == "minecraft:operation") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftParticle) { /*8.5*/
+        else if (parser == "minecraft:particle") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftAngle) { /*8.5*/
+        else if (parser == "minecraft:angle") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftRotation) { /*8.5*/
+        else if (parser == "minecraft:rotation") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftScoreboardSlot) { /*8.5*/
+        else if (parser == "minecraft:scoreboard_slot") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftScoreHolder) { /*8.5*/
+        else if (parser == "minecraft:score_holder") { /*8.0*/
           uint8_t properties_minecraft_score_holder_val;
           READ_OR_BAIL(readUByte, properties_minecraft_score_holder_val);
-          v.properties_minecraft_score_holder.unused = properties_minecraft_score_holder_val >> 0 & 7;
-          v.properties_minecraft_score_holder.allowMultiple = properties_minecraft_score_holder_val >> 7 & 1; /*properties_minecraft_score_holder: bitfield*/ /*4.3*/
+          v2.properties_minecraft_score_holder.unused = properties_minecraft_score_holder_val >> 0 & 7;
+          v2.properties_minecraft_score_holder.allowMultiple = properties_minecraft_score_holder_val >> 7 & 1; /*properties_minecraft_score_holder: bitfield*/ /*4.3*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftSwizzle) { /*8.5*/
+        else if (parser == "minecraft:swizzle") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftTeam) { /*8.5*/
+        else if (parser == "minecraft:team") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftItemSlot) { /*8.5*/
+        else if (parser == "minecraft:item_slot") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftResourceLocation) { /*8.5*/
+        else if (parser == "minecraft:resource_location") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftMobEffect) { /*8.5*/
+        else if (parser == "minecraft:mob_effect") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftFunction) { /*8.5*/
+        else if (parser == "minecraft:function") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftEntityAnchor) { /*8.5*/
+        else if (parser == "minecraft:entity_anchor") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftRange) { /*8.5*/
-             v.properties_minecraft_range = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftRange &v = *v.properties_minecraft_range; /*8.4*/
-            READ_OR_BAIL(readBool, (bool&)v.allowDecimals); /*0.5*/
+        else if (parser == "minecraft:range") { /*8.0*/
+             v2.properties_minecraft_range = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftRange &v4 = *v2.properties_minecraft_range; /*8.4*/
+            READ_OR_BAIL(readBool, (bool&)v4.allowDecimals); /*0.5*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftIntRange) { /*8.5*/
+        else if (parser == "minecraft:int_range") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftFloatRange) { /*8.5*/
+        else if (parser == "minecraft:float_range") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftItemEnchantment) { /*8.5*/
+        else if (parser == "minecraft:item_enchantment") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftEntitySummon) { /*8.5*/
+        else if (parser == "minecraft:entity_summon") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftDimension) { /*8.5*/
+        else if (parser == "minecraft:dimension") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftNbtCompoundTag) { /*8.5*/
+        else if (parser == "minecraft:nbt_compound_tag") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftTime) { /*8.5*/
+        else if (parser == "minecraft:time") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftResourceOrTag) { /*8.5*/
-             v.properties_minecraft_resource_or_tag_or_minecraft_resource = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v = *v.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.4*/
+        else if (parser == "minecraft:resource_or_tag") { /*8.0*/
+             v2.properties_minecraft_resource_or_tag_or_minecraft_resource = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.4*/
             int registry_strlen; READ_OR_BAIL(readUnsignedVarInt, registry_strlen);
-            if (!stream.readString(v.registry, registry_strlen)) return false; /*registry: pstring*/ /*4.3*/
+            if (!stream.readString(v4.registry, registry_strlen)) return false; /*registry: pstring*/ /*4.3*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftResource) { /*8.5*/
-             v.properties_minecraft_resource_or_tag_or_minecraft_resource = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v = *v.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.4*/
+        else if (parser == "minecraft:resource") { /*8.0*/
+             v2.properties_minecraft_resource_or_tag_or_minecraft_resource = {}; pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.4*/
             int registry_strlen; READ_OR_BAIL(readUnsignedVarInt, registry_strlen);
-            if (!stream.readString(v.registry, registry_strlen)) return false; /*registry: pstring*/ /*4.3*/
+            if (!stream.readString(v4.registry, registry_strlen)) return false; /*registry: pstring*/ /*4.3*/
         }
-        else if (parser == pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::Parser::MinecraftUuid) { /*8.5*/
+        else if (parser == "minecraft:uuid") { /*8.0*/
         }
         if (flags.has_custom_suggestions == 1) { /*8.2*/
           int suggestionType_strlen; READ_OR_BAIL(readUnsignedVarInt, suggestionType_strlen);
-          if (!stream.readString(v.suggestionType, suggestionType_strlen)) return false; /*suggestionType: pstring*/ /*4.3*/
+          if (!stream.readString(v2.suggestionType, suggestionType_strlen)) return false; /*suggestionType: pstring*/ /*4.3*/
         }
     }
     return true;
@@ -6596,7 +6602,8 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
       int skyLight_len2; READ_OR_BAIL(readUnsignedVarInt, skyLight_len2); /*5.8*/
       obj.skyLight[i].resize(skyLight_len2); /*5.9*/
       for (int j = 0; j < skyLight_len2; j++) { /*5.11*/
-        READ_OR_BAIL(readUByte, obj.skyLight[i][j]); /*5.14*/
+        auto &v = obj.skyLight[i][j]; /*5.15*/
+        READ_OR_BAIL(readUByte, v); /*0.5*/
       }
     }
     int blockLight_len; READ_OR_BAIL(readUnsignedVarInt, blockLight_len); /*1.5*/
@@ -6605,7 +6612,8 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
       int blockLight_len2; READ_OR_BAIL(readUnsignedVarInt, blockLight_len2); /*5.8*/
       obj.blockLight[i].resize(blockLight_len2); /*5.9*/
       for (int j = 0; j < blockLight_len2; j++) { /*5.11*/
-        READ_OR_BAIL(readUByte, obj.blockLight[i][j]); /*5.14*/
+        auto &v = obj.blockLight[i][j]; /*5.15*/
+        READ_OR_BAIL(readUByte, v); /*0.5*/
       }
     }
     return true;
@@ -6634,59 +6642,59 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
     READ_OR_BAIL(readFloatBE, obj.particleData); /*0.5*/
     READ_OR_BAIL(readIntBE, obj.particles); /*0.5*/
     if (particleId == 2) { /*8.2*/
-         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.4*/
-        READ_OR_BAIL(readUnsignedVarInt, v.blockState); /*0.5*/
+         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
+        READ_OR_BAIL(readUnsignedVarInt, v2.blockState); /*0.5*/
     }
     else if (particleId == 3) { /*8.2*/
-         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.4*/
-        READ_OR_BAIL(readUnsignedVarInt, v.blockState); /*0.5*/
+         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
+        READ_OR_BAIL(readUnsignedVarInt, v2.blockState); /*0.5*/
     }
     else if (particleId == 14) { /*8.2*/
-         obj.data_14 = {}; pdef::pc1_18_play_toClient::packet_world_particles::Data14 &v = *obj.data_14; /*8.4*/
-        READ_OR_BAIL(readFloatBE, v.red); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.green); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.blue); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.scale); /*0.5*/
+         obj.data_14 = {}; pdef::pc1_18_play_toClient::packet_world_particles::Data14 &v2 = *obj.data_14; /*8.4*/
+        READ_OR_BAIL(readFloatBE, v2.red); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.green); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.blue); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.scale); /*0.5*/
     }
     else if (particleId == 15) { /*8.2*/
-         obj.data_15 = {}; pdef::pc1_18_play_toClient::packet_world_particles::Data15 &v = *obj.data_15; /*8.4*/
-        READ_OR_BAIL(readFloatBE, v.fromRed); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.fromGreen); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.fromBlue); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.scale); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.toRed); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.toGreen); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.toBlue); /*0.5*/
+         obj.data_15 = {}; pdef::pc1_18_play_toClient::packet_world_particles::Data15 &v2 = *obj.data_15; /*8.4*/
+        READ_OR_BAIL(readFloatBE, v2.fromRed); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.fromGreen); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.fromBlue); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.scale); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.toRed); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.toGreen); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.toBlue); /*0.5*/
     }
     else if (particleId == 24) { /*8.2*/
-         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.4*/
-        READ_OR_BAIL(readUnsignedVarInt, v.blockState); /*0.5*/
+         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
+        READ_OR_BAIL(readUnsignedVarInt, v2.blockState); /*0.5*/
     }
     else if (particleId == 35) { /*8.2*/
-         obj.data_35 = {}; pdef::pc1_18_play_toClient::packet_world_particles::Data35 &v = *obj.data_35; /*8.4*/
-        READ_OR_BAIL(readByte, v.item); /*0.5*/
+         obj.data_35 = {}; pdef::pc1_18_play_toClient::packet_world_particles::Data35 &v2 = *obj.data_35; /*8.4*/
+        READ_OR_BAIL(readByte, v2.item); /*0.5*/
     }
     else if (particleId == 36) { /*8.2*/
-         obj.data_36 = {}; pdef::pc1_18_play_toClient::packet_world_particles::Data36 &v = *obj.data_36; /*8.4*/
+         obj.data_36 = {}; pdef::pc1_18_play_toClient::packet_world_particles::Data36 &v2 = *obj.data_36; /*8.4*/
         uint8_t origin_val;
         READ_OR_BAIL(readUByte, origin_val);
-        v.origin.x = origin_val >> 0 & 26;
-        v.origin.z = origin_val >> 26 & 26;
-        v.origin.y = origin_val >> 52 & 12; /*origin: bitfield*/ /*4.3*/
+        v2.origin.x = origin_val >> 0 & 26;
+        v2.origin.z = origin_val >> 26 & 26;
+        v2.origin.y = origin_val >> 52 & 12; /*origin: bitfield*/ /*4.3*/
         int positionType_strlen; READ_OR_BAIL(readUnsignedVarInt, positionType_strlen);
-        if (!stream.readString(v.positionType, positionType_strlen)) return false; /*positionType: pstring*/ /*4.3*/
-        pdef::pc1_18_play_toClient::packet_world_particles::Data36::pstring &positionType = v.positionType; /*0.7*/
-        if (positionType == pdef::pc1_18_play_toClient::packet_world_particles::Data36::PositionType::MinecraftBlock) { /*8.5*/
+        if (!stream.readString(v2.positionType, positionType_strlen)) return false; /*positionType: pstring*/ /*4.3*/
+        std::string &positionType = v2.positionType; /*4.8*/
+        if (positionType == "minecraft:block") { /*8.0*/
           uint8_t destination_position_val;
           READ_OR_BAIL(readUByte, destination_position_val);
-          v.destination_position.x = destination_position_val >> 0 & 26;
-          v.destination_position.z = destination_position_val >> 26 & 26;
-          v.destination_position.y = destination_position_val >> 52 & 12; /*destination_position: bitfield*/ /*4.3*/
+          v2.destination_position.x = destination_position_val >> 0 & 26;
+          v2.destination_position.z = destination_position_val >> 26 & 26;
+          v2.destination_position.y = destination_position_val >> 52 & 12; /*destination_position: bitfield*/ /*4.3*/
         }
-        else if (positionType == pdef::pc1_18_play_toClient::packet_world_particles::Data36::PositionType::MinecraftEntity) { /*8.5*/
-          READ_OR_BAIL(readUnsignedVarInt, v.destination_varint); /*0.5*/
+        else if (positionType == "minecraft:entity") { /*8.0*/
+          READ_OR_BAIL(readUnsignedVarInt, v2.destination_varint); /*0.5*/
         }
-        READ_OR_BAIL(readUnsignedVarInt, v.ticks); /*0.5*/
+        READ_OR_BAIL(readUnsignedVarInt, v2.ticks); /*0.5*/
     }
     return true;
   }
@@ -6724,7 +6732,8 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
       int skyLight_len2; READ_OR_BAIL(readUnsignedVarInt, skyLight_len2); /*5.8*/
       obj.skyLight[i].resize(skyLight_len2); /*5.9*/
       for (int j = 0; j < skyLight_len2; j++) { /*5.11*/
-        READ_OR_BAIL(readUByte, obj.skyLight[i][j]); /*5.14*/
+        auto &v = obj.skyLight[i][j]; /*5.15*/
+        READ_OR_BAIL(readUByte, v); /*0.5*/
       }
     }
     int blockLight_len; READ_OR_BAIL(readUnsignedVarInt, blockLight_len); /*1.5*/
@@ -6733,7 +6742,8 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
       int blockLight_len2; READ_OR_BAIL(readUnsignedVarInt, blockLight_len2); /*5.8*/
       obj.blockLight[i].resize(blockLight_len2); /*5.9*/
       for (int j = 0; j < blockLight_len2; j++) { /*5.11*/
-        READ_OR_BAIL(readUByte, obj.blockLight[i][j]); /*5.14*/
+        auto &v = obj.blockLight[i][j]; /*5.15*/
+        READ_OR_BAIL(readUByte, v); /*0.5*/
       }
     }
     return true;
@@ -6925,21 +6935,21 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
         READ_OR_BAIL(readUnsignedVarInt, v2.ping); /*0.5*/
       }
       if (action == 0) { /*8.2*/
-           v2.displayName = {}; pdef::pc1_18_play_toClient::packet_player_info::Data::DisplayName &v = *v2.displayName; /*8.4*/
-          READ_OR_BAIL(readBool, (bool&)v2.has); /*0.5*/
-          bool &has = v2.has; /*0.6*/
+           v2.displayName = {}; pdef::pc1_18_play_toClient::packet_player_info::Data::DisplayName &v3 = *v2.displayName; /*8.4*/
+          READ_OR_BAIL(readBool, (bool&)v3.has); /*0.5*/
+          bool &has = v3.has; /*0.6*/
           if (has == true) { /*8.1*/
             int value_strlen; READ_OR_BAIL(readUnsignedVarInt, value_strlen);
-            if (!stream.readString(v2.value, value_strlen)) return false; /*value: pstring*/ /*4.3*/
+            if (!stream.readString(v3.value, value_strlen)) return false; /*value: pstring*/ /*4.3*/
           }
       }
       else if (action == 3) { /*8.2*/
-           v2.displayName = {}; pdef::pc1_18_play_toClient::packet_player_info::Data::DisplayName &v = *v2.displayName; /*8.4*/
-          READ_OR_BAIL(readBool, (bool&)v2.has); /*0.5*/
-          bool &has = v2.has; /*0.6*/
+           v2.displayName = {}; pdef::pc1_18_play_toClient::packet_player_info::Data::DisplayName &v3 = *v2.displayName; /*8.4*/
+          READ_OR_BAIL(readBool, (bool&)v3.has); /*0.5*/
+          bool &has = v3.has; /*0.6*/
           if (has == true) { /*8.1*/
             int value_strlen; READ_OR_BAIL(readUnsignedVarInt, value_strlen);
-            if (!stream.readString(v2.value, value_strlen)) return false; /*value: pstring*/ /*4.3*/
+            if (!stream.readString(v3.value, value_strlen)) return false; /*value: pstring*/ /*4.3*/
           }
       }
     }
@@ -7326,17 +7336,17 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
       pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes &v2 = obj.recipes[i]; /*5.23*/
       int type_strlen; READ_OR_BAIL(readUnsignedVarInt, type_strlen);
       if (!stream.readString(v2.type, type_strlen)) return false; /*type: pstring*/ /*4.3*/
-      pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::pstring &type = v2.type; /*0.7*/
+      std::string &type = v2.type; /*4.8*/
       int recipeId_strlen; READ_OR_BAIL(readUnsignedVarInt, recipeId_strlen);
       if (!stream.readString(v2.recipeId, recipeId_strlen)) return false; /*recipeId: pstring*/ /*4.3*/
-      if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingShapeless) { /*8.5*/
-           v2.data_minecraft_crafting_shapeless = {}; pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftCraftingShapeless &v = *v2.data_minecraft_crafting_shapeless; /*8.4*/
+      if (type == "minecraft:crafting_shapeless") { /*8.0*/
+           v2.data_minecraft_crafting_shapeless = {}; pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftCraftingShapeless &v3 = *v2.data_minecraft_crafting_shapeless; /*8.4*/
           int group_strlen; READ_OR_BAIL(readUnsignedVarInt, group_strlen);
-          if (!stream.readString(v2.group, group_strlen)) return false; /*group: pstring*/ /*4.3*/
+          if (!stream.readString(v3.group, group_strlen)) return false; /*group: pstring*/ /*4.3*/
           int ingredients_len; READ_OR_BAIL(readUnsignedVarInt, ingredients_len); /*1.5*/
-          v2.ingredients.resize(ingredients_len); /*1.6*/
+          v3.ingredients.resize(ingredients_len); /*1.6*/
           for (int i = 0; i < ingredients_len; i++) {
-            auto &v5 = v2.ingredients[i]; /*3.4*/
+            auto &v5 = v3.ingredients[i]; /*3.4*/
             int _len; READ_OR_BAIL(readUnsignedVarInt, _len); /*1.5*/
             v5.resize(_len); /*1.6*/
             for (int i = 0; i < _len; i++) {
@@ -7344,93 +7354,99 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
               READ_OR_BAIL(readByte, v6); /*0.5*/
             }
           }
-          READ_OR_BAIL(readByte, v2.result); /*0.5*/
+          READ_OR_BAIL(readByte, v3.result); /*0.5*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingShaped) { /*8.5*/
-           v2.data_minecraft_crafting_shaped = {}; pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftCraftingShaped &v = *v2.data_minecraft_crafting_shaped; /*8.4*/
-          READ_OR_BAIL(readUnsignedVarInt, v2.width); /*0.5*/
-          int &width = v2.width; /*0.6*/
-          READ_OR_BAIL(readUnsignedVarInt, v2.height); /*0.5*/
-          int &height = v2.height; /*0.6*/
+      else if (type == "minecraft:crafting_shaped") { /*8.0*/
+           v2.data_minecraft_crafting_shaped = {}; pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftCraftingShaped &v3 = *v2.data_minecraft_crafting_shaped; /*8.4*/
+          READ_OR_BAIL(readUnsignedVarInt, v3.width); /*0.5*/
+          int &width = v3.width; /*0.6*/
+          READ_OR_BAIL(readUnsignedVarInt, v3.height); /*0.5*/
+          int &height = v3.height; /*0.6*/
           int group_strlen; READ_OR_BAIL(readUnsignedVarInt, group_strlen);
-          if (!stream.readString(v2.group, group_strlen)) return false; /*group: pstring*/ /*4.3*/
-          v2.ingredients.resize(width); /*1.6*/
+          if (!stream.readString(v3.group, group_strlen)) return false; /*group: pstring*/ /*4.3*/
+          v3.ingredients.resize(width); /*1.6*/
           for (int i = 0; i < width; i++) { /*5.2*/
             int ingredients_len2; READ_OR_BAIL(readUnsignedVarInt, ingredients_len2); /*5.5*/
-            v2.ingredients[i].resize(ingredients_len2); /*5.10*/
+            v3.ingredients[i].resize(ingredients_len2); /*5.10*/
             for (int j = 0; j < height; j++) { /*5.11*/
-              pdef::pc1_18_play_toClient::decode::ingredient(stream, v2.ingredients[i][j]); /*5.14*/
+              auto &v = v3.ingredients[i][j]; /*5.15*/
+              int _len; READ_OR_BAIL(readUnsignedVarInt, _len); /*1.5*/
+              v.resize(_len); /*1.6*/
+              for (int i = 0; i < _len; i++) {
+                auto &v7 = v[i]; /*3.4*/
+                READ_OR_BAIL(readByte, v7); /*0.5*/
+              }
             }
           }
-          READ_OR_BAIL(readByte, v2.result); /*0.5*/
+          READ_OR_BAIL(readByte, v3.result); /*0.5*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialArmordye) { /*8.5*/
+      else if (type == "minecraft:crafting_special_armordye") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialBookcloning) { /*8.5*/
+      else if (type == "minecraft:crafting_special_bookcloning") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialMapcloning) { /*8.5*/
+      else if (type == "minecraft:crafting_special_mapcloning") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialMapextending) { /*8.5*/
+      else if (type == "minecraft:crafting_special_mapextending") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialFireworkRocket) { /*8.5*/
+      else if (type == "minecraft:crafting_special_firework_rocket") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialFireworkStar) { /*8.5*/
+      else if (type == "minecraft:crafting_special_firework_star") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialFireworkStarFade) { /*8.5*/
+      else if (type == "minecraft:crafting_special_firework_star_fade") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialRepairitem) { /*8.5*/
+      else if (type == "minecraft:crafting_special_repairitem") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialTippedarrow) { /*8.5*/
+      else if (type == "minecraft:crafting_special_tippedarrow") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialBannerduplicate) { /*8.5*/
+      else if (type == "minecraft:crafting_special_bannerduplicate") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialBanneraddpattern) { /*8.5*/
+      else if (type == "minecraft:crafting_special_banneraddpattern") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialShielddecoration) { /*8.5*/
+      else if (type == "minecraft:crafting_special_shielddecoration") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialShulkerboxcoloring) { /*8.5*/
+      else if (type == "minecraft:crafting_special_shulkerboxcoloring") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCraftingSpecialSuspiciousstew) { /*8.5*/
+      else if (type == "minecraft:crafting_special_suspiciousstew") { /*8.0*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftSmelting) { /*8.5*/
+      else if (type == "minecraft:smelting") { /*8.0*/
         v2.data_minecraft_smelting_format = {}; pdef::pc1_18_play_toClient::decode::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); /*v2*/ /*4.6*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftBlasting) { /*8.5*/
+      else if (type == "minecraft:blasting") { /*8.0*/
         v2.data_minecraft_smelting_format = {}; pdef::pc1_18_play_toClient::decode::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); /*v2*/ /*4.6*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftSmoking) { /*8.5*/
+      else if (type == "minecraft:smoking") { /*8.0*/
         v2.data_minecraft_smelting_format = {}; pdef::pc1_18_play_toClient::decode::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); /*v2*/ /*4.6*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftCampfireCooking) { /*8.5*/
+      else if (type == "minecraft:campfire_cooking") { /*8.0*/
         v2.data_minecraft_smelting_format = {}; pdef::pc1_18_play_toClient::decode::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); /*v2*/ /*4.6*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftStonecutting) { /*8.5*/
-           v2.data_minecraft_stonecutting = {}; pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftStonecutting &v = *v2.data_minecraft_stonecutting; /*8.4*/
+      else if (type == "minecraft:stonecutting") { /*8.0*/
+           v2.data_minecraft_stonecutting = {}; pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftStonecutting &v3 = *v2.data_minecraft_stonecutting; /*8.4*/
           int group_strlen; READ_OR_BAIL(readUnsignedVarInt, group_strlen);
-          if (!stream.readString(v2.group, group_strlen)) return false; /*group: pstring*/ /*4.3*/
+          if (!stream.readString(v3.group, group_strlen)) return false; /*group: pstring*/ /*4.3*/
           int ingredient_len; READ_OR_BAIL(readUnsignedVarInt, ingredient_len); /*1.5*/
-          v2.ingredient.resize(ingredient_len); /*1.6*/
+          v3.ingredient.resize(ingredient_len); /*1.6*/
           for (int i = 0; i < ingredient_len; i++) {
-            auto &v5 = v2.ingredient[i]; /*3.4*/
+            auto &v5 = v3.ingredient[i]; /*3.4*/
             READ_OR_BAIL(readByte, v5); /*0.5*/
           }
-          READ_OR_BAIL(readByte, v2.result); /*0.5*/
+          READ_OR_BAIL(readByte, v3.result); /*0.5*/
       }
-      else if (type == pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::Type::MinecraftSmithing) { /*8.5*/
-           v2.data_minecraft_smithing = {}; pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftSmithing &v = *v2.data_minecraft_smithing; /*8.4*/
+      else if (type == "minecraft:smithing") { /*8.0*/
+           v2.data_minecraft_smithing = {}; pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftSmithing &v3 = *v2.data_minecraft_smithing; /*8.4*/
           int base_len; READ_OR_BAIL(readUnsignedVarInt, base_len); /*1.5*/
-          v2.base.resize(base_len); /*1.6*/
+          v3.base.resize(base_len); /*1.6*/
           for (int i = 0; i < base_len; i++) {
-            auto &v5 = v2.base[i]; /*3.4*/
+            auto &v5 = v3.base[i]; /*3.4*/
             READ_OR_BAIL(readByte, v5); /*0.5*/
           }
           int addition_len; READ_OR_BAIL(readUnsignedVarInt, addition_len); /*1.5*/
-          v2.addition.resize(addition_len); /*1.6*/
+          v3.addition.resize(addition_len); /*1.6*/
           for (int i = 0; i < addition_len; i++) {
-            auto &v5 = v2.addition[i]; /*3.4*/
+            auto &v5 = v3.addition[i]; /*3.4*/
             READ_OR_BAIL(readByte, v5); /*0.5*/
           }
-          READ_OR_BAIL(readByte, v2.result); /*0.5*/
+          READ_OR_BAIL(readByte, v3.result); /*0.5*/
       }
     }
     return true;
@@ -7468,15 +7484,15 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
     obj.sourcePosition.y = sourcePosition_val >> 52 & 12; /*sourcePosition: bitfield*/ /*4.3*/
     int destinationIdentifier_strlen; READ_OR_BAIL(readUnsignedVarInt, destinationIdentifier_strlen);
     if (!stream.readString(obj.destinationIdentifier, destinationIdentifier_strlen)) return false; /*destinationIdentifier: pstring*/ /*4.3*/
-    pdef::pc1_18_play_toClient::packet_sculk_vibration_signal::pstring &destinationIdentifier = obj.destinationIdentifier; /*0.7*/
-    if (destinationIdentifier == pdef::pc1_18_play_toClient::packet_sculk_vibration_signal::DestinationIdentifier::Block) { /*8.5*/
+    std::string &destinationIdentifier = obj.destinationIdentifier; /*4.8*/
+    if (destinationIdentifier == "block") { /*8.0*/
       uint8_t destination_position_val;
       READ_OR_BAIL(readUByte, destination_position_val);
       obj.destination_position.x = destination_position_val >> 0 & 26;
       obj.destination_position.z = destination_position_val >> 26 & 26;
       obj.destination_position.y = destination_position_val >> 52 & 12; /*destination_position: bitfield*/ /*4.3*/
     }
-    else if (destinationIdentifier == pdef::pc1_18_play_toClient::packet_sculk_vibration_signal::DestinationIdentifier::EntityId) { /*8.5*/
+    else if (destinationIdentifier == "entityId") { /*8.0*/
       READ_OR_BAIL(readUnsignedVarInt, obj.destination_varint); /*0.5*/
     }
     READ_OR_BAIL(readUnsignedVarInt, obj.arrivalTicks); /*0.5*/

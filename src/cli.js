@@ -5,7 +5,7 @@ const path = require('path')
 const protodefYaml = require('protodef-yaml')
 const args = require('basic-args')({
   name: 'protodef-cpp',
-  version: '1.0.0',
+  version: require('../package.json').version,
   description: 'protodef-cpp - A C++ compiler for ProtoDef schemas',
   errorOnUnknown: true,
   options: {

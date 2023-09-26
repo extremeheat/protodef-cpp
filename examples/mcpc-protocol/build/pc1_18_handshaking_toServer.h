@@ -92,14 +92,14 @@ struct packet;
     };
     std::optional<Data35> data_35; /*3.2*/
     struct Data36 {
-      struct { /*6.0*/
+      struct origin_t { /*6.0*/
         int x = 0; /*6.0*/
         int z = 0; /*6.0*/
         int y = 0; /*6.0*/
       } origin; /*6.0*/
       std::string positionType; /*6.0*/
       int ticks; /*0.0*/
-      struct { /*6.0*/
+      struct destination_position_t { /*6.0*/
         int x = 0; /*6.0*/
         int z = 0; /*6.0*/
         int y = 0; /*6.0*/
@@ -124,7 +124,7 @@ struct packet;
     std::vector<int /*0.0*/> entries; /*3.0*/
   };
   struct chunkBlockEntity {
-    struct { /*6.0*/
+    struct _3_t { /*6.0*/
       int x = 0; /*6.0*/
       int z = 0; /*6.0*/
     } _3; /*6.0*/
@@ -133,7 +133,7 @@ struct packet;
     int8_t nbtData; /*0.0*/
   };
   struct command_node {
-    struct { /*6.0*/
+    struct flags_t { /*6.0*/
       int unused = 0; /*6.0*/
       int has_custom_suggestions = 0; /*6.0*/
       int has_redirect_node = 0; /*6.0*/
@@ -149,7 +149,7 @@ struct packet;
       std::string name; /*6.0*/
       std::string parser; /*6.0*/
       struct PropertiesBrigadierFloat {
-        struct { /*6.0*/
+        struct flags_t { /*6.0*/
           int unused = 0; /*6.0*/
           int max_present = 0; /*6.0*/
           int min_present = 0; /*6.0*/
@@ -159,7 +159,7 @@ struct packet;
       };
       std::optional<PropertiesBrigadierFloat> properties_brigadier_float; /*3.2*/
       struct PropertiesBrigadierDouble {
-        struct { /*6.0*/
+        struct flags_t { /*6.0*/
           int unused = 0; /*6.0*/
           int max_present = 0; /*6.0*/
           int min_present = 0; /*6.0*/
@@ -169,7 +169,7 @@ struct packet;
       };
       std::optional<PropertiesBrigadierDouble> properties_brigadier_double; /*3.2*/
       struct PropertiesBrigadierInteger {
-        struct { /*6.0*/
+        struct flags_t { /*6.0*/
           int unused = 0; /*6.0*/
           int max_present = 0; /*6.0*/
           int min_present = 0; /*6.0*/
@@ -179,7 +179,7 @@ struct packet;
       };
       std::optional<PropertiesBrigadierInteger> properties_brigadier_integer; /*3.2*/
       struct PropertiesBrigadierLong {
-        struct { /*6.0*/
+        struct flags_t { /*6.0*/
           int unused = 0; /*6.0*/
           int max_present = 0; /*6.0*/
           int min_present = 0; /*6.0*/
@@ -194,12 +194,12 @@ struct packet;
         GREEDY_PHRASE = 2,
       };
       PropertiesMapper properties_mapper; /*3.2*/
-      struct { /*6.0*/
+      struct properties_minecraft_entity_t { /*6.0*/
         int unused = 0; /*6.0*/
         int onlyAllowPlayers = 0; /*6.0*/
         int onlyAllowEntities = 0; /*6.0*/
       } properties_minecraft_entity; /*6.0*/
-      struct { /*6.0*/
+      struct properties_minecraft_score_holder_t { /*6.0*/
         int unused = 0; /*6.0*/
         int allowMultiple = 0; /*6.0*/
       } properties_minecraft_score_holder; /*6.0*/
@@ -262,22 +262,22 @@ size_t packet(pdef::Stream &stream, const pdef::pc1_18_handshaking_toServer::pac
     size_t len = 0;
     const int &particleId = obj.particleId; /*0.1*/
     if (particleId == 2) { /*8.2*/
-        EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_handshaking_toServer::particle::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.6*/
-        len += stream.sizeOfVarInt(v.blockState); /*0.2*/
+        EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_handshaking_toServer::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.6*/
+        len += stream.sizeOfVarInt(v2.blockState); /*0.2*/
     }
     else if (particleId == 3) { /*8.2*/
-        EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_handshaking_toServer::particle::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.6*/
-        len += stream.sizeOfVarInt(v.blockState); /*0.2*/
+        EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_handshaking_toServer::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.6*/
+        len += stream.sizeOfVarInt(v2.blockState); /*0.2*/
     }
     else if (particleId == 14) { /*8.2*/
-        EXPECT_OR_BAIL(obj.data_14); const pdef::pc1_18_handshaking_toServer::particle::Data14 &v = *obj.data_14; /*8.6*/
+        EXPECT_OR_BAIL(obj.data_14); const pdef::pc1_18_handshaking_toServer::particle::Data14 &v2 = *obj.data_14; /*8.6*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
     }
     else if (particleId == 15) { /*8.2*/
-        EXPECT_OR_BAIL(obj.data_15); const pdef::pc1_18_handshaking_toServer::particle::Data15 &v = *obj.data_15; /*8.6*/
+        EXPECT_OR_BAIL(obj.data_15); const pdef::pc1_18_handshaking_toServer::particle::Data15 &v2 = *obj.data_15; /*8.6*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
         len += 4; /*0.2*/
@@ -287,26 +287,26 @@ size_t packet(pdef::Stream &stream, const pdef::pc1_18_handshaking_toServer::pac
         len += 4; /*0.2*/
     }
     else if (particleId == 24) { /*8.2*/
-        EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_handshaking_toServer::particle::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.6*/
-        len += stream.sizeOfVarInt(v.blockState); /*0.2*/
+        EXPECT_OR_BAIL(obj.data_2_or_3_or_24); const pdef::pc1_18_handshaking_toServer::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.6*/
+        len += stream.sizeOfVarInt(v2.blockState); /*0.2*/
     }
     else if (particleId == 35) { /*8.2*/
-        EXPECT_OR_BAIL(obj.data_35); const pdef::pc1_18_handshaking_toServer::particle::Data35 &v = *obj.data_35; /*8.6*/
+        EXPECT_OR_BAIL(obj.data_35); const pdef::pc1_18_handshaking_toServer::particle::Data35 &v2 = *obj.data_35; /*8.6*/
         len += 1; /*0.2*/
     }
     else if (particleId == 36) { /*8.2*/
-        EXPECT_OR_BAIL(obj.data_36); const pdef::pc1_18_handshaking_toServer::particle::Data36 &v = *obj.data_36; /*8.6*/
+        EXPECT_OR_BAIL(obj.data_36); const pdef::pc1_18_handshaking_toServer::particle::Data36 &v2 = *obj.data_36; /*8.6*/
         len += 1; /*origin: bitfield*/ /*4.1*/
-        len += stream.sizeOfVarInt(v.positionType.length());
-        len += v.positionType.length(); /*positionType^: pstring*/ /*4.1*/
-        const pdef::pc1_18_handshaking_toServer::particle::Data36::pstring &positionType = v.positionType; /*0.1*/
-        if (positionType == pdef::pc1_18_handshaking_toServer::particle::Data36::PositionType::MinecraftBlock) { /*8.5*/
+        len += stream.sizeOfVarInt(v2.positionType.length());
+        len += v2.positionType.length(); /*positionType^: pstring*/ /*4.1*/
+        const std::string &positionType = v2.positionType; /*4.7*/
+        if (positionType == "minecraft:block") { /*8.0*/
           len += 1; /*destination: bitfield*/ /*4.1*/
         }
-        else if (positionType == pdef::pc1_18_handshaking_toServer::particle::Data36::PositionType::MinecraftEntity) { /*8.5*/
-          len += stream.sizeOfVarInt(v.destination_varint); /*0.2*/
+        else if (positionType == "minecraft:entity") { /*8.0*/
+          len += stream.sizeOfVarInt(v2.destination_varint); /*0.2*/
         }
-        len += stream.sizeOfVarInt(v.ticks); /*0.2*/
+        len += stream.sizeOfVarInt(v2.ticks); /*0.2*/
     }
     DBG_PRINT("%s: sized at %lld\n", __func__, len); return len;
   }
@@ -344,7 +344,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_handshaking_toServer::tags 
   size_t command_node(pdef::Stream &stream, const pdef::pc1_18_handshaking_toServer::command_node &obj) {
     size_t len = 0;
     len += 1; /*flags^: bitfield*/ /*4.1*/
-    const pdef::pc1_18_handshaking_toServer::command_node::bitfield &flags = obj.flags; /*0.1*/
+    const pdef::pc1_18_handshaking_toServer::command_node::flags_t &flags = obj.flags; /*4.7*/
     len += stream.sizeOfVarInt(obj.children.size()); /*1.3*/
     for (const auto &v2 : obj.children) {
       len += stream.sizeOfVarInt(v2); /*0.2*/
@@ -355,23 +355,23 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_handshaking_toServer::tags 
     if (flags.command_node_type == 0) { /*8.2*/
     }
     else if (flags.command_node_type == 1) { /*8.2*/
-        EXPECT_OR_BAIL(obj.extraNodeData_1); const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData1 &v = *obj.extraNodeData_1; /*8.6*/
-        len += stream.sizeOfVarInt(v.name.length());
-        len += v.name.length(); /*name: pstring*/ /*4.1*/
+        EXPECT_OR_BAIL(obj.extraNodeData_1); const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData1 &v2 = *obj.extraNodeData_1; /*8.6*/
+        len += stream.sizeOfVarInt(v2.name.length());
+        len += v2.name.length(); /*name: pstring*/ /*4.1*/
     }
     else if (flags.command_node_type == 2) { /*8.2*/
-        EXPECT_OR_BAIL(obj.extraNodeData_2); const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2 &v = *obj.extraNodeData_2; /*8.6*/
-        len += stream.sizeOfVarInt(v.name.length());
-        len += v.name.length(); /*name: pstring*/ /*4.1*/
-        len += stream.sizeOfVarInt(v.parser.length());
-        len += v.parser.length(); /*parser^: pstring*/ /*4.1*/
-        const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::pstring &parser = v.parser; /*0.1*/
-        if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::BrigadierBool) { /*8.5*/
+        EXPECT_OR_BAIL(obj.extraNodeData_2); const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2 &v2 = *obj.extraNodeData_2; /*8.6*/
+        len += stream.sizeOfVarInt(v2.name.length());
+        len += v2.name.length(); /*name: pstring*/ /*4.1*/
+        len += stream.sizeOfVarInt(v2.parser.length());
+        len += v2.parser.length(); /*parser^: pstring*/ /*4.1*/
+        const std::string &parser = v2.parser; /*4.7*/
+        if (parser == "brigadier:bool") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::BrigadierFloat) { /*8.5*/
-            EXPECT_OR_BAIL(v.properties_brigadier_float); const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierFloat &v = *v.properties_brigadier_float; /*8.6*/
+        else if (parser == "brigadier:float") { /*8.0*/
+            EXPECT_OR_BAIL(v2.properties_brigadier_float); const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierFloat &v4 = *v2.properties_brigadier_float; /*8.6*/
             len += 1; /*flags^: bitfield*/ /*4.1*/
-            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierFloat::bitfield &flags = v.flags; /*0.1*/
+            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierFloat::flags_t &flags = v4.flags; /*4.7*/
             if (flags.min_present == 1) { /*8.2*/
               len += 4; /*0.2*/
             }
@@ -379,10 +379,10 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_handshaking_toServer::tags 
               len += 4; /*0.2*/
             }
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::BrigadierDouble) { /*8.5*/
-            EXPECT_OR_BAIL(v.properties_brigadier_double); const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierDouble &v = *v.properties_brigadier_double; /*8.6*/
+        else if (parser == "brigadier:double") { /*8.0*/
+            EXPECT_OR_BAIL(v2.properties_brigadier_double); const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierDouble &v4 = *v2.properties_brigadier_double; /*8.6*/
             len += 1; /*flags^: bitfield*/ /*4.1*/
-            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierDouble::bitfield &flags = v.flags; /*0.1*/
+            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierDouble::flags_t &flags = v4.flags; /*4.7*/
             if (flags.min_present == 1) { /*8.2*/
               len += 8; /*0.2*/
             }
@@ -390,10 +390,10 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_handshaking_toServer::tags 
               len += 8; /*0.2*/
             }
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::BrigadierInteger) { /*8.5*/
-            EXPECT_OR_BAIL(v.properties_brigadier_integer); const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierInteger &v = *v.properties_brigadier_integer; /*8.6*/
+        else if (parser == "brigadier:integer") { /*8.0*/
+            EXPECT_OR_BAIL(v2.properties_brigadier_integer); const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierInteger &v4 = *v2.properties_brigadier_integer; /*8.6*/
             len += 1; /*flags^: bitfield*/ /*4.1*/
-            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierInteger::bitfield &flags = v.flags; /*0.1*/
+            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierInteger::flags_t &flags = v4.flags; /*4.7*/
             if (flags.min_present == 1) { /*8.2*/
               len += 4; /*0.2*/
             }
@@ -401,10 +401,10 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_handshaking_toServer::tags 
               len += 4; /*0.2*/
             }
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::BrigadierLong) { /*8.5*/
-            EXPECT_OR_BAIL(v.properties_brigadier_long); const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierLong &v = *v.properties_brigadier_long; /*8.6*/
+        else if (parser == "brigadier:long") { /*8.0*/
+            EXPECT_OR_BAIL(v2.properties_brigadier_long); const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierLong &v4 = *v2.properties_brigadier_long; /*8.6*/
             len += 1; /*flags^: bitfield*/ /*4.1*/
-            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierLong::bitfield &flags = v.flags; /*0.1*/
+            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierLong::flags_t &flags = v4.flags; /*4.7*/
             if (flags.min_present == 1) { /*8.2*/
               len += 8; /*0.2*/
             }
@@ -412,103 +412,103 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_handshaking_toServer::tags 
               len += 8; /*0.2*/
             }
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::BrigadierString) { /*8.5*/
+        else if (parser == "brigadier:string") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftEntity) { /*8.5*/
+        else if (parser == "minecraft:entity") { /*8.0*/
           len += 1; /*properties: bitfield*/ /*4.1*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftGameProfile) { /*8.5*/
+        else if (parser == "minecraft:game_profile") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftBlockPos) { /*8.5*/
+        else if (parser == "minecraft:block_pos") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftColumnPos) { /*8.5*/
+        else if (parser == "minecraft:column_pos") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftVec3) { /*8.5*/
+        else if (parser == "minecraft:vec3") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftVec2) { /*8.5*/
+        else if (parser == "minecraft:vec2") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftBlockState) { /*8.5*/
+        else if (parser == "minecraft:block_state") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftBlockPredicate) { /*8.5*/
+        else if (parser == "minecraft:block_predicate") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftItemStack) { /*8.5*/
+        else if (parser == "minecraft:item_stack") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftItemPredicate) { /*8.5*/
+        else if (parser == "minecraft:item_predicate") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftColor) { /*8.5*/
+        else if (parser == "minecraft:color") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftComponent) { /*8.5*/
+        else if (parser == "minecraft:component") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftMessage) { /*8.5*/
+        else if (parser == "minecraft:message") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftNbt) { /*8.5*/
+        else if (parser == "minecraft:nbt") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftNbtPath) { /*8.5*/
+        else if (parser == "minecraft:nbt_path") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftObjective) { /*8.5*/
+        else if (parser == "minecraft:objective") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftObjectiveCriteria) { /*8.5*/
+        else if (parser == "minecraft:objective_criteria") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftOperation) { /*8.5*/
+        else if (parser == "minecraft:operation") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftParticle) { /*8.5*/
+        else if (parser == "minecraft:particle") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftAngle) { /*8.5*/
+        else if (parser == "minecraft:angle") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftRotation) { /*8.5*/
+        else if (parser == "minecraft:rotation") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftScoreboardSlot) { /*8.5*/
+        else if (parser == "minecraft:scoreboard_slot") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftScoreHolder) { /*8.5*/
+        else if (parser == "minecraft:score_holder") { /*8.0*/
           len += 1; /*properties: bitfield*/ /*4.1*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftSwizzle) { /*8.5*/
+        else if (parser == "minecraft:swizzle") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftTeam) { /*8.5*/
+        else if (parser == "minecraft:team") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftItemSlot) { /*8.5*/
+        else if (parser == "minecraft:item_slot") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftResourceLocation) { /*8.5*/
+        else if (parser == "minecraft:resource_location") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftMobEffect) { /*8.5*/
+        else if (parser == "minecraft:mob_effect") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftFunction) { /*8.5*/
+        else if (parser == "minecraft:function") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftEntityAnchor) { /*8.5*/
+        else if (parser == "minecraft:entity_anchor") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftRange) { /*8.5*/
-            EXPECT_OR_BAIL(v.properties_minecraft_range); const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesMinecraftRange &v = *v.properties_minecraft_range; /*8.6*/
+        else if (parser == "minecraft:range") { /*8.0*/
+            EXPECT_OR_BAIL(v2.properties_minecraft_range); const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesMinecraftRange &v4 = *v2.properties_minecraft_range; /*8.6*/
             len += 1; /*0.2*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftIntRange) { /*8.5*/
+        else if (parser == "minecraft:int_range") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftFloatRange) { /*8.5*/
+        else if (parser == "minecraft:float_range") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftItemEnchantment) { /*8.5*/
+        else if (parser == "minecraft:item_enchantment") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftEntitySummon) { /*8.5*/
+        else if (parser == "minecraft:entity_summon") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftDimension) { /*8.5*/
+        else if (parser == "minecraft:dimension") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftNbtCompoundTag) { /*8.5*/
+        else if (parser == "minecraft:nbt_compound_tag") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftTime) { /*8.5*/
+        else if (parser == "minecraft:time") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftResourceOrTag) { /*8.5*/
-            EXPECT_OR_BAIL(v.properties_minecraft_resource_or_tag_or_minecraft_resource); const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v = *v.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.6*/
-            len += stream.sizeOfVarInt(v.registry.length());
-            len += v.registry.length(); /*registry: pstring*/ /*4.1*/
+        else if (parser == "minecraft:resource_or_tag") { /*8.0*/
+            EXPECT_OR_BAIL(v2.properties_minecraft_resource_or_tag_or_minecraft_resource); const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.6*/
+            len += stream.sizeOfVarInt(v4.registry.length());
+            len += v4.registry.length(); /*registry: pstring*/ /*4.1*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftResource) { /*8.5*/
-            EXPECT_OR_BAIL(v.properties_minecraft_resource_or_tag_or_minecraft_resource); const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v = *v.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.6*/
-            len += stream.sizeOfVarInt(v.registry.length());
-            len += v.registry.length(); /*registry: pstring*/ /*4.1*/
+        else if (parser == "minecraft:resource") { /*8.0*/
+            EXPECT_OR_BAIL(v2.properties_minecraft_resource_or_tag_or_minecraft_resource); const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.6*/
+            len += stream.sizeOfVarInt(v4.registry.length());
+            len += v4.registry.length(); /*registry: pstring*/ /*4.1*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftUuid) { /*8.5*/
+        else if (parser == "minecraft:uuid") { /*8.0*/
         }
         if (flags.has_custom_suggestions == 1) { /*8.2*/
-          len += stream.sizeOfVarInt(v.suggestionType.length());
-          len += v.suggestionType.length(); /*suggestionType: pstring*/ /*4.1*/
+          len += stream.sizeOfVarInt(v2.suggestionType.length());
+          len += v2.suggestionType.length(); /*suggestionType: pstring*/ /*4.1*/
         }
     }
     DBG_PRINT("%s: sized at %lld\n", __func__, len); return len;
@@ -574,59 +574,59 @@ bool packet(pdef::Stream &stream, const pdef::pc1_18_handshaking_toServer::packe
     const int &particleId = obj.particleId; /*0.1*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.particleId); /*0.4*/
     if (particleId == 2) { /*8.2*/
-        const pdef::pc1_18_handshaking_toServer::particle::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.5*/
-        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.blockState); /*0.4*/
+        const pdef::pc1_18_handshaking_toServer::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.5*/
+        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.blockState); /*0.4*/
     }
     else if (particleId == 3) { /*8.2*/
-        const pdef::pc1_18_handshaking_toServer::particle::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.5*/
-        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.blockState); /*0.4*/
+        const pdef::pc1_18_handshaking_toServer::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.5*/
+        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.blockState); /*0.4*/
     }
     else if (particleId == 14) { /*8.2*/
-        const pdef::pc1_18_handshaking_toServer::particle::Data14 &v = *obj.data_14; /*8.5*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.red); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.green); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.blue); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.scale); /*0.4*/
+        const pdef::pc1_18_handshaking_toServer::particle::Data14 &v2 = *obj.data_14; /*8.5*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.red); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.green); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.blue); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.scale); /*0.4*/
     }
     else if (particleId == 15) { /*8.2*/
-        const pdef::pc1_18_handshaking_toServer::particle::Data15 &v = *obj.data_15; /*8.5*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.fromRed); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.fromGreen); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.fromBlue); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.scale); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.toRed); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.toGreen); /*0.4*/
-        WRITE_OR_BAIL(writeFloatBE, (float)v.toBlue); /*0.4*/
+        const pdef::pc1_18_handshaking_toServer::particle::Data15 &v2 = *obj.data_15; /*8.5*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.fromRed); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.fromGreen); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.fromBlue); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.scale); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.toRed); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.toGreen); /*0.4*/
+        WRITE_OR_BAIL(writeFloatBE, (float)v2.toBlue); /*0.4*/
     }
     else if (particleId == 24) { /*8.2*/
-        const pdef::pc1_18_handshaking_toServer::particle::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.5*/
-        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.blockState); /*0.4*/
+        const pdef::pc1_18_handshaking_toServer::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.5*/
+        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.blockState); /*0.4*/
     }
     else if (particleId == 35) { /*8.2*/
-        const pdef::pc1_18_handshaking_toServer::particle::Data35 &v = *obj.data_35; /*8.5*/
-        WRITE_OR_BAIL(writeByte, (int8_t)v.item); /*0.4*/
+        const pdef::pc1_18_handshaking_toServer::particle::Data35 &v2 = *obj.data_35; /*8.5*/
+        WRITE_OR_BAIL(writeByte, (int8_t)v2.item); /*0.4*/
     }
     else if (particleId == 36) { /*8.2*/
-        const pdef::pc1_18_handshaking_toServer::particle::Data36 &v = *obj.data_36; /*8.5*/
+        const pdef::pc1_18_handshaking_toServer::particle::Data36 &v2 = *obj.data_36; /*8.5*/
         uint8_t origin_val = 0;
-        origin_val |= v.origin.x << 0;
-        origin_val |= v.origin.z << 26;
-        origin_val |= v.origin.y << 52;
+        origin_val |= v2.origin.x << 0;
+        origin_val |= v2.origin.z << 26;
+        origin_val |= v2.origin.y << 52;
         WRITE_OR_BAIL(writeUByte, origin_val); /*origin: bitfield*/ /*4.2*/
-        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.positionType.length());
-        WRITE_OR_BAIL(writeString, v.positionType); /*positionType: pstring*/ /*4.2*/
-        const pdef::pc1_18_handshaking_toServer::particle::Data36::pstring &positionType = v.positionType; /*0.1*/
-        if (positionType == pdef::pc1_18_handshaking_toServer::particle::Data36::PositionType::MinecraftBlock) { /*8.5*/
+        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.positionType.length());
+        WRITE_OR_BAIL(writeString, v2.positionType); /*positionType: pstring*/ /*4.2*/
+        const std::string &positionType = v2.positionType; /*4.7*/
+        if (positionType == "minecraft:block") { /*8.0*/
           uint8_t destination_position_val = 0;
-          destination_position_val |= v.destination_position.x << 0;
-          destination_position_val |= v.destination_position.z << 26;
-          destination_position_val |= v.destination_position.y << 52;
+          destination_position_val |= v2.destination_position.x << 0;
+          destination_position_val |= v2.destination_position.z << 26;
+          destination_position_val |= v2.destination_position.y << 52;
           WRITE_OR_BAIL(writeUByte, destination_position_val); /*destination_position: bitfield*/ /*4.2*/
         }
-        else if (positionType == pdef::pc1_18_handshaking_toServer::particle::Data36::PositionType::MinecraftEntity) { /*8.5*/
-          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.destination_varint); /*0.4*/
+        else if (positionType == "minecraft:entity") { /*8.0*/
+          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.destination_varint); /*0.4*/
         }
-        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.ticks); /*0.4*/
+        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.ticks); /*0.4*/
     }
     return true;
   }
@@ -673,7 +673,7 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_handshaking_toServer::tags &o
     flags_val |= obj.flags.has_command << 5;
     flags_val |= obj.flags.command_node_type << 6;
     WRITE_OR_BAIL(writeUByte, flags_val); /*flags: bitfield*/ /*4.2*/
-    const pdef::pc1_18_handshaking_toServer::command_node::bitfield &flags = obj.flags; /*0.1*/
+    const pdef::pc1_18_handshaking_toServer::command_node::flags_t &flags = obj.flags; /*4.7*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.children.size()); /*1.4*/
     for (const auto &v2 : obj.children) { /*3.1*/
       WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2); /*0.4*/
@@ -684,183 +684,183 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_handshaking_toServer::tags &o
     if (flags.command_node_type == 0) { /*8.2*/
     }
     else if (flags.command_node_type == 1) { /*8.2*/
-        const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData1 &v = *obj.extraNodeData_1; /*8.5*/
-        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.name.length());
-        WRITE_OR_BAIL(writeString, v.name); /*name: pstring*/ /*4.2*/
+        const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData1 &v2 = *obj.extraNodeData_1; /*8.5*/
+        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.name.length());
+        WRITE_OR_BAIL(writeString, v2.name); /*name: pstring*/ /*4.2*/
     }
     else if (flags.command_node_type == 2) { /*8.2*/
-        const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2 &v = *obj.extraNodeData_2; /*8.5*/
-        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.name.length());
-        WRITE_OR_BAIL(writeString, v.name); /*name: pstring*/ /*4.2*/
-        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.parser.length());
-        WRITE_OR_BAIL(writeString, v.parser); /*parser: pstring*/ /*4.2*/
-        const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::pstring &parser = v.parser; /*0.1*/
-        if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::BrigadierBool) { /*8.5*/
+        const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2 &v2 = *obj.extraNodeData_2; /*8.5*/
+        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.name.length());
+        WRITE_OR_BAIL(writeString, v2.name); /*name: pstring*/ /*4.2*/
+        WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.parser.length());
+        WRITE_OR_BAIL(writeString, v2.parser); /*parser: pstring*/ /*4.2*/
+        const std::string &parser = v2.parser; /*4.7*/
+        if (parser == "brigadier:bool") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::BrigadierFloat) { /*8.5*/
-            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierFloat &v = *v.properties_brigadier_float; /*8.5*/
+        else if (parser == "brigadier:float") { /*8.0*/
+            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierFloat &v4 = *v2.properties_brigadier_float; /*8.5*/
             uint8_t flags_val = 0;
-            flags_val |= v.flags.unused << 0;
-            flags_val |= v.flags.max_present << 6;
-            flags_val |= v.flags.min_present << 7;
+            flags_val |= v4.flags.unused << 0;
+            flags_val |= v4.flags.max_present << 6;
+            flags_val |= v4.flags.min_present << 7;
             WRITE_OR_BAIL(writeUByte, flags_val); /*flags: bitfield*/ /*4.2*/
-            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierFloat::bitfield &flags = v.flags; /*0.1*/
+            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierFloat::flags_t &flags = v4.flags; /*4.7*/
             if (flags.min_present == 1) { /*8.2*/
-              WRITE_OR_BAIL(writeFloatBE, (float)v.min); /*0.4*/
+              WRITE_OR_BAIL(writeFloatBE, (float)v4.min); /*0.4*/
             }
             if (flags.max_present == 1) { /*8.2*/
-              WRITE_OR_BAIL(writeFloatBE, (float)v.max); /*0.4*/
+              WRITE_OR_BAIL(writeFloatBE, (float)v4.max); /*0.4*/
             }
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::BrigadierDouble) { /*8.5*/
-            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierDouble &v = *v.properties_brigadier_double; /*8.5*/
+        else if (parser == "brigadier:double") { /*8.0*/
+            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierDouble &v4 = *v2.properties_brigadier_double; /*8.5*/
             uint8_t flags_val = 0;
-            flags_val |= v.flags.unused << 0;
-            flags_val |= v.flags.max_present << 6;
-            flags_val |= v.flags.min_present << 7;
+            flags_val |= v4.flags.unused << 0;
+            flags_val |= v4.flags.max_present << 6;
+            flags_val |= v4.flags.min_present << 7;
             WRITE_OR_BAIL(writeUByte, flags_val); /*flags: bitfield*/ /*4.2*/
-            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierDouble::bitfield &flags = v.flags; /*0.1*/
+            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierDouble::flags_t &flags = v4.flags; /*4.7*/
             if (flags.min_present == 1) { /*8.2*/
-              WRITE_OR_BAIL(writeDoubleBE, (double)v.min); /*0.4*/
+              WRITE_OR_BAIL(writeDoubleBE, (double)v4.min); /*0.4*/
             }
             if (flags.max_present == 1) { /*8.2*/
-              WRITE_OR_BAIL(writeDoubleBE, (double)v.max); /*0.4*/
+              WRITE_OR_BAIL(writeDoubleBE, (double)v4.max); /*0.4*/
             }
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::BrigadierInteger) { /*8.5*/
-            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierInteger &v = *v.properties_brigadier_integer; /*8.5*/
+        else if (parser == "brigadier:integer") { /*8.0*/
+            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierInteger &v4 = *v2.properties_brigadier_integer; /*8.5*/
             uint8_t flags_val = 0;
-            flags_val |= v.flags.unused << 0;
-            flags_val |= v.flags.max_present << 6;
-            flags_val |= v.flags.min_present << 7;
+            flags_val |= v4.flags.unused << 0;
+            flags_val |= v4.flags.max_present << 6;
+            flags_val |= v4.flags.min_present << 7;
             WRITE_OR_BAIL(writeUByte, flags_val); /*flags: bitfield*/ /*4.2*/
-            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierInteger::bitfield &flags = v.flags; /*0.1*/
+            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierInteger::flags_t &flags = v4.flags; /*4.7*/
             if (flags.min_present == 1) { /*8.2*/
-              WRITE_OR_BAIL(writeIntBE, (int32_t)v.min); /*0.4*/
+              WRITE_OR_BAIL(writeIntBE, (int32_t)v4.min); /*0.4*/
             }
             if (flags.max_present == 1) { /*8.2*/
-              WRITE_OR_BAIL(writeIntBE, (int32_t)v.max); /*0.4*/
+              WRITE_OR_BAIL(writeIntBE, (int32_t)v4.max); /*0.4*/
             }
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::BrigadierLong) { /*8.5*/
-            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierLong &v = *v.properties_brigadier_long; /*8.5*/
+        else if (parser == "brigadier:long") { /*8.0*/
+            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierLong &v4 = *v2.properties_brigadier_long; /*8.5*/
             uint8_t flags_val = 0;
-            flags_val |= v.flags.unused << 0;
-            flags_val |= v.flags.max_present << 6;
-            flags_val |= v.flags.min_present << 7;
+            flags_val |= v4.flags.unused << 0;
+            flags_val |= v4.flags.max_present << 6;
+            flags_val |= v4.flags.min_present << 7;
             WRITE_OR_BAIL(writeUByte, flags_val); /*flags: bitfield*/ /*4.2*/
-            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierLong::bitfield &flags = v.flags; /*0.1*/
+            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierLong::flags_t &flags = v4.flags; /*4.7*/
             if (flags.min_present == 1) { /*8.2*/
-              WRITE_OR_BAIL(writeLongBE, (int64_t)v.min); /*0.4*/
+              WRITE_OR_BAIL(writeLongBE, (int64_t)v4.min); /*0.4*/
             }
             if (flags.max_present == 1) { /*8.2*/
-              WRITE_OR_BAIL(writeLongBE, (int64_t)v.max); /*0.4*/
+              WRITE_OR_BAIL(writeLongBE, (int64_t)v4.max); /*0.4*/
             }
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::BrigadierString) { /*8.5*/
+        else if (parser == "brigadier:string") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftEntity) { /*8.5*/
+        else if (parser == "minecraft:entity") { /*8.0*/
           uint8_t properties_minecraft_entity_val = 0;
-          properties_minecraft_entity_val |= v.properties_minecraft_entity.unused << 0;
-          properties_minecraft_entity_val |= v.properties_minecraft_entity.onlyAllowPlayers << 6;
-          properties_minecraft_entity_val |= v.properties_minecraft_entity.onlyAllowEntities << 7;
+          properties_minecraft_entity_val |= v2.properties_minecraft_entity.unused << 0;
+          properties_minecraft_entity_val |= v2.properties_minecraft_entity.onlyAllowPlayers << 6;
+          properties_minecraft_entity_val |= v2.properties_minecraft_entity.onlyAllowEntities << 7;
           WRITE_OR_BAIL(writeUByte, properties_minecraft_entity_val); /*properties_minecraft_entity: bitfield*/ /*4.2*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftGameProfile) { /*8.5*/
+        else if (parser == "minecraft:game_profile") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftBlockPos) { /*8.5*/
+        else if (parser == "minecraft:block_pos") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftColumnPos) { /*8.5*/
+        else if (parser == "minecraft:column_pos") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftVec3) { /*8.5*/
+        else if (parser == "minecraft:vec3") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftVec2) { /*8.5*/
+        else if (parser == "minecraft:vec2") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftBlockState) { /*8.5*/
+        else if (parser == "minecraft:block_state") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftBlockPredicate) { /*8.5*/
+        else if (parser == "minecraft:block_predicate") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftItemStack) { /*8.5*/
+        else if (parser == "minecraft:item_stack") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftItemPredicate) { /*8.5*/
+        else if (parser == "minecraft:item_predicate") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftColor) { /*8.5*/
+        else if (parser == "minecraft:color") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftComponent) { /*8.5*/
+        else if (parser == "minecraft:component") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftMessage) { /*8.5*/
+        else if (parser == "minecraft:message") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftNbt) { /*8.5*/
+        else if (parser == "minecraft:nbt") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftNbtPath) { /*8.5*/
+        else if (parser == "minecraft:nbt_path") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftObjective) { /*8.5*/
+        else if (parser == "minecraft:objective") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftObjectiveCriteria) { /*8.5*/
+        else if (parser == "minecraft:objective_criteria") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftOperation) { /*8.5*/
+        else if (parser == "minecraft:operation") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftParticle) { /*8.5*/
+        else if (parser == "minecraft:particle") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftAngle) { /*8.5*/
+        else if (parser == "minecraft:angle") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftRotation) { /*8.5*/
+        else if (parser == "minecraft:rotation") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftScoreboardSlot) { /*8.5*/
+        else if (parser == "minecraft:scoreboard_slot") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftScoreHolder) { /*8.5*/
+        else if (parser == "minecraft:score_holder") { /*8.0*/
           uint8_t properties_minecraft_score_holder_val = 0;
-          properties_minecraft_score_holder_val |= v.properties_minecraft_score_holder.unused << 0;
-          properties_minecraft_score_holder_val |= v.properties_minecraft_score_holder.allowMultiple << 7;
+          properties_minecraft_score_holder_val |= v2.properties_minecraft_score_holder.unused << 0;
+          properties_minecraft_score_holder_val |= v2.properties_minecraft_score_holder.allowMultiple << 7;
           WRITE_OR_BAIL(writeUByte, properties_minecraft_score_holder_val); /*properties_minecraft_score_holder: bitfield*/ /*4.2*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftSwizzle) { /*8.5*/
+        else if (parser == "minecraft:swizzle") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftTeam) { /*8.5*/
+        else if (parser == "minecraft:team") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftItemSlot) { /*8.5*/
+        else if (parser == "minecraft:item_slot") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftResourceLocation) { /*8.5*/
+        else if (parser == "minecraft:resource_location") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftMobEffect) { /*8.5*/
+        else if (parser == "minecraft:mob_effect") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftFunction) { /*8.5*/
+        else if (parser == "minecraft:function") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftEntityAnchor) { /*8.5*/
+        else if (parser == "minecraft:entity_anchor") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftRange) { /*8.5*/
-            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesMinecraftRange &v = *v.properties_minecraft_range; /*8.5*/
-            WRITE_OR_BAIL(writeBool, (bool)v.allowDecimals); /*0.4*/
+        else if (parser == "minecraft:range") { /*8.0*/
+            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesMinecraftRange &v4 = *v2.properties_minecraft_range; /*8.5*/
+            WRITE_OR_BAIL(writeBool, (bool)v4.allowDecimals); /*0.4*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftIntRange) { /*8.5*/
+        else if (parser == "minecraft:int_range") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftFloatRange) { /*8.5*/
+        else if (parser == "minecraft:float_range") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftItemEnchantment) { /*8.5*/
+        else if (parser == "minecraft:item_enchantment") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftEntitySummon) { /*8.5*/
+        else if (parser == "minecraft:entity_summon") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftDimension) { /*8.5*/
+        else if (parser == "minecraft:dimension") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftNbtCompoundTag) { /*8.5*/
+        else if (parser == "minecraft:nbt_compound_tag") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftTime) { /*8.5*/
+        else if (parser == "minecraft:time") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftResourceOrTag) { /*8.5*/
-            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v = *v.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.5*/
-            WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.registry.length());
-            WRITE_OR_BAIL(writeString, v.registry); /*registry: pstring*/ /*4.2*/
+        else if (parser == "minecraft:resource_or_tag") { /*8.0*/
+            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.5*/
+            WRITE_OR_BAIL(writeUnsignedVarInt, (int)v4.registry.length());
+            WRITE_OR_BAIL(writeString, v4.registry); /*registry: pstring*/ /*4.2*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftResource) { /*8.5*/
-            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v = *v.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.5*/
-            WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.registry.length());
-            WRITE_OR_BAIL(writeString, v.registry); /*registry: pstring*/ /*4.2*/
+        else if (parser == "minecraft:resource") { /*8.0*/
+            const pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.5*/
+            WRITE_OR_BAIL(writeUnsignedVarInt, (int)v4.registry.length());
+            WRITE_OR_BAIL(writeString, v4.registry); /*registry: pstring*/ /*4.2*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftUuid) { /*8.5*/
+        else if (parser == "minecraft:uuid") { /*8.0*/
         }
         if (flags.has_custom_suggestions == 1) { /*8.2*/
-          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v.suggestionType.length());
-          WRITE_OR_BAIL(writeString, v.suggestionType); /*suggestionType: pstring*/ /*4.2*/
+          WRITE_OR_BAIL(writeUnsignedVarInt, (int)v2.suggestionType.length());
+          WRITE_OR_BAIL(writeString, v2.suggestionType); /*suggestionType: pstring*/ /*4.2*/
         }
     }
     return true;
@@ -924,59 +924,59 @@ bool packet(pdef::Stream &stream, pdef::pc1_18_handshaking_toServer::packet &obj
     READ_OR_BAIL(readUnsignedVarInt, obj.particleId); /*0.5*/
     int &particleId = obj.particleId; /*0.6*/
     if (particleId == 2) { /*8.2*/
-         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_handshaking_toServer::particle::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.4*/
-        READ_OR_BAIL(readUnsignedVarInt, v.blockState); /*0.5*/
+         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_handshaking_toServer::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
+        READ_OR_BAIL(readUnsignedVarInt, v2.blockState); /*0.5*/
     }
     else if (particleId == 3) { /*8.2*/
-         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_handshaking_toServer::particle::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.4*/
-        READ_OR_BAIL(readUnsignedVarInt, v.blockState); /*0.5*/
+         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_handshaking_toServer::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
+        READ_OR_BAIL(readUnsignedVarInt, v2.blockState); /*0.5*/
     }
     else if (particleId == 14) { /*8.2*/
-         obj.data_14 = {}; pdef::pc1_18_handshaking_toServer::particle::Data14 &v = *obj.data_14; /*8.4*/
-        READ_OR_BAIL(readFloatBE, v.red); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.green); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.blue); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.scale); /*0.5*/
+         obj.data_14 = {}; pdef::pc1_18_handshaking_toServer::particle::Data14 &v2 = *obj.data_14; /*8.4*/
+        READ_OR_BAIL(readFloatBE, v2.red); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.green); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.blue); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.scale); /*0.5*/
     }
     else if (particleId == 15) { /*8.2*/
-         obj.data_15 = {}; pdef::pc1_18_handshaking_toServer::particle::Data15 &v = *obj.data_15; /*8.4*/
-        READ_OR_BAIL(readFloatBE, v.fromRed); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.fromGreen); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.fromBlue); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.scale); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.toRed); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.toGreen); /*0.5*/
-        READ_OR_BAIL(readFloatBE, v.toBlue); /*0.5*/
+         obj.data_15 = {}; pdef::pc1_18_handshaking_toServer::particle::Data15 &v2 = *obj.data_15; /*8.4*/
+        READ_OR_BAIL(readFloatBE, v2.fromRed); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.fromGreen); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.fromBlue); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.scale); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.toRed); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.toGreen); /*0.5*/
+        READ_OR_BAIL(readFloatBE, v2.toBlue); /*0.5*/
     }
     else if (particleId == 24) { /*8.2*/
-         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_handshaking_toServer::particle::Data2Or3Or24 &v = *obj.data_2_or_3_or_24; /*8.4*/
-        READ_OR_BAIL(readUnsignedVarInt, v.blockState); /*0.5*/
+         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_handshaking_toServer::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
+        READ_OR_BAIL(readUnsignedVarInt, v2.blockState); /*0.5*/
     }
     else if (particleId == 35) { /*8.2*/
-         obj.data_35 = {}; pdef::pc1_18_handshaking_toServer::particle::Data35 &v = *obj.data_35; /*8.4*/
-        READ_OR_BAIL(readByte, v.item); /*0.5*/
+         obj.data_35 = {}; pdef::pc1_18_handshaking_toServer::particle::Data35 &v2 = *obj.data_35; /*8.4*/
+        READ_OR_BAIL(readByte, v2.item); /*0.5*/
     }
     else if (particleId == 36) { /*8.2*/
-         obj.data_36 = {}; pdef::pc1_18_handshaking_toServer::particle::Data36 &v = *obj.data_36; /*8.4*/
+         obj.data_36 = {}; pdef::pc1_18_handshaking_toServer::particle::Data36 &v2 = *obj.data_36; /*8.4*/
         uint8_t origin_val;
         READ_OR_BAIL(readUByte, origin_val);
-        v.origin.x = origin_val >> 0 & 26;
-        v.origin.z = origin_val >> 26 & 26;
-        v.origin.y = origin_val >> 52 & 12; /*origin: bitfield*/ /*4.3*/
+        v2.origin.x = origin_val >> 0 & 26;
+        v2.origin.z = origin_val >> 26 & 26;
+        v2.origin.y = origin_val >> 52 & 12; /*origin: bitfield*/ /*4.3*/
         int positionType_strlen; READ_OR_BAIL(readUnsignedVarInt, positionType_strlen);
-        if (!stream.readString(v.positionType, positionType_strlen)) return false; /*positionType: pstring*/ /*4.3*/
-        pdef::pc1_18_handshaking_toServer::particle::Data36::pstring &positionType = v.positionType; /*0.7*/
-        if (positionType == pdef::pc1_18_handshaking_toServer::particle::Data36::PositionType::MinecraftBlock) { /*8.5*/
+        if (!stream.readString(v2.positionType, positionType_strlen)) return false; /*positionType: pstring*/ /*4.3*/
+        std::string &positionType = v2.positionType; /*4.8*/
+        if (positionType == "minecraft:block") { /*8.0*/
           uint8_t destination_position_val;
           READ_OR_BAIL(readUByte, destination_position_val);
-          v.destination_position.x = destination_position_val >> 0 & 26;
-          v.destination_position.z = destination_position_val >> 26 & 26;
-          v.destination_position.y = destination_position_val >> 52 & 12; /*destination_position: bitfield*/ /*4.3*/
+          v2.destination_position.x = destination_position_val >> 0 & 26;
+          v2.destination_position.z = destination_position_val >> 26 & 26;
+          v2.destination_position.y = destination_position_val >> 52 & 12; /*destination_position: bitfield*/ /*4.3*/
         }
-        else if (positionType == pdef::pc1_18_handshaking_toServer::particle::Data36::PositionType::MinecraftEntity) { /*8.5*/
-          READ_OR_BAIL(readUnsignedVarInt, v.destination_varint); /*0.5*/
+        else if (positionType == "minecraft:entity") { /*8.0*/
+          READ_OR_BAIL(readUnsignedVarInt, v2.destination_varint); /*0.5*/
         }
-        READ_OR_BAIL(readUnsignedVarInt, v.ticks); /*0.5*/
+        READ_OR_BAIL(readUnsignedVarInt, v2.ticks); /*0.5*/
     }
     return true;
   }
@@ -1023,7 +1023,7 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_handshaking_toServer::tags &obj) {
     obj.flags.has_redirect_node = flags_val >> 4 & 1;
     obj.flags.has_command = flags_val >> 5 & 1;
     obj.flags.command_node_type = flags_val >> 6 & 2; /*flags: bitfield*/ /*4.3*/
-    pdef::pc1_18_handshaking_toServer::command_node::bitfield &flags = obj.flags; /*0.7*/
+    pdef::pc1_18_handshaking_toServer::command_node::flags_t &flags = obj.flags; /*4.8*/
     int children_len; READ_OR_BAIL(readUnsignedVarInt, children_len); /*1.5*/
     obj.children.resize(children_len); /*1.6*/
     for (int i = 0; i < children_len; i++) {
@@ -1036,183 +1036,183 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_handshaking_toServer::tags &obj) {
     if (flags.command_node_type == 0) { /*8.2*/
     }
     else if (flags.command_node_type == 1) { /*8.2*/
-         obj.extraNodeData_1 = {}; pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData1 &v = *obj.extraNodeData_1; /*8.4*/
+         obj.extraNodeData_1 = {}; pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData1 &v2 = *obj.extraNodeData_1; /*8.4*/
         int name_strlen; READ_OR_BAIL(readUnsignedVarInt, name_strlen);
-        if (!stream.readString(v.name, name_strlen)) return false; /*name: pstring*/ /*4.3*/
+        if (!stream.readString(v2.name, name_strlen)) return false; /*name: pstring*/ /*4.3*/
     }
     else if (flags.command_node_type == 2) { /*8.2*/
-         obj.extraNodeData_2 = {}; pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2 &v = *obj.extraNodeData_2; /*8.4*/
+         obj.extraNodeData_2 = {}; pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2 &v2 = *obj.extraNodeData_2; /*8.4*/
         int name_strlen; READ_OR_BAIL(readUnsignedVarInt, name_strlen);
-        if (!stream.readString(v.name, name_strlen)) return false; /*name: pstring*/ /*4.3*/
+        if (!stream.readString(v2.name, name_strlen)) return false; /*name: pstring*/ /*4.3*/
         int parser_strlen; READ_OR_BAIL(readUnsignedVarInt, parser_strlen);
-        if (!stream.readString(v.parser, parser_strlen)) return false; /*parser: pstring*/ /*4.3*/
-        pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::pstring &parser = v.parser; /*0.7*/
-        if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::BrigadierBool) { /*8.5*/
+        if (!stream.readString(v2.parser, parser_strlen)) return false; /*parser: pstring*/ /*4.3*/
+        std::string &parser = v2.parser; /*4.8*/
+        if (parser == "brigadier:bool") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::BrigadierFloat) { /*8.5*/
-             v.properties_brigadier_float = {}; pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierFloat &v = *v.properties_brigadier_float; /*8.4*/
+        else if (parser == "brigadier:float") { /*8.0*/
+             v2.properties_brigadier_float = {}; pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierFloat &v4 = *v2.properties_brigadier_float; /*8.4*/
             uint8_t flags_val;
             READ_OR_BAIL(readUByte, flags_val);
-            v.flags.unused = flags_val >> 0 & 6;
-            v.flags.max_present = flags_val >> 6 & 1;
-            v.flags.min_present = flags_val >> 7 & 1; /*flags: bitfield*/ /*4.3*/
-            pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierFloat::bitfield &flags = v.flags; /*0.7*/
+            v4.flags.unused = flags_val >> 0 & 6;
+            v4.flags.max_present = flags_val >> 6 & 1;
+            v4.flags.min_present = flags_val >> 7 & 1; /*flags: bitfield*/ /*4.3*/
+            pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierFloat::flags_t &flags = v4.flags; /*4.8*/
             if (flags.min_present == 1) { /*8.2*/
-              READ_OR_BAIL(readFloatBE, v.min); /*0.5*/
+              READ_OR_BAIL(readFloatBE, v4.min); /*0.5*/
             }
             if (flags.max_present == 1) { /*8.2*/
-              READ_OR_BAIL(readFloatBE, v.max); /*0.5*/
+              READ_OR_BAIL(readFloatBE, v4.max); /*0.5*/
             }
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::BrigadierDouble) { /*8.5*/
-             v.properties_brigadier_double = {}; pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierDouble &v = *v.properties_brigadier_double; /*8.4*/
+        else if (parser == "brigadier:double") { /*8.0*/
+             v2.properties_brigadier_double = {}; pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierDouble &v4 = *v2.properties_brigadier_double; /*8.4*/
             uint8_t flags_val;
             READ_OR_BAIL(readUByte, flags_val);
-            v.flags.unused = flags_val >> 0 & 6;
-            v.flags.max_present = flags_val >> 6 & 1;
-            v.flags.min_present = flags_val >> 7 & 1; /*flags: bitfield*/ /*4.3*/
-            pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierDouble::bitfield &flags = v.flags; /*0.7*/
+            v4.flags.unused = flags_val >> 0 & 6;
+            v4.flags.max_present = flags_val >> 6 & 1;
+            v4.flags.min_present = flags_val >> 7 & 1; /*flags: bitfield*/ /*4.3*/
+            pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierDouble::flags_t &flags = v4.flags; /*4.8*/
             if (flags.min_present == 1) { /*8.2*/
-              READ_OR_BAIL(readDoubleBE, v.min); /*0.5*/
+              READ_OR_BAIL(readDoubleBE, v4.min); /*0.5*/
             }
             if (flags.max_present == 1) { /*8.2*/
-              READ_OR_BAIL(readDoubleBE, v.max); /*0.5*/
+              READ_OR_BAIL(readDoubleBE, v4.max); /*0.5*/
             }
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::BrigadierInteger) { /*8.5*/
-             v.properties_brigadier_integer = {}; pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierInteger &v = *v.properties_brigadier_integer; /*8.4*/
+        else if (parser == "brigadier:integer") { /*8.0*/
+             v2.properties_brigadier_integer = {}; pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierInteger &v4 = *v2.properties_brigadier_integer; /*8.4*/
             uint8_t flags_val;
             READ_OR_BAIL(readUByte, flags_val);
-            v.flags.unused = flags_val >> 0 & 6;
-            v.flags.max_present = flags_val >> 6 & 1;
-            v.flags.min_present = flags_val >> 7 & 1; /*flags: bitfield*/ /*4.3*/
-            pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierInteger::bitfield &flags = v.flags; /*0.7*/
+            v4.flags.unused = flags_val >> 0 & 6;
+            v4.flags.max_present = flags_val >> 6 & 1;
+            v4.flags.min_present = flags_val >> 7 & 1; /*flags: bitfield*/ /*4.3*/
+            pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierInteger::flags_t &flags = v4.flags; /*4.8*/
             if (flags.min_present == 1) { /*8.2*/
-              READ_OR_BAIL(readIntBE, v.min); /*0.5*/
+              READ_OR_BAIL(readIntBE, v4.min); /*0.5*/
             }
             if (flags.max_present == 1) { /*8.2*/
-              READ_OR_BAIL(readIntBE, v.max); /*0.5*/
+              READ_OR_BAIL(readIntBE, v4.max); /*0.5*/
             }
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::BrigadierLong) { /*8.5*/
-             v.properties_brigadier_long = {}; pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierLong &v = *v.properties_brigadier_long; /*8.4*/
+        else if (parser == "brigadier:long") { /*8.0*/
+             v2.properties_brigadier_long = {}; pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierLong &v4 = *v2.properties_brigadier_long; /*8.4*/
             uint8_t flags_val;
             READ_OR_BAIL(readUByte, flags_val);
-            v.flags.unused = flags_val >> 0 & 6;
-            v.flags.max_present = flags_val >> 6 & 1;
-            v.flags.min_present = flags_val >> 7 & 1; /*flags: bitfield*/ /*4.3*/
-            pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierLong::bitfield &flags = v.flags; /*0.7*/
+            v4.flags.unused = flags_val >> 0 & 6;
+            v4.flags.max_present = flags_val >> 6 & 1;
+            v4.flags.min_present = flags_val >> 7 & 1; /*flags: bitfield*/ /*4.3*/
+            pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesBrigadierLong::flags_t &flags = v4.flags; /*4.8*/
             if (flags.min_present == 1) { /*8.2*/
-              READ_OR_BAIL(readLongBE, v.min); /*0.5*/
+              READ_OR_BAIL(readLongBE, v4.min); /*0.5*/
             }
             if (flags.max_present == 1) { /*8.2*/
-              READ_OR_BAIL(readLongBE, v.max); /*0.5*/
+              READ_OR_BAIL(readLongBE, v4.max); /*0.5*/
             }
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::BrigadierString) { /*8.5*/
+        else if (parser == "brigadier:string") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftEntity) { /*8.5*/
+        else if (parser == "minecraft:entity") { /*8.0*/
           uint8_t properties_minecraft_entity_val;
           READ_OR_BAIL(readUByte, properties_minecraft_entity_val);
-          v.properties_minecraft_entity.unused = properties_minecraft_entity_val >> 0 & 6;
-          v.properties_minecraft_entity.onlyAllowPlayers = properties_minecraft_entity_val >> 6 & 1;
-          v.properties_minecraft_entity.onlyAllowEntities = properties_minecraft_entity_val >> 7 & 1; /*properties_minecraft_entity: bitfield*/ /*4.3*/
+          v2.properties_minecraft_entity.unused = properties_minecraft_entity_val >> 0 & 6;
+          v2.properties_minecraft_entity.onlyAllowPlayers = properties_minecraft_entity_val >> 6 & 1;
+          v2.properties_minecraft_entity.onlyAllowEntities = properties_minecraft_entity_val >> 7 & 1; /*properties_minecraft_entity: bitfield*/ /*4.3*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftGameProfile) { /*8.5*/
+        else if (parser == "minecraft:game_profile") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftBlockPos) { /*8.5*/
+        else if (parser == "minecraft:block_pos") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftColumnPos) { /*8.5*/
+        else if (parser == "minecraft:column_pos") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftVec3) { /*8.5*/
+        else if (parser == "minecraft:vec3") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftVec2) { /*8.5*/
+        else if (parser == "minecraft:vec2") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftBlockState) { /*8.5*/
+        else if (parser == "minecraft:block_state") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftBlockPredicate) { /*8.5*/
+        else if (parser == "minecraft:block_predicate") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftItemStack) { /*8.5*/
+        else if (parser == "minecraft:item_stack") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftItemPredicate) { /*8.5*/
+        else if (parser == "minecraft:item_predicate") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftColor) { /*8.5*/
+        else if (parser == "minecraft:color") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftComponent) { /*8.5*/
+        else if (parser == "minecraft:component") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftMessage) { /*8.5*/
+        else if (parser == "minecraft:message") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftNbt) { /*8.5*/
+        else if (parser == "minecraft:nbt") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftNbtPath) { /*8.5*/
+        else if (parser == "minecraft:nbt_path") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftObjective) { /*8.5*/
+        else if (parser == "minecraft:objective") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftObjectiveCriteria) { /*8.5*/
+        else if (parser == "minecraft:objective_criteria") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftOperation) { /*8.5*/
+        else if (parser == "minecraft:operation") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftParticle) { /*8.5*/
+        else if (parser == "minecraft:particle") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftAngle) { /*8.5*/
+        else if (parser == "minecraft:angle") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftRotation) { /*8.5*/
+        else if (parser == "minecraft:rotation") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftScoreboardSlot) { /*8.5*/
+        else if (parser == "minecraft:scoreboard_slot") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftScoreHolder) { /*8.5*/
+        else if (parser == "minecraft:score_holder") { /*8.0*/
           uint8_t properties_minecraft_score_holder_val;
           READ_OR_BAIL(readUByte, properties_minecraft_score_holder_val);
-          v.properties_minecraft_score_holder.unused = properties_minecraft_score_holder_val >> 0 & 7;
-          v.properties_minecraft_score_holder.allowMultiple = properties_minecraft_score_holder_val >> 7 & 1; /*properties_minecraft_score_holder: bitfield*/ /*4.3*/
+          v2.properties_minecraft_score_holder.unused = properties_minecraft_score_holder_val >> 0 & 7;
+          v2.properties_minecraft_score_holder.allowMultiple = properties_minecraft_score_holder_val >> 7 & 1; /*properties_minecraft_score_holder: bitfield*/ /*4.3*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftSwizzle) { /*8.5*/
+        else if (parser == "minecraft:swizzle") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftTeam) { /*8.5*/
+        else if (parser == "minecraft:team") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftItemSlot) { /*8.5*/
+        else if (parser == "minecraft:item_slot") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftResourceLocation) { /*8.5*/
+        else if (parser == "minecraft:resource_location") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftMobEffect) { /*8.5*/
+        else if (parser == "minecraft:mob_effect") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftFunction) { /*8.5*/
+        else if (parser == "minecraft:function") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftEntityAnchor) { /*8.5*/
+        else if (parser == "minecraft:entity_anchor") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftRange) { /*8.5*/
-             v.properties_minecraft_range = {}; pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesMinecraftRange &v = *v.properties_minecraft_range; /*8.4*/
-            READ_OR_BAIL(readBool, (bool&)v.allowDecimals); /*0.5*/
+        else if (parser == "minecraft:range") { /*8.0*/
+             v2.properties_minecraft_range = {}; pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesMinecraftRange &v4 = *v2.properties_minecraft_range; /*8.4*/
+            READ_OR_BAIL(readBool, (bool&)v4.allowDecimals); /*0.5*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftIntRange) { /*8.5*/
+        else if (parser == "minecraft:int_range") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftFloatRange) { /*8.5*/
+        else if (parser == "minecraft:float_range") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftItemEnchantment) { /*8.5*/
+        else if (parser == "minecraft:item_enchantment") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftEntitySummon) { /*8.5*/
+        else if (parser == "minecraft:entity_summon") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftDimension) { /*8.5*/
+        else if (parser == "minecraft:dimension") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftNbtCompoundTag) { /*8.5*/
+        else if (parser == "minecraft:nbt_compound_tag") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftTime) { /*8.5*/
+        else if (parser == "minecraft:time") { /*8.0*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftResourceOrTag) { /*8.5*/
-             v.properties_minecraft_resource_or_tag_or_minecraft_resource = {}; pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v = *v.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.4*/
+        else if (parser == "minecraft:resource_or_tag") { /*8.0*/
+             v2.properties_minecraft_resource_or_tag_or_minecraft_resource = {}; pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.4*/
             int registry_strlen; READ_OR_BAIL(readUnsignedVarInt, registry_strlen);
-            if (!stream.readString(v.registry, registry_strlen)) return false; /*registry: pstring*/ /*4.3*/
+            if (!stream.readString(v4.registry, registry_strlen)) return false; /*registry: pstring*/ /*4.3*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftResource) { /*8.5*/
-             v.properties_minecraft_resource_or_tag_or_minecraft_resource = {}; pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v = *v.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.4*/
+        else if (parser == "minecraft:resource") { /*8.0*/
+             v2.properties_minecraft_resource_or_tag_or_minecraft_resource = {}; pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.4*/
             int registry_strlen; READ_OR_BAIL(readUnsignedVarInt, registry_strlen);
-            if (!stream.readString(v.registry, registry_strlen)) return false; /*registry: pstring*/ /*4.3*/
+            if (!stream.readString(v4.registry, registry_strlen)) return false; /*registry: pstring*/ /*4.3*/
         }
-        else if (parser == pdef::pc1_18_handshaking_toServer::command_node::ExtraNodeData2::Parser::MinecraftUuid) { /*8.5*/
+        else if (parser == "minecraft:uuid") { /*8.0*/
         }
         if (flags.has_custom_suggestions == 1) { /*8.2*/
           int suggestionType_strlen; READ_OR_BAIL(readUnsignedVarInt, suggestionType_strlen);
-          if (!stream.readString(v.suggestionType, suggestionType_strlen)) return false; /*suggestionType: pstring*/ /*4.3*/
+          if (!stream.readString(v2.suggestionType, suggestionType_strlen)) return false; /*suggestionType: pstring*/ /*4.3*/
         }
     }
     return true;
