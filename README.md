@@ -4,9 +4,14 @@
 [![Try it on gitpod](https://img.shields.io/static/v1.svg?label=try&message=on%20gitpod&color=brightgreen&logo=gitpod)](https://gitpod.io/#https://github.com/extremeheat/protodef-cpp)
 [![Official Discord](https://img.shields.io/static/v1.svg?label=PrismarineJS&message=Discord&color=blue&logo=discord)](https://discord.gg/GsEFRM8)
 
-C++ compiler for ProtoDef schemas, a lighter and more versatile alternative to Protocol Buffers or FlatBuffers that can support any binary format.
+C++ compiler in Node.js for ProtoDef schemas, a lighter and more versatile alternative to Protocol Buffers or FlatBuffers that can support any binary format.
 
 See the ProtoDef specification at https://github.com/ProtoDef-io/ProtoDef.
+
+### Features
+* Header-only : No dependencies other than the C or C++ standard libraries
+* Arrays, enums, nested structures, optional fields, variable-length integers/strings, custom types, etc. See ProtoDef spec for more details
+* Built-in support for dumping JSON for utility/debugging on top of binary encode/decode
 
 ## Install
 ```cmd
