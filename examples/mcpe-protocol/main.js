@@ -40,6 +40,9 @@ protodefCpp.compile({
       },
       size (args, [name], makeCallingCode) {
         return `pdef::proto::packet_available_commands::_EnumType V_${name}; if (V_values_len <= 0xff) { V_${name} = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (V_values_len <= 0xffff) { V_${name} = pdef::proto::packet_available_commands::_EnumType::Short; } else { V_${name} = pdef::proto::packet_available_commands::_EnumType::Int; }`
+      },
+      json (args, [name], makeCallingCode) {
+        return `pdef::proto::packet_available_commands::_EnumType V_${name}; if (V_values_len <= 0xff) { V_${name} = pdef::proto::packet_available_commands::_EnumType::Byte; } else if (V_values_len <= 0xffff) { V_${name} = pdef::proto::packet_available_commands::_EnumType::Short; } else { V_${name} = pdef::proto::packet_available_commands::_EnumType::Int; } /*J0*/`
       }
     }
   }

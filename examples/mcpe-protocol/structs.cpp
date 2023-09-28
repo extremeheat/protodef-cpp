@@ -79,5 +79,12 @@ int main () {
     printf("Failed to decode packet\n");
   }
 
+  // 1MB buffer: note that toJSON does not do any memory allocation, 
+  // so we need to provide a buffer big enough
+  pdef::Stream jsonStream(1024 * 1024 * 1);
+  if (!pdef::proto::toJSON::mcpe_packet(jsonStream, mcpe_packet)) {
+    printf("Failed to encode packet to JSON\n");
+  }
+  jsonStream.dumpWrittenStringToStdout();
   return 0;
 }

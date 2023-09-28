@@ -4,6 +4,7 @@
 #include <cstring>
 #include <string>
 #include <vector>
+#include <cstdio>
 #define CHECK_BOUNDS(index) if (index > this->length) { return false; }
 namespace pdef {
 struct BinaryStream {
@@ -15,6 +16,8 @@ struct BinaryStream {
   BinaryStream(int length) : length(length) {
     this->buffer = new char[length];
   }
+
+  BinaryStream(char *buffer, int length) : buffer(buffer), length(length) { }
 
   ~BinaryStream() {
     delete[] this->buffer;
@@ -33,6 +36,14 @@ struct BinaryStream {
       printf("%02x ", (unsigned char)this->buffer[i]);
     }
     printf("\n");
+  }
+
+  // write in ASCII
+  void dumpWrittenStringToStdout() {
+    for (int i = 0; i < this->writeIndex; i++) {
+      putchar(this->buffer[i]);
+    }
+    putchar('\n');
   }
 
   // Varints
@@ -148,11 +159,11 @@ struct BinaryStream {
   bool writeBool(bool value) {
     return writeByte(value ? 1 : 0);
   }
-  bool writeCString(std::string &value) {
-    CHECK_BOUNDS(writeIndex + value.length() + 1);
-    memcpy(buffer + writeIndex, value.c_str(), value.length());
-    writeIndex += value.length();
-    buffer[writeIndex++] = 0;
+  bool writeCString(const char *value) {
+    while (*value != 0) {
+      CHECK_BOUNDS(writeIndex + 1);
+      buffer[writeIndex++] = *value++;
+    }
     return true;
   }
   bool writeString(const std::string &value) {
@@ -361,6 +372,111 @@ struct BinaryStream {
     CHECK_BOUNDS(readIndex + length);
     value = std::vector<unsigned char>(buffer + readIndex, buffer + readIndex + length);
     readIndex += length;
+    return true;
+  }
+
+  // ASCII
+  int sizeOfUnsignedLongInAsciiDigitsBE(uint64_t value) {
+    int i = 0;
+    do {
+      value /= 10;
+      i++;
+    } while (value != 0);
+    return i;
+  }
+  // write a integer as a string of ascii character digits
+  bool writeUnsignedLongInAsciiDigitsBE(uint64_t value) {
+    CHECK_BOUNDS(writeIndex + 8);
+    char buf[8];
+    int i = 0;
+    do {
+      buf[i++] = value % 10 + '0';
+      value /= 10;
+    } while (value != 0);
+    while (i > 0) {
+      buffer[writeIndex++] = buf[--i];
+    }
+    return true;
+  }
+  // read an integer from a string of ascii character digits
+  bool readUnsignedLongInAsciiDigitsBE(char *str, int len, uint64_t &value) {
+    value = 0;
+    for (int i = 0; i < len; i++) {
+      if (str[i] < '0' || str[i] > '9') return false;
+      value = value * 10 + str[i] - '0';
+    }
+    return true;
+  }
+  // This has to account for the sign!
+  int sizeOfSignedLongInAsciiDigitsBE(int64_t value) {
+    int i = 0;
+    bool negative = value < 0;
+    if (negative) value = -value;
+    do {
+      value /= 10;
+      i++;
+    } while (value != 0);
+    if (negative) i++;
+    return i;
+  }
+  // This has to write the sign!
+  bool writeSignedLongInAsciiDigitsBE(int64_t value) {
+    CHECK_BOUNDS(writeIndex + sizeOfSignedLongInAsciiDigitsBE(value));
+    char buf[9];
+    int i = 0;
+    bool negative = value < 0;
+    if (negative) value = -value;
+    do {
+      buf[i++] = value % 10 + '0';
+      value /= 10;
+    } while (value != 0);
+    if (negative) buf[i++] = '-';
+    while (i > 0) {
+      buffer[writeIndex++] = buf[--i];
+    }
+    return true;
+  }
+  // This has to read the sign!
+  bool readSignedLongInAsciiDigitsBE(char *str, int len, int64_t &value) {
+    value = 0;
+    bool negative = false;
+    for (int i = 0; i < len; i++) {
+      if (str[i] == '-') {
+        negative = true;
+        continue;
+      }
+      if (str[i] < '0' || str[i] > '9') return false;
+      value = value * 10 + str[i] - '0';
+    }
+    if (negative) value = -value;
+    return true;
+  }
+  bool writeDoubleInAsciiDigitsBE(double value) {
+    CHECK_BOUNDS(writeIndex + 24);
+    char buf[24];
+    int i = 0;
+    do {
+      buf[i++] = (int) value % 10 + '0';
+      value /= 10;
+    } while (value != 0);
+    while (i > 0) {
+      buffer[writeIndex++] = buf[--i];
+    }
+    return true;
+  }
+  bool readDoubleInAsciiDigitsBE(char *str, int len, double &value) {
+    value = 0;
+    for (int i = 0; i < len; i++) {
+      if (str[i] < '0' || str[i] > '9') return false;
+      value = value * 10 + str[i] - '0';
+    }
+    return true;
+  }
+  // This is just a helper when writing JSON ; remove a trailing comma if we wrote one
+  bool jsonPopIfWroteTrailingComma() {
+    if (writeIndex > 0 && buffer[writeIndex - 1] == ',') {
+      writeIndex--;
+    }
     return true;
   }
 };
