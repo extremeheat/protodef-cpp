@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <optional>
+#include <memory>
 #include "stream.h"
 #ifndef DBG_PRINT
 #define DBG_PRINT(...)
@@ -88,7 +89,7 @@ struct packet;
       float blue; /*0.0*/
       float scale; /*0.0*/
     };
-    std::optional<Data14> data_14; /*3.2*/
+    pdef::Optional<Data14> data_14; /*3.2*/
     struct Data15 {
       float fromRed; /*0.0*/
       float fromGreen; /*0.0*/
@@ -98,11 +99,11 @@ struct packet;
       float toGreen; /*0.0*/
       float toBlue; /*0.0*/
     };
-    std::optional<Data15> data_15; /*3.2*/
+    pdef::Optional<Data15> data_15; /*3.2*/
     struct Data35 {
       int8_t item; /*0.0*/
     };
-    std::optional<Data35> data_35; /*3.2*/
+    pdef::Optional<Data35> data_35; /*3.2*/
     struct Data36 {
       struct origin_t { /*6.0*/
         int x = 0; /*6.0*/
@@ -118,11 +119,11 @@ struct packet;
       } destination_position; /*6.0*/
       int destination_varint; /*0.0*/
     };
-    std::optional<Data36> data_36; /*3.2*/
+    pdef::Optional<Data36> data_36; /*3.2*/
     struct Data2Or3Or24 {
       int blockState; /*0.0*/
     };
-    std::optional<Data2Or3Or24> data_2_or_3_or_24; /*3.2*/
+    pdef::Optional<Data2Or3Or24> data_2_or_3_or_24; /*3.2*/
   };
   struct minecraft_smelting_format {
     std::string group; /*6.0*/
@@ -156,7 +157,7 @@ struct packet;
     struct ExtraNodeData1 {
       std::string name; /*6.0*/
     };
-    std::optional<ExtraNodeData1> extraNodeData_1; /*3.2*/
+    pdef::Optional<ExtraNodeData1> extraNodeData_1; /*3.2*/
     struct ExtraNodeData2 {
       std::string name; /*6.0*/
       std::string parser; /*6.0*/
@@ -169,7 +170,7 @@ struct packet;
         float min; /*0.0*/
         float max; /*0.0*/
       };
-      std::optional<PropertiesBrigadierFloat> properties_brigadier_float; /*3.2*/
+      pdef::Optional<PropertiesBrigadierFloat> properties_brigadier_float; /*3.2*/
       struct PropertiesBrigadierDouble {
         struct flags_t { /*6.0*/
           int unused = 0; /*6.0*/
@@ -179,7 +180,7 @@ struct packet;
         double min; /*0.0*/
         double max; /*0.0*/
       };
-      std::optional<PropertiesBrigadierDouble> properties_brigadier_double; /*3.2*/
+      pdef::Optional<PropertiesBrigadierDouble> properties_brigadier_double; /*3.2*/
       struct PropertiesBrigadierInteger {
         struct flags_t { /*6.0*/
           int unused = 0; /*6.0*/
@@ -189,7 +190,7 @@ struct packet;
         int32_t min; /*0.0*/
         int32_t max; /*0.0*/
       };
-      std::optional<PropertiesBrigadierInteger> properties_brigadier_integer; /*3.2*/
+      pdef::Optional<PropertiesBrigadierInteger> properties_brigadier_integer; /*3.2*/
       struct PropertiesBrigadierLong {
         struct flags_t { /*6.0*/
           int unused = 0; /*6.0*/
@@ -199,7 +200,7 @@ struct packet;
         int64_t min; /*0.0*/
         int64_t max; /*0.0*/
       };
-      std::optional<PropertiesBrigadierLong> properties_brigadier_long; /*3.2*/
+      pdef::Optional<PropertiesBrigadierLong> properties_brigadier_long; /*3.2*/
       enum class PropertiesMapper : int {
         SINGLE_WORD = 0,
         QUOTABLE_PHRASE = 1,
@@ -218,14 +219,14 @@ struct packet;
       struct PropertiesMinecraftRange {
         bool allowDecimals; /*0.0*/
       };
-      std::optional<PropertiesMinecraftRange> properties_minecraft_range; /*3.2*/
+      pdef::Optional<PropertiesMinecraftRange> properties_minecraft_range; /*3.2*/
       struct PropertiesMinecraftResourceOrTagOrMinecraftResource {
         std::string registry; /*6.0*/
       };
-      std::optional<PropertiesMinecraftResourceOrTagOrMinecraftResource> properties_minecraft_resource_or_tag_or_minecraft_resource; /*3.2*/
+      pdef::Optional<PropertiesMinecraftResourceOrTagOrMinecraftResource> properties_minecraft_resource_or_tag_or_minecraft_resource; /*3.2*/
       std::string suggestionType; /*6.0*/
     };
-    std::optional<ExtraNodeData2> extraNodeData_2; /*3.2*/
+    pdef::Optional<ExtraNodeData2> extraNodeData_2; /*3.2*/
     int redirectNode; /*0.0*/
   };
   struct packet_server_info {
@@ -240,8 +241,8 @@ struct packet;
       Ping = 0x01,
     };
     Name name; /*3.2*/
-    std::optional<pdef::pc1_18_status_toClient::packet_server_info> params_packet_server_info; /*4.0*/
-    std::optional<pdef::pc1_18_status_toClient::packet_ping> params_packet_ping; /*4.0*/
+    pdef::Optional<pdef::pc1_18_status_toClient::packet_server_info> params_packet_server_info; /*4.0*/
+    pdef::Optional<pdef::pc1_18_status_toClient::packet_ping> params_packet_ping; /*4.0*/
   };
 }
 
@@ -927,22 +928,22 @@ bool packet(pdef::Stream &stream, pdef::pc1_18_status_toClient::packet &obj);
     READ_OR_BAIL(readUnsignedVarInt, obj.particleId); /*0.5*/
     int &V_particleId = obj.particleId; /*0.6*/
     if (V_particleId == 2) { /*8.2*/
-         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_status_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
+         obj.data_2_or_3_or_24.reset(new pdef::pc1_18_status_toClient::particle::Data2Or3Or24{}); pdef::pc1_18_status_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
         READ_OR_BAIL(readUnsignedVarInt, v2.blockState); /*0.5*/
     }
     else if (V_particleId == 3) { /*8.2*/
-         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_status_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
+         obj.data_2_or_3_or_24.reset(new pdef::pc1_18_status_toClient::particle::Data2Or3Or24{}); pdef::pc1_18_status_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
         READ_OR_BAIL(readUnsignedVarInt, v2.blockState); /*0.5*/
     }
     else if (V_particleId == 14) { /*8.2*/
-         obj.data_14 = {}; pdef::pc1_18_status_toClient::particle::Data14 &v2 = *obj.data_14; /*8.4*/
+         obj.data_14.reset(new pdef::pc1_18_status_toClient::particle::Data14{}); pdef::pc1_18_status_toClient::particle::Data14 &v2 = *obj.data_14; /*8.4*/
         READ_OR_BAIL(readFloatBE, v2.red); /*0.5*/
         READ_OR_BAIL(readFloatBE, v2.green); /*0.5*/
         READ_OR_BAIL(readFloatBE, v2.blue); /*0.5*/
         READ_OR_BAIL(readFloatBE, v2.scale); /*0.5*/
     }
     else if (V_particleId == 15) { /*8.2*/
-         obj.data_15 = {}; pdef::pc1_18_status_toClient::particle::Data15 &v2 = *obj.data_15; /*8.4*/
+         obj.data_15.reset(new pdef::pc1_18_status_toClient::particle::Data15{}); pdef::pc1_18_status_toClient::particle::Data15 &v2 = *obj.data_15; /*8.4*/
         READ_OR_BAIL(readFloatBE, v2.fromRed); /*0.5*/
         READ_OR_BAIL(readFloatBE, v2.fromGreen); /*0.5*/
         READ_OR_BAIL(readFloatBE, v2.fromBlue); /*0.5*/
@@ -952,15 +953,15 @@ bool packet(pdef::Stream &stream, pdef::pc1_18_status_toClient::packet &obj);
         READ_OR_BAIL(readFloatBE, v2.toBlue); /*0.5*/
     }
     else if (V_particleId == 24) { /*8.2*/
-         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_status_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
+         obj.data_2_or_3_or_24.reset(new pdef::pc1_18_status_toClient::particle::Data2Or3Or24{}); pdef::pc1_18_status_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
         READ_OR_BAIL(readUnsignedVarInt, v2.blockState); /*0.5*/
     }
     else if (V_particleId == 35) { /*8.2*/
-         obj.data_35 = {}; pdef::pc1_18_status_toClient::particle::Data35 &v2 = *obj.data_35; /*8.4*/
+         obj.data_35.reset(new pdef::pc1_18_status_toClient::particle::Data35{}); pdef::pc1_18_status_toClient::particle::Data35 &v2 = *obj.data_35; /*8.4*/
         READ_OR_BAIL(readByte, v2.item); /*0.5*/
     }
     else if (V_particleId == 36) { /*8.2*/
-         obj.data_36 = {}; pdef::pc1_18_status_toClient::particle::Data36 &v2 = *obj.data_36; /*8.4*/
+         obj.data_36.reset(new pdef::pc1_18_status_toClient::particle::Data36{}); pdef::pc1_18_status_toClient::particle::Data36 &v2 = *obj.data_36; /*8.4*/
         uint64_t origin_val;
         READ_OR_BAIL(readULongBE, origin_val);
         v2.origin.x = origin_val >> 0 & 26;
@@ -1039,12 +1040,12 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_status_toClient::tags &obj) {
     if (V_flags.command_node_type == 0) { /*8.2*/
     }
     else if (V_flags.command_node_type == 1) { /*8.2*/
-         obj.extraNodeData_1 = {}; pdef::pc1_18_status_toClient::command_node::ExtraNodeData1 &v2 = *obj.extraNodeData_1; /*8.4*/
+         obj.extraNodeData_1.reset(new pdef::pc1_18_status_toClient::command_node::ExtraNodeData1{}); pdef::pc1_18_status_toClient::command_node::ExtraNodeData1 &v2 = *obj.extraNodeData_1; /*8.4*/
         int name_strlen; READ_OR_BAIL(readUnsignedVarInt, name_strlen);
         if (!stream.readString(v2.name, name_strlen)) return false; /*name: pstring*/ /*4.3*/
     }
     else if (V_flags.command_node_type == 2) { /*8.2*/
-         obj.extraNodeData_2 = {}; pdef::pc1_18_status_toClient::command_node::ExtraNodeData2 &v2 = *obj.extraNodeData_2; /*8.4*/
+         obj.extraNodeData_2.reset(new pdef::pc1_18_status_toClient::command_node::ExtraNodeData2{}); pdef::pc1_18_status_toClient::command_node::ExtraNodeData2 &v2 = *obj.extraNodeData_2; /*8.4*/
         int name_strlen; READ_OR_BAIL(readUnsignedVarInt, name_strlen);
         if (!stream.readString(v2.name, name_strlen)) return false; /*name: pstring*/ /*4.3*/
         int parser_strlen; READ_OR_BAIL(readUnsignedVarInt, parser_strlen);
@@ -1053,7 +1054,7 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_status_toClient::tags &obj) {
         if (V_parser == "brigadier:bool") { /*8.0*/
         }
         else if (V_parser == "brigadier:float") { /*8.0*/
-             v2.properties_brigadier_float = {}; pdef::pc1_18_status_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat &v4 = *v2.properties_brigadier_float; /*8.4*/
+             v2.properties_brigadier_float.reset(new pdef::pc1_18_status_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat{}); pdef::pc1_18_status_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat &v4 = *v2.properties_brigadier_float; /*8.4*/
             uint8_t flags_val;
             READ_OR_BAIL(readUByte, flags_val);
             v4.flags.unused = flags_val >> 0 & 6;
@@ -1068,7 +1069,7 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_status_toClient::tags &obj) {
             }
         }
         else if (V_parser == "brigadier:double") { /*8.0*/
-             v2.properties_brigadier_double = {}; pdef::pc1_18_status_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble &v4 = *v2.properties_brigadier_double; /*8.4*/
+             v2.properties_brigadier_double.reset(new pdef::pc1_18_status_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble{}); pdef::pc1_18_status_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble &v4 = *v2.properties_brigadier_double; /*8.4*/
             uint8_t flags_val;
             READ_OR_BAIL(readUByte, flags_val);
             v4.flags.unused = flags_val >> 0 & 6;
@@ -1083,7 +1084,7 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_status_toClient::tags &obj) {
             }
         }
         else if (V_parser == "brigadier:integer") { /*8.0*/
-             v2.properties_brigadier_integer = {}; pdef::pc1_18_status_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger &v4 = *v2.properties_brigadier_integer; /*8.4*/
+             v2.properties_brigadier_integer.reset(new pdef::pc1_18_status_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger{}); pdef::pc1_18_status_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger &v4 = *v2.properties_brigadier_integer; /*8.4*/
             uint8_t flags_val;
             READ_OR_BAIL(readUByte, flags_val);
             v4.flags.unused = flags_val >> 0 & 6;
@@ -1098,7 +1099,7 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_status_toClient::tags &obj) {
             }
         }
         else if (V_parser == "brigadier:long") { /*8.0*/
-             v2.properties_brigadier_long = {}; pdef::pc1_18_status_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong &v4 = *v2.properties_brigadier_long; /*8.4*/
+             v2.properties_brigadier_long.reset(new pdef::pc1_18_status_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong{}); pdef::pc1_18_status_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong &v4 = *v2.properties_brigadier_long; /*8.4*/
             uint8_t flags_val;
             READ_OR_BAIL(readUByte, flags_val);
             v4.flags.unused = flags_val >> 0 & 6;
@@ -1184,7 +1185,7 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_status_toClient::tags &obj) {
         else if (V_parser == "minecraft:entity_anchor") { /*8.0*/
         }
         else if (V_parser == "minecraft:range") { /*8.0*/
-             v2.properties_minecraft_range = {}; pdef::pc1_18_status_toClient::command_node::ExtraNodeData2::PropertiesMinecraftRange &v4 = *v2.properties_minecraft_range; /*8.4*/
+             v2.properties_minecraft_range.reset(new pdef::pc1_18_status_toClient::command_node::ExtraNodeData2::PropertiesMinecraftRange{}); pdef::pc1_18_status_toClient::command_node::ExtraNodeData2::PropertiesMinecraftRange &v4 = *v2.properties_minecraft_range; /*8.4*/
             READ_OR_BAIL(readBool, (bool&)v4.allowDecimals); /*0.5*/
         }
         else if (V_parser == "minecraft:int_range") { /*8.0*/
@@ -1202,12 +1203,12 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_status_toClient::tags &obj) {
         else if (V_parser == "minecraft:time") { /*8.0*/
         }
         else if (V_parser == "minecraft:resource_or_tag") { /*8.0*/
-             v2.properties_minecraft_resource_or_tag_or_minecraft_resource = {}; pdef::pc1_18_status_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.4*/
+             v2.properties_minecraft_resource_or_tag_or_minecraft_resource.reset(new pdef::pc1_18_status_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource{}); pdef::pc1_18_status_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.4*/
             int registry_strlen; READ_OR_BAIL(readUnsignedVarInt, registry_strlen);
             if (!stream.readString(v4.registry, registry_strlen)) return false; /*registry: pstring*/ /*4.3*/
         }
         else if (V_parser == "minecraft:resource") { /*8.0*/
-             v2.properties_minecraft_resource_or_tag_or_minecraft_resource = {}; pdef::pc1_18_status_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.4*/
+             v2.properties_minecraft_resource_or_tag_or_minecraft_resource.reset(new pdef::pc1_18_status_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource{}); pdef::pc1_18_status_toClient::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.4*/
             int registry_strlen; READ_OR_BAIL(readUnsignedVarInt, registry_strlen);
             if (!stream.readString(v4.registry, registry_strlen)) return false; /*registry: pstring*/ /*4.3*/
         }
@@ -1234,11 +1235,11 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_status_toClient::tags &obj) {
     const pdef::pc1_18_status_toClient::packet::Name &V_name = obj.name; /*0.7*/
     switch (V_name) { /*8.0*/
       case pdef::pc1_18_status_toClient::packet::Name::ServerInfo: { /*8.5*/
-        obj.params_packet_server_info = {}; pdef::pc1_18_status_toClient::decode::packet_server_info(stream, *obj.params_packet_server_info); /*obj*/ /*4.6*/
+        obj.params_packet_server_info.reset(new pdef::pc1_18_status_toClient::packet_server_info{}); pdef::pc1_18_status_toClient::decode::packet_server_info(stream, *obj.params_packet_server_info); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::pc1_18_status_toClient::packet::Name::Ping: { /*8.5*/
-        obj.params_packet_ping = {}; pdef::pc1_18_status_toClient::decode::packet_ping(stream, *obj.params_packet_ping); /*obj*/ /*4.6*/
+        obj.params_packet_ping.reset(new pdef::pc1_18_status_toClient::packet_ping{}); pdef::pc1_18_status_toClient::decode::packet_ping(stream, *obj.params_packet_ping); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       default: break; /*avoid unhandled case warning*/

@@ -43,6 +43,7 @@ function preprocess (schema, logging) {
   }
 
   function visitType (type, parent, anon) {
+    const isCurrentInRoot = parent === schema
     if (typeof type === 'string') {
       // pass
     } else if (Array.isArray(type)) {
@@ -53,6 +54,12 @@ function preprocess (schema, logging) {
         log('Inlining root switch', type[0])
         const rootSwitch = schema[type[0]][1]
         const next = { ...rootSwitch, ...type[1] }
+        // next={compareTo: "$type", fields: {}, type: "bob" } -> {compareTo: "bob", fields: {}, type: "bob" }
+        for (const [k, v] of Object.entries(next)) {
+          if (typeof v === 'string' && v.startsWith('$')) {
+            next[k] = next[v.slice(1)]
+          }
+        }
         type[0] = 'switch'
         type[1] = next
         log('Inlined root switch', JSON.stringify(type))
@@ -61,7 +68,7 @@ function preprocess (schema, logging) {
       const [name, ...args] = type
       if (name === 'container') {
         visitContainer(args[0], parent, anon)
-      } else if (name === 'switch') {
+      } else if (name === 'switch' && !isCurrentInRoot) {
         const cases = args[0].fields
         cases.default = args[0].default
         const [compareTo, shouldReplace] = fixCompareToType(args[0].compareTo)

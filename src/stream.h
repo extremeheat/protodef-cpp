@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <cstdio>
+#include <memory>
 #define CHECK_BOUNDS(index) if (index > this->length) { return false; }
 namespace pdef {
 struct BinaryStream {
@@ -29,6 +30,12 @@ struct BinaryStream {
       this->buffer = new char[length];
       this->length = length;
     }
+  }
+
+  // return -1 if EOF, else return the byte at current read index
+  int peekByte() {
+    if (readIndex >= length) return -1;
+    return buffer[readIndex];
   }
 
   void dumpToStdout() {
@@ -480,6 +487,75 @@ struct BinaryStream {
     return true;
   }
 };
+
+template <typename T, typename Deleter = std::default_delete<T>>
+class Optional {
+ public:
+  Optional() = default;
+  Optional(T* ptr) : ptr_(ptr) {}
+  Optional(T* ptr, const Deleter& deleter) : ptr_(ptr), deleter_(deleter) {}
+
+  ~Optional() { deleter_(ptr_); }
+
+  Optional(const Optional& other) = delete;
+
+  Optional(Optional&& other) noexcept
+      : ptr_(other.release()), deleter_(other.deleter_) {}
+
+  Optional(T val) {
+    // new heap allocated value from stack value
+    ptr_ = new T(val);
+  }
+  
+  // generalized move ctor
+  template <typename U, typename E>
+  Optional(Optional<U, E>&& other) noexcept
+      : ptr_(other.release()), deleter_(std::forward<E>(other.get_deleter())) {}
+
+  Optional& operator=(const Optional& other) = delete;
+
+  Optional& operator=(Optional&& other) noexcept {
+    Optional(std::move(other)).swap(*this);
+    return *this;
+  }
+
+  // Assignment op to move from stack value -> new heap allocated value
+  Optional& operator=(T val) {
+    Optional(std::move(val)).swap(*this);
+    return *this;
+  }
+
+  void reset(T* ptr) noexcept {
+    deleter_(ptr_);
+    ptr_ = ptr;
+  }
+
+  T* release() noexcept {
+    auto old_ptr = ptr_;
+    ptr_ = nullptr;
+    return old_ptr;
+  }
+
+  void swap(Optional& other) noexcept {
+    using std::swap;
+    swap(ptr_, other.ptr_);
+  }
+
+  T& operator*() const noexcept { return *ptr_; }
+  T* operator->() const noexcept { return ptr_; }
+  T* get() const noexcept { return ptr_; }
+  Deleter get_deleter() const noexcept { return deleter_; }
+  explicit operator bool() const { return ptr_ != nullptr; }
+  // Overload the logical NOT operator
+  bool operator!() const { 
+    return !static_cast<bool>(*this); // Delegate to the existing bool operator
+  }
+
+ private:
+  T* ptr_ = nullptr;
+  Deleter deleter_ = Deleter();
+};
+
 using Stream = BinaryStream;
 }
 

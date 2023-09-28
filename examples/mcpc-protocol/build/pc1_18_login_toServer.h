@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <optional>
+#include <memory>
 #include "stream.h"
 #ifndef DBG_PRINT
 #define DBG_PRINT(...)
@@ -90,7 +91,7 @@ struct packet;
       float blue; /*0.0*/
       float scale; /*0.0*/
     };
-    std::optional<Data14> data_14; /*3.2*/
+    pdef::Optional<Data14> data_14; /*3.2*/
     struct Data15 {
       float fromRed; /*0.0*/
       float fromGreen; /*0.0*/
@@ -100,11 +101,11 @@ struct packet;
       float toGreen; /*0.0*/
       float toBlue; /*0.0*/
     };
-    std::optional<Data15> data_15; /*3.2*/
+    pdef::Optional<Data15> data_15; /*3.2*/
     struct Data35 {
       int8_t item; /*0.0*/
     };
-    std::optional<Data35> data_35; /*3.2*/
+    pdef::Optional<Data35> data_35; /*3.2*/
     struct Data36 {
       struct origin_t { /*6.0*/
         int x = 0; /*6.0*/
@@ -120,11 +121,11 @@ struct packet;
       } destination_position; /*6.0*/
       int destination_varint; /*0.0*/
     };
-    std::optional<Data36> data_36; /*3.2*/
+    pdef::Optional<Data36> data_36; /*3.2*/
     struct Data2Or3Or24 {
       int blockState; /*0.0*/
     };
-    std::optional<Data2Or3Or24> data_2_or_3_or_24; /*3.2*/
+    pdef::Optional<Data2Or3Or24> data_2_or_3_or_24; /*3.2*/
   };
   struct minecraft_smelting_format {
     std::string group; /*6.0*/
@@ -158,7 +159,7 @@ struct packet;
     struct ExtraNodeData1 {
       std::string name; /*6.0*/
     };
-    std::optional<ExtraNodeData1> extraNodeData_1; /*3.2*/
+    pdef::Optional<ExtraNodeData1> extraNodeData_1; /*3.2*/
     struct ExtraNodeData2 {
       std::string name; /*6.0*/
       std::string parser; /*6.0*/
@@ -171,7 +172,7 @@ struct packet;
         float min; /*0.0*/
         float max; /*0.0*/
       };
-      std::optional<PropertiesBrigadierFloat> properties_brigadier_float; /*3.2*/
+      pdef::Optional<PropertiesBrigadierFloat> properties_brigadier_float; /*3.2*/
       struct PropertiesBrigadierDouble {
         struct flags_t { /*6.0*/
           int unused = 0; /*6.0*/
@@ -181,7 +182,7 @@ struct packet;
         double min; /*0.0*/
         double max; /*0.0*/
       };
-      std::optional<PropertiesBrigadierDouble> properties_brigadier_double; /*3.2*/
+      pdef::Optional<PropertiesBrigadierDouble> properties_brigadier_double; /*3.2*/
       struct PropertiesBrigadierInteger {
         struct flags_t { /*6.0*/
           int unused = 0; /*6.0*/
@@ -191,7 +192,7 @@ struct packet;
         int32_t min; /*0.0*/
         int32_t max; /*0.0*/
       };
-      std::optional<PropertiesBrigadierInteger> properties_brigadier_integer; /*3.2*/
+      pdef::Optional<PropertiesBrigadierInteger> properties_brigadier_integer; /*3.2*/
       struct PropertiesBrigadierLong {
         struct flags_t { /*6.0*/
           int unused = 0; /*6.0*/
@@ -201,7 +202,7 @@ struct packet;
         int64_t min; /*0.0*/
         int64_t max; /*0.0*/
       };
-      std::optional<PropertiesBrigadierLong> properties_brigadier_long; /*3.2*/
+      pdef::Optional<PropertiesBrigadierLong> properties_brigadier_long; /*3.2*/
       enum class PropertiesMapper : int {
         SINGLE_WORD = 0,
         QUOTABLE_PHRASE = 1,
@@ -220,14 +221,14 @@ struct packet;
       struct PropertiesMinecraftRange {
         bool allowDecimals; /*0.0*/
       };
-      std::optional<PropertiesMinecraftRange> properties_minecraft_range; /*3.2*/
+      pdef::Optional<PropertiesMinecraftRange> properties_minecraft_range; /*3.2*/
       struct PropertiesMinecraftResourceOrTagOrMinecraftResource {
         std::string registry; /*6.0*/
       };
-      std::optional<PropertiesMinecraftResourceOrTagOrMinecraftResource> properties_minecraft_resource_or_tag_or_minecraft_resource; /*3.2*/
+      pdef::Optional<PropertiesMinecraftResourceOrTagOrMinecraftResource> properties_minecraft_resource_or_tag_or_minecraft_resource; /*3.2*/
       std::string suggestionType; /*6.0*/
     };
-    std::optional<ExtraNodeData2> extraNodeData_2; /*3.2*/
+    pdef::Optional<ExtraNodeData2> extraNodeData_2; /*3.2*/
     int redirectNode; /*0.0*/
   };
   struct packet_login_start {
@@ -252,9 +253,9 @@ struct packet;
       LoginPluginResponse = 0x02,
     };
     Name name; /*3.2*/
-    std::optional<pdef::pc1_18_login_toServer::packet_login_start> params_packet_login_start; /*4.0*/
-    std::optional<pdef::pc1_18_login_toServer::packet_encryption_begin> params_packet_encryption_begin; /*4.0*/
-    std::optional<pdef::pc1_18_login_toServer::packet_login_plugin_response> params_packet_login_plugin_response; /*4.0*/
+    pdef::Optional<pdef::pc1_18_login_toServer::packet_login_start> params_packet_login_start; /*4.0*/
+    pdef::Optional<pdef::pc1_18_login_toServer::packet_encryption_begin> params_packet_encryption_begin; /*4.0*/
+    pdef::Optional<pdef::pc1_18_login_toServer::packet_login_plugin_response> params_packet_login_plugin_response; /*4.0*/
   };
 }
 
@@ -553,7 +554,13 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_login_toServer::tags &obj) 
   size_t packet_login_plugin_response(pdef::Stream &stream, const pdef::pc1_18_login_toServer::packet_login_plugin_response &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.messageId); /*0.2*/
-    const pdef::pc1_18_login_toServer::packet_login_plugin_response::Data &v = obj.data; /*["packet_login_plugin_response"]*/ /*7.4*/
+    const pdef::pc1_18_login_toServer::packet_login_plugin_response::Data &v_0 = obj.data; /*["packet_login_plugin_response"]*/ /*7.4*/
+    {
+      const bool &V_has = v_0.has; /*0.1*/
+      if (V_has == true) { /*8.1*/
+        len += 1; /*0.2*/
+      }
+    }
     PDEF_SIZE_DBG; return len;
   }
   size_t packet(pdef::Stream &stream, const pdef::pc1_18_login_toServer::packet &obj) {
@@ -562,15 +569,15 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_login_toServer::tags &obj) 
     len += stream.sizeOfVarInt((int&)obj.name); /*name^: varint*/ /*7.0*/
     switch (V_name) { /*8.0*/
       case pdef::pc1_18_login_toServer::packet::Name::LoginStart: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_login_start); size_t len_0 = pdef::pc1_18_login_toServer::size::packet_login_start(stream, *obj.params_packet_login_start); EXPECT_OR_BAIL(len_0); len += len_0; /*params_packet_login_start*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_login_start); size_t len_1 = pdef::pc1_18_login_toServer::size::packet_login_start(stream, *obj.params_packet_login_start); EXPECT_OR_BAIL(len_1); len += len_1; /*params_packet_login_start*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_login_toServer::packet::Name::EncryptionBegin: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_encryption_begin); size_t len_1 = pdef::pc1_18_login_toServer::size::packet_encryption_begin(stream, *obj.params_packet_encryption_begin); EXPECT_OR_BAIL(len_1); len += len_1; /*params_packet_encryption_begin*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_encryption_begin); size_t len_2 = pdef::pc1_18_login_toServer::size::packet_encryption_begin(stream, *obj.params_packet_encryption_begin); EXPECT_OR_BAIL(len_2); len += len_2; /*params_packet_encryption_begin*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::pc1_18_login_toServer::packet::Name::LoginPluginResponse: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_login_plugin_response); size_t len_2 = pdef::pc1_18_login_toServer::size::packet_login_plugin_response(stream, *obj.params_packet_login_plugin_response); EXPECT_OR_BAIL(len_2); len += len_2; /*params_packet_login_plugin_response*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_login_plugin_response); size_t len_3 = pdef::pc1_18_login_toServer::size::packet_login_plugin_response(stream, *obj.params_packet_login_plugin_response); EXPECT_OR_BAIL(len_3); len += len_3; /*params_packet_login_plugin_response*/ /*4.4*/
         break;
       } /*8.7*/
       default: break; /*avoid unhandled case warning*/
@@ -916,7 +923,14 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_login_toServer::tags &obj, bo
   bool packet_login_plugin_response(pdef::Stream &stream, const pdef::pc1_18_login_toServer::packet_login_plugin_response &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::pc1_18_login_toServer::size::packet_login_plugin_response(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.messageId); /*0.4*/
-    const pdef::pc1_18_login_toServer::packet_login_plugin_response::Data &v = obj.data; /*["packet_login_plugin_response"]*/ /*7.4*/
+    const pdef::pc1_18_login_toServer::packet_login_plugin_response::Data &v_0 = obj.data; /*["packet_login_plugin_response"]*/ /*7.4*/
+    {
+      const bool &V_has = v_0.has; /*0.1*/
+      WRITE_OR_BAIL(writeBool, (bool)v_0.has); /*0.4*/
+      if (V_has == true) { /*8.1*/
+        WRITE_OR_BAIL(writeByte, (int8_t)v_0.value); /*0.4*/
+      }
+    }
     return true;
   }
   bool packet(pdef::Stream &stream, const pdef::pc1_18_login_toServer::packet &obj, bool allocate = true) {
@@ -969,22 +983,22 @@ bool packet(pdef::Stream &stream, pdef::pc1_18_login_toServer::packet &obj);
     READ_OR_BAIL(readUnsignedVarInt, obj.particleId); /*0.5*/
     int &V_particleId = obj.particleId; /*0.6*/
     if (V_particleId == 2) { /*8.2*/
-         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_login_toServer::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
+         obj.data_2_or_3_or_24.reset(new pdef::pc1_18_login_toServer::particle::Data2Or3Or24{}); pdef::pc1_18_login_toServer::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
         READ_OR_BAIL(readUnsignedVarInt, v2.blockState); /*0.5*/
     }
     else if (V_particleId == 3) { /*8.2*/
-         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_login_toServer::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
+         obj.data_2_or_3_or_24.reset(new pdef::pc1_18_login_toServer::particle::Data2Or3Or24{}); pdef::pc1_18_login_toServer::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
         READ_OR_BAIL(readUnsignedVarInt, v2.blockState); /*0.5*/
     }
     else if (V_particleId == 14) { /*8.2*/
-         obj.data_14 = {}; pdef::pc1_18_login_toServer::particle::Data14 &v2 = *obj.data_14; /*8.4*/
+         obj.data_14.reset(new pdef::pc1_18_login_toServer::particle::Data14{}); pdef::pc1_18_login_toServer::particle::Data14 &v2 = *obj.data_14; /*8.4*/
         READ_OR_BAIL(readFloatBE, v2.red); /*0.5*/
         READ_OR_BAIL(readFloatBE, v2.green); /*0.5*/
         READ_OR_BAIL(readFloatBE, v2.blue); /*0.5*/
         READ_OR_BAIL(readFloatBE, v2.scale); /*0.5*/
     }
     else if (V_particleId == 15) { /*8.2*/
-         obj.data_15 = {}; pdef::pc1_18_login_toServer::particle::Data15 &v2 = *obj.data_15; /*8.4*/
+         obj.data_15.reset(new pdef::pc1_18_login_toServer::particle::Data15{}); pdef::pc1_18_login_toServer::particle::Data15 &v2 = *obj.data_15; /*8.4*/
         READ_OR_BAIL(readFloatBE, v2.fromRed); /*0.5*/
         READ_OR_BAIL(readFloatBE, v2.fromGreen); /*0.5*/
         READ_OR_BAIL(readFloatBE, v2.fromBlue); /*0.5*/
@@ -994,15 +1008,15 @@ bool packet(pdef::Stream &stream, pdef::pc1_18_login_toServer::packet &obj);
         READ_OR_BAIL(readFloatBE, v2.toBlue); /*0.5*/
     }
     else if (V_particleId == 24) { /*8.2*/
-         obj.data_2_or_3_or_24 = {}; pdef::pc1_18_login_toServer::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
+         obj.data_2_or_3_or_24.reset(new pdef::pc1_18_login_toServer::particle::Data2Or3Or24{}); pdef::pc1_18_login_toServer::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.4*/
         READ_OR_BAIL(readUnsignedVarInt, v2.blockState); /*0.5*/
     }
     else if (V_particleId == 35) { /*8.2*/
-         obj.data_35 = {}; pdef::pc1_18_login_toServer::particle::Data35 &v2 = *obj.data_35; /*8.4*/
+         obj.data_35.reset(new pdef::pc1_18_login_toServer::particle::Data35{}); pdef::pc1_18_login_toServer::particle::Data35 &v2 = *obj.data_35; /*8.4*/
         READ_OR_BAIL(readByte, v2.item); /*0.5*/
     }
     else if (V_particleId == 36) { /*8.2*/
-         obj.data_36 = {}; pdef::pc1_18_login_toServer::particle::Data36 &v2 = *obj.data_36; /*8.4*/
+         obj.data_36.reset(new pdef::pc1_18_login_toServer::particle::Data36{}); pdef::pc1_18_login_toServer::particle::Data36 &v2 = *obj.data_36; /*8.4*/
         uint64_t origin_val;
         READ_OR_BAIL(readULongBE, origin_val);
         v2.origin.x = origin_val >> 0 & 26;
@@ -1081,12 +1095,12 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_login_toServer::tags &obj) {
     if (V_flags.command_node_type == 0) { /*8.2*/
     }
     else if (V_flags.command_node_type == 1) { /*8.2*/
-         obj.extraNodeData_1 = {}; pdef::pc1_18_login_toServer::command_node::ExtraNodeData1 &v2 = *obj.extraNodeData_1; /*8.4*/
+         obj.extraNodeData_1.reset(new pdef::pc1_18_login_toServer::command_node::ExtraNodeData1{}); pdef::pc1_18_login_toServer::command_node::ExtraNodeData1 &v2 = *obj.extraNodeData_1; /*8.4*/
         int name_strlen; READ_OR_BAIL(readUnsignedVarInt, name_strlen);
         if (!stream.readString(v2.name, name_strlen)) return false; /*name: pstring*/ /*4.3*/
     }
     else if (V_flags.command_node_type == 2) { /*8.2*/
-         obj.extraNodeData_2 = {}; pdef::pc1_18_login_toServer::command_node::ExtraNodeData2 &v2 = *obj.extraNodeData_2; /*8.4*/
+         obj.extraNodeData_2.reset(new pdef::pc1_18_login_toServer::command_node::ExtraNodeData2{}); pdef::pc1_18_login_toServer::command_node::ExtraNodeData2 &v2 = *obj.extraNodeData_2; /*8.4*/
         int name_strlen; READ_OR_BAIL(readUnsignedVarInt, name_strlen);
         if (!stream.readString(v2.name, name_strlen)) return false; /*name: pstring*/ /*4.3*/
         int parser_strlen; READ_OR_BAIL(readUnsignedVarInt, parser_strlen);
@@ -1095,7 +1109,7 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_login_toServer::tags &obj) {
         if (V_parser == "brigadier:bool") { /*8.0*/
         }
         else if (V_parser == "brigadier:float") { /*8.0*/
-             v2.properties_brigadier_float = {}; pdef::pc1_18_login_toServer::command_node::ExtraNodeData2::PropertiesBrigadierFloat &v4 = *v2.properties_brigadier_float; /*8.4*/
+             v2.properties_brigadier_float.reset(new pdef::pc1_18_login_toServer::command_node::ExtraNodeData2::PropertiesBrigadierFloat{}); pdef::pc1_18_login_toServer::command_node::ExtraNodeData2::PropertiesBrigadierFloat &v4 = *v2.properties_brigadier_float; /*8.4*/
             uint8_t flags_val;
             READ_OR_BAIL(readUByte, flags_val);
             v4.flags.unused = flags_val >> 0 & 6;
@@ -1110,7 +1124,7 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_login_toServer::tags &obj) {
             }
         }
         else if (V_parser == "brigadier:double") { /*8.0*/
-             v2.properties_brigadier_double = {}; pdef::pc1_18_login_toServer::command_node::ExtraNodeData2::PropertiesBrigadierDouble &v4 = *v2.properties_brigadier_double; /*8.4*/
+             v2.properties_brigadier_double.reset(new pdef::pc1_18_login_toServer::command_node::ExtraNodeData2::PropertiesBrigadierDouble{}); pdef::pc1_18_login_toServer::command_node::ExtraNodeData2::PropertiesBrigadierDouble &v4 = *v2.properties_brigadier_double; /*8.4*/
             uint8_t flags_val;
             READ_OR_BAIL(readUByte, flags_val);
             v4.flags.unused = flags_val >> 0 & 6;
@@ -1125,7 +1139,7 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_login_toServer::tags &obj) {
             }
         }
         else if (V_parser == "brigadier:integer") { /*8.0*/
-             v2.properties_brigadier_integer = {}; pdef::pc1_18_login_toServer::command_node::ExtraNodeData2::PropertiesBrigadierInteger &v4 = *v2.properties_brigadier_integer; /*8.4*/
+             v2.properties_brigadier_integer.reset(new pdef::pc1_18_login_toServer::command_node::ExtraNodeData2::PropertiesBrigadierInteger{}); pdef::pc1_18_login_toServer::command_node::ExtraNodeData2::PropertiesBrigadierInteger &v4 = *v2.properties_brigadier_integer; /*8.4*/
             uint8_t flags_val;
             READ_OR_BAIL(readUByte, flags_val);
             v4.flags.unused = flags_val >> 0 & 6;
@@ -1140,7 +1154,7 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_login_toServer::tags &obj) {
             }
         }
         else if (V_parser == "brigadier:long") { /*8.0*/
-             v2.properties_brigadier_long = {}; pdef::pc1_18_login_toServer::command_node::ExtraNodeData2::PropertiesBrigadierLong &v4 = *v2.properties_brigadier_long; /*8.4*/
+             v2.properties_brigadier_long.reset(new pdef::pc1_18_login_toServer::command_node::ExtraNodeData2::PropertiesBrigadierLong{}); pdef::pc1_18_login_toServer::command_node::ExtraNodeData2::PropertiesBrigadierLong &v4 = *v2.properties_brigadier_long; /*8.4*/
             uint8_t flags_val;
             READ_OR_BAIL(readUByte, flags_val);
             v4.flags.unused = flags_val >> 0 & 6;
@@ -1226,7 +1240,7 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_login_toServer::tags &obj) {
         else if (V_parser == "minecraft:entity_anchor") { /*8.0*/
         }
         else if (V_parser == "minecraft:range") { /*8.0*/
-             v2.properties_minecraft_range = {}; pdef::pc1_18_login_toServer::command_node::ExtraNodeData2::PropertiesMinecraftRange &v4 = *v2.properties_minecraft_range; /*8.4*/
+             v2.properties_minecraft_range.reset(new pdef::pc1_18_login_toServer::command_node::ExtraNodeData2::PropertiesMinecraftRange{}); pdef::pc1_18_login_toServer::command_node::ExtraNodeData2::PropertiesMinecraftRange &v4 = *v2.properties_minecraft_range; /*8.4*/
             READ_OR_BAIL(readBool, (bool&)v4.allowDecimals); /*0.5*/
         }
         else if (V_parser == "minecraft:int_range") { /*8.0*/
@@ -1244,12 +1258,12 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_login_toServer::tags &obj) {
         else if (V_parser == "minecraft:time") { /*8.0*/
         }
         else if (V_parser == "minecraft:resource_or_tag") { /*8.0*/
-             v2.properties_minecraft_resource_or_tag_or_minecraft_resource = {}; pdef::pc1_18_login_toServer::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.4*/
+             v2.properties_minecraft_resource_or_tag_or_minecraft_resource.reset(new pdef::pc1_18_login_toServer::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource{}); pdef::pc1_18_login_toServer::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.4*/
             int registry_strlen; READ_OR_BAIL(readUnsignedVarInt, registry_strlen);
             if (!stream.readString(v4.registry, registry_strlen)) return false; /*registry: pstring*/ /*4.3*/
         }
         else if (V_parser == "minecraft:resource") { /*8.0*/
-             v2.properties_minecraft_resource_or_tag_or_minecraft_resource = {}; pdef::pc1_18_login_toServer::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.4*/
+             v2.properties_minecraft_resource_or_tag_or_minecraft_resource.reset(new pdef::pc1_18_login_toServer::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource{}); pdef::pc1_18_login_toServer::command_node::ExtraNodeData2::PropertiesMinecraftResourceOrTagOrMinecraftResource &v4 = *v2.properties_minecraft_resource_or_tag_or_minecraft_resource; /*8.4*/
             int registry_strlen; READ_OR_BAIL(readUnsignedVarInt, registry_strlen);
             if (!stream.readString(v4.registry, registry_strlen)) return false; /*registry: pstring*/ /*4.3*/
         }
@@ -1274,7 +1288,14 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_login_toServer::tags &obj) {
   }
   bool packet_login_plugin_response(pdef::Stream &stream, pdef::pc1_18_login_toServer::packet_login_plugin_response &obj) {
     READ_OR_BAIL(readUnsignedVarInt, obj.messageId); /*0.5*/
-    const pdef::pc1_18_login_toServer::packet_login_plugin_response::Data &v = obj.data = {}; /*["packet_login_plugin_response"]*/ /*7.3*/
+    pdef::pc1_18_login_toServer::packet_login_plugin_response::Data &v_0 = obj.data = {}; /*["packet_login_plugin_response"]*/ /*7.3*/
+    {
+      READ_OR_BAIL(readBool, (bool&)v_0.has); /*0.5*/
+      bool &V_has = v_0.has; /*0.6*/
+      if (V_has == true) { /*8.1*/
+        READ_OR_BAIL(readByte, v_0.value); /*0.5*/
+      }
+    }
     return true;
   }
   bool packet(pdef::Stream &stream, pdef::pc1_18_login_toServer::packet &obj) {
@@ -1282,15 +1303,15 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_login_toServer::tags &obj) {
     const pdef::pc1_18_login_toServer::packet::Name &V_name = obj.name; /*0.7*/
     switch (V_name) { /*8.0*/
       case pdef::pc1_18_login_toServer::packet::Name::LoginStart: { /*8.5*/
-        obj.params_packet_login_start = {}; pdef::pc1_18_login_toServer::decode::packet_login_start(stream, *obj.params_packet_login_start); /*obj*/ /*4.6*/
+        obj.params_packet_login_start.reset(new pdef::pc1_18_login_toServer::packet_login_start{}); pdef::pc1_18_login_toServer::decode::packet_login_start(stream, *obj.params_packet_login_start); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::pc1_18_login_toServer::packet::Name::EncryptionBegin: { /*8.5*/
-        obj.params_packet_encryption_begin = {}; pdef::pc1_18_login_toServer::decode::packet_encryption_begin(stream, *obj.params_packet_encryption_begin); /*obj*/ /*4.6*/
+        obj.params_packet_encryption_begin.reset(new pdef::pc1_18_login_toServer::packet_encryption_begin{}); pdef::pc1_18_login_toServer::decode::packet_encryption_begin(stream, *obj.params_packet_encryption_begin); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::pc1_18_login_toServer::packet::Name::LoginPluginResponse: { /*8.5*/
-        obj.params_packet_login_plugin_response = {}; pdef::pc1_18_login_toServer::decode::packet_login_plugin_response(stream, *obj.params_packet_login_plugin_response); /*obj*/ /*4.6*/
+        obj.params_packet_login_plugin_response.reset(new pdef::pc1_18_login_toServer::packet_login_plugin_response{}); pdef::pc1_18_login_toServer::decode::packet_login_plugin_response(stream, *obj.params_packet_login_plugin_response); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       default: break; /*avoid unhandled case warning*/
@@ -1618,7 +1639,14 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_login_toServer::tags &obj) {
   bool packet_login_plugin_response(pdef::Stream &stream, const pdef::pc1_18_login_toServer::packet_login_plugin_response &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     PDEF_JSON_putNumber_OR_BAIL(messageId, (int64_t)obj.messageId); /*J0.4*/
-    const pdef::pc1_18_login_toServer::packet_login_plugin_response::Data &v = obj.data; /*["packet_login_plugin_response"]*/ /*7.4*/
+    const pdef::pc1_18_login_toServer::packet_login_plugin_response::Data &v_0 = obj.data; /*["packet_login_plugin_response"]*/ /*7.4*/
+    {
+      const bool &V_has = v_0.has; /*0.1*/
+      PDEF_JSON_putNumber_OR_BAIL(has, (int64_t)v_0.has); /*J0.4*/
+      if (V_has == true) { /*8.1*/
+        PDEF_JSON_putNumber_OR_BAIL(value, (int64_t)v_0.value); /*J0.4*/
+      }
+    }
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet(pdef::Stream &stream, const pdef::pc1_18_login_toServer::packet &obj) {

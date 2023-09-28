@@ -26,6 +26,7 @@ function compile ({ lang, inputJSON, inputFile, outputFolder, typeAliases, custo
   const inputFileName = inputFile?.split('/').pop()?.split('.')?.[0] ?? outputProtocolFileName ?? namespace ?? 'protocol'
   const parsedOutputFolder = outputFolder || './'
   const outputFilename = parsedOutputFolder + `${inputFileName}.h`
+  fs.mkdirSync(parsedOutputFolder, { recursive: true })
   fs.writeFileSync(outputFilename, compiledCppCode.lines)
   // Copy over stream.h into the output dir, if it's not already there
   fs.copyFileSync(join(__dirname, '/stream.h'), parsedOutputFolder + 'stream.h')

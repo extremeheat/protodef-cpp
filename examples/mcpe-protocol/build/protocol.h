@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <optional>
+#include <memory>
 #include "stream.h"
 #ifndef DBG_PRINT
 #define DBG_PRINT(...)
@@ -390,7 +391,7 @@ struct mcpe_packet;
       uint8_t version; /*0.0*/
       int8_t nbt; /*0.0*/
     };
-    std::optional<Nbt> nbt; /*3.2*/
+    pdef::Optional<Nbt> nbt; /*3.2*/
   };
   struct ItemExtraDataWithoutBlockingTick {
     enum class HasNbt : uint16_t {
@@ -404,7 +405,7 @@ struct mcpe_packet;
       uint8_t version; /*0.0*/
       int8_t nbt; /*0.0*/
     };
-    std::optional<Nbt> nbt; /*3.2*/
+    pdef::Optional<Nbt> nbt; /*3.2*/
   };
   struct ItemLegacy {
     int network_id; /*0.0*/
@@ -701,9 +702,9 @@ struct mcpe_packet;
     float value_lf32; /*0.0*/
     std::string value_string; /*6.0*/
     int8_t value_nbt; /*0.0*/
-    std::optional<pdef::proto::vec3i> value_vec3i; /*4.0*/
+    pdef::Optional<pdef::proto::vec3i> value_vec3i; /*4.0*/
     int64_t value_zigzag64; /*0.0*/
-    std::optional<pdef::proto::vec3f> value_vec3f; /*4.0*/
+    pdef::Optional<pdef::proto::vec3f> value_vec3f; /*4.0*/
   };
   struct Link {
     int64_t ridden_entity_id; /*0.0*/
@@ -830,7 +831,7 @@ struct mcpe_packet;
       pdef::proto::vec3f player_pos; /*4.0*/
       pdef::proto::vec3f click_pos; /*4.0*/
     };
-    std::optional<TransactionDataItemUseOnEntity> transaction_data_item_use_on_entity; /*3.2*/
+    pdef::Optional<TransactionDataItemUseOnEntity> transaction_data_item_use_on_entity; /*3.2*/
     struct TransactionDataItemRelease {
       enum class ActionType : int {
         Release = 0,
@@ -841,8 +842,8 @@ struct mcpe_packet;
       pdef::proto::Item held_item; /*4.0*/
       pdef::proto::vec3f head_pos; /*4.0*/
     };
-    std::optional<TransactionDataItemRelease> transaction_data_item_release; /*3.2*/
-    std::optional<pdef::proto::TransactionUseItem> transaction_data_TransactionUseItem; /*4.0*/
+    pdef::Optional<TransactionDataItemRelease> transaction_data_item_release; /*3.2*/
+    pdef::Optional<pdef::proto::TransactionUseItem> transaction_data_TransactionUseItem; /*4.0*/
   };
   struct RecipeIngredient {
     int network_id; /*0.0*/
@@ -879,19 +880,19 @@ struct mcpe_packet;
       pdef::proto::ItemLegacy output; /*4.0*/
       std::string block; /*6.0*/
     };
-    std::optional<RecipeFurnace> recipe_furnace; /*3.2*/
+    pdef::Optional<RecipeFurnace> recipe_furnace; /*3.2*/
     struct RecipeFurnaceWithMetadata {
       int input_id; /*0.0*/
       int input_meta; /*0.0*/
       pdef::proto::ItemLegacy output; /*4.0*/
       std::string block; /*6.0*/
     };
-    std::optional<RecipeFurnaceWithMetadata> recipe_furnace_with_metadata; /*3.2*/
+    pdef::Optional<RecipeFurnaceWithMetadata> recipe_furnace_with_metadata; /*3.2*/
     struct RecipeMulti {
       uint64_t uuid; /*0.0*/
       int network_id; /*0.0*/
     };
-    std::optional<RecipeMulti> recipe_multi; /*3.2*/
+    pdef::Optional<RecipeMulti> recipe_multi; /*3.2*/
     struct RecipeShapelessOrShulkerBoxOrShapelessChemistry {
       std::string recipe_id; /*6.0*/
       std::vector<pdef::proto::RecipeIngredient /*4.0*/> input; /*3.0*/
@@ -901,7 +902,7 @@ struct mcpe_packet;
       int priority; /*0.0*/
       int network_id; /*0.0*/
     };
-    std::optional<RecipeShapelessOrShulkerBoxOrShapelessChemistry> recipe_shapeless_or_shulker_box_or_shapeless_chemistry; /*3.2*/
+    pdef::Optional<RecipeShapelessOrShulkerBoxOrShapelessChemistry> recipe_shapeless_or_shulker_box_or_shapeless_chemistry; /*3.2*/
     struct RecipeShapedOrShapedChemistry {
       std::string recipe_id; /*6.0*/
       int width; /*0.0*/
@@ -913,7 +914,7 @@ struct mcpe_packet;
       int priority; /*0.0*/
       int network_id; /*0.0*/
     };
-    std::optional<RecipeShapedOrShapedChemistry> recipe_shaped_or_shaped_chemistry; /*3.2*/
+    pdef::Optional<RecipeShapedOrShapedChemistry> recipe_shaped_or_shaped_chemistry; /*3.2*/
   };
   struct SkinImage {
     int32_t width; /*0.0*/
@@ -976,11 +977,11 @@ struct mcpe_packet;
       bool is_teacher; /*0.0*/
       bool is_host; /*0.0*/
     };
-    std::optional<RecordsAdd> records_add; /*3.2*/
+    pdef::Optional<RecordsAdd> records_add; /*3.2*/
     struct RecordsRemove {
       uint64_t uuid; /*0.0*/
     };
-    std::optional<RecordsRemove> records_remove; /*3.2*/
+    pdef::Optional<RecordsRemove> records_remove; /*3.2*/
     std::vector<char> verified; /*3.0*/
   };
   struct Enchant {
@@ -1122,8 +1123,8 @@ struct mcpe_packet;
       };
       TypeId type_id; /*3.2*/
       uint8_t count; /*0.0*/
-      std::optional<pdef::proto::StackRequestSlotInfo> source; /*4.0*/
-      std::optional<pdef::proto::StackRequestSlotInfo> destination; /*4.0*/
+      pdef::Optional<pdef::proto::StackRequestSlotInfo> source; /*4.0*/
+      pdef::Optional<pdef::proto::StackRequestSlotInfo> destination; /*4.0*/
       bool randomly; /*0.0*/
       uint8_t result_slot_id; /*0.0*/
       int primary_effect; /*0.0*/
@@ -1254,7 +1255,7 @@ struct mcpe_packet;
     struct PlayerEntityId {
       int64_t player_entity_id; /*0.0*/
     };
-    std::optional<PlayerEntityId> player_entity_id; /*3.2*/
+    pdef::Optional<PlayerEntityId> player_entity_id; /*3.2*/
   };
   struct TrackedObject {
     enum class Type : int32_t {
@@ -1263,7 +1264,7 @@ struct mcpe_packet;
     };
     Type type; /*3.2*/
     int64_t entity_unique_id; /*0.0*/
-    std::optional<pdef::proto::BlockCoordinates> block_position; /*4.0*/
+    pdef::Optional<pdef::proto::BlockCoordinates> block_position; /*4.0*/
   };
   struct MapDecoration {
     uint8_t type; /*0.0*/
@@ -2452,7 +2453,7 @@ struct mcpe_packet;
       };
       SourceEntityType source_entity_type; /*3.2*/
     };
-    std::optional<Teleport> teleport; /*3.2*/
+    pdef::Optional<Teleport> teleport; /*3.2*/
   };
   struct packet_rider_jump {
     int jump_strength; /*0.0*/
@@ -2816,7 +2817,7 @@ struct mcpe_packet;
     };
     ActionId action_id; /*3.2*/
     int64_t target_entity_id; /*0.0*/
-    std::optional<pdef::proto::vec3f> position; /*4.0*/
+    pdef::Optional<pdef::proto::vec3f> position; /*4.0*/
   };
   struct packet_block_pick_request {
     int x; /*0.0*/
@@ -3273,7 +3274,7 @@ struct mcpe_packet;
     struct Blobs {
       std::vector<uint64_t /*0.0*/> hashes; /*3.0*/
     };
-    std::optional<Blobs> blobs; /*3.2*/
+    pdef::Optional<Blobs> blobs; /*3.2*/
   };
   struct packet_set_commands_enabled {
     bool enabled; /*0.0*/
@@ -3368,7 +3369,7 @@ struct mcpe_packet;
       std::vector<pdef::proto::TrackedObject /*4.0*/> objects; /*3.0*/
       std::vector<pdef::proto::MapDecoration /*4.0*/> decorations; /*3.0*/
     };
-    std::optional<Tracked> tracked; /*3.2*/
+    pdef::Optional<Tracked> tracked; /*3.2*/
     struct Texture {
       int width; /*0.0*/
       int height; /*0.0*/
@@ -3376,7 +3377,7 @@ struct mcpe_packet;
       int y_offset; /*0.0*/
       std::vector<int /*0.0*/> pixels; /*3.0*/
     };
-    std::optional<Texture> texture; /*3.2*/
+    pdef::Optional<Texture> texture; /*3.2*/
   };
   struct packet_map_info_request {
     int64_t map_id; /*0.0*/
@@ -3519,7 +3520,7 @@ struct mcpe_packet;
     bool should_track_output; /*0.0*/
     int32_t tick_delay; /*0.0*/
     bool execute_on_first_tick; /*0.0*/
-    std::optional<pdef::proto::BlockCoordinates> position; /*4.0*/
+    pdef::Optional<pdef::proto::BlockCoordinates> position; /*4.0*/
     enum class Mode : int {
       Impulse = 0,
       Repeat = 1,
@@ -4558,14 +4559,14 @@ struct mcpe_packet;
       bool has; /*0.0*/
       bool can_modify_blocks; /*0.0*/
     };
-    std::optional<AgentCapabilities> agent_capabilities; /*3.2*/
+    pdef::Optional<AgentCapabilities> agent_capabilities; /*3.2*/
     std::string OverrideURI; /*6.0*/
     struct ExternalLinkSettings {
       bool has; /*0.0*/
       std::string url; /*6.0*/
       std::string display_name; /*6.0*/
     };
-    std::optional<ExternalLinkSettings> external_link_settings; /*3.2*/
+    pdef::Optional<ExternalLinkSettings> external_link_settings; /*3.2*/
   };
   struct packet_emote {
     int64_t entity_id; /*0.0*/
@@ -4686,14 +4687,14 @@ struct mcpe_packet;
     InteractionModel interaction_model; /*3.2*/
     int64_t tick; /*0.0*/
     pdef::proto::vec3f delta; /*4.0*/
-    std::optional<pdef::proto::vec3f> gaze_direction; /*4.0*/
+    pdef::Optional<pdef::proto::vec3f> gaze_direction; /*4.0*/
     struct Transaction {
       pdef::proto::TransactionLegacy legacy; /*4.0*/
       std::vector<pdef::proto::TransactionActions> actions; /*1.0*/
       pdef::proto::TransactionUseItem data; /*4.0*/
     };
-    std::optional<Transaction> transaction; /*3.2*/
-    std::optional<pdef::proto::ItemStackRequest> item_stack_request; /*4.0*/
+    pdef::Optional<Transaction> transaction; /*3.2*/
+    pdef::Optional<pdef::proto::ItemStackRequest> item_stack_request; /*4.0*/
     struct BlockAction {
       enum class Action : int {
         StartBreak = 0,
@@ -4728,7 +4729,7 @@ struct mcpe_packet;
         StopItemUseOn = 29,
       };
       Action action; /*3.2*/
-      std::optional<pdef::proto::vec3i> position; /*4.0*/
+      pdef::Optional<pdef::proto::vec3i> position; /*4.0*/
       int face; /*0.0*/
     };
     std::vector<BlockAction /*3.2*/> block_action; /*3.0*/
@@ -4856,7 +4857,7 @@ struct mcpe_packet;
     };
     Type type; /*3.2*/
     std::string text; /*6.0*/
-    std::optional<pdef::proto::vec3f> position; /*4.0*/
+    pdef::Optional<pdef::proto::vec3f> position; /*4.0*/
     float red; /*0.0*/
     float green; /*0.0*/
     float blue; /*0.0*/
@@ -5310,187 +5311,187 @@ struct mcpe_packet;
       ToastRequest = 186,
     };
     Name name; /*3.2*/
-    std::optional<pdef::proto::packet_login> params_packet_login; /*4.0*/
-    std::optional<pdef::proto::packet_play_status> params_packet_play_status; /*4.0*/
-    std::optional<pdef::proto::packet_server_to_client_handshake> params_packet_server_to_client_handshake; /*4.0*/
-    std::optional<pdef::proto::packet_client_to_server_handshake> params_packet_client_to_server_handshake; /*4.0*/
-    std::optional<pdef::proto::packet_disconnect> params_packet_disconnect; /*4.0*/
-    std::optional<pdef::proto::packet_resource_packs_info> params_packet_resource_packs_info; /*4.0*/
-    std::optional<pdef::proto::packet_resource_pack_stack> params_packet_resource_pack_stack; /*4.0*/
-    std::optional<pdef::proto::packet_resource_pack_client_response> params_packet_resource_pack_client_response; /*4.0*/
-    std::optional<pdef::proto::packet_text> params_packet_text; /*4.0*/
-    std::optional<pdef::proto::packet_set_time> params_packet_set_time; /*4.0*/
-    std::optional<pdef::proto::packet_start_game> params_packet_start_game; /*4.0*/
-    std::optional<pdef::proto::packet_add_player> params_packet_add_player; /*4.0*/
-    std::optional<pdef::proto::packet_add_entity> params_packet_add_entity; /*4.0*/
-    std::optional<pdef::proto::packet_remove_entity> params_packet_remove_entity; /*4.0*/
-    std::optional<pdef::proto::packet_add_item_entity> params_packet_add_item_entity; /*4.0*/
-    std::optional<pdef::proto::packet_take_item_entity> params_packet_take_item_entity; /*4.0*/
-    std::optional<pdef::proto::packet_move_entity> params_packet_move_entity; /*4.0*/
-    std::optional<pdef::proto::packet_move_player> params_packet_move_player; /*4.0*/
-    std::optional<pdef::proto::packet_rider_jump> params_packet_rider_jump; /*4.0*/
-    std::optional<pdef::proto::packet_update_block> params_packet_update_block; /*4.0*/
-    std::optional<pdef::proto::packet_add_painting> params_packet_add_painting; /*4.0*/
-    std::optional<pdef::proto::packet_tick_sync> params_packet_tick_sync; /*4.0*/
-    std::optional<pdef::proto::packet_level_sound_event_old> params_packet_level_sound_event_old; /*4.0*/
-    std::optional<pdef::proto::packet_level_event> params_packet_level_event; /*4.0*/
-    std::optional<pdef::proto::packet_block_event> params_packet_block_event; /*4.0*/
-    std::optional<pdef::proto::packet_entity_event> params_packet_entity_event; /*4.0*/
-    std::optional<pdef::proto::packet_mob_effect> params_packet_mob_effect; /*4.0*/
-    std::optional<pdef::proto::packet_update_attributes> params_packet_update_attributes; /*4.0*/
-    std::optional<pdef::proto::packet_inventory_transaction> params_packet_inventory_transaction; /*4.0*/
-    std::optional<pdef::proto::packet_mob_equipment> params_packet_mob_equipment; /*4.0*/
-    std::optional<pdef::proto::packet_mob_armor_equipment> params_packet_mob_armor_equipment; /*4.0*/
-    std::optional<pdef::proto::packet_interact> params_packet_interact; /*4.0*/
-    std::optional<pdef::proto::packet_block_pick_request> params_packet_block_pick_request; /*4.0*/
-    std::optional<pdef::proto::packet_entity_pick_request> params_packet_entity_pick_request; /*4.0*/
-    std::optional<pdef::proto::packet_player_action> params_packet_player_action; /*4.0*/
-    std::optional<pdef::proto::packet_hurt_armor> params_packet_hurt_armor; /*4.0*/
-    std::optional<pdef::proto::packet_set_entity_data> params_packet_set_entity_data; /*4.0*/
-    std::optional<pdef::proto::packet_set_entity_motion> params_packet_set_entity_motion; /*4.0*/
-    std::optional<pdef::proto::packet_set_entity_link> params_packet_set_entity_link; /*4.0*/
-    std::optional<pdef::proto::packet_set_health> params_packet_set_health; /*4.0*/
-    std::optional<pdef::proto::packet_set_spawn_position> params_packet_set_spawn_position; /*4.0*/
-    std::optional<pdef::proto::packet_animate> params_packet_animate; /*4.0*/
-    std::optional<pdef::proto::packet_respawn> params_packet_respawn; /*4.0*/
-    std::optional<pdef::proto::packet_container_open> params_packet_container_open; /*4.0*/
-    std::optional<pdef::proto::packet_container_close> params_packet_container_close; /*4.0*/
-    std::optional<pdef::proto::packet_player_hotbar> params_packet_player_hotbar; /*4.0*/
-    std::optional<pdef::proto::packet_inventory_content> params_packet_inventory_content; /*4.0*/
-    std::optional<pdef::proto::packet_inventory_slot> params_packet_inventory_slot; /*4.0*/
-    std::optional<pdef::proto::packet_container_set_data> params_packet_container_set_data; /*4.0*/
-    std::optional<pdef::proto::packet_crafting_data> params_packet_crafting_data; /*4.0*/
-    std::optional<pdef::proto::packet_crafting_event> params_packet_crafting_event; /*4.0*/
-    std::optional<pdef::proto::packet_gui_data_pick_item> params_packet_gui_data_pick_item; /*4.0*/
-    std::optional<pdef::proto::packet_adventure_settings> params_packet_adventure_settings; /*4.0*/
-    std::optional<pdef::proto::packet_block_entity_data> params_packet_block_entity_data; /*4.0*/
-    std::optional<pdef::proto::packet_player_input> params_packet_player_input; /*4.0*/
-    std::optional<pdef::proto::packet_level_chunk> params_packet_level_chunk; /*4.0*/
-    std::optional<pdef::proto::packet_set_commands_enabled> params_packet_set_commands_enabled; /*4.0*/
-    std::optional<pdef::proto::packet_set_difficulty> params_packet_set_difficulty; /*4.0*/
-    std::optional<pdef::proto::packet_change_dimension> params_packet_change_dimension; /*4.0*/
-    std::optional<pdef::proto::packet_set_player_game_type> params_packet_set_player_game_type; /*4.0*/
-    std::optional<pdef::proto::packet_player_list> params_packet_player_list; /*4.0*/
-    std::optional<pdef::proto::packet_simple_event> params_packet_simple_event; /*4.0*/
-    std::optional<pdef::proto::packet_event> params_packet_event; /*4.0*/
-    std::optional<pdef::proto::packet_spawn_experience_orb> params_packet_spawn_experience_orb; /*4.0*/
-    std::optional<pdef::proto::packet_clientbound_map_item_data> params_packet_clientbound_map_item_data; /*4.0*/
-    std::optional<pdef::proto::packet_map_info_request> params_packet_map_info_request; /*4.0*/
-    std::optional<pdef::proto::packet_request_chunk_radius> params_packet_request_chunk_radius; /*4.0*/
-    std::optional<pdef::proto::packet_chunk_radius_update> params_packet_chunk_radius_update; /*4.0*/
-    std::optional<pdef::proto::packet_item_frame_drop_item> params_packet_item_frame_drop_item; /*4.0*/
-    std::optional<pdef::proto::packet_game_rules_changed> params_packet_game_rules_changed; /*4.0*/
-    std::optional<pdef::proto::packet_camera> params_packet_camera; /*4.0*/
-    std::optional<pdef::proto::packet_boss_event> params_packet_boss_event; /*4.0*/
-    std::optional<pdef::proto::packet_show_credits> params_packet_show_credits; /*4.0*/
-    std::optional<pdef::proto::packet_available_commands> params_packet_available_commands; /*4.0*/
-    std::optional<pdef::proto::packet_command_request> params_packet_command_request; /*4.0*/
-    std::optional<pdef::proto::packet_command_block_update> params_packet_command_block_update; /*4.0*/
-    std::optional<pdef::proto::packet_command_output> params_packet_command_output; /*4.0*/
-    std::optional<pdef::proto::packet_update_trade> params_packet_update_trade; /*4.0*/
-    std::optional<pdef::proto::packet_update_equipment> params_packet_update_equipment; /*4.0*/
-    std::optional<pdef::proto::packet_resource_pack_data_info> params_packet_resource_pack_data_info; /*4.0*/
-    std::optional<pdef::proto::packet_resource_pack_chunk_data> params_packet_resource_pack_chunk_data; /*4.0*/
-    std::optional<pdef::proto::packet_resource_pack_chunk_request> params_packet_resource_pack_chunk_request; /*4.0*/
-    std::optional<pdef::proto::packet_transfer> params_packet_transfer; /*4.0*/
-    std::optional<pdef::proto::packet_play_sound> params_packet_play_sound; /*4.0*/
-    std::optional<pdef::proto::packet_stop_sound> params_packet_stop_sound; /*4.0*/
-    std::optional<pdef::proto::packet_set_title> params_packet_set_title; /*4.0*/
-    std::optional<pdef::proto::packet_add_behavior_tree> params_packet_add_behavior_tree; /*4.0*/
-    std::optional<pdef::proto::packet_structure_block_update> params_packet_structure_block_update; /*4.0*/
-    std::optional<pdef::proto::packet_show_store_offer> params_packet_show_store_offer; /*4.0*/
-    std::optional<pdef::proto::packet_purchase_receipt> params_packet_purchase_receipt; /*4.0*/
-    std::optional<pdef::proto::packet_player_skin> params_packet_player_skin; /*4.0*/
-    std::optional<pdef::proto::packet_sub_client_login> params_packet_sub_client_login; /*4.0*/
-    std::optional<pdef::proto::packet_initiate_web_socket_connection> params_packet_initiate_web_socket_connection; /*4.0*/
-    std::optional<pdef::proto::packet_set_last_hurt_by> params_packet_set_last_hurt_by; /*4.0*/
-    std::optional<pdef::proto::packet_book_edit> params_packet_book_edit; /*4.0*/
-    std::optional<pdef::proto::packet_npc_request> params_packet_npc_request; /*4.0*/
-    std::optional<pdef::proto::packet_photo_transfer> params_packet_photo_transfer; /*4.0*/
-    std::optional<pdef::proto::packet_modal_form_request> params_packet_modal_form_request; /*4.0*/
-    std::optional<pdef::proto::packet_modal_form_response> params_packet_modal_form_response; /*4.0*/
-    std::optional<pdef::proto::packet_server_settings_request> params_packet_server_settings_request; /*4.0*/
-    std::optional<pdef::proto::packet_server_settings_response> params_packet_server_settings_response; /*4.0*/
-    std::optional<pdef::proto::packet_show_profile> params_packet_show_profile; /*4.0*/
-    std::optional<pdef::proto::packet_set_default_game_type> params_packet_set_default_game_type; /*4.0*/
-    std::optional<pdef::proto::packet_remove_objective> params_packet_remove_objective; /*4.0*/
-    std::optional<pdef::proto::packet_set_display_objective> params_packet_set_display_objective; /*4.0*/
-    std::optional<pdef::proto::packet_set_score> params_packet_set_score; /*4.0*/
-    std::optional<pdef::proto::packet_lab_table> params_packet_lab_table; /*4.0*/
-    std::optional<pdef::proto::packet_update_block_synced> params_packet_update_block_synced; /*4.0*/
-    std::optional<pdef::proto::packet_move_entity_delta> params_packet_move_entity_delta; /*4.0*/
-    std::optional<pdef::proto::packet_set_scoreboard_identity> params_packet_set_scoreboard_identity; /*4.0*/
-    std::optional<pdef::proto::packet_set_local_player_as_initialized> params_packet_set_local_player_as_initialized; /*4.0*/
-    std::optional<pdef::proto::packet_update_soft_enum> params_packet_update_soft_enum; /*4.0*/
-    std::optional<pdef::proto::packet_network_stack_latency> params_packet_network_stack_latency; /*4.0*/
-    std::optional<pdef::proto::packet_script_custom_event> params_packet_script_custom_event; /*4.0*/
-    std::optional<pdef::proto::packet_spawn_particle_effect> params_packet_spawn_particle_effect; /*4.0*/
-    std::optional<pdef::proto::packet_available_entity_identifiers> params_packet_available_entity_identifiers; /*4.0*/
-    std::optional<pdef::proto::packet_level_sound_event_v2> params_packet_level_sound_event_v2; /*4.0*/
-    std::optional<pdef::proto::packet_network_chunk_publisher_update> params_packet_network_chunk_publisher_update; /*4.0*/
-    std::optional<pdef::proto::packet_biome_definition_list> params_packet_biome_definition_list; /*4.0*/
-    std::optional<pdef::proto::packet_level_sound_event> params_packet_level_sound_event; /*4.0*/
-    std::optional<pdef::proto::packet_level_event_generic> params_packet_level_event_generic; /*4.0*/
-    std::optional<pdef::proto::packet_lectern_update> params_packet_lectern_update; /*4.0*/
-    std::optional<pdef::proto::packet_video_stream_connect> params_packet_video_stream_connect; /*4.0*/
-    std::optional<pdef::proto::packet_add_ecs_entity> params_packet_add_ecs_entity; /*4.0*/
-    std::optional<pdef::proto::packet_remove_ecs_entity> params_packet_remove_ecs_entity; /*4.0*/
-    std::optional<pdef::proto::packet_client_cache_status> params_packet_client_cache_status; /*4.0*/
-    std::optional<pdef::proto::packet_on_screen_texture_animation> params_packet_on_screen_texture_animation; /*4.0*/
-    std::optional<pdef::proto::packet_map_create_locked_copy> params_packet_map_create_locked_copy; /*4.0*/
-    std::optional<pdef::proto::packet_structure_template_data_export_request> params_packet_structure_template_data_export_request; /*4.0*/
-    std::optional<pdef::proto::packet_structure_template_data_export_response> params_packet_structure_template_data_export_response; /*4.0*/
-    std::optional<pdef::proto::packet_update_block_properties> params_packet_update_block_properties; /*4.0*/
-    std::optional<pdef::proto::packet_client_cache_blob_status> params_packet_client_cache_blob_status; /*4.0*/
-    std::optional<pdef::proto::packet_client_cache_miss_response> params_packet_client_cache_miss_response; /*4.0*/
-    std::optional<pdef::proto::packet_education_settings> params_packet_education_settings; /*4.0*/
-    std::optional<pdef::proto::packet_emote> params_packet_emote; /*4.0*/
-    std::optional<pdef::proto::packet_multiplayer_settings> params_packet_multiplayer_settings; /*4.0*/
-    std::optional<pdef::proto::packet_settings_command> params_packet_settings_command; /*4.0*/
-    std::optional<pdef::proto::packet_anvil_damage> params_packet_anvil_damage; /*4.0*/
-    std::optional<pdef::proto::packet_completed_using_item> params_packet_completed_using_item; /*4.0*/
-    std::optional<pdef::proto::packet_network_settings> params_packet_network_settings; /*4.0*/
-    std::optional<pdef::proto::packet_player_auth_input> params_packet_player_auth_input; /*4.0*/
-    std::optional<pdef::proto::packet_creative_content> params_packet_creative_content; /*4.0*/
-    std::optional<pdef::proto::packet_player_enchant_options> params_packet_player_enchant_options; /*4.0*/
-    std::optional<pdef::proto::packet_item_stack_request> params_packet_item_stack_request; /*4.0*/
-    std::optional<pdef::proto::packet_item_stack_response> params_packet_item_stack_response; /*4.0*/
-    std::optional<pdef::proto::packet_player_armor_damage> params_packet_player_armor_damage; /*4.0*/
-    std::optional<pdef::proto::packet_update_player_game_type> params_packet_update_player_game_type; /*4.0*/
-    std::optional<pdef::proto::packet_emote_list> params_packet_emote_list; /*4.0*/
-    std::optional<pdef::proto::packet_position_tracking_db_request> params_packet_position_tracking_db_request; /*4.0*/
-    std::optional<pdef::proto::packet_position_tracking_db_broadcast> params_packet_position_tracking_db_broadcast; /*4.0*/
-    std::optional<pdef::proto::packet_packet_violation_warning> params_packet_packet_violation_warning; /*4.0*/
-    std::optional<pdef::proto::packet_motion_prediction_hints> params_packet_motion_prediction_hints; /*4.0*/
-    std::optional<pdef::proto::packet_animate_entity> params_packet_animate_entity; /*4.0*/
-    std::optional<pdef::proto::packet_camera_shake> params_packet_camera_shake; /*4.0*/
-    std::optional<pdef::proto::packet_player_fog> params_packet_player_fog; /*4.0*/
-    std::optional<pdef::proto::packet_correct_player_move_prediction> params_packet_correct_player_move_prediction; /*4.0*/
-    std::optional<pdef::proto::packet_item_component> params_packet_item_component; /*4.0*/
-    std::optional<pdef::proto::packet_filter_text_packet> params_packet_filter_text_packet; /*4.0*/
-    std::optional<pdef::proto::packet_debug_renderer> params_packet_debug_renderer; /*4.0*/
-    std::optional<pdef::proto::packet_sync_entity_property> params_packet_sync_entity_property; /*4.0*/
-    std::optional<pdef::proto::packet_add_volume_entity> params_packet_add_volume_entity; /*4.0*/
-    std::optional<pdef::proto::packet_remove_volume_entity> params_packet_remove_volume_entity; /*4.0*/
-    std::optional<pdef::proto::packet_simulation_type> params_packet_simulation_type; /*4.0*/
-    std::optional<pdef::proto::packet_npc_dialogue> params_packet_npc_dialogue; /*4.0*/
-    std::optional<pdef::proto::packet_edu_uri_resource_packet> params_packet_edu_uri_resource_packet; /*4.0*/
-    std::optional<pdef::proto::packet_create_photo> params_packet_create_photo; /*4.0*/
-    std::optional<pdef::proto::packet_update_subchunk_blocks> params_packet_update_subchunk_blocks; /*4.0*/
-    std::optional<pdef::proto::packet_photo_info_request> params_packet_photo_info_request; /*4.0*/
-    std::optional<pdef::proto::packet_subchunk> params_packet_subchunk; /*4.0*/
-    std::optional<pdef::proto::packet_subchunk_request> params_packet_subchunk_request; /*4.0*/
-    std::optional<pdef::proto::packet_client_start_item_cooldown> params_packet_client_start_item_cooldown; /*4.0*/
-    std::optional<pdef::proto::packet_script_message> params_packet_script_message; /*4.0*/
-    std::optional<pdef::proto::packet_code_builder_source> params_packet_code_builder_source; /*4.0*/
-    std::optional<pdef::proto::packet_ticking_areas_load_status> params_packet_ticking_areas_load_status; /*4.0*/
-    std::optional<pdef::proto::packet_dimension_data> params_packet_dimension_data; /*4.0*/
-    std::optional<pdef::proto::packet_agent_action> params_packet_agent_action; /*4.0*/
-    std::optional<pdef::proto::packet_change_mob_property> params_packet_change_mob_property; /*4.0*/
-    std::optional<pdef::proto::packet_lesson_progress> params_packet_lesson_progress; /*4.0*/
-    std::optional<pdef::proto::packet_request_ability> params_packet_request_ability; /*4.0*/
-    std::optional<pdef::proto::packet_request_permissions> params_packet_request_permissions; /*4.0*/
-    std::optional<pdef::proto::packet_toast_request> params_packet_toast_request; /*4.0*/
+    pdef::Optional<pdef::proto::packet_login> params_packet_login; /*4.0*/
+    pdef::Optional<pdef::proto::packet_play_status> params_packet_play_status; /*4.0*/
+    pdef::Optional<pdef::proto::packet_server_to_client_handshake> params_packet_server_to_client_handshake; /*4.0*/
+    pdef::Optional<pdef::proto::packet_client_to_server_handshake> params_packet_client_to_server_handshake; /*4.0*/
+    pdef::Optional<pdef::proto::packet_disconnect> params_packet_disconnect; /*4.0*/
+    pdef::Optional<pdef::proto::packet_resource_packs_info> params_packet_resource_packs_info; /*4.0*/
+    pdef::Optional<pdef::proto::packet_resource_pack_stack> params_packet_resource_pack_stack; /*4.0*/
+    pdef::Optional<pdef::proto::packet_resource_pack_client_response> params_packet_resource_pack_client_response; /*4.0*/
+    pdef::Optional<pdef::proto::packet_text> params_packet_text; /*4.0*/
+    pdef::Optional<pdef::proto::packet_set_time> params_packet_set_time; /*4.0*/
+    pdef::Optional<pdef::proto::packet_start_game> params_packet_start_game; /*4.0*/
+    pdef::Optional<pdef::proto::packet_add_player> params_packet_add_player; /*4.0*/
+    pdef::Optional<pdef::proto::packet_add_entity> params_packet_add_entity; /*4.0*/
+    pdef::Optional<pdef::proto::packet_remove_entity> params_packet_remove_entity; /*4.0*/
+    pdef::Optional<pdef::proto::packet_add_item_entity> params_packet_add_item_entity; /*4.0*/
+    pdef::Optional<pdef::proto::packet_take_item_entity> params_packet_take_item_entity; /*4.0*/
+    pdef::Optional<pdef::proto::packet_move_entity> params_packet_move_entity; /*4.0*/
+    pdef::Optional<pdef::proto::packet_move_player> params_packet_move_player; /*4.0*/
+    pdef::Optional<pdef::proto::packet_rider_jump> params_packet_rider_jump; /*4.0*/
+    pdef::Optional<pdef::proto::packet_update_block> params_packet_update_block; /*4.0*/
+    pdef::Optional<pdef::proto::packet_add_painting> params_packet_add_painting; /*4.0*/
+    pdef::Optional<pdef::proto::packet_tick_sync> params_packet_tick_sync; /*4.0*/
+    pdef::Optional<pdef::proto::packet_level_sound_event_old> params_packet_level_sound_event_old; /*4.0*/
+    pdef::Optional<pdef::proto::packet_level_event> params_packet_level_event; /*4.0*/
+    pdef::Optional<pdef::proto::packet_block_event> params_packet_block_event; /*4.0*/
+    pdef::Optional<pdef::proto::packet_entity_event> params_packet_entity_event; /*4.0*/
+    pdef::Optional<pdef::proto::packet_mob_effect> params_packet_mob_effect; /*4.0*/
+    pdef::Optional<pdef::proto::packet_update_attributes> params_packet_update_attributes; /*4.0*/
+    pdef::Optional<pdef::proto::packet_inventory_transaction> params_packet_inventory_transaction; /*4.0*/
+    pdef::Optional<pdef::proto::packet_mob_equipment> params_packet_mob_equipment; /*4.0*/
+    pdef::Optional<pdef::proto::packet_mob_armor_equipment> params_packet_mob_armor_equipment; /*4.0*/
+    pdef::Optional<pdef::proto::packet_interact> params_packet_interact; /*4.0*/
+    pdef::Optional<pdef::proto::packet_block_pick_request> params_packet_block_pick_request; /*4.0*/
+    pdef::Optional<pdef::proto::packet_entity_pick_request> params_packet_entity_pick_request; /*4.0*/
+    pdef::Optional<pdef::proto::packet_player_action> params_packet_player_action; /*4.0*/
+    pdef::Optional<pdef::proto::packet_hurt_armor> params_packet_hurt_armor; /*4.0*/
+    pdef::Optional<pdef::proto::packet_set_entity_data> params_packet_set_entity_data; /*4.0*/
+    pdef::Optional<pdef::proto::packet_set_entity_motion> params_packet_set_entity_motion; /*4.0*/
+    pdef::Optional<pdef::proto::packet_set_entity_link> params_packet_set_entity_link; /*4.0*/
+    pdef::Optional<pdef::proto::packet_set_health> params_packet_set_health; /*4.0*/
+    pdef::Optional<pdef::proto::packet_set_spawn_position> params_packet_set_spawn_position; /*4.0*/
+    pdef::Optional<pdef::proto::packet_animate> params_packet_animate; /*4.0*/
+    pdef::Optional<pdef::proto::packet_respawn> params_packet_respawn; /*4.0*/
+    pdef::Optional<pdef::proto::packet_container_open> params_packet_container_open; /*4.0*/
+    pdef::Optional<pdef::proto::packet_container_close> params_packet_container_close; /*4.0*/
+    pdef::Optional<pdef::proto::packet_player_hotbar> params_packet_player_hotbar; /*4.0*/
+    pdef::Optional<pdef::proto::packet_inventory_content> params_packet_inventory_content; /*4.0*/
+    pdef::Optional<pdef::proto::packet_inventory_slot> params_packet_inventory_slot; /*4.0*/
+    pdef::Optional<pdef::proto::packet_container_set_data> params_packet_container_set_data; /*4.0*/
+    pdef::Optional<pdef::proto::packet_crafting_data> params_packet_crafting_data; /*4.0*/
+    pdef::Optional<pdef::proto::packet_crafting_event> params_packet_crafting_event; /*4.0*/
+    pdef::Optional<pdef::proto::packet_gui_data_pick_item> params_packet_gui_data_pick_item; /*4.0*/
+    pdef::Optional<pdef::proto::packet_adventure_settings> params_packet_adventure_settings; /*4.0*/
+    pdef::Optional<pdef::proto::packet_block_entity_data> params_packet_block_entity_data; /*4.0*/
+    pdef::Optional<pdef::proto::packet_player_input> params_packet_player_input; /*4.0*/
+    pdef::Optional<pdef::proto::packet_level_chunk> params_packet_level_chunk; /*4.0*/
+    pdef::Optional<pdef::proto::packet_set_commands_enabled> params_packet_set_commands_enabled; /*4.0*/
+    pdef::Optional<pdef::proto::packet_set_difficulty> params_packet_set_difficulty; /*4.0*/
+    pdef::Optional<pdef::proto::packet_change_dimension> params_packet_change_dimension; /*4.0*/
+    pdef::Optional<pdef::proto::packet_set_player_game_type> params_packet_set_player_game_type; /*4.0*/
+    pdef::Optional<pdef::proto::packet_player_list> params_packet_player_list; /*4.0*/
+    pdef::Optional<pdef::proto::packet_simple_event> params_packet_simple_event; /*4.0*/
+    pdef::Optional<pdef::proto::packet_event> params_packet_event; /*4.0*/
+    pdef::Optional<pdef::proto::packet_spawn_experience_orb> params_packet_spawn_experience_orb; /*4.0*/
+    pdef::Optional<pdef::proto::packet_clientbound_map_item_data> params_packet_clientbound_map_item_data; /*4.0*/
+    pdef::Optional<pdef::proto::packet_map_info_request> params_packet_map_info_request; /*4.0*/
+    pdef::Optional<pdef::proto::packet_request_chunk_radius> params_packet_request_chunk_radius; /*4.0*/
+    pdef::Optional<pdef::proto::packet_chunk_radius_update> params_packet_chunk_radius_update; /*4.0*/
+    pdef::Optional<pdef::proto::packet_item_frame_drop_item> params_packet_item_frame_drop_item; /*4.0*/
+    pdef::Optional<pdef::proto::packet_game_rules_changed> params_packet_game_rules_changed; /*4.0*/
+    pdef::Optional<pdef::proto::packet_camera> params_packet_camera; /*4.0*/
+    pdef::Optional<pdef::proto::packet_boss_event> params_packet_boss_event; /*4.0*/
+    pdef::Optional<pdef::proto::packet_show_credits> params_packet_show_credits; /*4.0*/
+    pdef::Optional<pdef::proto::packet_available_commands> params_packet_available_commands; /*4.0*/
+    pdef::Optional<pdef::proto::packet_command_request> params_packet_command_request; /*4.0*/
+    pdef::Optional<pdef::proto::packet_command_block_update> params_packet_command_block_update; /*4.0*/
+    pdef::Optional<pdef::proto::packet_command_output> params_packet_command_output; /*4.0*/
+    pdef::Optional<pdef::proto::packet_update_trade> params_packet_update_trade; /*4.0*/
+    pdef::Optional<pdef::proto::packet_update_equipment> params_packet_update_equipment; /*4.0*/
+    pdef::Optional<pdef::proto::packet_resource_pack_data_info> params_packet_resource_pack_data_info; /*4.0*/
+    pdef::Optional<pdef::proto::packet_resource_pack_chunk_data> params_packet_resource_pack_chunk_data; /*4.0*/
+    pdef::Optional<pdef::proto::packet_resource_pack_chunk_request> params_packet_resource_pack_chunk_request; /*4.0*/
+    pdef::Optional<pdef::proto::packet_transfer> params_packet_transfer; /*4.0*/
+    pdef::Optional<pdef::proto::packet_play_sound> params_packet_play_sound; /*4.0*/
+    pdef::Optional<pdef::proto::packet_stop_sound> params_packet_stop_sound; /*4.0*/
+    pdef::Optional<pdef::proto::packet_set_title> params_packet_set_title; /*4.0*/
+    pdef::Optional<pdef::proto::packet_add_behavior_tree> params_packet_add_behavior_tree; /*4.0*/
+    pdef::Optional<pdef::proto::packet_structure_block_update> params_packet_structure_block_update; /*4.0*/
+    pdef::Optional<pdef::proto::packet_show_store_offer> params_packet_show_store_offer; /*4.0*/
+    pdef::Optional<pdef::proto::packet_purchase_receipt> params_packet_purchase_receipt; /*4.0*/
+    pdef::Optional<pdef::proto::packet_player_skin> params_packet_player_skin; /*4.0*/
+    pdef::Optional<pdef::proto::packet_sub_client_login> params_packet_sub_client_login; /*4.0*/
+    pdef::Optional<pdef::proto::packet_initiate_web_socket_connection> params_packet_initiate_web_socket_connection; /*4.0*/
+    pdef::Optional<pdef::proto::packet_set_last_hurt_by> params_packet_set_last_hurt_by; /*4.0*/
+    pdef::Optional<pdef::proto::packet_book_edit> params_packet_book_edit; /*4.0*/
+    pdef::Optional<pdef::proto::packet_npc_request> params_packet_npc_request; /*4.0*/
+    pdef::Optional<pdef::proto::packet_photo_transfer> params_packet_photo_transfer; /*4.0*/
+    pdef::Optional<pdef::proto::packet_modal_form_request> params_packet_modal_form_request; /*4.0*/
+    pdef::Optional<pdef::proto::packet_modal_form_response> params_packet_modal_form_response; /*4.0*/
+    pdef::Optional<pdef::proto::packet_server_settings_request> params_packet_server_settings_request; /*4.0*/
+    pdef::Optional<pdef::proto::packet_server_settings_response> params_packet_server_settings_response; /*4.0*/
+    pdef::Optional<pdef::proto::packet_show_profile> params_packet_show_profile; /*4.0*/
+    pdef::Optional<pdef::proto::packet_set_default_game_type> params_packet_set_default_game_type; /*4.0*/
+    pdef::Optional<pdef::proto::packet_remove_objective> params_packet_remove_objective; /*4.0*/
+    pdef::Optional<pdef::proto::packet_set_display_objective> params_packet_set_display_objective; /*4.0*/
+    pdef::Optional<pdef::proto::packet_set_score> params_packet_set_score; /*4.0*/
+    pdef::Optional<pdef::proto::packet_lab_table> params_packet_lab_table; /*4.0*/
+    pdef::Optional<pdef::proto::packet_update_block_synced> params_packet_update_block_synced; /*4.0*/
+    pdef::Optional<pdef::proto::packet_move_entity_delta> params_packet_move_entity_delta; /*4.0*/
+    pdef::Optional<pdef::proto::packet_set_scoreboard_identity> params_packet_set_scoreboard_identity; /*4.0*/
+    pdef::Optional<pdef::proto::packet_set_local_player_as_initialized> params_packet_set_local_player_as_initialized; /*4.0*/
+    pdef::Optional<pdef::proto::packet_update_soft_enum> params_packet_update_soft_enum; /*4.0*/
+    pdef::Optional<pdef::proto::packet_network_stack_latency> params_packet_network_stack_latency; /*4.0*/
+    pdef::Optional<pdef::proto::packet_script_custom_event> params_packet_script_custom_event; /*4.0*/
+    pdef::Optional<pdef::proto::packet_spawn_particle_effect> params_packet_spawn_particle_effect; /*4.0*/
+    pdef::Optional<pdef::proto::packet_available_entity_identifiers> params_packet_available_entity_identifiers; /*4.0*/
+    pdef::Optional<pdef::proto::packet_level_sound_event_v2> params_packet_level_sound_event_v2; /*4.0*/
+    pdef::Optional<pdef::proto::packet_network_chunk_publisher_update> params_packet_network_chunk_publisher_update; /*4.0*/
+    pdef::Optional<pdef::proto::packet_biome_definition_list> params_packet_biome_definition_list; /*4.0*/
+    pdef::Optional<pdef::proto::packet_level_sound_event> params_packet_level_sound_event; /*4.0*/
+    pdef::Optional<pdef::proto::packet_level_event_generic> params_packet_level_event_generic; /*4.0*/
+    pdef::Optional<pdef::proto::packet_lectern_update> params_packet_lectern_update; /*4.0*/
+    pdef::Optional<pdef::proto::packet_video_stream_connect> params_packet_video_stream_connect; /*4.0*/
+    pdef::Optional<pdef::proto::packet_add_ecs_entity> params_packet_add_ecs_entity; /*4.0*/
+    pdef::Optional<pdef::proto::packet_remove_ecs_entity> params_packet_remove_ecs_entity; /*4.0*/
+    pdef::Optional<pdef::proto::packet_client_cache_status> params_packet_client_cache_status; /*4.0*/
+    pdef::Optional<pdef::proto::packet_on_screen_texture_animation> params_packet_on_screen_texture_animation; /*4.0*/
+    pdef::Optional<pdef::proto::packet_map_create_locked_copy> params_packet_map_create_locked_copy; /*4.0*/
+    pdef::Optional<pdef::proto::packet_structure_template_data_export_request> params_packet_structure_template_data_export_request; /*4.0*/
+    pdef::Optional<pdef::proto::packet_structure_template_data_export_response> params_packet_structure_template_data_export_response; /*4.0*/
+    pdef::Optional<pdef::proto::packet_update_block_properties> params_packet_update_block_properties; /*4.0*/
+    pdef::Optional<pdef::proto::packet_client_cache_blob_status> params_packet_client_cache_blob_status; /*4.0*/
+    pdef::Optional<pdef::proto::packet_client_cache_miss_response> params_packet_client_cache_miss_response; /*4.0*/
+    pdef::Optional<pdef::proto::packet_education_settings> params_packet_education_settings; /*4.0*/
+    pdef::Optional<pdef::proto::packet_emote> params_packet_emote; /*4.0*/
+    pdef::Optional<pdef::proto::packet_multiplayer_settings> params_packet_multiplayer_settings; /*4.0*/
+    pdef::Optional<pdef::proto::packet_settings_command> params_packet_settings_command; /*4.0*/
+    pdef::Optional<pdef::proto::packet_anvil_damage> params_packet_anvil_damage; /*4.0*/
+    pdef::Optional<pdef::proto::packet_completed_using_item> params_packet_completed_using_item; /*4.0*/
+    pdef::Optional<pdef::proto::packet_network_settings> params_packet_network_settings; /*4.0*/
+    pdef::Optional<pdef::proto::packet_player_auth_input> params_packet_player_auth_input; /*4.0*/
+    pdef::Optional<pdef::proto::packet_creative_content> params_packet_creative_content; /*4.0*/
+    pdef::Optional<pdef::proto::packet_player_enchant_options> params_packet_player_enchant_options; /*4.0*/
+    pdef::Optional<pdef::proto::packet_item_stack_request> params_packet_item_stack_request; /*4.0*/
+    pdef::Optional<pdef::proto::packet_item_stack_response> params_packet_item_stack_response; /*4.0*/
+    pdef::Optional<pdef::proto::packet_player_armor_damage> params_packet_player_armor_damage; /*4.0*/
+    pdef::Optional<pdef::proto::packet_update_player_game_type> params_packet_update_player_game_type; /*4.0*/
+    pdef::Optional<pdef::proto::packet_emote_list> params_packet_emote_list; /*4.0*/
+    pdef::Optional<pdef::proto::packet_position_tracking_db_request> params_packet_position_tracking_db_request; /*4.0*/
+    pdef::Optional<pdef::proto::packet_position_tracking_db_broadcast> params_packet_position_tracking_db_broadcast; /*4.0*/
+    pdef::Optional<pdef::proto::packet_packet_violation_warning> params_packet_packet_violation_warning; /*4.0*/
+    pdef::Optional<pdef::proto::packet_motion_prediction_hints> params_packet_motion_prediction_hints; /*4.0*/
+    pdef::Optional<pdef::proto::packet_animate_entity> params_packet_animate_entity; /*4.0*/
+    pdef::Optional<pdef::proto::packet_camera_shake> params_packet_camera_shake; /*4.0*/
+    pdef::Optional<pdef::proto::packet_player_fog> params_packet_player_fog; /*4.0*/
+    pdef::Optional<pdef::proto::packet_correct_player_move_prediction> params_packet_correct_player_move_prediction; /*4.0*/
+    pdef::Optional<pdef::proto::packet_item_component> params_packet_item_component; /*4.0*/
+    pdef::Optional<pdef::proto::packet_filter_text_packet> params_packet_filter_text_packet; /*4.0*/
+    pdef::Optional<pdef::proto::packet_debug_renderer> params_packet_debug_renderer; /*4.0*/
+    pdef::Optional<pdef::proto::packet_sync_entity_property> params_packet_sync_entity_property; /*4.0*/
+    pdef::Optional<pdef::proto::packet_add_volume_entity> params_packet_add_volume_entity; /*4.0*/
+    pdef::Optional<pdef::proto::packet_remove_volume_entity> params_packet_remove_volume_entity; /*4.0*/
+    pdef::Optional<pdef::proto::packet_simulation_type> params_packet_simulation_type; /*4.0*/
+    pdef::Optional<pdef::proto::packet_npc_dialogue> params_packet_npc_dialogue; /*4.0*/
+    pdef::Optional<pdef::proto::packet_edu_uri_resource_packet> params_packet_edu_uri_resource_packet; /*4.0*/
+    pdef::Optional<pdef::proto::packet_create_photo> params_packet_create_photo; /*4.0*/
+    pdef::Optional<pdef::proto::packet_update_subchunk_blocks> params_packet_update_subchunk_blocks; /*4.0*/
+    pdef::Optional<pdef::proto::packet_photo_info_request> params_packet_photo_info_request; /*4.0*/
+    pdef::Optional<pdef::proto::packet_subchunk> params_packet_subchunk; /*4.0*/
+    pdef::Optional<pdef::proto::packet_subchunk_request> params_packet_subchunk_request; /*4.0*/
+    pdef::Optional<pdef::proto::packet_client_start_item_cooldown> params_packet_client_start_item_cooldown; /*4.0*/
+    pdef::Optional<pdef::proto::packet_script_message> params_packet_script_message; /*4.0*/
+    pdef::Optional<pdef::proto::packet_code_builder_source> params_packet_code_builder_source; /*4.0*/
+    pdef::Optional<pdef::proto::packet_ticking_areas_load_status> params_packet_ticking_areas_load_status; /*4.0*/
+    pdef::Optional<pdef::proto::packet_dimension_data> params_packet_dimension_data; /*4.0*/
+    pdef::Optional<pdef::proto::packet_agent_action> params_packet_agent_action; /*4.0*/
+    pdef::Optional<pdef::proto::packet_change_mob_property> params_packet_change_mob_property; /*4.0*/
+    pdef::Optional<pdef::proto::packet_lesson_progress> params_packet_lesson_progress; /*4.0*/
+    pdef::Optional<pdef::proto::packet_request_ability> params_packet_request_ability; /*4.0*/
+    pdef::Optional<pdef::proto::packet_request_permissions> params_packet_request_permissions; /*4.0*/
+    pdef::Optional<pdef::proto::packet_toast_request> params_packet_toast_request; /*4.0*/
   };
 }
 
@@ -6796,7 +6797,11 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   size_t MaterialReducer(pdef::Stream &stream, const pdef::proto::MaterialReducer &obj) {
     size_t len = 0;
     len += stream.sizeOfZigZagVarInt(obj.mix); /*0.2*/
-    const pdef::proto::MaterialReducer::Items &v = obj.items; /*["MaterialReducer"]*/ /*7.4*/
+    const pdef::proto::MaterialReducer::Items &v_50 = obj.items; /*["MaterialReducer"]*/ /*7.4*/
+    {
+      len += stream.sizeOfZigZagVarInt(v_50.network_id); /*0.2*/
+      len += stream.sizeOfZigZagVarInt(v_50.count); /*0.2*/
+    }
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_login(pdef::Stream &stream, const pdef::proto::packet_login &obj) {
@@ -6841,23 +6846,23 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += 1; /*0.2*/
     len += 1; /*0.2*/
     len += 2; /*2.4*/
-    for (const auto &v : obj.behaviour_packs) { size_t len_50 = pdef::proto::size::BehaviourPackInfos(stream, v); EXPECT_OR_BAIL(len_50); len += len_50; } /*2.5*/
+    for (const auto &v : obj.behaviour_packs) { size_t len_51 = pdef::proto::size::BehaviourPackInfos(stream, v); EXPECT_OR_BAIL(len_51); len += len_51; } /*2.5*/
     len += 2; /*2.4*/
-    for (const auto &v : obj.texture_packs) { size_t len_51 = pdef::proto::size::TexturePackInfos(stream, v); EXPECT_OR_BAIL(len_51); len += len_51; } /*2.5*/
+    for (const auto &v : obj.texture_packs) { size_t len_52 = pdef::proto::size::TexturePackInfos(stream, v); EXPECT_OR_BAIL(len_52); len += len_52; } /*2.5*/
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_resource_pack_stack(pdef::Stream &stream, const pdef::proto::packet_resource_pack_stack &obj) {
     size_t len = 0;
     len += 1; /*0.2*/
     len += stream.sizeOfVarInt(obj.behavior_packs.size()); /*2.4*/
-    for (const auto &v : obj.behavior_packs) { size_t len_52 = pdef::proto::size::ResourcePackIdVersions(stream, v); EXPECT_OR_BAIL(len_52); len += len_52; } /*2.5*/
+    for (const auto &v : obj.behavior_packs) { size_t len_53 = pdef::proto::size::ResourcePackIdVersions(stream, v); EXPECT_OR_BAIL(len_53); len += len_53; } /*2.5*/
     len += stream.sizeOfVarInt(obj.resource_packs.size()); /*2.4*/
-    for (const auto &v : obj.resource_packs) { size_t len_53 = pdef::proto::size::ResourcePackIdVersions(stream, v); EXPECT_OR_BAIL(len_53); len += len_53; } /*2.5*/
+    for (const auto &v : obj.resource_packs) { size_t len_54 = pdef::proto::size::ResourcePackIdVersions(stream, v); EXPECT_OR_BAIL(len_54); len += len_54; } /*2.5*/
     len += stream.sizeOfVarInt(obj.game_version.length());
     len += obj.game_version.length(); /*game_version: pstring*/ /*4.1*/
     len += 4; /*1.3*/
     for (const auto &v2 : obj.experiments) { /*3.2*/
-      size_t len_54 = pdef::proto::size::Experiment(stream, v2); EXPECT_OR_BAIL(len_54); len += len_54; /**/ /*4.4*/
+      size_t len_55 = pdef::proto::size::Experiment(stream, v2); EXPECT_OR_BAIL(len_55); len += len_55; /**/ /*4.4*/
     }
     len += 1; /*0.2*/
     PDEF_SIZE_DBG; return len;
@@ -6972,8 +6977,8 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += stream.sizeOfZigZagVarLong(obj.entity_id); /*0.2*/
     len += stream.sizeOfVarInt64(obj.runtime_entity_id); /*0.2*/
     len += stream.sizeOfZigZagVarInt((int&)obj.player_gamemode); /*player_gamemode: zigzag32*/ /*7.0*/
-    size_t len_55 = pdef::proto::size::vec3f(stream, obj.player_position); EXPECT_OR_BAIL(len_55); len += len_55; /*player_position*/ /*4.4*/
-    size_t len_56 = pdef::proto::size::vec2f(stream, obj.rotation); EXPECT_OR_BAIL(len_56); len += len_56; /*rotation*/ /*4.4*/
+    size_t len_56 = pdef::proto::size::vec3f(stream, obj.player_position); EXPECT_OR_BAIL(len_56); len += len_56; /*player_position*/ /*4.4*/
+    size_t len_57 = pdef::proto::size::vec2f(stream, obj.rotation); EXPECT_OR_BAIL(len_57); len += len_57; /*rotation*/ /*4.4*/
     len += 8; /*0.2*/
     len += 2; /*0.2*/
     len += stream.sizeOfVarInt(obj.biome_name.length());
@@ -6982,7 +6987,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += stream.sizeOfZigZagVarInt(obj.generator); /*0.2*/
     len += stream.sizeOfZigZagVarInt((int&)obj.world_gamemode); /*world_gamemode: zigzag32*/ /*7.0*/
     len += stream.sizeOfZigZagVarInt(obj.difficulty); /*0.2*/
-    size_t len_57 = pdef::proto::size::BlockCoordinates(stream, obj.spawn_position); EXPECT_OR_BAIL(len_57); len += len_57; /*spawn_position*/ /*4.4*/
+    size_t len_58 = pdef::proto::size::BlockCoordinates(stream, obj.spawn_position); EXPECT_OR_BAIL(len_58); len += len_58; /*spawn_position*/ /*4.4*/
     len += 1; /*0.2*/
     len += stream.sizeOfZigZagVarInt(obj.day_cycle_stop_time); /*0.2*/
     len += stream.sizeOfZigZagVarInt(obj.edu_offer); /*0.2*/
@@ -7000,11 +7005,11 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += 1; /*0.2*/
     len += stream.sizeOfVarInt(obj.gamerules.size()); /*1.3*/
     for (const auto &v2 : obj.gamerules) { /*3.2*/
-      size_t len_58 = pdef::proto::size::GameRule(stream, v2); EXPECT_OR_BAIL(len_58); len += len_58; /**/ /*4.4*/
+      size_t len_59 = pdef::proto::size::GameRule(stream, v2); EXPECT_OR_BAIL(len_59); len += len_59; /**/ /*4.4*/
     }
     len += 4; /*1.3*/
     for (const auto &v2 : obj.experiments) { /*3.2*/
-      size_t len_59 = pdef::proto::size::Experiment(stream, v2); EXPECT_OR_BAIL(len_59); len += len_59; /**/ /*4.4*/
+      size_t len_60 = pdef::proto::size::Experiment(stream, v2); EXPECT_OR_BAIL(len_60); len += len_60; /**/ /*4.4*/
     }
     len += 1; /*0.2*/
     len += 1; /*0.2*/
@@ -7023,7 +7028,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += 4; /*0.2*/
     len += 4; /*0.2*/
     len += 1; /*0.2*/
-    size_t len_60 = pdef::proto::size::EducationSharedResourceURI(stream, obj.edu_resource_uri); EXPECT_OR_BAIL(len_60); len += len_60; /*edu_resource_uri*/ /*4.4*/
+    size_t len_61 = pdef::proto::size::EducationSharedResourceURI(stream, obj.edu_resource_uri); EXPECT_OR_BAIL(len_61); len += len_61; /*edu_resource_uri*/ /*4.4*/
     len += 1; /*0.2*/
     len += stream.sizeOfVarInt(obj.level_id.length());
     len += obj.level_id.length(); /*level_id: pstring*/ /*4.1*/
@@ -7038,9 +7043,9 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += 8; /*0.2*/
     len += stream.sizeOfZigZagVarInt(obj.enchantment_seed); /*0.2*/
     len += stream.sizeOfVarInt(obj.block_properties.size()); /*2.4*/
-    for (const auto &v : obj.block_properties) { size_t len_61 = pdef::proto::size::BlockProperties(stream, v); EXPECT_OR_BAIL(len_61); len += len_61; } /*2.5*/
+    for (const auto &v : obj.block_properties) { size_t len_62 = pdef::proto::size::BlockProperties(stream, v); EXPECT_OR_BAIL(len_62); len += len_62; } /*2.5*/
     len += stream.sizeOfVarInt(obj.itemstates.size()); /*2.4*/
-    for (const auto &v : obj.itemstates) { size_t len_62 = pdef::proto::size::Itemstates(stream, v); EXPECT_OR_BAIL(len_62); len += len_62; } /*2.5*/
+    for (const auto &v : obj.itemstates) { size_t len_63 = pdef::proto::size::Itemstates(stream, v); EXPECT_OR_BAIL(len_63); len += len_63; } /*2.5*/
     len += stream.sizeOfVarInt(obj.multiplayer_correlation_id.length());
     len += obj.multiplayer_correlation_id.length(); /*multiplayer_correlation_id: pstring*/ /*4.1*/
     len += 1; /*0.2*/
@@ -7060,15 +7065,15 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += stream.sizeOfVarInt64(obj.runtime_entity_id); /*0.2*/
     len += stream.sizeOfVarInt(obj.platform_chat_id.length());
     len += obj.platform_chat_id.length(); /*platform_chat_id: pstring*/ /*4.1*/
-    size_t len_63 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_63); len += len_63; /*position*/ /*4.4*/
-    size_t len_64 = pdef::proto::size::vec3f(stream, obj.velocity); EXPECT_OR_BAIL(len_64); len += len_64; /*velocity*/ /*4.4*/
+    size_t len_64 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_64); len += len_64; /*position*/ /*4.4*/
+    size_t len_65 = pdef::proto::size::vec3f(stream, obj.velocity); EXPECT_OR_BAIL(len_65); len += len_65; /*velocity*/ /*4.4*/
     len += 4; /*0.2*/
     len += 4; /*0.2*/
     len += 4; /*0.2*/
-    size_t len_65 = pdef::proto::size::Item(stream, obj.held_item); EXPECT_OR_BAIL(len_65); len += len_65; /*held_item*/ /*4.4*/
+    size_t len_66 = pdef::proto::size::Item(stream, obj.held_item); EXPECT_OR_BAIL(len_66); len += len_66; /*held_item*/ /*4.4*/
     len += stream.sizeOfZigZagVarInt((int&)obj.gamemode); /*gamemode: zigzag32*/ /*7.0*/
     len += stream.sizeOfVarInt(obj.metadata.size()); /*2.4*/
-    for (const auto &v : obj.metadata) { size_t len_66 = pdef::proto::size::MetadataDictionary(stream, v); EXPECT_OR_BAIL(len_66); len += len_66; } /*2.5*/
+    for (const auto &v : obj.metadata) { size_t len_67 = pdef::proto::size::MetadataDictionary(stream, v); EXPECT_OR_BAIL(len_67); len += len_67; } /*2.5*/
     len += stream.sizeOfVarInt(obj.flags); /*0.2*/
     len += stream.sizeOfVarInt(obj.command_permission); /*0.2*/
     len += stream.sizeOfVarInt(obj.action_permissions); /*0.2*/
@@ -7077,7 +7082,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += 8; /*0.2*/
     len += stream.sizeOfVarInt(obj.links.size()); /*1.3*/
     for (const auto &v2 : obj.links) { /*3.2*/
-      size_t len_67 = pdef::proto::size::Link(stream, v2); EXPECT_OR_BAIL(len_67); len += len_67; /**/ /*4.4*/
+      size_t len_68 = pdef::proto::size::Link(stream, v2); EXPECT_OR_BAIL(len_68); len += len_68; /**/ /*4.4*/
     }
     len += stream.sizeOfVarInt(obj.device_id.length());
     len += obj.device_id.length(); /*device_id: pstring*/ /*4.1*/
@@ -7090,18 +7095,18 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += stream.sizeOfVarInt64(obj.runtime_entity_id); /*0.2*/
     len += stream.sizeOfVarInt(obj.entity_type.length());
     len += obj.entity_type.length(); /*entity_type: pstring*/ /*4.1*/
-    size_t len_68 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_68); len += len_68; /*position*/ /*4.4*/
-    size_t len_69 = pdef::proto::size::vec3f(stream, obj.velocity); EXPECT_OR_BAIL(len_69); len += len_69; /*velocity*/ /*4.4*/
+    size_t len_69 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_69); len += len_69; /*position*/ /*4.4*/
+    size_t len_70 = pdef::proto::size::vec3f(stream, obj.velocity); EXPECT_OR_BAIL(len_70); len += len_70; /*velocity*/ /*4.4*/
     len += 4; /*0.2*/
     len += 4; /*0.2*/
     len += 4; /*0.2*/
     len += stream.sizeOfVarInt(obj.attributes.size()); /*2.4*/
-    for (const auto &v : obj.attributes) { size_t len_70 = pdef::proto::size::EntityAttributes(stream, v); EXPECT_OR_BAIL(len_70); len += len_70; } /*2.5*/
+    for (const auto &v : obj.attributes) { size_t len_71 = pdef::proto::size::EntityAttributes(stream, v); EXPECT_OR_BAIL(len_71); len += len_71; } /*2.5*/
     len += stream.sizeOfVarInt(obj.metadata.size()); /*2.4*/
-    for (const auto &v : obj.metadata) { size_t len_71 = pdef::proto::size::MetadataDictionary(stream, v); EXPECT_OR_BAIL(len_71); len += len_71; } /*2.5*/
+    for (const auto &v : obj.metadata) { size_t len_72 = pdef::proto::size::MetadataDictionary(stream, v); EXPECT_OR_BAIL(len_72); len += len_72; } /*2.5*/
     len += stream.sizeOfVarInt(obj.links.size()); /*1.3*/
     for (const auto &v2 : obj.links) { /*3.2*/
-      size_t len_72 = pdef::proto::size::Link(stream, v2); EXPECT_OR_BAIL(len_72); len += len_72; /**/ /*4.4*/
+      size_t len_73 = pdef::proto::size::Link(stream, v2); EXPECT_OR_BAIL(len_73); len += len_73; /**/ /*4.4*/
     }
     PDEF_SIZE_DBG; return len;
   }
@@ -7114,11 +7119,11 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     len += stream.sizeOfZigZagVarLong(obj.entity_id_self); /*0.2*/
     len += stream.sizeOfVarInt64(obj.runtime_entity_id); /*0.2*/
-    size_t len_73 = pdef::proto::size::Item(stream, obj.item); EXPECT_OR_BAIL(len_73); len += len_73; /*item*/ /*4.4*/
-    size_t len_74 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_74); len += len_74; /*position*/ /*4.4*/
-    size_t len_75 = pdef::proto::size::vec3f(stream, obj.velocity); EXPECT_OR_BAIL(len_75); len += len_75; /*velocity*/ /*4.4*/
+    size_t len_74 = pdef::proto::size::Item(stream, obj.item); EXPECT_OR_BAIL(len_74); len += len_74; /*item*/ /*4.4*/
+    size_t len_75 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_75); len += len_75; /*position*/ /*4.4*/
+    size_t len_76 = pdef::proto::size::vec3f(stream, obj.velocity); EXPECT_OR_BAIL(len_76); len += len_76; /*velocity*/ /*4.4*/
     len += stream.sizeOfVarInt(obj.metadata.size()); /*2.4*/
-    for (const auto &v : obj.metadata) { size_t len_76 = pdef::proto::size::MetadataDictionary(stream, v); EXPECT_OR_BAIL(len_76); len += len_76; } /*2.5*/
+    for (const auto &v : obj.metadata) { size_t len_77 = pdef::proto::size::MetadataDictionary(stream, v); EXPECT_OR_BAIL(len_77); len += len_77; } /*2.5*/
     len += 1; /*0.2*/
     PDEF_SIZE_DBG; return len;
   }
@@ -7132,14 +7137,14 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     len += stream.sizeOfVarInt64(obj.runtime_entity_id); /*0.2*/
     len += 1; /*0.2*/
-    size_t len_77 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_77); len += len_77; /*position*/ /*4.4*/
-    size_t len_78 = pdef::proto::size::Rotation(stream, obj.rotation); EXPECT_OR_BAIL(len_78); len += len_78; /*rotation*/ /*4.4*/
+    size_t len_78 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_78); len += len_78; /*position*/ /*4.4*/
+    size_t len_79 = pdef::proto::size::Rotation(stream, obj.rotation); EXPECT_OR_BAIL(len_79); len += len_79; /*rotation*/ /*4.4*/
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_move_player(pdef::Stream &stream, const pdef::proto::packet_move_player &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.runtime_id); /*0.2*/
-    size_t len_79 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_79); len += len_79; /*position*/ /*4.4*/
+    size_t len_80 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_80); len += len_80; /*position*/ /*4.4*/
     len += 4; /*0.2*/
     len += 4; /*0.2*/
     len += 4; /*0.2*/
@@ -7166,7 +7171,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   }
   size_t packet_update_block(pdef::Stream &stream, const pdef::proto::packet_update_block &obj) {
     size_t len = 0;
-    size_t len_80 = pdef::proto::size::BlockCoordinates(stream, obj.position); EXPECT_OR_BAIL(len_80); len += len_80; /*position*/ /*4.4*/
+    size_t len_81 = pdef::proto::size::BlockCoordinates(stream, obj.position); EXPECT_OR_BAIL(len_81); len += len_81; /*position*/ /*4.4*/
     len += stream.sizeOfVarInt(obj.block_runtime_id); /*0.2*/
     int flags_val = 0; /*X*/
     if (obj.flags.neighbors) flags_val |= 1;
@@ -7182,7 +7187,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     len += stream.sizeOfZigZagVarLong(obj.entity_id_self); /*0.2*/
     len += stream.sizeOfVarInt64(obj.runtime_entity_id); /*0.2*/
-    size_t len_81 = pdef::proto::size::vec3f(stream, obj.coordinates); EXPECT_OR_BAIL(len_81); len += len_81; /*coordinates*/ /*4.4*/
+    size_t len_82 = pdef::proto::size::vec3f(stream, obj.coordinates); EXPECT_OR_BAIL(len_82); len += len_82; /*coordinates*/ /*4.4*/
     len += stream.sizeOfZigZagVarInt(obj.direction); /*0.2*/
     len += stream.sizeOfVarInt(obj.title.length());
     len += obj.title.length(); /*title: pstring*/ /*4.1*/
@@ -7197,7 +7202,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   size_t packet_level_sound_event_old(pdef::Stream &stream, const pdef::proto::packet_level_sound_event_old &obj) {
     size_t len = 0;
     len += 1; /*0.2*/
-    size_t len_82 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_82); len += len_82; /*position*/ /*4.4*/
+    size_t len_83 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_83); len += len_83; /*position*/ /*4.4*/
     len += stream.sizeOfZigZagVarInt(obj.block_id); /*0.2*/
     len += stream.sizeOfZigZagVarInt(obj.entity_type); /*0.2*/
     len += 1; /*0.2*/
@@ -7207,13 +7212,13 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   size_t packet_level_event(pdef::Stream &stream, const pdef::proto::packet_level_event &obj) {
     size_t len = 0;
     len += stream.sizeOfZigZagVarInt((int&)obj.event); /*event: zigzag32*/ /*7.0*/
-    size_t len_83 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_83); len += len_83; /*position*/ /*4.4*/
+    size_t len_84 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_84); len += len_84; /*position*/ /*4.4*/
     len += stream.sizeOfZigZagVarInt(obj.data); /*0.2*/
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_block_event(pdef::Stream &stream, const pdef::proto::packet_block_event &obj) {
     size_t len = 0;
-    size_t len_84 = pdef::proto::size::BlockCoordinates(stream, obj.position); EXPECT_OR_BAIL(len_84); len += len_84; /*position*/ /*4.4*/
+    size_t len_85 = pdef::proto::size::BlockCoordinates(stream, obj.position); EXPECT_OR_BAIL(len_85); len += len_85; /*position*/ /*4.4*/
     len += stream.sizeOfZigZagVarInt((int&)obj.type); /*type: zigzag32*/ /*7.0*/
     len += stream.sizeOfZigZagVarInt(obj.data); /*0.2*/
     PDEF_SIZE_DBG; return len;
@@ -7239,19 +7244,19 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     len += stream.sizeOfVarInt64(obj.runtime_entity_id); /*0.2*/
     len += stream.sizeOfVarInt(obj.attributes.size()); /*2.4*/
-    for (const auto &v : obj.attributes) { size_t len_85 = pdef::proto::size::PlayerAttributes(stream, v); EXPECT_OR_BAIL(len_85); len += len_85; } /*2.5*/
+    for (const auto &v : obj.attributes) { size_t len_86 = pdef::proto::size::PlayerAttributes(stream, v); EXPECT_OR_BAIL(len_86); len += len_86; } /*2.5*/
     len += stream.sizeOfVarInt64(obj.tick); /*0.2*/
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_inventory_transaction(pdef::Stream &stream, const pdef::proto::packet_inventory_transaction &obj) {
     size_t len = 0;
-    size_t len_86 = pdef::proto::size::Transaction(stream, obj.transaction); EXPECT_OR_BAIL(len_86); len += len_86; /*transaction*/ /*4.4*/
+    size_t len_87 = pdef::proto::size::Transaction(stream, obj.transaction); EXPECT_OR_BAIL(len_87); len += len_87; /*transaction*/ /*4.4*/
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_mob_equipment(pdef::Stream &stream, const pdef::proto::packet_mob_equipment &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt64(obj.runtime_entity_id); /*0.2*/
-    size_t len_87 = pdef::proto::size::Item(stream, obj.item); EXPECT_OR_BAIL(len_87); len += len_87; /*item*/ /*4.4*/
+    size_t len_88 = pdef::proto::size::Item(stream, obj.item); EXPECT_OR_BAIL(len_88); len += len_88; /*item*/ /*4.4*/
     len += 1; /*0.2*/
     len += 1; /*0.2*/
     len += 1; /*window_id: i8*/ /*7.0*/
@@ -7260,10 +7265,10 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   size_t packet_mob_armor_equipment(pdef::Stream &stream, const pdef::proto::packet_mob_armor_equipment &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt64(obj.runtime_entity_id); /*0.2*/
-    size_t len_88 = pdef::proto::size::Item(stream, obj.helmet); EXPECT_OR_BAIL(len_88); len += len_88; /*helmet*/ /*4.4*/
-    size_t len_89 = pdef::proto::size::Item(stream, obj.chestplate); EXPECT_OR_BAIL(len_89); len += len_89; /*chestplate*/ /*4.4*/
-    size_t len_90 = pdef::proto::size::Item(stream, obj.leggings); EXPECT_OR_BAIL(len_90); len += len_90; /*leggings*/ /*4.4*/
-    size_t len_91 = pdef::proto::size::Item(stream, obj.boots); EXPECT_OR_BAIL(len_91); len += len_91; /*boots*/ /*4.4*/
+    size_t len_89 = pdef::proto::size::Item(stream, obj.helmet); EXPECT_OR_BAIL(len_89); len += len_89; /*helmet*/ /*4.4*/
+    size_t len_90 = pdef::proto::size::Item(stream, obj.chestplate); EXPECT_OR_BAIL(len_90); len += len_90; /*chestplate*/ /*4.4*/
+    size_t len_91 = pdef::proto::size::Item(stream, obj.leggings); EXPECT_OR_BAIL(len_91); len += len_91; /*leggings*/ /*4.4*/
+    size_t len_92 = pdef::proto::size::Item(stream, obj.boots); EXPECT_OR_BAIL(len_92); len += len_92; /*boots*/ /*4.4*/
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_interact(pdef::Stream &stream, const pdef::proto::packet_interact &obj) {
@@ -7273,11 +7278,11 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += stream.sizeOfVarInt64(obj.target_entity_id); /*0.2*/
     switch (V_action_id) { /*8.0*/
       case pdef::proto::packet_interact::ActionId::MouseOverEntity: { /*8.5*/
-        EXPECT_OR_BAIL(obj.position); size_t len_92 = pdef::proto::size::vec3f(stream, *obj.position); EXPECT_OR_BAIL(len_92); len += len_92; /*position*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.position); size_t len_93 = pdef::proto::size::vec3f(stream, *obj.position); EXPECT_OR_BAIL(len_93); len += len_93; /*position*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::packet_interact::ActionId::LeaveVehicle: { /*8.5*/
-        EXPECT_OR_BAIL(obj.position); size_t len_93 = pdef::proto::size::vec3f(stream, *obj.position); EXPECT_OR_BAIL(len_93); len += len_93; /*position*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.position); size_t len_94 = pdef::proto::size::vec3f(stream, *obj.position); EXPECT_OR_BAIL(len_94); len += len_94; /*position*/ /*4.4*/
         break;
       } /*8.7*/
       default: break; /*avoid unhandled case warning*/
@@ -7304,8 +7309,8 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     len += stream.sizeOfVarInt64(obj.runtime_entity_id); /*0.2*/
     len += stream.sizeOfZigZagVarInt((int&)obj.action); /*action: zigzag32*/ /*7.0*/
-    size_t len_94 = pdef::proto::size::BlockCoordinates(stream, obj.position); EXPECT_OR_BAIL(len_94); len += len_94; /*position*/ /*4.4*/
-    size_t len_95 = pdef::proto::size::BlockCoordinates(stream, obj.result_position); EXPECT_OR_BAIL(len_95); len += len_95; /*result_position*/ /*4.4*/
+    size_t len_95 = pdef::proto::size::BlockCoordinates(stream, obj.position); EXPECT_OR_BAIL(len_95); len += len_95; /*position*/ /*4.4*/
+    size_t len_96 = pdef::proto::size::BlockCoordinates(stream, obj.result_position); EXPECT_OR_BAIL(len_96); len += len_96; /*result_position*/ /*4.4*/
     len += stream.sizeOfZigZagVarInt(obj.face); /*0.2*/
     PDEF_SIZE_DBG; return len;
   }
@@ -7320,19 +7325,19 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     len += stream.sizeOfVarInt64(obj.runtime_entity_id); /*0.2*/
     len += stream.sizeOfVarInt(obj.metadata.size()); /*2.4*/
-    for (const auto &v : obj.metadata) { size_t len_96 = pdef::proto::size::MetadataDictionary(stream, v); EXPECT_OR_BAIL(len_96); len += len_96; } /*2.5*/
+    for (const auto &v : obj.metadata) { size_t len_97 = pdef::proto::size::MetadataDictionary(stream, v); EXPECT_OR_BAIL(len_97); len += len_97; } /*2.5*/
     len += stream.sizeOfVarInt64(obj.tick); /*0.2*/
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_set_entity_motion(pdef::Stream &stream, const pdef::proto::packet_set_entity_motion &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt64(obj.runtime_entity_id); /*0.2*/
-    size_t len_97 = pdef::proto::size::vec3f(stream, obj.velocity); EXPECT_OR_BAIL(len_97); len += len_97; /*velocity*/ /*4.4*/
+    size_t len_98 = pdef::proto::size::vec3f(stream, obj.velocity); EXPECT_OR_BAIL(len_98); len += len_98; /*velocity*/ /*4.4*/
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_set_entity_link(pdef::Stream &stream, const pdef::proto::packet_set_entity_link &obj) {
     size_t len = 0;
-    size_t len_98 = pdef::proto::size::Link(stream, obj.link); EXPECT_OR_BAIL(len_98); len += len_98; /*link*/ /*4.4*/
+    size_t len_99 = pdef::proto::size::Link(stream, obj.link); EXPECT_OR_BAIL(len_99); len += len_99; /*link*/ /*4.4*/
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_set_health(pdef::Stream &stream, const pdef::proto::packet_set_health &obj) {
@@ -7343,9 +7348,9 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   size_t packet_set_spawn_position(pdef::Stream &stream, const pdef::proto::packet_set_spawn_position &obj) {
     size_t len = 0;
     len += stream.sizeOfZigZagVarInt((int&)obj.spawn_type); /*spawn_type: zigzag32*/ /*7.0*/
-    size_t len_99 = pdef::proto::size::BlockCoordinates(stream, obj.player_position); EXPECT_OR_BAIL(len_99); len += len_99; /*player_position*/ /*4.4*/
+    size_t len_100 = pdef::proto::size::BlockCoordinates(stream, obj.player_position); EXPECT_OR_BAIL(len_100); len += len_100; /*player_position*/ /*4.4*/
     len += stream.sizeOfZigZagVarInt(obj.dimension); /*0.2*/
-    size_t len_100 = pdef::proto::size::BlockCoordinates(stream, obj.world_position); EXPECT_OR_BAIL(len_100); len += len_100; /*world_position*/ /*4.4*/
+    size_t len_101 = pdef::proto::size::BlockCoordinates(stream, obj.world_position); EXPECT_OR_BAIL(len_101); len += len_101; /*world_position*/ /*4.4*/
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_animate(pdef::Stream &stream, const pdef::proto::packet_animate &obj) {
@@ -7368,7 +7373,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   }
   size_t packet_respawn(pdef::Stream &stream, const pdef::proto::packet_respawn &obj) {
     size_t len = 0;
-    size_t len_101 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_101); len += len_101; /*position*/ /*4.4*/
+    size_t len_102 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_102); len += len_102; /*position*/ /*4.4*/
     len += 1; /*0.2*/
     len += stream.sizeOfVarInt64(obj.runtime_entity_id); /*0.2*/
     PDEF_SIZE_DBG; return len;
@@ -7377,7 +7382,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     len += 1; /*window_id: i8*/ /*7.0*/
     len += 1; /*window_type: i8*/ /*7.0*/
-    size_t len_102 = pdef::proto::size::BlockCoordinates(stream, obj.coordinates); EXPECT_OR_BAIL(len_102); len += len_102; /*coordinates*/ /*4.4*/
+    size_t len_103 = pdef::proto::size::BlockCoordinates(stream, obj.coordinates); EXPECT_OR_BAIL(len_103); len += len_103; /*coordinates*/ /*4.4*/
     len += stream.sizeOfZigZagVarLong(obj.runtime_entity_id); /*0.2*/
     PDEF_SIZE_DBG; return len;
   }
@@ -7399,7 +7404,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += stream.sizeOfVarInt((int&)obj.window_id); /*window_id: varint*/ /*7.0*/
     len += stream.sizeOfVarInt(obj.input.size()); /*1.3*/
     for (const auto &v2 : obj.input) { /*3.2*/
-      size_t len_103 = pdef::proto::size::Item(stream, v2); EXPECT_OR_BAIL(len_103); len += len_103; /**/ /*4.4*/
+      size_t len_104 = pdef::proto::size::Item(stream, v2); EXPECT_OR_BAIL(len_104); len += len_104; /**/ /*4.4*/
     }
     PDEF_SIZE_DBG; return len;
   }
@@ -7407,7 +7412,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     len += stream.sizeOfVarInt((int&)obj.window_id); /*window_id: varint*/ /*7.0*/
     len += stream.sizeOfVarInt(obj.slot); /*0.2*/
-    size_t len_104 = pdef::proto::size::Item(stream, obj.item); EXPECT_OR_BAIL(len_104); len += len_104; /*item*/ /*4.4*/
+    size_t len_105 = pdef::proto::size::Item(stream, obj.item); EXPECT_OR_BAIL(len_105); len += len_105; /*item*/ /*4.4*/
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_container_set_data(pdef::Stream &stream, const pdef::proto::packet_container_set_data &obj) {
@@ -7420,14 +7425,14 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   size_t packet_crafting_data(pdef::Stream &stream, const pdef::proto::packet_crafting_data &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.recipes.size()); /*2.4*/
-    for (const auto &v : obj.recipes) { size_t len_105 = pdef::proto::size::Recipes(stream, v); EXPECT_OR_BAIL(len_105); len += len_105; } /*2.5*/
+    for (const auto &v : obj.recipes) { size_t len_106 = pdef::proto::size::Recipes(stream, v); EXPECT_OR_BAIL(len_106); len += len_106; } /*2.5*/
     len += stream.sizeOfVarInt(obj.potion_type_recipes.size()); /*2.4*/
-    for (const auto &v : obj.potion_type_recipes) { size_t len_106 = pdef::proto::size::PotionTypeRecipes(stream, v); EXPECT_OR_BAIL(len_106); len += len_106; } /*2.5*/
+    for (const auto &v : obj.potion_type_recipes) { size_t len_107 = pdef::proto::size::PotionTypeRecipes(stream, v); EXPECT_OR_BAIL(len_107); len += len_107; } /*2.5*/
     len += stream.sizeOfVarInt(obj.potion_container_recipes.size()); /*2.4*/
-    for (const auto &v : obj.potion_container_recipes) { size_t len_107 = pdef::proto::size::PotionContainerChangeRecipes(stream, v); EXPECT_OR_BAIL(len_107); len += len_107; } /*2.5*/
+    for (const auto &v : obj.potion_container_recipes) { size_t len_108 = pdef::proto::size::PotionContainerChangeRecipes(stream, v); EXPECT_OR_BAIL(len_108); len += len_108; } /*2.5*/
     len += stream.sizeOfVarInt(obj.material_reducers.size()); /*1.3*/
     for (const auto &v2 : obj.material_reducers) { /*3.2*/
-      size_t len_108 = pdef::proto::size::MaterialReducer(stream, v2); EXPECT_OR_BAIL(len_108); len += len_108; /**/ /*4.4*/
+      size_t len_109 = pdef::proto::size::MaterialReducer(stream, v2); EXPECT_OR_BAIL(len_109); len += len_109; /**/ /*4.4*/
     }
     len += 1; /*0.2*/
     PDEF_SIZE_DBG; return len;
@@ -7439,11 +7444,11 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += 8; /*0.2*/
     len += stream.sizeOfVarInt(obj.input.size()); /*1.3*/
     for (const auto &v2 : obj.input) { /*3.2*/
-      size_t len_109 = pdef::proto::size::Item(stream, v2); EXPECT_OR_BAIL(len_109); len += len_109; /**/ /*4.4*/
+      size_t len_110 = pdef::proto::size::Item(stream, v2); EXPECT_OR_BAIL(len_110); len += len_110; /**/ /*4.4*/
     }
     len += stream.sizeOfVarInt(obj.result.size()); /*1.3*/
     for (const auto &v2 : obj.result) { /*3.2*/
-      size_t len_110 = pdef::proto::size::Item(stream, v2); EXPECT_OR_BAIL(len_110); len += len_110; /**/ /*4.4*/
+      size_t len_111 = pdef::proto::size::Item(stream, v2); EXPECT_OR_BAIL(len_111); len += len_111; /**/ /*4.4*/
     }
     PDEF_SIZE_DBG; return len;
   }
@@ -7487,7 +7492,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   }
   size_t packet_block_entity_data(pdef::Stream &stream, const pdef::proto::packet_block_entity_data &obj) {
     size_t len = 0;
-    size_t len_111 = pdef::proto::size::BlockCoordinates(stream, obj.position); EXPECT_OR_BAIL(len_111); len += len_111; /*position*/ /*4.4*/
+    size_t len_112 = pdef::proto::size::BlockCoordinates(stream, obj.position); EXPECT_OR_BAIL(len_112); len += len_112; /*position*/ /*4.4*/
     len += 1; /*0.2*/
     PDEF_SIZE_DBG; return len;
   }
@@ -7532,7 +7537,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   size_t packet_change_dimension(pdef::Stream &stream, const pdef::proto::packet_change_dimension &obj) {
     size_t len = 0;
     len += stream.sizeOfZigZagVarInt(obj.dimension); /*0.2*/
-    size_t len_112 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_112); len += len_112; /*position*/ /*4.4*/
+    size_t len_113 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_113); len += len_113; /*position*/ /*4.4*/
     len += 1; /*0.2*/
     PDEF_SIZE_DBG; return len;
   }
@@ -7543,7 +7548,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   }
   size_t packet_player_list(pdef::Stream &stream, const pdef::proto::packet_player_list &obj) {
     size_t len = 0;
-    size_t len_113 = pdef::proto::size::PlayerRecords(stream, obj.records); EXPECT_OR_BAIL(len_113); len += len_113; /*records*/ /*4.4*/
+    size_t len_114 = pdef::proto::size::PlayerRecords(stream, obj.records); EXPECT_OR_BAIL(len_114); len += len_114; /*records*/ /*4.4*/
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_simple_event(pdef::Stream &stream, const pdef::proto::packet_simple_event &obj) {
@@ -7561,7 +7566,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   }
   size_t packet_spawn_experience_orb(pdef::Stream &stream, const pdef::proto::packet_spawn_experience_orb &obj) {
     size_t len = 0;
-    size_t len_114 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_114); len += len_114; /*position*/ /*4.4*/
+    size_t len_115 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_115); len += len_115; /*position*/ /*4.4*/
     len += stream.sizeOfZigZagVarInt(obj.count); /*0.2*/
     PDEF_SIZE_DBG; return len;
   }
@@ -7590,11 +7595,11 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
         EXPECT_OR_BAIL(obj.tracked); const pdef::proto::packet_clientbound_map_item_data::Tracked &v2 = *obj.tracked; /*8.6*/
         len += stream.sizeOfVarInt(v2.objects.size()); /*1.3*/
         for (const auto &v4 : v2.objects) { /*3.2*/
-          size_t len_115 = pdef::proto::size::TrackedObject(stream, v4); EXPECT_OR_BAIL(len_115); len += len_115; /**/ /*4.4*/
+          size_t len_116 = pdef::proto::size::TrackedObject(stream, v4); EXPECT_OR_BAIL(len_116); len += len_116; /**/ /*4.4*/
         }
         len += stream.sizeOfVarInt(v2.decorations.size()); /*1.3*/
         for (const auto &v4 : v2.decorations) { /*3.2*/
-          size_t len_116 = pdef::proto::size::MapDecoration(stream, v4); EXPECT_OR_BAIL(len_116); len += len_116; /**/ /*4.4*/
+          size_t len_117 = pdef::proto::size::MapDecoration(stream, v4); EXPECT_OR_BAIL(len_117); len += len_117; /**/ /*4.4*/
         }
     }
     if (V_update_flags.texture == true) { /*8.2*/
@@ -7627,14 +7632,14 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   }
   size_t packet_item_frame_drop_item(pdef::Stream &stream, const pdef::proto::packet_item_frame_drop_item &obj) {
     size_t len = 0;
-    size_t len_117 = pdef::proto::size::BlockCoordinates(stream, obj.coordinates); EXPECT_OR_BAIL(len_117); len += len_117; /*coordinates*/ /*4.4*/
+    size_t len_118 = pdef::proto::size::BlockCoordinates(stream, obj.coordinates); EXPECT_OR_BAIL(len_118); len += len_118; /*coordinates*/ /*4.4*/
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_game_rules_changed(pdef::Stream &stream, const pdef::proto::packet_game_rules_changed &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.rules.size()); /*1.3*/
     for (const auto &v2 : obj.rules) { /*3.2*/
-      size_t len_118 = pdef::proto::size::GameRule(stream, v2); EXPECT_OR_BAIL(len_118); len += len_118; /**/ /*4.4*/
+      size_t len_119 = pdef::proto::size::GameRule(stream, v2); EXPECT_OR_BAIL(len_119); len += len_119; /**/ /*4.4*/
     }
     PDEF_SIZE_DBG; return len;
   }
@@ -7776,7 +7781,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.command.length());
     len += obj.command.length(); /*command: pstring*/ /*4.1*/
-    size_t len_119 = pdef::proto::size::CommandOrigin(stream, obj.origin); EXPECT_OR_BAIL(len_119); len += len_119; /*origin*/ /*4.4*/
+    size_t len_120 = pdef::proto::size::CommandOrigin(stream, obj.origin); EXPECT_OR_BAIL(len_120); len += len_120; /*origin*/ /*4.4*/
     len += 1; /*0.2*/
     PDEF_SIZE_DBG; return len;
   }
@@ -7784,7 +7789,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     const bool &V_is_block = obj.is_block; /*0.1*/
     if (V_is_block == true) { /*8.1*/
-        EXPECT_OR_BAIL(obj.position); size_t len_120 = pdef::proto::size::BlockCoordinates(stream, *obj.position); EXPECT_OR_BAIL(len_120); len += len_120; /*position*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.position); size_t len_121 = pdef::proto::size::BlockCoordinates(stream, *obj.position); EXPECT_OR_BAIL(len_121); len += len_121; /*position*/ /*4.4*/
         len += stream.sizeOfVarInt((int&)obj.mode); /*mode: varint*/ /*7.0*/
         len += 1; /*0.2*/
         len += 1; /*0.2*/
@@ -7805,7 +7810,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   }
   size_t packet_command_output(pdef::Stream &stream, const pdef::proto::packet_command_output &obj) {
     size_t len = 0;
-    size_t len_121 = pdef::proto::size::CommandOrigin(stream, obj.origin); EXPECT_OR_BAIL(len_121); len += len_121; /*origin*/ /*4.4*/
+    size_t len_122 = pdef::proto::size::CommandOrigin(stream, obj.origin); EXPECT_OR_BAIL(len_122); len += len_122; /*origin*/ /*4.4*/
     const pdef::proto::packet_command_output::OutputType &V_output_type = obj.output_type; /*0.3*/
     len += 1; /*output_type^: i8*/ /*7.0*/
     len += stream.sizeOfVarInt(obj.success_count); /*0.2*/
@@ -7895,7 +7900,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.name.length());
     len += obj.name.length(); /*name: pstring*/ /*4.1*/
-    size_t len_122 = pdef::proto::size::BlockCoordinates(stream, obj.coordinates); EXPECT_OR_BAIL(len_122); len += len_122; /*coordinates*/ /*4.4*/
+    size_t len_123 = pdef::proto::size::BlockCoordinates(stream, obj.coordinates); EXPECT_OR_BAIL(len_123); len += len_123; /*coordinates*/ /*4.4*/
     len += 4; /*0.2*/
     len += 4; /*0.2*/
     PDEF_SIZE_DBG; return len;
@@ -7929,7 +7934,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   }
   size_t packet_structure_block_update(pdef::Stream &stream, const pdef::proto::packet_structure_block_update &obj) {
     size_t len = 0;
-    size_t len_123 = pdef::proto::size::BlockCoordinates(stream, obj.position); EXPECT_OR_BAIL(len_123); len += len_123; /*position*/ /*4.4*/
+    size_t len_124 = pdef::proto::size::BlockCoordinates(stream, obj.position); EXPECT_OR_BAIL(len_124); len += len_124; /*position*/ /*4.4*/
     len += stream.sizeOfVarInt(obj.structure_name.length());
     len += obj.structure_name.length(); /*structure_name: pstring*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.data_field.length());
@@ -7937,7 +7942,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += 1; /*0.2*/
     len += 1; /*0.2*/
     len += stream.sizeOfZigZagVarInt(obj.structure_block_type); /*0.2*/
-    size_t len_124 = pdef::proto::size::StructureBlockSettings(stream, obj.settings); EXPECT_OR_BAIL(len_124); len += len_124; /*settings*/ /*4.4*/
+    size_t len_125 = pdef::proto::size::StructureBlockSettings(stream, obj.settings); EXPECT_OR_BAIL(len_125); len += len_125; /*settings*/ /*4.4*/
     len += stream.sizeOfZigZagVarInt(obj.redstone_save_mode); /*0.2*/
     len += 1; /*0.2*/
     PDEF_SIZE_DBG; return len;
@@ -7961,7 +7966,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   size_t packet_player_skin(pdef::Stream &stream, const pdef::proto::packet_player_skin &obj) {
     size_t len = 0;
     len += 8; /*0.2*/
-    size_t len_125 = pdef::proto::size::Skin(stream, obj.skin); EXPECT_OR_BAIL(len_125); len += len_125; /*skin*/ /*4.4*/
+    size_t len_126 = pdef::proto::size::Skin(stream, obj.skin); EXPECT_OR_BAIL(len_126); len += len_126; /*skin*/ /*4.4*/
     len += stream.sizeOfVarInt(obj.skin_name.length());
     len += obj.skin_name.length(); /*skin_name: pstring*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.old_skin_name.length());
@@ -8153,13 +8158,13 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   size_t packet_lab_table(pdef::Stream &stream, const pdef::proto::packet_lab_table &obj) {
     size_t len = 0;
     len += 1; /*action_type: u8*/ /*7.0*/
-    size_t len_126 = pdef::proto::size::vec3i(stream, obj.position); EXPECT_OR_BAIL(len_126); len += len_126; /*position*/ /*4.4*/
+    size_t len_127 = pdef::proto::size::vec3i(stream, obj.position); EXPECT_OR_BAIL(len_127); len += len_127; /*position*/ /*4.4*/
     len += 1; /*0.2*/
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_update_block_synced(pdef::Stream &stream, const pdef::proto::packet_update_block_synced &obj) {
     size_t len = 0;
-    size_t len_127 = pdef::proto::size::BlockCoordinates(stream, obj.position); EXPECT_OR_BAIL(len_127); len += len_127; /*position*/ /*4.4*/
+    size_t len_128 = pdef::proto::size::BlockCoordinates(stream, obj.position); EXPECT_OR_BAIL(len_128); len += len_128; /*position*/ /*4.4*/
     len += stream.sizeOfVarInt(obj.block_runtime_id); /*0.2*/
     int flags_val = 0; /*X*/
     if (obj.flags.neighbors) flags_val |= 1;
@@ -8260,7 +8265,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     len += 1; /*0.2*/
     len += stream.sizeOfZigZagVarLong(obj.entity_id); /*0.2*/
-    size_t len_128 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_128); len += len_128; /*position*/ /*4.4*/
+    size_t len_129 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_129); len += len_129; /*position*/ /*4.4*/
     len += stream.sizeOfVarInt(obj.particle_name.length());
     len += obj.particle_name.length(); /*particle_name: pstring*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.molang_variables.size());
@@ -8275,7 +8280,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   size_t packet_level_sound_event_v2(pdef::Stream &stream, const pdef::proto::packet_level_sound_event_v2 &obj) {
     size_t len = 0;
     len += 1; /*0.2*/
-    size_t len_129 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_129); len += len_129; /*position*/ /*4.4*/
+    size_t len_130 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_130); len += len_130; /*position*/ /*4.4*/
     len += stream.sizeOfZigZagVarInt(obj.block_id); /*0.2*/
     len += stream.sizeOfVarInt(obj.entity_type.length());
     len += obj.entity_type.length(); /*entity_type: pstring*/ /*4.1*/
@@ -8285,7 +8290,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   }
   size_t packet_network_chunk_publisher_update(pdef::Stream &stream, const pdef::proto::packet_network_chunk_publisher_update &obj) {
     size_t len = 0;
-    size_t len_130 = pdef::proto::size::BlockCoordinates(stream, obj.coordinates); EXPECT_OR_BAIL(len_130); len += len_130; /*coordinates*/ /*4.4*/
+    size_t len_131 = pdef::proto::size::BlockCoordinates(stream, obj.coordinates); EXPECT_OR_BAIL(len_131); len += len_131; /*coordinates*/ /*4.4*/
     len += stream.sizeOfVarInt(obj.radius); /*0.2*/
     PDEF_SIZE_DBG; return len;
   }
@@ -8297,7 +8302,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   size_t packet_level_sound_event(pdef::Stream &stream, const pdef::proto::packet_level_sound_event &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt((int&)obj.sound_id); /*sound_id: varint*/ /*7.0*/
-    size_t len_131 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_131); len += len_131; /*position*/ /*4.4*/
+    size_t len_132 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_132); len += len_132; /*position*/ /*4.4*/
     len += stream.sizeOfZigZagVarInt(obj.extra_data); /*0.2*/
     len += stream.sizeOfVarInt(obj.entity_type.length());
     len += obj.entity_type.length(); /*entity_type: pstring*/ /*4.1*/
@@ -8315,7 +8320,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     len += 1; /*0.2*/
     len += 1; /*0.2*/
-    size_t len_132 = pdef::proto::size::vec3i(stream, obj.position); EXPECT_OR_BAIL(len_132); len += len_132; /*position*/ /*4.4*/
+    size_t len_133 = pdef::proto::size::vec3i(stream, obj.position); EXPECT_OR_BAIL(len_133); len += len_133; /*position*/ /*4.4*/
     len += 1; /*0.2*/
     PDEF_SIZE_DBG; return len;
   }
@@ -8359,8 +8364,8 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.name.length());
     len += obj.name.length(); /*name: pstring*/ /*4.1*/
-    size_t len_133 = pdef::proto::size::BlockCoordinates(stream, obj.position); EXPECT_OR_BAIL(len_133); len += len_133; /*position*/ /*4.4*/
-    size_t len_134 = pdef::proto::size::StructureBlockSettings(stream, obj.settings); EXPECT_OR_BAIL(len_134); len += len_134; /*settings*/ /*4.4*/
+    size_t len_134 = pdef::proto::size::BlockCoordinates(stream, obj.position); EXPECT_OR_BAIL(len_134); len += len_134; /*position*/ /*4.4*/
+    size_t len_135 = pdef::proto::size::StructureBlockSettings(stream, obj.settings); EXPECT_OR_BAIL(len_135); len += len_135; /*settings*/ /*4.4*/
     len += 1; /*request_type: u8*/ /*7.0*/
     PDEF_SIZE_DBG; return len;
   }
@@ -8398,7 +8403,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.blobs.size()); /*1.3*/
     for (const auto &v2 : obj.blobs) { /*3.2*/
-      size_t len_135 = pdef::proto::size::Blob(stream, v2); EXPECT_OR_BAIL(len_135); len += len_135; /**/ /*4.4*/
+      size_t len_136 = pdef::proto::size::Blob(stream, v2); EXPECT_OR_BAIL(len_136); len += len_136; /**/ /*4.4*/
     }
     PDEF_SIZE_DBG; return len;
   }
@@ -8460,7 +8465,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   size_t packet_anvil_damage(pdef::Stream &stream, const pdef::proto::packet_anvil_damage &obj) {
     size_t len = 0;
     len += 1; /*0.2*/
-    size_t len_136 = pdef::proto::size::BlockCoordinates(stream, obj.position); EXPECT_OR_BAIL(len_136); len += len_136; /*position*/ /*4.4*/
+    size_t len_137 = pdef::proto::size::BlockCoordinates(stream, obj.position); EXPECT_OR_BAIL(len_137); len += len_137; /*position*/ /*4.4*/
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_completed_using_item(pdef::Stream &stream, const pdef::proto::packet_completed_using_item &obj) {
@@ -8478,8 +8483,8 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     len += 4; /*0.2*/
     len += 4; /*0.2*/
-    size_t len_137 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_137); len += len_137; /*position*/ /*4.4*/
-    size_t len_138 = pdef::proto::size::vec2f(stream, obj.move_vector); EXPECT_OR_BAIL(len_138); len += len_138; /*move_vector*/ /*4.4*/
+    size_t len_138 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_138); len += len_138; /*position*/ /*4.4*/
+    size_t len_139 = pdef::proto::size::vec2f(stream, obj.move_vector); EXPECT_OR_BAIL(len_139); len += len_139; /*move_vector*/ /*4.4*/
     len += 4; /*0.2*/
     int64_t input_data_val = 0; /*X*/
     input_data_val |= (int64_t)obj.input_data.ascend << 0;
@@ -8527,22 +8532,22 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += stream.sizeOfZigZagVarInt((int&)obj.interaction_model); /*interaction_model: zigzag32*/ /*7.0*/
     switch (V_play_mode) { /*8.0*/
       case pdef::proto::packet_player_auth_input::PlayMode::Reality: { /*8.5*/
-        EXPECT_OR_BAIL(obj.gaze_direction); size_t len_139 = pdef::proto::size::vec3f(stream, *obj.gaze_direction); EXPECT_OR_BAIL(len_139); len += len_139; /*gaze_direction*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.gaze_direction); size_t len_140 = pdef::proto::size::vec3f(stream, *obj.gaze_direction); EXPECT_OR_BAIL(len_140); len += len_140; /*gaze_direction*/ /*4.4*/
         break;
       } /*8.7*/
       default: break; /*avoid unhandled case warning*/
     } /*8.8*/
     len += stream.sizeOfVarInt64(obj.tick); /*0.2*/
-    size_t len_140 = pdef::proto::size::vec3f(stream, obj.delta); EXPECT_OR_BAIL(len_140); len += len_140; /*delta*/ /*4.4*/
+    size_t len_141 = pdef::proto::size::vec3f(stream, obj.delta); EXPECT_OR_BAIL(len_141); len += len_141; /*delta*/ /*4.4*/
     if (V_input_data.item_interact == true) { /*8.2*/
         EXPECT_OR_BAIL(obj.transaction); const pdef::proto::packet_player_auth_input::Transaction &v2 = *obj.transaction; /*8.6*/
-        size_t len_141 = pdef::proto::size::TransactionLegacy(stream, v2.legacy); EXPECT_OR_BAIL(len_141); len += len_141; /*legacy*/ /*4.4*/
+        size_t len_142 = pdef::proto::size::TransactionLegacy(stream, v2.legacy); EXPECT_OR_BAIL(len_142); len += len_142; /*legacy*/ /*4.4*/
         len += stream.sizeOfVarInt(v2.actions.size()); /*2.4*/
-        for (const auto &v : v2.actions) { size_t len_142 = pdef::proto::size::TransactionActions(stream, v); EXPECT_OR_BAIL(len_142); len += len_142; } /*2.5*/
-        size_t len_143 = pdef::proto::size::TransactionUseItem(stream, v2.data); EXPECT_OR_BAIL(len_143); len += len_143; /*data*/ /*4.4*/
+        for (const auto &v : v2.actions) { size_t len_143 = pdef::proto::size::TransactionActions(stream, v); EXPECT_OR_BAIL(len_143); len += len_143; } /*2.5*/
+        size_t len_144 = pdef::proto::size::TransactionUseItem(stream, v2.data); EXPECT_OR_BAIL(len_144); len += len_144; /*data*/ /*4.4*/
     }
     if (V_input_data.item_stack_request == true) { /*8.2*/
-      EXPECT_OR_BAIL(obj.item_stack_request); size_t len_144 = pdef::proto::size::ItemStackRequest(stream, *obj.item_stack_request); EXPECT_OR_BAIL(len_144); len += len_144; /*item_stack_request*/ /*4.4*/
+      EXPECT_OR_BAIL(obj.item_stack_request); size_t len_145 = pdef::proto::size::ItemStackRequest(stream, *obj.item_stack_request); EXPECT_OR_BAIL(len_145); len += len_145; /*item_stack_request*/ /*4.4*/
     }
     if (V_input_data.block_action == true) { /*8.2*/
       len += stream.sizeOfZigZagVarInt(obj.block_action.size()); /*1.3*/
@@ -8550,23 +8555,23 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
         const pdef::proto::packet_player_auth_input::BlockAction::Action &V_action = v3.action; /*0.3*/
         len += stream.sizeOfZigZagVarInt((int&)v3.action); /*action^: zigzag32*/ /*7.0*/
         if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::StartBreak) { /*8.5*/
-            EXPECT_OR_BAIL(v3.position); size_t len_145 = pdef::proto::size::vec3i(stream, *v3.position); EXPECT_OR_BAIL(len_145); len += len_145; /*position*/ /*4.4*/
-            len += stream.sizeOfZigZagVarInt(v3.face); /*0.2*/
-        }
-        else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::AbortBreak) { /*8.5*/
             EXPECT_OR_BAIL(v3.position); size_t len_146 = pdef::proto::size::vec3i(stream, *v3.position); EXPECT_OR_BAIL(len_146); len += len_146; /*position*/ /*4.4*/
             len += stream.sizeOfZigZagVarInt(v3.face); /*0.2*/
         }
-        else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::CrackBreak) { /*8.5*/
+        else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::AbortBreak) { /*8.5*/
             EXPECT_OR_BAIL(v3.position); size_t len_147 = pdef::proto::size::vec3i(stream, *v3.position); EXPECT_OR_BAIL(len_147); len += len_147; /*position*/ /*4.4*/
             len += stream.sizeOfZigZagVarInt(v3.face); /*0.2*/
         }
-        else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::PredictBreak) { /*8.5*/
+        else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::CrackBreak) { /*8.5*/
             EXPECT_OR_BAIL(v3.position); size_t len_148 = pdef::proto::size::vec3i(stream, *v3.position); EXPECT_OR_BAIL(len_148); len += len_148; /*position*/ /*4.4*/
             len += stream.sizeOfZigZagVarInt(v3.face); /*0.2*/
         }
-        else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::ContinueBreak) { /*8.5*/
+        else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::PredictBreak) { /*8.5*/
             EXPECT_OR_BAIL(v3.position); size_t len_149 = pdef::proto::size::vec3i(stream, *v3.position); EXPECT_OR_BAIL(len_149); len += len_149; /*position*/ /*4.4*/
+            len += stream.sizeOfZigZagVarInt(v3.face); /*0.2*/
+        }
+        else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::ContinueBreak) { /*8.5*/
+            EXPECT_OR_BAIL(v3.position); size_t len_150 = pdef::proto::size::vec3i(stream, *v3.position); EXPECT_OR_BAIL(len_150); len += len_150; /*position*/ /*4.4*/
             len += stream.sizeOfZigZagVarInt(v3.face); /*0.2*/
         }
       }
@@ -8578,7 +8583,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += stream.sizeOfVarInt(obj.items.size()); /*1.3*/
     for (const auto &v2 : obj.items) { /*5.20*/
       len += stream.sizeOfVarInt(v2.entry_id); /*0.2*/
-      size_t len_150 = pdef::proto::size::ItemLegacy(stream, v2.item); EXPECT_OR_BAIL(len_150); len += len_150; /*item*/ /*4.4*/
+      size_t len_151 = pdef::proto::size::ItemLegacy(stream, v2.item); EXPECT_OR_BAIL(len_151); len += len_151; /*item*/ /*4.4*/
     }
     PDEF_SIZE_DBG; return len;
   }
@@ -8586,7 +8591,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.options.size()); /*1.3*/
     for (const auto &v2 : obj.options) { /*3.2*/
-      size_t len_151 = pdef::proto::size::EnchantOption(stream, v2); EXPECT_OR_BAIL(len_151); len += len_151; /**/ /*4.4*/
+      size_t len_152 = pdef::proto::size::EnchantOption(stream, v2); EXPECT_OR_BAIL(len_152); len += len_152; /**/ /*4.4*/
     }
     PDEF_SIZE_DBG; return len;
   }
@@ -8594,14 +8599,14 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.requests.size()); /*1.3*/
     for (const auto &v2 : obj.requests) { /*3.2*/
-      size_t len_152 = pdef::proto::size::ItemStackRequest(stream, v2); EXPECT_OR_BAIL(len_152); len += len_152; /**/ /*4.4*/
+      size_t len_153 = pdef::proto::size::ItemStackRequest(stream, v2); EXPECT_OR_BAIL(len_153); len += len_153; /**/ /*4.4*/
     }
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_item_stack_response(pdef::Stream &stream, const pdef::proto::packet_item_stack_response &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.responses.size()); /*2.4*/
-    for (const auto &v : obj.responses) { size_t len_153 = pdef::proto::size::ItemStackResponses(stream, v); EXPECT_OR_BAIL(len_153); len += len_153; } /*2.5*/
+    for (const auto &v : obj.responses) { size_t len_154 = pdef::proto::size::ItemStackResponses(stream, v); EXPECT_OR_BAIL(len_154); len += len_154; } /*2.5*/
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_player_armor_damage(pdef::Stream &stream, const pdef::proto::packet_player_armor_damage &obj) {
@@ -8667,7 +8672,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   size_t packet_motion_prediction_hints(pdef::Stream &stream, const pdef::proto::packet_motion_prediction_hints &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt64(obj.entity_runtime_id); /*0.2*/
-    size_t len_154 = pdef::proto::size::vec3f(stream, obj.velocity); EXPECT_OR_BAIL(len_154); len += len_154; /*velocity*/ /*4.4*/
+    size_t len_155 = pdef::proto::size::vec3f(stream, obj.velocity); EXPECT_OR_BAIL(len_155); len += len_155; /*velocity*/ /*4.4*/
     len += 1; /*0.2*/
     PDEF_SIZE_DBG; return len;
   }
@@ -8708,8 +8713,8 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   }
   size_t packet_correct_player_move_prediction(pdef::Stream &stream, const pdef::proto::packet_correct_player_move_prediction &obj) {
     size_t len = 0;
-    size_t len_155 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_155); len += len_155; /*position*/ /*4.4*/
-    size_t len_156 = pdef::proto::size::vec3f(stream, obj.delta); EXPECT_OR_BAIL(len_156); len += len_156; /*delta*/ /*4.4*/
+    size_t len_156 = pdef::proto::size::vec3f(stream, obj.position); EXPECT_OR_BAIL(len_156); len += len_156; /*position*/ /*4.4*/
+    size_t len_157 = pdef::proto::size::vec3f(stream, obj.delta); EXPECT_OR_BAIL(len_157); len += len_157; /*delta*/ /*4.4*/
     len += 1; /*0.2*/
     len += stream.sizeOfVarInt64(obj.tick); /*0.2*/
     PDEF_SIZE_DBG; return len;
@@ -8717,7 +8722,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   size_t packet_item_component(pdef::Stream &stream, const pdef::proto::packet_item_component &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.entries.size()); /*2.4*/
-    for (const auto &v : obj.entries) { size_t len_157 = pdef::proto::size::ItemComponentList(stream, v); EXPECT_OR_BAIL(len_157); len += len_157; } /*2.5*/
+    for (const auto &v : obj.entries) { size_t len_158 = pdef::proto::size::ItemComponentList(stream, v); EXPECT_OR_BAIL(len_158); len += len_158; } /*2.5*/
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_filter_text_packet(pdef::Stream &stream, const pdef::proto::packet_filter_text_packet &obj) {
@@ -8738,7 +8743,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
       case pdef::proto::packet_debug_renderer::Type::AddCube: { /*8.5*/
           len += stream.sizeOfVarInt(obj.text.length());
           len += obj.text.length(); /*text: pstring*/ /*4.1*/
-          EXPECT_OR_BAIL(obj.position); size_t len_158 = pdef::proto::size::vec3f(stream, *obj.position); EXPECT_OR_BAIL(len_158); len += len_158; /*position*/ /*4.4*/
+          EXPECT_OR_BAIL(obj.position); size_t len_159 = pdef::proto::size::vec3f(stream, *obj.position); EXPECT_OR_BAIL(len_159); len += len_159; /*position*/ /*4.4*/
           len += 4; /*0.2*/
           len += 4; /*0.2*/
           len += 4; /*0.2*/
@@ -8763,7 +8768,11 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += obj.encoding_identifier.length(); /*encoding_identifier: pstring*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.instance_name.length());
     len += obj.instance_name.length(); /*instance_name: pstring*/ /*4.1*/
-    const pdef::proto::packet_add_volume_entity::Bounds &v = obj.bounds; /*["packet_add_volume_entity"]*/ /*7.4*/
+    const pdef::proto::packet_add_volume_entity::Bounds &v_160 = obj.bounds; /*["packet_add_volume_entity"]*/ /*7.4*/
+    {
+      size_t len_161 = pdef::proto::size::BlockCoordinates(stream, v_160.min); EXPECT_OR_BAIL(len_161); len += len_161; /*min*/ /*4.4*/
+      size_t len_162 = pdef::proto::size::BlockCoordinates(stream, v_160.max); EXPECT_OR_BAIL(len_162); len += len_162; /*max*/ /*4.4*/
+    }
     len += stream.sizeOfZigZagVarInt(obj.dimension); /*0.2*/
     len += stream.sizeOfVarInt(obj.engine_version.length());
     len += obj.engine_version.length(); /*engine_version: pstring*/ /*4.1*/
@@ -8795,7 +8804,7 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
   }
   size_t packet_edu_uri_resource_packet(pdef::Stream &stream, const pdef::proto::packet_edu_uri_resource_packet &obj) {
     size_t len = 0;
-    size_t len_159 = pdef::proto::size::EducationSharedResourceURI(stream, obj.resource); EXPECT_OR_BAIL(len_159); len += len_159; /*resource*/ /*4.4*/
+    size_t len_163 = pdef::proto::size::EducationSharedResourceURI(stream, obj.resource); EXPECT_OR_BAIL(len_163); len += len_163; /*resource*/ /*4.4*/
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_create_photo(pdef::Stream &stream, const pdef::proto::packet_create_photo &obj) {
@@ -8814,11 +8823,11 @@ size_t ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentL
     len += stream.sizeOfZigZagVarInt(obj.z); /*0.2*/
     len += stream.sizeOfVarInt(obj.blocks.size()); /*1.3*/
     for (const auto &v2 : obj.blocks) { /*3.2*/
-      size_t len_160 = pdef::proto::size::BlockUpdate(stream, v2); EXPECT_OR_BAIL(len_160); len += len_160; /**/ /*4.4*/
+      size_t len_164 = pdef::proto::size::BlockUpdate(stream, v2); EXPECT_OR_BAIL(len_164); len += len_164; /**/ /*4.4*/
     }
     len += stream.sizeOfVarInt(obj.extra.size()); /*1.3*/
     for (const auto &v2 : obj.extra) { /*3.2*/
-      size_t len_161 = pdef::proto::size::BlockUpdate(stream, v2); EXPECT_OR_BAIL(len_161); len += len_161; /**/ /*4.4*/
+      size_t len_165 = pdef::proto::size::BlockUpdate(stream, v2); EXPECT_OR_BAIL(len_165); len += len_165; /**/ /*4.4*/
     }
     PDEF_SIZE_DBG; return len;
   }
@@ -8879,21 +8888,21 @@ size_t SubChunkEntryWithCaching(pdef::Stream &stream, const pdef::proto::SubChun
     size_t len = 0;
     const bool &V_cache_enabled = obj.cache_enabled; /*0.1*/
     len += stream.sizeOfZigZagVarInt(obj.dimension); /*0.2*/
-    size_t len_162 = pdef::proto::size::vec3i(stream, obj.origin); EXPECT_OR_BAIL(len_162); len += len_162; /*origin*/ /*4.4*/
+    size_t len_166 = pdef::proto::size::vec3i(stream, obj.origin); EXPECT_OR_BAIL(len_166); len += len_166; /*origin*/ /*4.4*/
     if (V_cache_enabled == true) { /*8.1*/
       len += 4; /*2.4*/
-      for (const auto &v : obj.entries_SubChunkEntryWithCaching) { size_t len_163 = pdef::proto::size::SubChunkEntryWithCaching(stream, v); EXPECT_OR_BAIL(len_163); len += len_163; } /*2.5*/
+      for (const auto &v : obj.entries_SubChunkEntryWithCaching) { size_t len_167 = pdef::proto::size::SubChunkEntryWithCaching(stream, v); EXPECT_OR_BAIL(len_167); len += len_167; } /*2.5*/
     }
     else if (V_cache_enabled == false) { /*8.1*/
       len += 4; /*2.4*/
-      for (const auto &v : obj.entries_SubChunkEntryWithoutCaching) { size_t len_164 = pdef::proto::size::SubChunkEntryWithoutCaching(stream, v); EXPECT_OR_BAIL(len_164); len += len_164; } /*2.5*/
+      for (const auto &v : obj.entries_SubChunkEntryWithoutCaching) { size_t len_168 = pdef::proto::size::SubChunkEntryWithoutCaching(stream, v); EXPECT_OR_BAIL(len_168); len += len_168; } /*2.5*/
     }
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_subchunk_request(pdef::Stream &stream, const pdef::proto::packet_subchunk_request &obj) {
     size_t len = 0;
     len += stream.sizeOfZigZagVarInt(obj.dimension); /*0.2*/
-    size_t len_165 = pdef::proto::size::vec3i(stream, obj.origin); EXPECT_OR_BAIL(len_165); len += len_165; /*origin*/ /*4.4*/
+    size_t len_169 = pdef::proto::size::vec3i(stream, obj.origin); EXPECT_OR_BAIL(len_169); len += len_169; /*origin*/ /*4.4*/
     len += 4; /*1.3*/
     for (const auto &v2 : obj.requests) { /*5.20*/
       len += 1; /*0.2*/
@@ -9009,727 +9018,727 @@ size_t SubChunkEntryWithCaching(pdef::Stream &stream, const pdef::proto::SubChun
     len += stream.sizeOfVarInt((int&)obj.name); /*name^: varint*/ /*7.0*/
     switch (V_name) { /*8.0*/
       case pdef::proto::mcpe_packet::Name::Login: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_login); size_t len_166 = pdef::proto::size::packet_login(stream, *obj.params_packet_login); EXPECT_OR_BAIL(len_166); len += len_166; /*params_packet_login*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_login); size_t len_170 = pdef::proto::size::packet_login(stream, *obj.params_packet_login); EXPECT_OR_BAIL(len_170); len += len_170; /*params_packet_login*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PlayStatus: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_play_status); size_t len_167 = pdef::proto::size::packet_play_status(stream, *obj.params_packet_play_status); EXPECT_OR_BAIL(len_167); len += len_167; /*params_packet_play_status*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_play_status); size_t len_171 = pdef::proto::size::packet_play_status(stream, *obj.params_packet_play_status); EXPECT_OR_BAIL(len_171); len += len_171; /*params_packet_play_status*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ServerToClientHandshake: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_server_to_client_handshake); size_t len_168 = pdef::proto::size::packet_server_to_client_handshake(stream, *obj.params_packet_server_to_client_handshake); EXPECT_OR_BAIL(len_168); len += len_168; /*params_packet_server_to_client_handshake*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_server_to_client_handshake); size_t len_172 = pdef::proto::size::packet_server_to_client_handshake(stream, *obj.params_packet_server_to_client_handshake); EXPECT_OR_BAIL(len_172); len += len_172; /*params_packet_server_to_client_handshake*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ClientToServerHandshake: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_client_to_server_handshake); size_t len_169 = pdef::proto::size::packet_client_to_server_handshake(stream, *obj.params_packet_client_to_server_handshake); EXPECT_OR_BAIL(len_169); len += len_169; /*params_packet_client_to_server_handshake*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_client_to_server_handshake); size_t len_173 = pdef::proto::size::packet_client_to_server_handshake(stream, *obj.params_packet_client_to_server_handshake); EXPECT_OR_BAIL(len_173); len += len_173; /*params_packet_client_to_server_handshake*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::Disconnect: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_disconnect); size_t len_170 = pdef::proto::size::packet_disconnect(stream, *obj.params_packet_disconnect); EXPECT_OR_BAIL(len_170); len += len_170; /*params_packet_disconnect*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_disconnect); size_t len_174 = pdef::proto::size::packet_disconnect(stream, *obj.params_packet_disconnect); EXPECT_OR_BAIL(len_174); len += len_174; /*params_packet_disconnect*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ResourcePacksInfo: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_resource_packs_info); size_t len_171 = pdef::proto::size::packet_resource_packs_info(stream, *obj.params_packet_resource_packs_info); EXPECT_OR_BAIL(len_171); len += len_171; /*params_packet_resource_packs_info*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_resource_packs_info); size_t len_175 = pdef::proto::size::packet_resource_packs_info(stream, *obj.params_packet_resource_packs_info); EXPECT_OR_BAIL(len_175); len += len_175; /*params_packet_resource_packs_info*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ResourcePackStack: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_resource_pack_stack); size_t len_172 = pdef::proto::size::packet_resource_pack_stack(stream, *obj.params_packet_resource_pack_stack); EXPECT_OR_BAIL(len_172); len += len_172; /*params_packet_resource_pack_stack*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_resource_pack_stack); size_t len_176 = pdef::proto::size::packet_resource_pack_stack(stream, *obj.params_packet_resource_pack_stack); EXPECT_OR_BAIL(len_176); len += len_176; /*params_packet_resource_pack_stack*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ResourcePackClientResponse: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_resource_pack_client_response); size_t len_173 = pdef::proto::size::packet_resource_pack_client_response(stream, *obj.params_packet_resource_pack_client_response); EXPECT_OR_BAIL(len_173); len += len_173; /*params_packet_resource_pack_client_response*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_resource_pack_client_response); size_t len_177 = pdef::proto::size::packet_resource_pack_client_response(stream, *obj.params_packet_resource_pack_client_response); EXPECT_OR_BAIL(len_177); len += len_177; /*params_packet_resource_pack_client_response*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::Text: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_text); size_t len_174 = pdef::proto::size::packet_text(stream, *obj.params_packet_text); EXPECT_OR_BAIL(len_174); len += len_174; /*params_packet_text*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_text); size_t len_178 = pdef::proto::size::packet_text(stream, *obj.params_packet_text); EXPECT_OR_BAIL(len_178); len += len_178; /*params_packet_text*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetTime: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_set_time); size_t len_175 = pdef::proto::size::packet_set_time(stream, *obj.params_packet_set_time); EXPECT_OR_BAIL(len_175); len += len_175; /*params_packet_set_time*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_set_time); size_t len_179 = pdef::proto::size::packet_set_time(stream, *obj.params_packet_set_time); EXPECT_OR_BAIL(len_179); len += len_179; /*params_packet_set_time*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::StartGame: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_start_game); size_t len_176 = pdef::proto::size::packet_start_game(stream, *obj.params_packet_start_game); EXPECT_OR_BAIL(len_176); len += len_176; /*params_packet_start_game*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_start_game); size_t len_180 = pdef::proto::size::packet_start_game(stream, *obj.params_packet_start_game); EXPECT_OR_BAIL(len_180); len += len_180; /*params_packet_start_game*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AddPlayer: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_add_player); size_t len_177 = pdef::proto::size::packet_add_player(stream, *obj.params_packet_add_player); EXPECT_OR_BAIL(len_177); len += len_177; /*params_packet_add_player*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_add_player); size_t len_181 = pdef::proto::size::packet_add_player(stream, *obj.params_packet_add_player); EXPECT_OR_BAIL(len_181); len += len_181; /*params_packet_add_player*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AddEntity: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_add_entity); size_t len_178 = pdef::proto::size::packet_add_entity(stream, *obj.params_packet_add_entity); EXPECT_OR_BAIL(len_178); len += len_178; /*params_packet_add_entity*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_add_entity); size_t len_182 = pdef::proto::size::packet_add_entity(stream, *obj.params_packet_add_entity); EXPECT_OR_BAIL(len_182); len += len_182; /*params_packet_add_entity*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::RemoveEntity: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_remove_entity); size_t len_179 = pdef::proto::size::packet_remove_entity(stream, *obj.params_packet_remove_entity); EXPECT_OR_BAIL(len_179); len += len_179; /*params_packet_remove_entity*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_remove_entity); size_t len_183 = pdef::proto::size::packet_remove_entity(stream, *obj.params_packet_remove_entity); EXPECT_OR_BAIL(len_183); len += len_183; /*params_packet_remove_entity*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AddItemEntity: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_add_item_entity); size_t len_180 = pdef::proto::size::packet_add_item_entity(stream, *obj.params_packet_add_item_entity); EXPECT_OR_BAIL(len_180); len += len_180; /*params_packet_add_item_entity*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_add_item_entity); size_t len_184 = pdef::proto::size::packet_add_item_entity(stream, *obj.params_packet_add_item_entity); EXPECT_OR_BAIL(len_184); len += len_184; /*params_packet_add_item_entity*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::TakeItemEntity: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_take_item_entity); size_t len_181 = pdef::proto::size::packet_take_item_entity(stream, *obj.params_packet_take_item_entity); EXPECT_OR_BAIL(len_181); len += len_181; /*params_packet_take_item_entity*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_take_item_entity); size_t len_185 = pdef::proto::size::packet_take_item_entity(stream, *obj.params_packet_take_item_entity); EXPECT_OR_BAIL(len_185); len += len_185; /*params_packet_take_item_entity*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::MoveEntity: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_move_entity); size_t len_182 = pdef::proto::size::packet_move_entity(stream, *obj.params_packet_move_entity); EXPECT_OR_BAIL(len_182); len += len_182; /*params_packet_move_entity*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_move_entity); size_t len_186 = pdef::proto::size::packet_move_entity(stream, *obj.params_packet_move_entity); EXPECT_OR_BAIL(len_186); len += len_186; /*params_packet_move_entity*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::MovePlayer: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_move_player); size_t len_183 = pdef::proto::size::packet_move_player(stream, *obj.params_packet_move_player); EXPECT_OR_BAIL(len_183); len += len_183; /*params_packet_move_player*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_move_player); size_t len_187 = pdef::proto::size::packet_move_player(stream, *obj.params_packet_move_player); EXPECT_OR_BAIL(len_187); len += len_187; /*params_packet_move_player*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::RiderJump: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_rider_jump); size_t len_184 = pdef::proto::size::packet_rider_jump(stream, *obj.params_packet_rider_jump); EXPECT_OR_BAIL(len_184); len += len_184; /*params_packet_rider_jump*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_rider_jump); size_t len_188 = pdef::proto::size::packet_rider_jump(stream, *obj.params_packet_rider_jump); EXPECT_OR_BAIL(len_188); len += len_188; /*params_packet_rider_jump*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::UpdateBlock: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_update_block); size_t len_185 = pdef::proto::size::packet_update_block(stream, *obj.params_packet_update_block); EXPECT_OR_BAIL(len_185); len += len_185; /*params_packet_update_block*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_update_block); size_t len_189 = pdef::proto::size::packet_update_block(stream, *obj.params_packet_update_block); EXPECT_OR_BAIL(len_189); len += len_189; /*params_packet_update_block*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AddPainting: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_add_painting); size_t len_186 = pdef::proto::size::packet_add_painting(stream, *obj.params_packet_add_painting); EXPECT_OR_BAIL(len_186); len += len_186; /*params_packet_add_painting*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_add_painting); size_t len_190 = pdef::proto::size::packet_add_painting(stream, *obj.params_packet_add_painting); EXPECT_OR_BAIL(len_190); len += len_190; /*params_packet_add_painting*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::TickSync: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_tick_sync); size_t len_187 = pdef::proto::size::packet_tick_sync(stream, *obj.params_packet_tick_sync); EXPECT_OR_BAIL(len_187); len += len_187; /*params_packet_tick_sync*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_tick_sync); size_t len_191 = pdef::proto::size::packet_tick_sync(stream, *obj.params_packet_tick_sync); EXPECT_OR_BAIL(len_191); len += len_191; /*params_packet_tick_sync*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::LevelSoundEventOld: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_level_sound_event_old); size_t len_188 = pdef::proto::size::packet_level_sound_event_old(stream, *obj.params_packet_level_sound_event_old); EXPECT_OR_BAIL(len_188); len += len_188; /*params_packet_level_sound_event_old*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_level_sound_event_old); size_t len_192 = pdef::proto::size::packet_level_sound_event_old(stream, *obj.params_packet_level_sound_event_old); EXPECT_OR_BAIL(len_192); len += len_192; /*params_packet_level_sound_event_old*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::LevelEvent: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_level_event); size_t len_189 = pdef::proto::size::packet_level_event(stream, *obj.params_packet_level_event); EXPECT_OR_BAIL(len_189); len += len_189; /*params_packet_level_event*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_level_event); size_t len_193 = pdef::proto::size::packet_level_event(stream, *obj.params_packet_level_event); EXPECT_OR_BAIL(len_193); len += len_193; /*params_packet_level_event*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::BlockEvent: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_block_event); size_t len_190 = pdef::proto::size::packet_block_event(stream, *obj.params_packet_block_event); EXPECT_OR_BAIL(len_190); len += len_190; /*params_packet_block_event*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_block_event); size_t len_194 = pdef::proto::size::packet_block_event(stream, *obj.params_packet_block_event); EXPECT_OR_BAIL(len_194); len += len_194; /*params_packet_block_event*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::EntityEvent: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_entity_event); size_t len_191 = pdef::proto::size::packet_entity_event(stream, *obj.params_packet_entity_event); EXPECT_OR_BAIL(len_191); len += len_191; /*params_packet_entity_event*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_entity_event); size_t len_195 = pdef::proto::size::packet_entity_event(stream, *obj.params_packet_entity_event); EXPECT_OR_BAIL(len_195); len += len_195; /*params_packet_entity_event*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::MobEffect: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_mob_effect); size_t len_192 = pdef::proto::size::packet_mob_effect(stream, *obj.params_packet_mob_effect); EXPECT_OR_BAIL(len_192); len += len_192; /*params_packet_mob_effect*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_mob_effect); size_t len_196 = pdef::proto::size::packet_mob_effect(stream, *obj.params_packet_mob_effect); EXPECT_OR_BAIL(len_196); len += len_196; /*params_packet_mob_effect*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::UpdateAttributes: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_update_attributes); size_t len_193 = pdef::proto::size::packet_update_attributes(stream, *obj.params_packet_update_attributes); EXPECT_OR_BAIL(len_193); len += len_193; /*params_packet_update_attributes*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_update_attributes); size_t len_197 = pdef::proto::size::packet_update_attributes(stream, *obj.params_packet_update_attributes); EXPECT_OR_BAIL(len_197); len += len_197; /*params_packet_update_attributes*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::InventoryTransaction: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_inventory_transaction); size_t len_194 = pdef::proto::size::packet_inventory_transaction(stream, *obj.params_packet_inventory_transaction); EXPECT_OR_BAIL(len_194); len += len_194; /*params_packet_inventory_transaction*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_inventory_transaction); size_t len_198 = pdef::proto::size::packet_inventory_transaction(stream, *obj.params_packet_inventory_transaction); EXPECT_OR_BAIL(len_198); len += len_198; /*params_packet_inventory_transaction*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::MobEquipment: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_mob_equipment); size_t len_195 = pdef::proto::size::packet_mob_equipment(stream, *obj.params_packet_mob_equipment); EXPECT_OR_BAIL(len_195); len += len_195; /*params_packet_mob_equipment*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_mob_equipment); size_t len_199 = pdef::proto::size::packet_mob_equipment(stream, *obj.params_packet_mob_equipment); EXPECT_OR_BAIL(len_199); len += len_199; /*params_packet_mob_equipment*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::MobArmorEquipment: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_mob_armor_equipment); size_t len_196 = pdef::proto::size::packet_mob_armor_equipment(stream, *obj.params_packet_mob_armor_equipment); EXPECT_OR_BAIL(len_196); len += len_196; /*params_packet_mob_armor_equipment*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_mob_armor_equipment); size_t len_200 = pdef::proto::size::packet_mob_armor_equipment(stream, *obj.params_packet_mob_armor_equipment); EXPECT_OR_BAIL(len_200); len += len_200; /*params_packet_mob_armor_equipment*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::Interact: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_interact); size_t len_197 = pdef::proto::size::packet_interact(stream, *obj.params_packet_interact); EXPECT_OR_BAIL(len_197); len += len_197; /*params_packet_interact*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_interact); size_t len_201 = pdef::proto::size::packet_interact(stream, *obj.params_packet_interact); EXPECT_OR_BAIL(len_201); len += len_201; /*params_packet_interact*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::BlockPickRequest: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_block_pick_request); size_t len_198 = pdef::proto::size::packet_block_pick_request(stream, *obj.params_packet_block_pick_request); EXPECT_OR_BAIL(len_198); len += len_198; /*params_packet_block_pick_request*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_block_pick_request); size_t len_202 = pdef::proto::size::packet_block_pick_request(stream, *obj.params_packet_block_pick_request); EXPECT_OR_BAIL(len_202); len += len_202; /*params_packet_block_pick_request*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::EntityPickRequest: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_entity_pick_request); size_t len_199 = pdef::proto::size::packet_entity_pick_request(stream, *obj.params_packet_entity_pick_request); EXPECT_OR_BAIL(len_199); len += len_199; /*params_packet_entity_pick_request*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_entity_pick_request); size_t len_203 = pdef::proto::size::packet_entity_pick_request(stream, *obj.params_packet_entity_pick_request); EXPECT_OR_BAIL(len_203); len += len_203; /*params_packet_entity_pick_request*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PlayerAction: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_player_action); size_t len_200 = pdef::proto::size::packet_player_action(stream, *obj.params_packet_player_action); EXPECT_OR_BAIL(len_200); len += len_200; /*params_packet_player_action*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_player_action); size_t len_204 = pdef::proto::size::packet_player_action(stream, *obj.params_packet_player_action); EXPECT_OR_BAIL(len_204); len += len_204; /*params_packet_player_action*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::HurtArmor: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_hurt_armor); size_t len_201 = pdef::proto::size::packet_hurt_armor(stream, *obj.params_packet_hurt_armor); EXPECT_OR_BAIL(len_201); len += len_201; /*params_packet_hurt_armor*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_hurt_armor); size_t len_205 = pdef::proto::size::packet_hurt_armor(stream, *obj.params_packet_hurt_armor); EXPECT_OR_BAIL(len_205); len += len_205; /*params_packet_hurt_armor*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetEntityData: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_set_entity_data); size_t len_202 = pdef::proto::size::packet_set_entity_data(stream, *obj.params_packet_set_entity_data); EXPECT_OR_BAIL(len_202); len += len_202; /*params_packet_set_entity_data*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_set_entity_data); size_t len_206 = pdef::proto::size::packet_set_entity_data(stream, *obj.params_packet_set_entity_data); EXPECT_OR_BAIL(len_206); len += len_206; /*params_packet_set_entity_data*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetEntityMotion: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_set_entity_motion); size_t len_203 = pdef::proto::size::packet_set_entity_motion(stream, *obj.params_packet_set_entity_motion); EXPECT_OR_BAIL(len_203); len += len_203; /*params_packet_set_entity_motion*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_set_entity_motion); size_t len_207 = pdef::proto::size::packet_set_entity_motion(stream, *obj.params_packet_set_entity_motion); EXPECT_OR_BAIL(len_207); len += len_207; /*params_packet_set_entity_motion*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetEntityLink: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_set_entity_link); size_t len_204 = pdef::proto::size::packet_set_entity_link(stream, *obj.params_packet_set_entity_link); EXPECT_OR_BAIL(len_204); len += len_204; /*params_packet_set_entity_link*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_set_entity_link); size_t len_208 = pdef::proto::size::packet_set_entity_link(stream, *obj.params_packet_set_entity_link); EXPECT_OR_BAIL(len_208); len += len_208; /*params_packet_set_entity_link*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetHealth: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_set_health); size_t len_205 = pdef::proto::size::packet_set_health(stream, *obj.params_packet_set_health); EXPECT_OR_BAIL(len_205); len += len_205; /*params_packet_set_health*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_set_health); size_t len_209 = pdef::proto::size::packet_set_health(stream, *obj.params_packet_set_health); EXPECT_OR_BAIL(len_209); len += len_209; /*params_packet_set_health*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetSpawnPosition: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_set_spawn_position); size_t len_206 = pdef::proto::size::packet_set_spawn_position(stream, *obj.params_packet_set_spawn_position); EXPECT_OR_BAIL(len_206); len += len_206; /*params_packet_set_spawn_position*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_set_spawn_position); size_t len_210 = pdef::proto::size::packet_set_spawn_position(stream, *obj.params_packet_set_spawn_position); EXPECT_OR_BAIL(len_210); len += len_210; /*params_packet_set_spawn_position*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::Animate: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_animate); size_t len_207 = pdef::proto::size::packet_animate(stream, *obj.params_packet_animate); EXPECT_OR_BAIL(len_207); len += len_207; /*params_packet_animate*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_animate); size_t len_211 = pdef::proto::size::packet_animate(stream, *obj.params_packet_animate); EXPECT_OR_BAIL(len_211); len += len_211; /*params_packet_animate*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::Respawn: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_respawn); size_t len_208 = pdef::proto::size::packet_respawn(stream, *obj.params_packet_respawn); EXPECT_OR_BAIL(len_208); len += len_208; /*params_packet_respawn*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_respawn); size_t len_212 = pdef::proto::size::packet_respawn(stream, *obj.params_packet_respawn); EXPECT_OR_BAIL(len_212); len += len_212; /*params_packet_respawn*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ContainerOpen: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_container_open); size_t len_209 = pdef::proto::size::packet_container_open(stream, *obj.params_packet_container_open); EXPECT_OR_BAIL(len_209); len += len_209; /*params_packet_container_open*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_container_open); size_t len_213 = pdef::proto::size::packet_container_open(stream, *obj.params_packet_container_open); EXPECT_OR_BAIL(len_213); len += len_213; /*params_packet_container_open*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ContainerClose: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_container_close); size_t len_210 = pdef::proto::size::packet_container_close(stream, *obj.params_packet_container_close); EXPECT_OR_BAIL(len_210); len += len_210; /*params_packet_container_close*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_container_close); size_t len_214 = pdef::proto::size::packet_container_close(stream, *obj.params_packet_container_close); EXPECT_OR_BAIL(len_214); len += len_214; /*params_packet_container_close*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PlayerHotbar: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_player_hotbar); size_t len_211 = pdef::proto::size::packet_player_hotbar(stream, *obj.params_packet_player_hotbar); EXPECT_OR_BAIL(len_211); len += len_211; /*params_packet_player_hotbar*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_player_hotbar); size_t len_215 = pdef::proto::size::packet_player_hotbar(stream, *obj.params_packet_player_hotbar); EXPECT_OR_BAIL(len_215); len += len_215; /*params_packet_player_hotbar*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::InventoryContent: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_inventory_content); size_t len_212 = pdef::proto::size::packet_inventory_content(stream, *obj.params_packet_inventory_content); EXPECT_OR_BAIL(len_212); len += len_212; /*params_packet_inventory_content*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_inventory_content); size_t len_216 = pdef::proto::size::packet_inventory_content(stream, *obj.params_packet_inventory_content); EXPECT_OR_BAIL(len_216); len += len_216; /*params_packet_inventory_content*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::InventorySlot: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_inventory_slot); size_t len_213 = pdef::proto::size::packet_inventory_slot(stream, *obj.params_packet_inventory_slot); EXPECT_OR_BAIL(len_213); len += len_213; /*params_packet_inventory_slot*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_inventory_slot); size_t len_217 = pdef::proto::size::packet_inventory_slot(stream, *obj.params_packet_inventory_slot); EXPECT_OR_BAIL(len_217); len += len_217; /*params_packet_inventory_slot*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ContainerSetData: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_container_set_data); size_t len_214 = pdef::proto::size::packet_container_set_data(stream, *obj.params_packet_container_set_data); EXPECT_OR_BAIL(len_214); len += len_214; /*params_packet_container_set_data*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_container_set_data); size_t len_218 = pdef::proto::size::packet_container_set_data(stream, *obj.params_packet_container_set_data); EXPECT_OR_BAIL(len_218); len += len_218; /*params_packet_container_set_data*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::CraftingData: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_crafting_data); size_t len_215 = pdef::proto::size::packet_crafting_data(stream, *obj.params_packet_crafting_data); EXPECT_OR_BAIL(len_215); len += len_215; /*params_packet_crafting_data*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_crafting_data); size_t len_219 = pdef::proto::size::packet_crafting_data(stream, *obj.params_packet_crafting_data); EXPECT_OR_BAIL(len_219); len += len_219; /*params_packet_crafting_data*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::CraftingEvent: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_crafting_event); size_t len_216 = pdef::proto::size::packet_crafting_event(stream, *obj.params_packet_crafting_event); EXPECT_OR_BAIL(len_216); len += len_216; /*params_packet_crafting_event*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_crafting_event); size_t len_220 = pdef::proto::size::packet_crafting_event(stream, *obj.params_packet_crafting_event); EXPECT_OR_BAIL(len_220); len += len_220; /*params_packet_crafting_event*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::GuiDataPickItem: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_gui_data_pick_item); size_t len_217 = pdef::proto::size::packet_gui_data_pick_item(stream, *obj.params_packet_gui_data_pick_item); EXPECT_OR_BAIL(len_217); len += len_217; /*params_packet_gui_data_pick_item*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_gui_data_pick_item); size_t len_221 = pdef::proto::size::packet_gui_data_pick_item(stream, *obj.params_packet_gui_data_pick_item); EXPECT_OR_BAIL(len_221); len += len_221; /*params_packet_gui_data_pick_item*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AdventureSettings: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_adventure_settings); size_t len_218 = pdef::proto::size::packet_adventure_settings(stream, *obj.params_packet_adventure_settings); EXPECT_OR_BAIL(len_218); len += len_218; /*params_packet_adventure_settings*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_adventure_settings); size_t len_222 = pdef::proto::size::packet_adventure_settings(stream, *obj.params_packet_adventure_settings); EXPECT_OR_BAIL(len_222); len += len_222; /*params_packet_adventure_settings*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::BlockEntityData: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_block_entity_data); size_t len_219 = pdef::proto::size::packet_block_entity_data(stream, *obj.params_packet_block_entity_data); EXPECT_OR_BAIL(len_219); len += len_219; /*params_packet_block_entity_data*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_block_entity_data); size_t len_223 = pdef::proto::size::packet_block_entity_data(stream, *obj.params_packet_block_entity_data); EXPECT_OR_BAIL(len_223); len += len_223; /*params_packet_block_entity_data*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PlayerInput: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_player_input); size_t len_220 = pdef::proto::size::packet_player_input(stream, *obj.params_packet_player_input); EXPECT_OR_BAIL(len_220); len += len_220; /*params_packet_player_input*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_player_input); size_t len_224 = pdef::proto::size::packet_player_input(stream, *obj.params_packet_player_input); EXPECT_OR_BAIL(len_224); len += len_224; /*params_packet_player_input*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::LevelChunk: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_level_chunk); size_t len_221 = pdef::proto::size::packet_level_chunk(stream, *obj.params_packet_level_chunk); EXPECT_OR_BAIL(len_221); len += len_221; /*params_packet_level_chunk*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_level_chunk); size_t len_225 = pdef::proto::size::packet_level_chunk(stream, *obj.params_packet_level_chunk); EXPECT_OR_BAIL(len_225); len += len_225; /*params_packet_level_chunk*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetCommandsEnabled: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_set_commands_enabled); size_t len_222 = pdef::proto::size::packet_set_commands_enabled(stream, *obj.params_packet_set_commands_enabled); EXPECT_OR_BAIL(len_222); len += len_222; /*params_packet_set_commands_enabled*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_set_commands_enabled); size_t len_226 = pdef::proto::size::packet_set_commands_enabled(stream, *obj.params_packet_set_commands_enabled); EXPECT_OR_BAIL(len_226); len += len_226; /*params_packet_set_commands_enabled*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetDifficulty: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_set_difficulty); size_t len_223 = pdef::proto::size::packet_set_difficulty(stream, *obj.params_packet_set_difficulty); EXPECT_OR_BAIL(len_223); len += len_223; /*params_packet_set_difficulty*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_set_difficulty); size_t len_227 = pdef::proto::size::packet_set_difficulty(stream, *obj.params_packet_set_difficulty); EXPECT_OR_BAIL(len_227); len += len_227; /*params_packet_set_difficulty*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ChangeDimension: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_change_dimension); size_t len_224 = pdef::proto::size::packet_change_dimension(stream, *obj.params_packet_change_dimension); EXPECT_OR_BAIL(len_224); len += len_224; /*params_packet_change_dimension*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_change_dimension); size_t len_228 = pdef::proto::size::packet_change_dimension(stream, *obj.params_packet_change_dimension); EXPECT_OR_BAIL(len_228); len += len_228; /*params_packet_change_dimension*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetPlayerGameType: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_set_player_game_type); size_t len_225 = pdef::proto::size::packet_set_player_game_type(stream, *obj.params_packet_set_player_game_type); EXPECT_OR_BAIL(len_225); len += len_225; /*params_packet_set_player_game_type*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_set_player_game_type); size_t len_229 = pdef::proto::size::packet_set_player_game_type(stream, *obj.params_packet_set_player_game_type); EXPECT_OR_BAIL(len_229); len += len_229; /*params_packet_set_player_game_type*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PlayerList: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_player_list); size_t len_226 = pdef::proto::size::packet_player_list(stream, *obj.params_packet_player_list); EXPECT_OR_BAIL(len_226); len += len_226; /*params_packet_player_list*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_player_list); size_t len_230 = pdef::proto::size::packet_player_list(stream, *obj.params_packet_player_list); EXPECT_OR_BAIL(len_230); len += len_230; /*params_packet_player_list*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SimpleEvent: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_simple_event); size_t len_227 = pdef::proto::size::packet_simple_event(stream, *obj.params_packet_simple_event); EXPECT_OR_BAIL(len_227); len += len_227; /*params_packet_simple_event*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_simple_event); size_t len_231 = pdef::proto::size::packet_simple_event(stream, *obj.params_packet_simple_event); EXPECT_OR_BAIL(len_231); len += len_231; /*params_packet_simple_event*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::Event: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_event); size_t len_228 = pdef::proto::size::packet_event(stream, *obj.params_packet_event); EXPECT_OR_BAIL(len_228); len += len_228; /*params_packet_event*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_event); size_t len_232 = pdef::proto::size::packet_event(stream, *obj.params_packet_event); EXPECT_OR_BAIL(len_232); len += len_232; /*params_packet_event*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SpawnExperienceOrb: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_spawn_experience_orb); size_t len_229 = pdef::proto::size::packet_spawn_experience_orb(stream, *obj.params_packet_spawn_experience_orb); EXPECT_OR_BAIL(len_229); len += len_229; /*params_packet_spawn_experience_orb*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_spawn_experience_orb); size_t len_233 = pdef::proto::size::packet_spawn_experience_orb(stream, *obj.params_packet_spawn_experience_orb); EXPECT_OR_BAIL(len_233); len += len_233; /*params_packet_spawn_experience_orb*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ClientboundMapItemData: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_clientbound_map_item_data); size_t len_230 = pdef::proto::size::packet_clientbound_map_item_data(stream, *obj.params_packet_clientbound_map_item_data); EXPECT_OR_BAIL(len_230); len += len_230; /*params_packet_clientbound_map_item_data*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_clientbound_map_item_data); size_t len_234 = pdef::proto::size::packet_clientbound_map_item_data(stream, *obj.params_packet_clientbound_map_item_data); EXPECT_OR_BAIL(len_234); len += len_234; /*params_packet_clientbound_map_item_data*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::MapInfoRequest: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_map_info_request); size_t len_231 = pdef::proto::size::packet_map_info_request(stream, *obj.params_packet_map_info_request); EXPECT_OR_BAIL(len_231); len += len_231; /*params_packet_map_info_request*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_map_info_request); size_t len_235 = pdef::proto::size::packet_map_info_request(stream, *obj.params_packet_map_info_request); EXPECT_OR_BAIL(len_235); len += len_235; /*params_packet_map_info_request*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::RequestChunkRadius: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_request_chunk_radius); size_t len_232 = pdef::proto::size::packet_request_chunk_radius(stream, *obj.params_packet_request_chunk_radius); EXPECT_OR_BAIL(len_232); len += len_232; /*params_packet_request_chunk_radius*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_request_chunk_radius); size_t len_236 = pdef::proto::size::packet_request_chunk_radius(stream, *obj.params_packet_request_chunk_radius); EXPECT_OR_BAIL(len_236); len += len_236; /*params_packet_request_chunk_radius*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ChunkRadiusUpdate: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_chunk_radius_update); size_t len_233 = pdef::proto::size::packet_chunk_radius_update(stream, *obj.params_packet_chunk_radius_update); EXPECT_OR_BAIL(len_233); len += len_233; /*params_packet_chunk_radius_update*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_chunk_radius_update); size_t len_237 = pdef::proto::size::packet_chunk_radius_update(stream, *obj.params_packet_chunk_radius_update); EXPECT_OR_BAIL(len_237); len += len_237; /*params_packet_chunk_radius_update*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ItemFrameDropItem: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_item_frame_drop_item); size_t len_234 = pdef::proto::size::packet_item_frame_drop_item(stream, *obj.params_packet_item_frame_drop_item); EXPECT_OR_BAIL(len_234); len += len_234; /*params_packet_item_frame_drop_item*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_item_frame_drop_item); size_t len_238 = pdef::proto::size::packet_item_frame_drop_item(stream, *obj.params_packet_item_frame_drop_item); EXPECT_OR_BAIL(len_238); len += len_238; /*params_packet_item_frame_drop_item*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::GameRulesChanged: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_game_rules_changed); size_t len_235 = pdef::proto::size::packet_game_rules_changed(stream, *obj.params_packet_game_rules_changed); EXPECT_OR_BAIL(len_235); len += len_235; /*params_packet_game_rules_changed*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_game_rules_changed); size_t len_239 = pdef::proto::size::packet_game_rules_changed(stream, *obj.params_packet_game_rules_changed); EXPECT_OR_BAIL(len_239); len += len_239; /*params_packet_game_rules_changed*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::Camera: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_camera); size_t len_236 = pdef::proto::size::packet_camera(stream, *obj.params_packet_camera); EXPECT_OR_BAIL(len_236); len += len_236; /*params_packet_camera*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_camera); size_t len_240 = pdef::proto::size::packet_camera(stream, *obj.params_packet_camera); EXPECT_OR_BAIL(len_240); len += len_240; /*params_packet_camera*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::BossEvent: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_boss_event); size_t len_237 = pdef::proto::size::packet_boss_event(stream, *obj.params_packet_boss_event); EXPECT_OR_BAIL(len_237); len += len_237; /*params_packet_boss_event*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_boss_event); size_t len_241 = pdef::proto::size::packet_boss_event(stream, *obj.params_packet_boss_event); EXPECT_OR_BAIL(len_241); len += len_241; /*params_packet_boss_event*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ShowCredits: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_show_credits); size_t len_238 = pdef::proto::size::packet_show_credits(stream, *obj.params_packet_show_credits); EXPECT_OR_BAIL(len_238); len += len_238; /*params_packet_show_credits*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_show_credits); size_t len_242 = pdef::proto::size::packet_show_credits(stream, *obj.params_packet_show_credits); EXPECT_OR_BAIL(len_242); len += len_242; /*params_packet_show_credits*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AvailableCommands: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_available_commands); size_t len_239 = pdef::proto::size::packet_available_commands(stream, *obj.params_packet_available_commands); EXPECT_OR_BAIL(len_239); len += len_239; /*params_packet_available_commands*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_available_commands); size_t len_243 = pdef::proto::size::packet_available_commands(stream, *obj.params_packet_available_commands); EXPECT_OR_BAIL(len_243); len += len_243; /*params_packet_available_commands*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::CommandRequest: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_command_request); size_t len_240 = pdef::proto::size::packet_command_request(stream, *obj.params_packet_command_request); EXPECT_OR_BAIL(len_240); len += len_240; /*params_packet_command_request*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_command_request); size_t len_244 = pdef::proto::size::packet_command_request(stream, *obj.params_packet_command_request); EXPECT_OR_BAIL(len_244); len += len_244; /*params_packet_command_request*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::CommandBlockUpdate: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_command_block_update); size_t len_241 = pdef::proto::size::packet_command_block_update(stream, *obj.params_packet_command_block_update); EXPECT_OR_BAIL(len_241); len += len_241; /*params_packet_command_block_update*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_command_block_update); size_t len_245 = pdef::proto::size::packet_command_block_update(stream, *obj.params_packet_command_block_update); EXPECT_OR_BAIL(len_245); len += len_245; /*params_packet_command_block_update*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::CommandOutput: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_command_output); size_t len_242 = pdef::proto::size::packet_command_output(stream, *obj.params_packet_command_output); EXPECT_OR_BAIL(len_242); len += len_242; /*params_packet_command_output*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_command_output); size_t len_246 = pdef::proto::size::packet_command_output(stream, *obj.params_packet_command_output); EXPECT_OR_BAIL(len_246); len += len_246; /*params_packet_command_output*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::UpdateTrade: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_update_trade); size_t len_243 = pdef::proto::size::packet_update_trade(stream, *obj.params_packet_update_trade); EXPECT_OR_BAIL(len_243); len += len_243; /*params_packet_update_trade*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_update_trade); size_t len_247 = pdef::proto::size::packet_update_trade(stream, *obj.params_packet_update_trade); EXPECT_OR_BAIL(len_247); len += len_247; /*params_packet_update_trade*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::UpdateEquipment: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_update_equipment); size_t len_244 = pdef::proto::size::packet_update_equipment(stream, *obj.params_packet_update_equipment); EXPECT_OR_BAIL(len_244); len += len_244; /*params_packet_update_equipment*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_update_equipment); size_t len_248 = pdef::proto::size::packet_update_equipment(stream, *obj.params_packet_update_equipment); EXPECT_OR_BAIL(len_248); len += len_248; /*params_packet_update_equipment*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ResourcePackDataInfo: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_resource_pack_data_info); size_t len_245 = pdef::proto::size::packet_resource_pack_data_info(stream, *obj.params_packet_resource_pack_data_info); EXPECT_OR_BAIL(len_245); len += len_245; /*params_packet_resource_pack_data_info*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_resource_pack_data_info); size_t len_249 = pdef::proto::size::packet_resource_pack_data_info(stream, *obj.params_packet_resource_pack_data_info); EXPECT_OR_BAIL(len_249); len += len_249; /*params_packet_resource_pack_data_info*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ResourcePackChunkData: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_resource_pack_chunk_data); size_t len_246 = pdef::proto::size::packet_resource_pack_chunk_data(stream, *obj.params_packet_resource_pack_chunk_data); EXPECT_OR_BAIL(len_246); len += len_246; /*params_packet_resource_pack_chunk_data*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_resource_pack_chunk_data); size_t len_250 = pdef::proto::size::packet_resource_pack_chunk_data(stream, *obj.params_packet_resource_pack_chunk_data); EXPECT_OR_BAIL(len_250); len += len_250; /*params_packet_resource_pack_chunk_data*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ResourcePackChunkRequest: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_resource_pack_chunk_request); size_t len_247 = pdef::proto::size::packet_resource_pack_chunk_request(stream, *obj.params_packet_resource_pack_chunk_request); EXPECT_OR_BAIL(len_247); len += len_247; /*params_packet_resource_pack_chunk_request*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_resource_pack_chunk_request); size_t len_251 = pdef::proto::size::packet_resource_pack_chunk_request(stream, *obj.params_packet_resource_pack_chunk_request); EXPECT_OR_BAIL(len_251); len += len_251; /*params_packet_resource_pack_chunk_request*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::Transfer: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_transfer); size_t len_248 = pdef::proto::size::packet_transfer(stream, *obj.params_packet_transfer); EXPECT_OR_BAIL(len_248); len += len_248; /*params_packet_transfer*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_transfer); size_t len_252 = pdef::proto::size::packet_transfer(stream, *obj.params_packet_transfer); EXPECT_OR_BAIL(len_252); len += len_252; /*params_packet_transfer*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PlaySound: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_play_sound); size_t len_249 = pdef::proto::size::packet_play_sound(stream, *obj.params_packet_play_sound); EXPECT_OR_BAIL(len_249); len += len_249; /*params_packet_play_sound*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_play_sound); size_t len_253 = pdef::proto::size::packet_play_sound(stream, *obj.params_packet_play_sound); EXPECT_OR_BAIL(len_253); len += len_253; /*params_packet_play_sound*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::StopSound: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_stop_sound); size_t len_250 = pdef::proto::size::packet_stop_sound(stream, *obj.params_packet_stop_sound); EXPECT_OR_BAIL(len_250); len += len_250; /*params_packet_stop_sound*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_stop_sound); size_t len_254 = pdef::proto::size::packet_stop_sound(stream, *obj.params_packet_stop_sound); EXPECT_OR_BAIL(len_254); len += len_254; /*params_packet_stop_sound*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetTitle: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_set_title); size_t len_251 = pdef::proto::size::packet_set_title(stream, *obj.params_packet_set_title); EXPECT_OR_BAIL(len_251); len += len_251; /*params_packet_set_title*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_set_title); size_t len_255 = pdef::proto::size::packet_set_title(stream, *obj.params_packet_set_title); EXPECT_OR_BAIL(len_255); len += len_255; /*params_packet_set_title*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AddBehaviorTree: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_add_behavior_tree); size_t len_252 = pdef::proto::size::packet_add_behavior_tree(stream, *obj.params_packet_add_behavior_tree); EXPECT_OR_BAIL(len_252); len += len_252; /*params_packet_add_behavior_tree*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_add_behavior_tree); size_t len_256 = pdef::proto::size::packet_add_behavior_tree(stream, *obj.params_packet_add_behavior_tree); EXPECT_OR_BAIL(len_256); len += len_256; /*params_packet_add_behavior_tree*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::StructureBlockUpdate: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_structure_block_update); size_t len_253 = pdef::proto::size::packet_structure_block_update(stream, *obj.params_packet_structure_block_update); EXPECT_OR_BAIL(len_253); len += len_253; /*params_packet_structure_block_update*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_structure_block_update); size_t len_257 = pdef::proto::size::packet_structure_block_update(stream, *obj.params_packet_structure_block_update); EXPECT_OR_BAIL(len_257); len += len_257; /*params_packet_structure_block_update*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ShowStoreOffer: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_show_store_offer); size_t len_254 = pdef::proto::size::packet_show_store_offer(stream, *obj.params_packet_show_store_offer); EXPECT_OR_BAIL(len_254); len += len_254; /*params_packet_show_store_offer*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_show_store_offer); size_t len_258 = pdef::proto::size::packet_show_store_offer(stream, *obj.params_packet_show_store_offer); EXPECT_OR_BAIL(len_258); len += len_258; /*params_packet_show_store_offer*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PurchaseReceipt: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_purchase_receipt); size_t len_255 = pdef::proto::size::packet_purchase_receipt(stream, *obj.params_packet_purchase_receipt); EXPECT_OR_BAIL(len_255); len += len_255; /*params_packet_purchase_receipt*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_purchase_receipt); size_t len_259 = pdef::proto::size::packet_purchase_receipt(stream, *obj.params_packet_purchase_receipt); EXPECT_OR_BAIL(len_259); len += len_259; /*params_packet_purchase_receipt*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PlayerSkin: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_player_skin); size_t len_256 = pdef::proto::size::packet_player_skin(stream, *obj.params_packet_player_skin); EXPECT_OR_BAIL(len_256); len += len_256; /*params_packet_player_skin*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_player_skin); size_t len_260 = pdef::proto::size::packet_player_skin(stream, *obj.params_packet_player_skin); EXPECT_OR_BAIL(len_260); len += len_260; /*params_packet_player_skin*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SubClientLogin: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_sub_client_login); size_t len_257 = pdef::proto::size::packet_sub_client_login(stream, *obj.params_packet_sub_client_login); EXPECT_OR_BAIL(len_257); len += len_257; /*params_packet_sub_client_login*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_sub_client_login); size_t len_261 = pdef::proto::size::packet_sub_client_login(stream, *obj.params_packet_sub_client_login); EXPECT_OR_BAIL(len_261); len += len_261; /*params_packet_sub_client_login*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::InitiateWebSocketConnection: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_initiate_web_socket_connection); size_t len_258 = pdef::proto::size::packet_initiate_web_socket_connection(stream, *obj.params_packet_initiate_web_socket_connection); EXPECT_OR_BAIL(len_258); len += len_258; /*params_packet_initiate_web_socket_connection*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_initiate_web_socket_connection); size_t len_262 = pdef::proto::size::packet_initiate_web_socket_connection(stream, *obj.params_packet_initiate_web_socket_connection); EXPECT_OR_BAIL(len_262); len += len_262; /*params_packet_initiate_web_socket_connection*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetLastHurtBy: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_set_last_hurt_by); size_t len_259 = pdef::proto::size::packet_set_last_hurt_by(stream, *obj.params_packet_set_last_hurt_by); EXPECT_OR_BAIL(len_259); len += len_259; /*params_packet_set_last_hurt_by*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_set_last_hurt_by); size_t len_263 = pdef::proto::size::packet_set_last_hurt_by(stream, *obj.params_packet_set_last_hurt_by); EXPECT_OR_BAIL(len_263); len += len_263; /*params_packet_set_last_hurt_by*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::BookEdit: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_book_edit); size_t len_260 = pdef::proto::size::packet_book_edit(stream, *obj.params_packet_book_edit); EXPECT_OR_BAIL(len_260); len += len_260; /*params_packet_book_edit*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_book_edit); size_t len_264 = pdef::proto::size::packet_book_edit(stream, *obj.params_packet_book_edit); EXPECT_OR_BAIL(len_264); len += len_264; /*params_packet_book_edit*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::NpcRequest: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_npc_request); size_t len_261 = pdef::proto::size::packet_npc_request(stream, *obj.params_packet_npc_request); EXPECT_OR_BAIL(len_261); len += len_261; /*params_packet_npc_request*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_npc_request); size_t len_265 = pdef::proto::size::packet_npc_request(stream, *obj.params_packet_npc_request); EXPECT_OR_BAIL(len_265); len += len_265; /*params_packet_npc_request*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PhotoTransfer: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_photo_transfer); size_t len_262 = pdef::proto::size::packet_photo_transfer(stream, *obj.params_packet_photo_transfer); EXPECT_OR_BAIL(len_262); len += len_262; /*params_packet_photo_transfer*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_photo_transfer); size_t len_266 = pdef::proto::size::packet_photo_transfer(stream, *obj.params_packet_photo_transfer); EXPECT_OR_BAIL(len_266); len += len_266; /*params_packet_photo_transfer*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ModalFormRequest: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_modal_form_request); size_t len_263 = pdef::proto::size::packet_modal_form_request(stream, *obj.params_packet_modal_form_request); EXPECT_OR_BAIL(len_263); len += len_263; /*params_packet_modal_form_request*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_modal_form_request); size_t len_267 = pdef::proto::size::packet_modal_form_request(stream, *obj.params_packet_modal_form_request); EXPECT_OR_BAIL(len_267); len += len_267; /*params_packet_modal_form_request*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ModalFormResponse: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_modal_form_response); size_t len_264 = pdef::proto::size::packet_modal_form_response(stream, *obj.params_packet_modal_form_response); EXPECT_OR_BAIL(len_264); len += len_264; /*params_packet_modal_form_response*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_modal_form_response); size_t len_268 = pdef::proto::size::packet_modal_form_response(stream, *obj.params_packet_modal_form_response); EXPECT_OR_BAIL(len_268); len += len_268; /*params_packet_modal_form_response*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ServerSettingsRequest: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_server_settings_request); size_t len_265 = pdef::proto::size::packet_server_settings_request(stream, *obj.params_packet_server_settings_request); EXPECT_OR_BAIL(len_265); len += len_265; /*params_packet_server_settings_request*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_server_settings_request); size_t len_269 = pdef::proto::size::packet_server_settings_request(stream, *obj.params_packet_server_settings_request); EXPECT_OR_BAIL(len_269); len += len_269; /*params_packet_server_settings_request*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ServerSettingsResponse: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_server_settings_response); size_t len_266 = pdef::proto::size::packet_server_settings_response(stream, *obj.params_packet_server_settings_response); EXPECT_OR_BAIL(len_266); len += len_266; /*params_packet_server_settings_response*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_server_settings_response); size_t len_270 = pdef::proto::size::packet_server_settings_response(stream, *obj.params_packet_server_settings_response); EXPECT_OR_BAIL(len_270); len += len_270; /*params_packet_server_settings_response*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ShowProfile: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_show_profile); size_t len_267 = pdef::proto::size::packet_show_profile(stream, *obj.params_packet_show_profile); EXPECT_OR_BAIL(len_267); len += len_267; /*params_packet_show_profile*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_show_profile); size_t len_271 = pdef::proto::size::packet_show_profile(stream, *obj.params_packet_show_profile); EXPECT_OR_BAIL(len_271); len += len_271; /*params_packet_show_profile*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetDefaultGameType: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_set_default_game_type); size_t len_268 = pdef::proto::size::packet_set_default_game_type(stream, *obj.params_packet_set_default_game_type); EXPECT_OR_BAIL(len_268); len += len_268; /*params_packet_set_default_game_type*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_set_default_game_type); size_t len_272 = pdef::proto::size::packet_set_default_game_type(stream, *obj.params_packet_set_default_game_type); EXPECT_OR_BAIL(len_272); len += len_272; /*params_packet_set_default_game_type*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::RemoveObjective: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_remove_objective); size_t len_269 = pdef::proto::size::packet_remove_objective(stream, *obj.params_packet_remove_objective); EXPECT_OR_BAIL(len_269); len += len_269; /*params_packet_remove_objective*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_remove_objective); size_t len_273 = pdef::proto::size::packet_remove_objective(stream, *obj.params_packet_remove_objective); EXPECT_OR_BAIL(len_273); len += len_273; /*params_packet_remove_objective*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetDisplayObjective: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_set_display_objective); size_t len_270 = pdef::proto::size::packet_set_display_objective(stream, *obj.params_packet_set_display_objective); EXPECT_OR_BAIL(len_270); len += len_270; /*params_packet_set_display_objective*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_set_display_objective); size_t len_274 = pdef::proto::size::packet_set_display_objective(stream, *obj.params_packet_set_display_objective); EXPECT_OR_BAIL(len_274); len += len_274; /*params_packet_set_display_objective*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetScore: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_set_score); size_t len_271 = pdef::proto::size::packet_set_score(stream, *obj.params_packet_set_score); EXPECT_OR_BAIL(len_271); len += len_271; /*params_packet_set_score*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_set_score); size_t len_275 = pdef::proto::size::packet_set_score(stream, *obj.params_packet_set_score); EXPECT_OR_BAIL(len_275); len += len_275; /*params_packet_set_score*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::LabTable: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_lab_table); size_t len_272 = pdef::proto::size::packet_lab_table(stream, *obj.params_packet_lab_table); EXPECT_OR_BAIL(len_272); len += len_272; /*params_packet_lab_table*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_lab_table); size_t len_276 = pdef::proto::size::packet_lab_table(stream, *obj.params_packet_lab_table); EXPECT_OR_BAIL(len_276); len += len_276; /*params_packet_lab_table*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::UpdateBlockSynced: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_update_block_synced); size_t len_273 = pdef::proto::size::packet_update_block_synced(stream, *obj.params_packet_update_block_synced); EXPECT_OR_BAIL(len_273); len += len_273; /*params_packet_update_block_synced*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_update_block_synced); size_t len_277 = pdef::proto::size::packet_update_block_synced(stream, *obj.params_packet_update_block_synced); EXPECT_OR_BAIL(len_277); len += len_277; /*params_packet_update_block_synced*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::MoveEntityDelta: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_move_entity_delta); size_t len_274 = pdef::proto::size::packet_move_entity_delta(stream, *obj.params_packet_move_entity_delta); EXPECT_OR_BAIL(len_274); len += len_274; /*params_packet_move_entity_delta*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_move_entity_delta); size_t len_278 = pdef::proto::size::packet_move_entity_delta(stream, *obj.params_packet_move_entity_delta); EXPECT_OR_BAIL(len_278); len += len_278; /*params_packet_move_entity_delta*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetScoreboardIdentity: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_set_scoreboard_identity); size_t len_275 = pdef::proto::size::packet_set_scoreboard_identity(stream, *obj.params_packet_set_scoreboard_identity); EXPECT_OR_BAIL(len_275); len += len_275; /*params_packet_set_scoreboard_identity*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_set_scoreboard_identity); size_t len_279 = pdef::proto::size::packet_set_scoreboard_identity(stream, *obj.params_packet_set_scoreboard_identity); EXPECT_OR_BAIL(len_279); len += len_279; /*params_packet_set_scoreboard_identity*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetLocalPlayerAsInitialized: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_set_local_player_as_initialized); size_t len_276 = pdef::proto::size::packet_set_local_player_as_initialized(stream, *obj.params_packet_set_local_player_as_initialized); EXPECT_OR_BAIL(len_276); len += len_276; /*params_packet_set_local_player_as_initialized*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_set_local_player_as_initialized); size_t len_280 = pdef::proto::size::packet_set_local_player_as_initialized(stream, *obj.params_packet_set_local_player_as_initialized); EXPECT_OR_BAIL(len_280); len += len_280; /*params_packet_set_local_player_as_initialized*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::UpdateSoftEnum: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_update_soft_enum); size_t len_277 = pdef::proto::size::packet_update_soft_enum(stream, *obj.params_packet_update_soft_enum); EXPECT_OR_BAIL(len_277); len += len_277; /*params_packet_update_soft_enum*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_update_soft_enum); size_t len_281 = pdef::proto::size::packet_update_soft_enum(stream, *obj.params_packet_update_soft_enum); EXPECT_OR_BAIL(len_281); len += len_281; /*params_packet_update_soft_enum*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::NetworkStackLatency: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_network_stack_latency); size_t len_278 = pdef::proto::size::packet_network_stack_latency(stream, *obj.params_packet_network_stack_latency); EXPECT_OR_BAIL(len_278); len += len_278; /*params_packet_network_stack_latency*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_network_stack_latency); size_t len_282 = pdef::proto::size::packet_network_stack_latency(stream, *obj.params_packet_network_stack_latency); EXPECT_OR_BAIL(len_282); len += len_282; /*params_packet_network_stack_latency*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ScriptCustomEvent: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_script_custom_event); size_t len_279 = pdef::proto::size::packet_script_custom_event(stream, *obj.params_packet_script_custom_event); EXPECT_OR_BAIL(len_279); len += len_279; /*params_packet_script_custom_event*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_script_custom_event); size_t len_283 = pdef::proto::size::packet_script_custom_event(stream, *obj.params_packet_script_custom_event); EXPECT_OR_BAIL(len_283); len += len_283; /*params_packet_script_custom_event*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SpawnParticleEffect: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_spawn_particle_effect); size_t len_280 = pdef::proto::size::packet_spawn_particle_effect(stream, *obj.params_packet_spawn_particle_effect); EXPECT_OR_BAIL(len_280); len += len_280; /*params_packet_spawn_particle_effect*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_spawn_particle_effect); size_t len_284 = pdef::proto::size::packet_spawn_particle_effect(stream, *obj.params_packet_spawn_particle_effect); EXPECT_OR_BAIL(len_284); len += len_284; /*params_packet_spawn_particle_effect*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AvailableEntityIdentifiers: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_available_entity_identifiers); size_t len_281 = pdef::proto::size::packet_available_entity_identifiers(stream, *obj.params_packet_available_entity_identifiers); EXPECT_OR_BAIL(len_281); len += len_281; /*params_packet_available_entity_identifiers*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_available_entity_identifiers); size_t len_285 = pdef::proto::size::packet_available_entity_identifiers(stream, *obj.params_packet_available_entity_identifiers); EXPECT_OR_BAIL(len_285); len += len_285; /*params_packet_available_entity_identifiers*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::LevelSoundEventV2: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_level_sound_event_v2); size_t len_282 = pdef::proto::size::packet_level_sound_event_v2(stream, *obj.params_packet_level_sound_event_v2); EXPECT_OR_BAIL(len_282); len += len_282; /*params_packet_level_sound_event_v2*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_level_sound_event_v2); size_t len_286 = pdef::proto::size::packet_level_sound_event_v2(stream, *obj.params_packet_level_sound_event_v2); EXPECT_OR_BAIL(len_286); len += len_286; /*params_packet_level_sound_event_v2*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::NetworkChunkPublisherUpdate: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_network_chunk_publisher_update); size_t len_283 = pdef::proto::size::packet_network_chunk_publisher_update(stream, *obj.params_packet_network_chunk_publisher_update); EXPECT_OR_BAIL(len_283); len += len_283; /*params_packet_network_chunk_publisher_update*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_network_chunk_publisher_update); size_t len_287 = pdef::proto::size::packet_network_chunk_publisher_update(stream, *obj.params_packet_network_chunk_publisher_update); EXPECT_OR_BAIL(len_287); len += len_287; /*params_packet_network_chunk_publisher_update*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::BiomeDefinitionList: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_biome_definition_list); size_t len_284 = pdef::proto::size::packet_biome_definition_list(stream, *obj.params_packet_biome_definition_list); EXPECT_OR_BAIL(len_284); len += len_284; /*params_packet_biome_definition_list*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_biome_definition_list); size_t len_288 = pdef::proto::size::packet_biome_definition_list(stream, *obj.params_packet_biome_definition_list); EXPECT_OR_BAIL(len_288); len += len_288; /*params_packet_biome_definition_list*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::LevelSoundEvent: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_level_sound_event); size_t len_285 = pdef::proto::size::packet_level_sound_event(stream, *obj.params_packet_level_sound_event); EXPECT_OR_BAIL(len_285); len += len_285; /*params_packet_level_sound_event*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_level_sound_event); size_t len_289 = pdef::proto::size::packet_level_sound_event(stream, *obj.params_packet_level_sound_event); EXPECT_OR_BAIL(len_289); len += len_289; /*params_packet_level_sound_event*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::LevelEventGeneric: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_level_event_generic); size_t len_286 = pdef::proto::size::packet_level_event_generic(stream, *obj.params_packet_level_event_generic); EXPECT_OR_BAIL(len_286); len += len_286; /*params_packet_level_event_generic*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_level_event_generic); size_t len_290 = pdef::proto::size::packet_level_event_generic(stream, *obj.params_packet_level_event_generic); EXPECT_OR_BAIL(len_290); len += len_290; /*params_packet_level_event_generic*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::LecternUpdate: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_lectern_update); size_t len_287 = pdef::proto::size::packet_lectern_update(stream, *obj.params_packet_lectern_update); EXPECT_OR_BAIL(len_287); len += len_287; /*params_packet_lectern_update*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_lectern_update); size_t len_291 = pdef::proto::size::packet_lectern_update(stream, *obj.params_packet_lectern_update); EXPECT_OR_BAIL(len_291); len += len_291; /*params_packet_lectern_update*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::VideoStreamConnect: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_video_stream_connect); size_t len_288 = pdef::proto::size::packet_video_stream_connect(stream, *obj.params_packet_video_stream_connect); EXPECT_OR_BAIL(len_288); len += len_288; /*params_packet_video_stream_connect*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_video_stream_connect); size_t len_292 = pdef::proto::size::packet_video_stream_connect(stream, *obj.params_packet_video_stream_connect); EXPECT_OR_BAIL(len_292); len += len_292; /*params_packet_video_stream_connect*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AddEcsEntity: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_add_ecs_entity); size_t len_289 = pdef::proto::size::packet_add_ecs_entity(stream, *obj.params_packet_add_ecs_entity); EXPECT_OR_BAIL(len_289); len += len_289; /*params_packet_add_ecs_entity*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_add_ecs_entity); size_t len_293 = pdef::proto::size::packet_add_ecs_entity(stream, *obj.params_packet_add_ecs_entity); EXPECT_OR_BAIL(len_293); len += len_293; /*params_packet_add_ecs_entity*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::RemoveEcsEntity: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_remove_ecs_entity); size_t len_290 = pdef::proto::size::packet_remove_ecs_entity(stream, *obj.params_packet_remove_ecs_entity); EXPECT_OR_BAIL(len_290); len += len_290; /*params_packet_remove_ecs_entity*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_remove_ecs_entity); size_t len_294 = pdef::proto::size::packet_remove_ecs_entity(stream, *obj.params_packet_remove_ecs_entity); EXPECT_OR_BAIL(len_294); len += len_294; /*params_packet_remove_ecs_entity*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ClientCacheStatus: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_client_cache_status); size_t len_291 = pdef::proto::size::packet_client_cache_status(stream, *obj.params_packet_client_cache_status); EXPECT_OR_BAIL(len_291); len += len_291; /*params_packet_client_cache_status*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_client_cache_status); size_t len_295 = pdef::proto::size::packet_client_cache_status(stream, *obj.params_packet_client_cache_status); EXPECT_OR_BAIL(len_295); len += len_295; /*params_packet_client_cache_status*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::OnScreenTextureAnimation: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_on_screen_texture_animation); size_t len_292 = pdef::proto::size::packet_on_screen_texture_animation(stream, *obj.params_packet_on_screen_texture_animation); EXPECT_OR_BAIL(len_292); len += len_292; /*params_packet_on_screen_texture_animation*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_on_screen_texture_animation); size_t len_296 = pdef::proto::size::packet_on_screen_texture_animation(stream, *obj.params_packet_on_screen_texture_animation); EXPECT_OR_BAIL(len_296); len += len_296; /*params_packet_on_screen_texture_animation*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::MapCreateLockedCopy: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_map_create_locked_copy); size_t len_293 = pdef::proto::size::packet_map_create_locked_copy(stream, *obj.params_packet_map_create_locked_copy); EXPECT_OR_BAIL(len_293); len += len_293; /*params_packet_map_create_locked_copy*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_map_create_locked_copy); size_t len_297 = pdef::proto::size::packet_map_create_locked_copy(stream, *obj.params_packet_map_create_locked_copy); EXPECT_OR_BAIL(len_297); len += len_297; /*params_packet_map_create_locked_copy*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::StructureTemplateDataExportRequest: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_structure_template_data_export_request); size_t len_294 = pdef::proto::size::packet_structure_template_data_export_request(stream, *obj.params_packet_structure_template_data_export_request); EXPECT_OR_BAIL(len_294); len += len_294; /*params_packet_structure_template_data_export_request*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_structure_template_data_export_request); size_t len_298 = pdef::proto::size::packet_structure_template_data_export_request(stream, *obj.params_packet_structure_template_data_export_request); EXPECT_OR_BAIL(len_298); len += len_298; /*params_packet_structure_template_data_export_request*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::StructureTemplateDataExportResponse: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_structure_template_data_export_response); size_t len_295 = pdef::proto::size::packet_structure_template_data_export_response(stream, *obj.params_packet_structure_template_data_export_response); EXPECT_OR_BAIL(len_295); len += len_295; /*params_packet_structure_template_data_export_response*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_structure_template_data_export_response); size_t len_299 = pdef::proto::size::packet_structure_template_data_export_response(stream, *obj.params_packet_structure_template_data_export_response); EXPECT_OR_BAIL(len_299); len += len_299; /*params_packet_structure_template_data_export_response*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::UpdateBlockProperties: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_update_block_properties); size_t len_296 = pdef::proto::size::packet_update_block_properties(stream, *obj.params_packet_update_block_properties); EXPECT_OR_BAIL(len_296); len += len_296; /*params_packet_update_block_properties*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_update_block_properties); size_t len_300 = pdef::proto::size::packet_update_block_properties(stream, *obj.params_packet_update_block_properties); EXPECT_OR_BAIL(len_300); len += len_300; /*params_packet_update_block_properties*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ClientCacheBlobStatus: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_client_cache_blob_status); size_t len_297 = pdef::proto::size::packet_client_cache_blob_status(stream, *obj.params_packet_client_cache_blob_status); EXPECT_OR_BAIL(len_297); len += len_297; /*params_packet_client_cache_blob_status*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_client_cache_blob_status); size_t len_301 = pdef::proto::size::packet_client_cache_blob_status(stream, *obj.params_packet_client_cache_blob_status); EXPECT_OR_BAIL(len_301); len += len_301; /*params_packet_client_cache_blob_status*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ClientCacheMissResponse: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_client_cache_miss_response); size_t len_298 = pdef::proto::size::packet_client_cache_miss_response(stream, *obj.params_packet_client_cache_miss_response); EXPECT_OR_BAIL(len_298); len += len_298; /*params_packet_client_cache_miss_response*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_client_cache_miss_response); size_t len_302 = pdef::proto::size::packet_client_cache_miss_response(stream, *obj.params_packet_client_cache_miss_response); EXPECT_OR_BAIL(len_302); len += len_302; /*params_packet_client_cache_miss_response*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::EducationSettings: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_education_settings); size_t len_299 = pdef::proto::size::packet_education_settings(stream, *obj.params_packet_education_settings); EXPECT_OR_BAIL(len_299); len += len_299; /*params_packet_education_settings*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_education_settings); size_t len_303 = pdef::proto::size::packet_education_settings(stream, *obj.params_packet_education_settings); EXPECT_OR_BAIL(len_303); len += len_303; /*params_packet_education_settings*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::Emote: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_emote); size_t len_300 = pdef::proto::size::packet_emote(stream, *obj.params_packet_emote); EXPECT_OR_BAIL(len_300); len += len_300; /*params_packet_emote*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_emote); size_t len_304 = pdef::proto::size::packet_emote(stream, *obj.params_packet_emote); EXPECT_OR_BAIL(len_304); len += len_304; /*params_packet_emote*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::MultiplayerSettings: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_multiplayer_settings); size_t len_301 = pdef::proto::size::packet_multiplayer_settings(stream, *obj.params_packet_multiplayer_settings); EXPECT_OR_BAIL(len_301); len += len_301; /*params_packet_multiplayer_settings*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_multiplayer_settings); size_t len_305 = pdef::proto::size::packet_multiplayer_settings(stream, *obj.params_packet_multiplayer_settings); EXPECT_OR_BAIL(len_305); len += len_305; /*params_packet_multiplayer_settings*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SettingsCommand: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_settings_command); size_t len_302 = pdef::proto::size::packet_settings_command(stream, *obj.params_packet_settings_command); EXPECT_OR_BAIL(len_302); len += len_302; /*params_packet_settings_command*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_settings_command); size_t len_306 = pdef::proto::size::packet_settings_command(stream, *obj.params_packet_settings_command); EXPECT_OR_BAIL(len_306); len += len_306; /*params_packet_settings_command*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AnvilDamage: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_anvil_damage); size_t len_303 = pdef::proto::size::packet_anvil_damage(stream, *obj.params_packet_anvil_damage); EXPECT_OR_BAIL(len_303); len += len_303; /*params_packet_anvil_damage*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_anvil_damage); size_t len_307 = pdef::proto::size::packet_anvil_damage(stream, *obj.params_packet_anvil_damage); EXPECT_OR_BAIL(len_307); len += len_307; /*params_packet_anvil_damage*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::CompletedUsingItem: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_completed_using_item); size_t len_304 = pdef::proto::size::packet_completed_using_item(stream, *obj.params_packet_completed_using_item); EXPECT_OR_BAIL(len_304); len += len_304; /*params_packet_completed_using_item*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_completed_using_item); size_t len_308 = pdef::proto::size::packet_completed_using_item(stream, *obj.params_packet_completed_using_item); EXPECT_OR_BAIL(len_308); len += len_308; /*params_packet_completed_using_item*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::NetworkSettings: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_network_settings); size_t len_305 = pdef::proto::size::packet_network_settings(stream, *obj.params_packet_network_settings); EXPECT_OR_BAIL(len_305); len += len_305; /*params_packet_network_settings*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_network_settings); size_t len_309 = pdef::proto::size::packet_network_settings(stream, *obj.params_packet_network_settings); EXPECT_OR_BAIL(len_309); len += len_309; /*params_packet_network_settings*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PlayerAuthInput: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_player_auth_input); size_t len_306 = pdef::proto::size::packet_player_auth_input(stream, *obj.params_packet_player_auth_input); EXPECT_OR_BAIL(len_306); len += len_306; /*params_packet_player_auth_input*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_player_auth_input); size_t len_310 = pdef::proto::size::packet_player_auth_input(stream, *obj.params_packet_player_auth_input); EXPECT_OR_BAIL(len_310); len += len_310; /*params_packet_player_auth_input*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::CreativeContent: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_creative_content); size_t len_307 = pdef::proto::size::packet_creative_content(stream, *obj.params_packet_creative_content); EXPECT_OR_BAIL(len_307); len += len_307; /*params_packet_creative_content*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_creative_content); size_t len_311 = pdef::proto::size::packet_creative_content(stream, *obj.params_packet_creative_content); EXPECT_OR_BAIL(len_311); len += len_311; /*params_packet_creative_content*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PlayerEnchantOptions: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_player_enchant_options); size_t len_308 = pdef::proto::size::packet_player_enchant_options(stream, *obj.params_packet_player_enchant_options); EXPECT_OR_BAIL(len_308); len += len_308; /*params_packet_player_enchant_options*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_player_enchant_options); size_t len_312 = pdef::proto::size::packet_player_enchant_options(stream, *obj.params_packet_player_enchant_options); EXPECT_OR_BAIL(len_312); len += len_312; /*params_packet_player_enchant_options*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ItemStackRequest: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_item_stack_request); size_t len_309 = pdef::proto::size::packet_item_stack_request(stream, *obj.params_packet_item_stack_request); EXPECT_OR_BAIL(len_309); len += len_309; /*params_packet_item_stack_request*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_item_stack_request); size_t len_313 = pdef::proto::size::packet_item_stack_request(stream, *obj.params_packet_item_stack_request); EXPECT_OR_BAIL(len_313); len += len_313; /*params_packet_item_stack_request*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ItemStackResponse: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_item_stack_response); size_t len_310 = pdef::proto::size::packet_item_stack_response(stream, *obj.params_packet_item_stack_response); EXPECT_OR_BAIL(len_310); len += len_310; /*params_packet_item_stack_response*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_item_stack_response); size_t len_314 = pdef::proto::size::packet_item_stack_response(stream, *obj.params_packet_item_stack_response); EXPECT_OR_BAIL(len_314); len += len_314; /*params_packet_item_stack_response*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PlayerArmorDamage: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_player_armor_damage); size_t len_311 = pdef::proto::size::packet_player_armor_damage(stream, *obj.params_packet_player_armor_damage); EXPECT_OR_BAIL(len_311); len += len_311; /*params_packet_player_armor_damage*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_player_armor_damage); size_t len_315 = pdef::proto::size::packet_player_armor_damage(stream, *obj.params_packet_player_armor_damage); EXPECT_OR_BAIL(len_315); len += len_315; /*params_packet_player_armor_damage*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::UpdatePlayerGameType: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_update_player_game_type); size_t len_312 = pdef::proto::size::packet_update_player_game_type(stream, *obj.params_packet_update_player_game_type); EXPECT_OR_BAIL(len_312); len += len_312; /*params_packet_update_player_game_type*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_update_player_game_type); size_t len_316 = pdef::proto::size::packet_update_player_game_type(stream, *obj.params_packet_update_player_game_type); EXPECT_OR_BAIL(len_316); len += len_316; /*params_packet_update_player_game_type*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::EmoteList: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_emote_list); size_t len_313 = pdef::proto::size::packet_emote_list(stream, *obj.params_packet_emote_list); EXPECT_OR_BAIL(len_313); len += len_313; /*params_packet_emote_list*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_emote_list); size_t len_317 = pdef::proto::size::packet_emote_list(stream, *obj.params_packet_emote_list); EXPECT_OR_BAIL(len_317); len += len_317; /*params_packet_emote_list*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PositionTrackingDbRequest: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_position_tracking_db_request); size_t len_314 = pdef::proto::size::packet_position_tracking_db_request(stream, *obj.params_packet_position_tracking_db_request); EXPECT_OR_BAIL(len_314); len += len_314; /*params_packet_position_tracking_db_request*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_position_tracking_db_request); size_t len_318 = pdef::proto::size::packet_position_tracking_db_request(stream, *obj.params_packet_position_tracking_db_request); EXPECT_OR_BAIL(len_318); len += len_318; /*params_packet_position_tracking_db_request*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PositionTrackingDbBroadcast: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_position_tracking_db_broadcast); size_t len_315 = pdef::proto::size::packet_position_tracking_db_broadcast(stream, *obj.params_packet_position_tracking_db_broadcast); EXPECT_OR_BAIL(len_315); len += len_315; /*params_packet_position_tracking_db_broadcast*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_position_tracking_db_broadcast); size_t len_319 = pdef::proto::size::packet_position_tracking_db_broadcast(stream, *obj.params_packet_position_tracking_db_broadcast); EXPECT_OR_BAIL(len_319); len += len_319; /*params_packet_position_tracking_db_broadcast*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PacketViolationWarning: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_packet_violation_warning); size_t len_316 = pdef::proto::size::packet_packet_violation_warning(stream, *obj.params_packet_packet_violation_warning); EXPECT_OR_BAIL(len_316); len += len_316; /*params_packet_packet_violation_warning*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_packet_violation_warning); size_t len_320 = pdef::proto::size::packet_packet_violation_warning(stream, *obj.params_packet_packet_violation_warning); EXPECT_OR_BAIL(len_320); len += len_320; /*params_packet_packet_violation_warning*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::MotionPredictionHints: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_motion_prediction_hints); size_t len_317 = pdef::proto::size::packet_motion_prediction_hints(stream, *obj.params_packet_motion_prediction_hints); EXPECT_OR_BAIL(len_317); len += len_317; /*params_packet_motion_prediction_hints*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_motion_prediction_hints); size_t len_321 = pdef::proto::size::packet_motion_prediction_hints(stream, *obj.params_packet_motion_prediction_hints); EXPECT_OR_BAIL(len_321); len += len_321; /*params_packet_motion_prediction_hints*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AnimateEntity: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_animate_entity); size_t len_318 = pdef::proto::size::packet_animate_entity(stream, *obj.params_packet_animate_entity); EXPECT_OR_BAIL(len_318); len += len_318; /*params_packet_animate_entity*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_animate_entity); size_t len_322 = pdef::proto::size::packet_animate_entity(stream, *obj.params_packet_animate_entity); EXPECT_OR_BAIL(len_322); len += len_322; /*params_packet_animate_entity*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::CameraShake: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_camera_shake); size_t len_319 = pdef::proto::size::packet_camera_shake(stream, *obj.params_packet_camera_shake); EXPECT_OR_BAIL(len_319); len += len_319; /*params_packet_camera_shake*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_camera_shake); size_t len_323 = pdef::proto::size::packet_camera_shake(stream, *obj.params_packet_camera_shake); EXPECT_OR_BAIL(len_323); len += len_323; /*params_packet_camera_shake*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PlayerFog: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_player_fog); size_t len_320 = pdef::proto::size::packet_player_fog(stream, *obj.params_packet_player_fog); EXPECT_OR_BAIL(len_320); len += len_320; /*params_packet_player_fog*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_player_fog); size_t len_324 = pdef::proto::size::packet_player_fog(stream, *obj.params_packet_player_fog); EXPECT_OR_BAIL(len_324); len += len_324; /*params_packet_player_fog*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::CorrectPlayerMovePrediction: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_correct_player_move_prediction); size_t len_321 = pdef::proto::size::packet_correct_player_move_prediction(stream, *obj.params_packet_correct_player_move_prediction); EXPECT_OR_BAIL(len_321); len += len_321; /*params_packet_correct_player_move_prediction*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_correct_player_move_prediction); size_t len_325 = pdef::proto::size::packet_correct_player_move_prediction(stream, *obj.params_packet_correct_player_move_prediction); EXPECT_OR_BAIL(len_325); len += len_325; /*params_packet_correct_player_move_prediction*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ItemComponent: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_item_component); size_t len_322 = pdef::proto::size::packet_item_component(stream, *obj.params_packet_item_component); EXPECT_OR_BAIL(len_322); len += len_322; /*params_packet_item_component*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_item_component); size_t len_326 = pdef::proto::size::packet_item_component(stream, *obj.params_packet_item_component); EXPECT_OR_BAIL(len_326); len += len_326; /*params_packet_item_component*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::FilterTextPacket: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_filter_text_packet); size_t len_323 = pdef::proto::size::packet_filter_text_packet(stream, *obj.params_packet_filter_text_packet); EXPECT_OR_BAIL(len_323); len += len_323; /*params_packet_filter_text_packet*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_filter_text_packet); size_t len_327 = pdef::proto::size::packet_filter_text_packet(stream, *obj.params_packet_filter_text_packet); EXPECT_OR_BAIL(len_327); len += len_327; /*params_packet_filter_text_packet*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::DebugRenderer: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_debug_renderer); size_t len_324 = pdef::proto::size::packet_debug_renderer(stream, *obj.params_packet_debug_renderer); EXPECT_OR_BAIL(len_324); len += len_324; /*params_packet_debug_renderer*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_debug_renderer); size_t len_328 = pdef::proto::size::packet_debug_renderer(stream, *obj.params_packet_debug_renderer); EXPECT_OR_BAIL(len_328); len += len_328; /*params_packet_debug_renderer*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SyncEntityProperty: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_sync_entity_property); size_t len_325 = pdef::proto::size::packet_sync_entity_property(stream, *obj.params_packet_sync_entity_property); EXPECT_OR_BAIL(len_325); len += len_325; /*params_packet_sync_entity_property*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_sync_entity_property); size_t len_329 = pdef::proto::size::packet_sync_entity_property(stream, *obj.params_packet_sync_entity_property); EXPECT_OR_BAIL(len_329); len += len_329; /*params_packet_sync_entity_property*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AddVolumeEntity: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_add_volume_entity); size_t len_326 = pdef::proto::size::packet_add_volume_entity(stream, *obj.params_packet_add_volume_entity); EXPECT_OR_BAIL(len_326); len += len_326; /*params_packet_add_volume_entity*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_add_volume_entity); size_t len_330 = pdef::proto::size::packet_add_volume_entity(stream, *obj.params_packet_add_volume_entity); EXPECT_OR_BAIL(len_330); len += len_330; /*params_packet_add_volume_entity*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::RemoveVolumeEntity: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_remove_volume_entity); size_t len_327 = pdef::proto::size::packet_remove_volume_entity(stream, *obj.params_packet_remove_volume_entity); EXPECT_OR_BAIL(len_327); len += len_327; /*params_packet_remove_volume_entity*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_remove_volume_entity); size_t len_331 = pdef::proto::size::packet_remove_volume_entity(stream, *obj.params_packet_remove_volume_entity); EXPECT_OR_BAIL(len_331); len += len_331; /*params_packet_remove_volume_entity*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SimulationType: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_simulation_type); size_t len_328 = pdef::proto::size::packet_simulation_type(stream, *obj.params_packet_simulation_type); EXPECT_OR_BAIL(len_328); len += len_328; /*params_packet_simulation_type*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_simulation_type); size_t len_332 = pdef::proto::size::packet_simulation_type(stream, *obj.params_packet_simulation_type); EXPECT_OR_BAIL(len_332); len += len_332; /*params_packet_simulation_type*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::NpcDialogue: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_npc_dialogue); size_t len_329 = pdef::proto::size::packet_npc_dialogue(stream, *obj.params_packet_npc_dialogue); EXPECT_OR_BAIL(len_329); len += len_329; /*params_packet_npc_dialogue*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_npc_dialogue); size_t len_333 = pdef::proto::size::packet_npc_dialogue(stream, *obj.params_packet_npc_dialogue); EXPECT_OR_BAIL(len_333); len += len_333; /*params_packet_npc_dialogue*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::EduUriResourcePacket: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_edu_uri_resource_packet); size_t len_330 = pdef::proto::size::packet_edu_uri_resource_packet(stream, *obj.params_packet_edu_uri_resource_packet); EXPECT_OR_BAIL(len_330); len += len_330; /*params_packet_edu_uri_resource_packet*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_edu_uri_resource_packet); size_t len_334 = pdef::proto::size::packet_edu_uri_resource_packet(stream, *obj.params_packet_edu_uri_resource_packet); EXPECT_OR_BAIL(len_334); len += len_334; /*params_packet_edu_uri_resource_packet*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::CreatePhoto: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_create_photo); size_t len_331 = pdef::proto::size::packet_create_photo(stream, *obj.params_packet_create_photo); EXPECT_OR_BAIL(len_331); len += len_331; /*params_packet_create_photo*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_create_photo); size_t len_335 = pdef::proto::size::packet_create_photo(stream, *obj.params_packet_create_photo); EXPECT_OR_BAIL(len_335); len += len_335; /*params_packet_create_photo*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::UpdateSubchunkBlocks: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_update_subchunk_blocks); size_t len_332 = pdef::proto::size::packet_update_subchunk_blocks(stream, *obj.params_packet_update_subchunk_blocks); EXPECT_OR_BAIL(len_332); len += len_332; /*params_packet_update_subchunk_blocks*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_update_subchunk_blocks); size_t len_336 = pdef::proto::size::packet_update_subchunk_blocks(stream, *obj.params_packet_update_subchunk_blocks); EXPECT_OR_BAIL(len_336); len += len_336; /*params_packet_update_subchunk_blocks*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PhotoInfoRequest: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_photo_info_request); size_t len_333 = pdef::proto::size::packet_photo_info_request(stream, *obj.params_packet_photo_info_request); EXPECT_OR_BAIL(len_333); len += len_333; /*params_packet_photo_info_request*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_photo_info_request); size_t len_337 = pdef::proto::size::packet_photo_info_request(stream, *obj.params_packet_photo_info_request); EXPECT_OR_BAIL(len_337); len += len_337; /*params_packet_photo_info_request*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::Subchunk: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_subchunk); size_t len_334 = pdef::proto::size::packet_subchunk(stream, *obj.params_packet_subchunk); EXPECT_OR_BAIL(len_334); len += len_334; /*params_packet_subchunk*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_subchunk); size_t len_338 = pdef::proto::size::packet_subchunk(stream, *obj.params_packet_subchunk); EXPECT_OR_BAIL(len_338); len += len_338; /*params_packet_subchunk*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SubchunkRequest: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_subchunk_request); size_t len_335 = pdef::proto::size::packet_subchunk_request(stream, *obj.params_packet_subchunk_request); EXPECT_OR_BAIL(len_335); len += len_335; /*params_packet_subchunk_request*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_subchunk_request); size_t len_339 = pdef::proto::size::packet_subchunk_request(stream, *obj.params_packet_subchunk_request); EXPECT_OR_BAIL(len_339); len += len_339; /*params_packet_subchunk_request*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ClientStartItemCooldown: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_client_start_item_cooldown); size_t len_336 = pdef::proto::size::packet_client_start_item_cooldown(stream, *obj.params_packet_client_start_item_cooldown); EXPECT_OR_BAIL(len_336); len += len_336; /*params_packet_client_start_item_cooldown*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_client_start_item_cooldown); size_t len_340 = pdef::proto::size::packet_client_start_item_cooldown(stream, *obj.params_packet_client_start_item_cooldown); EXPECT_OR_BAIL(len_340); len += len_340; /*params_packet_client_start_item_cooldown*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ScriptMessage: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_script_message); size_t len_337 = pdef::proto::size::packet_script_message(stream, *obj.params_packet_script_message); EXPECT_OR_BAIL(len_337); len += len_337; /*params_packet_script_message*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_script_message); size_t len_341 = pdef::proto::size::packet_script_message(stream, *obj.params_packet_script_message); EXPECT_OR_BAIL(len_341); len += len_341; /*params_packet_script_message*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::CodeBuilderSource: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_code_builder_source); size_t len_338 = pdef::proto::size::packet_code_builder_source(stream, *obj.params_packet_code_builder_source); EXPECT_OR_BAIL(len_338); len += len_338; /*params_packet_code_builder_source*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_code_builder_source); size_t len_342 = pdef::proto::size::packet_code_builder_source(stream, *obj.params_packet_code_builder_source); EXPECT_OR_BAIL(len_342); len += len_342; /*params_packet_code_builder_source*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::TickingAreasLoadStatus: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_ticking_areas_load_status); size_t len_339 = pdef::proto::size::packet_ticking_areas_load_status(stream, *obj.params_packet_ticking_areas_load_status); EXPECT_OR_BAIL(len_339); len += len_339; /*params_packet_ticking_areas_load_status*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_ticking_areas_load_status); size_t len_343 = pdef::proto::size::packet_ticking_areas_load_status(stream, *obj.params_packet_ticking_areas_load_status); EXPECT_OR_BAIL(len_343); len += len_343; /*params_packet_ticking_areas_load_status*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::DimensionData: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_dimension_data); size_t len_340 = pdef::proto::size::packet_dimension_data(stream, *obj.params_packet_dimension_data); EXPECT_OR_BAIL(len_340); len += len_340; /*params_packet_dimension_data*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_dimension_data); size_t len_344 = pdef::proto::size::packet_dimension_data(stream, *obj.params_packet_dimension_data); EXPECT_OR_BAIL(len_344); len += len_344; /*params_packet_dimension_data*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AgentAction: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_agent_action); size_t len_341 = pdef::proto::size::packet_agent_action(stream, *obj.params_packet_agent_action); EXPECT_OR_BAIL(len_341); len += len_341; /*params_packet_agent_action*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_agent_action); size_t len_345 = pdef::proto::size::packet_agent_action(stream, *obj.params_packet_agent_action); EXPECT_OR_BAIL(len_345); len += len_345; /*params_packet_agent_action*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ChangeMobProperty: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_change_mob_property); size_t len_342 = pdef::proto::size::packet_change_mob_property(stream, *obj.params_packet_change_mob_property); EXPECT_OR_BAIL(len_342); len += len_342; /*params_packet_change_mob_property*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_change_mob_property); size_t len_346 = pdef::proto::size::packet_change_mob_property(stream, *obj.params_packet_change_mob_property); EXPECT_OR_BAIL(len_346); len += len_346; /*params_packet_change_mob_property*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::LessonProgress: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_lesson_progress); size_t len_343 = pdef::proto::size::packet_lesson_progress(stream, *obj.params_packet_lesson_progress); EXPECT_OR_BAIL(len_343); len += len_343; /*params_packet_lesson_progress*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_lesson_progress); size_t len_347 = pdef::proto::size::packet_lesson_progress(stream, *obj.params_packet_lesson_progress); EXPECT_OR_BAIL(len_347); len += len_347; /*params_packet_lesson_progress*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::RequestAbility: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_request_ability); size_t len_344 = pdef::proto::size::packet_request_ability(stream, *obj.params_packet_request_ability); EXPECT_OR_BAIL(len_344); len += len_344; /*params_packet_request_ability*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_request_ability); size_t len_348 = pdef::proto::size::packet_request_ability(stream, *obj.params_packet_request_ability); EXPECT_OR_BAIL(len_348); len += len_348; /*params_packet_request_ability*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::RequestPermissions: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_request_permissions); size_t len_345 = pdef::proto::size::packet_request_permissions(stream, *obj.params_packet_request_permissions); EXPECT_OR_BAIL(len_345); len += len_345; /*params_packet_request_permissions*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_request_permissions); size_t len_349 = pdef::proto::size::packet_request_permissions(stream, *obj.params_packet_request_permissions); EXPECT_OR_BAIL(len_349); len += len_349; /*params_packet_request_permissions*/ /*4.4*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ToastRequest: { /*8.5*/
-        EXPECT_OR_BAIL(obj.params_packet_toast_request); size_t len_346 = pdef::proto::size::packet_toast_request(stream, *obj.params_packet_toast_request); EXPECT_OR_BAIL(len_346); len += len_346; /*params_packet_toast_request*/ /*4.4*/
+        EXPECT_OR_BAIL(obj.params_packet_toast_request); size_t len_350 = pdef::proto::size::packet_toast_request(stream, *obj.params_packet_toast_request); EXPECT_OR_BAIL(len_350); len += len_350; /*params_packet_toast_request*/ /*4.4*/
         break;
       } /*8.7*/
       default: break; /*avoid unhandled case warning*/
@@ -11047,7 +11056,11 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
   bool MaterialReducer(pdef::Stream &stream, const pdef::proto::MaterialReducer &obj, bool allocate = true) {
     if (allocate) { auto writeSize = pdef::proto::size::MaterialReducer(stream, obj); if (!writeSize) return false; stream.reserve(writeSize); }
     WRITE_OR_BAIL(writeZigZagVarInt, (int)obj.mix); /*0.4*/
-    const pdef::proto::MaterialReducer::Items &v = obj.items; /*["MaterialReducer"]*/ /*7.4*/
+    const pdef::proto::MaterialReducer::Items &v_50 = obj.items; /*["MaterialReducer"]*/ /*7.4*/
+    {
+      WRITE_OR_BAIL(writeZigZagVarInt, (int)v_50.network_id); /*0.4*/
+      WRITE_OR_BAIL(writeZigZagVarInt, (int)v_50.count); /*0.4*/
+    }
     return true;
   }
   bool packet_login(pdef::Stream &stream, const pdef::proto::packet_login &obj, bool allocate = true) {
@@ -13027,7 +13040,11 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
     WRITE_OR_BAIL(writeString, obj.encoding_identifier); /*encoding_identifier: pstring*/ /*4.2*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.instance_name.length());
     WRITE_OR_BAIL(writeString, obj.instance_name); /*instance_name: pstring*/ /*4.2*/
-    const pdef::proto::packet_add_volume_entity::Bounds &v = obj.bounds; /*["packet_add_volume_entity"]*/ /*7.4*/
+    const pdef::proto::packet_add_volume_entity::Bounds &v_160 = obj.bounds; /*["packet_add_volume_entity"]*/ /*7.4*/
+    {
+      pdef::proto::encode::BlockCoordinates(stream, v_160.min); /*BlockCoordinates*/ /*4.5*/
+      pdef::proto::encode::BlockCoordinates(stream, v_160.max); /*BlockCoordinates*/ /*4.5*/
+    }
     WRITE_OR_BAIL(writeZigZagVarInt, (int)obj.dimension); /*0.4*/
     WRITE_OR_BAIL(writeUnsignedVarInt, (int)obj.engine_version.length());
     WRITE_OR_BAIL(writeString, obj.engine_version); /*engine_version: pstring*/ /*4.2*/
@@ -14328,7 +14345,7 @@ bool Itemstates(pdef::Stream &stream, pdef::proto::Itemstates &obj) {
     const pdef::proto::ItemExtraDataWithBlockingTick::HasNbt &V_has_nbt = obj.has_nbt; /*0.7*/
     switch (V_has_nbt) { /*8.0*/
       case pdef::proto::ItemExtraDataWithBlockingTick::HasNbt::True: { /*8.5*/
-         obj.nbt = {}; pdef::proto::ItemExtraDataWithBlockingTick::Nbt &v2 = *obj.nbt; /*8.4*/
+         obj.nbt.reset(new pdef::proto::ItemExtraDataWithBlockingTick::Nbt{}); pdef::proto::ItemExtraDataWithBlockingTick::Nbt &v2 = *obj.nbt; /*8.4*/
           READ_OR_BAIL(readUByte, v2.version); /*0.5*/
           READ_OR_BAIL(readByte, v2.nbt); /*0.5*/
         break;
@@ -14357,7 +14374,7 @@ bool Itemstates(pdef::Stream &stream, pdef::proto::Itemstates &obj) {
     const pdef::proto::ItemExtraDataWithoutBlockingTick::HasNbt &V_has_nbt = obj.has_nbt; /*0.7*/
     switch (V_has_nbt) { /*8.0*/
       case pdef::proto::ItemExtraDataWithoutBlockingTick::HasNbt::True: { /*8.5*/
-         obj.nbt = {}; pdef::proto::ItemExtraDataWithoutBlockingTick::Nbt &v2 = *obj.nbt; /*8.4*/
+         obj.nbt.reset(new pdef::proto::ItemExtraDataWithoutBlockingTick::Nbt{}); pdef::proto::ItemExtraDataWithoutBlockingTick::Nbt &v2 = *obj.nbt; /*8.4*/
           READ_OR_BAIL(readUByte, v2.version); /*0.5*/
           READ_OR_BAIL(readByte, v2.nbt); /*0.5*/
         break;
@@ -14596,7 +14613,7 @@ bool MetadataDictionary(pdef::Stream &stream, pdef::proto::MetadataDictionary &o
             break;
           } /*8.7*/
           case pdef::proto::MetadataDictionary::Type::Vec3i: { /*8.5*/
-            obj.value_vec3i = {}; pdef::proto::decode::vec3i(stream, *obj.value_vec3i); /*obj*/ /*4.6*/
+            obj.value_vec3i.reset(new pdef::proto::vec3i{}); pdef::proto::decode::vec3i(stream, *obj.value_vec3i); /*obj*/ /*4.6*/
             break;
           } /*8.7*/
           case pdef::proto::MetadataDictionary::Type::Long: { /*8.5*/
@@ -14604,7 +14621,7 @@ bool MetadataDictionary(pdef::Stream &stream, pdef::proto::MetadataDictionary &o
             break;
           } /*8.7*/
           case pdef::proto::MetadataDictionary::Type::Vec3f: { /*8.5*/
-            obj.value_vec3f = {}; pdef::proto::decode::vec3f(stream, *obj.value_vec3f); /*obj*/ /*4.6*/
+            obj.value_vec3f.reset(new pdef::proto::vec3f{}); pdef::proto::decode::vec3f(stream, *obj.value_vec3f); /*obj*/ /*4.6*/
             break;
           } /*8.7*/
           default: break; /*avoid unhandled case warning*/
@@ -14726,11 +14743,11 @@ bool TransactionActions(pdef::Stream &stream, pdef::proto::TransactionActions &o
         break;
       } /*8.7*/
       case pdef::proto::Transaction::TransactionType::ItemUse: { /*8.5*/
-        obj.transaction_data_TransactionUseItem = {}; pdef::proto::decode::TransactionUseItem(stream, *obj.transaction_data_TransactionUseItem); /*obj*/ /*4.6*/
+        obj.transaction_data_TransactionUseItem.reset(new pdef::proto::TransactionUseItem{}); pdef::proto::decode::TransactionUseItem(stream, *obj.transaction_data_TransactionUseItem); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::Transaction::TransactionType::ItemUseOnEntity: { /*8.5*/
-         obj.transaction_data_item_use_on_entity = {}; pdef::proto::Transaction::TransactionDataItemUseOnEntity &v2 = *obj.transaction_data_item_use_on_entity; /*8.4*/
+         obj.transaction_data_item_use_on_entity.reset(new pdef::proto::Transaction::TransactionDataItemUseOnEntity{}); pdef::proto::Transaction::TransactionDataItemUseOnEntity &v2 = *obj.transaction_data_item_use_on_entity; /*8.4*/
           READ_OR_BAIL(readUnsignedVarLong, v2.entity_runtime_id); /*0.5*/
           READ_OR_BAIL(readUnsignedVarInt, (int&)v2.action_type); /*7.2*/
           READ_OR_BAIL(readZigZagVarInt, v2.hotbar_slot); /*0.5*/
@@ -14740,7 +14757,7 @@ bool TransactionActions(pdef::Stream &stream, pdef::proto::TransactionActions &o
         break;
       } /*8.7*/
       case pdef::proto::Transaction::TransactionType::ItemRelease: { /*8.5*/
-         obj.transaction_data_item_release = {}; pdef::proto::Transaction::TransactionDataItemRelease &v2 = *obj.transaction_data_item_release; /*8.4*/
+         obj.transaction_data_item_release.reset(new pdef::proto::Transaction::TransactionDataItemRelease{}); pdef::proto::Transaction::TransactionDataItemRelease &v2 = *obj.transaction_data_item_release; /*8.4*/
           READ_OR_BAIL(readUnsignedVarInt, (int&)v2.action_type); /*7.2*/
           READ_OR_BAIL(readZigZagVarInt, v2.hotbar_slot); /*0.5*/
           pdef::proto::decode::Item(stream, v2.held_item); /*v2*/ /*4.6*/
@@ -14782,7 +14799,7 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
     const pdef::proto::Recipes::Type &V_type = obj.type; /*0.7*/
     switch (V_type) { /*8.0*/
       case pdef::proto::Recipes::Type::Shapeless: { /*8.5*/
-         obj.recipe_shapeless_or_shulker_box_or_shapeless_chemistry = {}; pdef::proto::Recipes::RecipeShapelessOrShulkerBoxOrShapelessChemistry &v2 = *obj.recipe_shapeless_or_shulker_box_or_shapeless_chemistry; /*8.4*/
+         obj.recipe_shapeless_or_shulker_box_or_shapeless_chemistry.reset(new pdef::proto::Recipes::RecipeShapelessOrShulkerBoxOrShapelessChemistry{}); pdef::proto::Recipes::RecipeShapelessOrShulkerBoxOrShapelessChemistry &v2 = *obj.recipe_shapeless_or_shulker_box_or_shapeless_chemistry; /*8.4*/
           int recipe_id_strlen; READ_OR_BAIL(readUnsignedVarInt, recipe_id_strlen);
           if (!stream.readString(v2.recipe_id, recipe_id_strlen)) return false; /*recipe_id: pstring*/ /*4.3*/
           int input_len; READ_OR_BAIL(readUnsignedVarInt, input_len); /*1.5*/
@@ -14805,7 +14822,7 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
         break;
       } /*8.7*/
       case pdef::proto::Recipes::Type::ShulkerBox: { /*8.5*/
-         obj.recipe_shapeless_or_shulker_box_or_shapeless_chemistry = {}; pdef::proto::Recipes::RecipeShapelessOrShulkerBoxOrShapelessChemistry &v2 = *obj.recipe_shapeless_or_shulker_box_or_shapeless_chemistry; /*8.4*/
+         obj.recipe_shapeless_or_shulker_box_or_shapeless_chemistry.reset(new pdef::proto::Recipes::RecipeShapelessOrShulkerBoxOrShapelessChemistry{}); pdef::proto::Recipes::RecipeShapelessOrShulkerBoxOrShapelessChemistry &v2 = *obj.recipe_shapeless_or_shulker_box_or_shapeless_chemistry; /*8.4*/
           int recipe_id_strlen; READ_OR_BAIL(readUnsignedVarInt, recipe_id_strlen);
           if (!stream.readString(v2.recipe_id, recipe_id_strlen)) return false; /*recipe_id: pstring*/ /*4.3*/
           int input_len; READ_OR_BAIL(readUnsignedVarInt, input_len); /*1.5*/
@@ -14828,7 +14845,7 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
         break;
       } /*8.7*/
       case pdef::proto::Recipes::Type::ShapelessChemistry: { /*8.5*/
-         obj.recipe_shapeless_or_shulker_box_or_shapeless_chemistry = {}; pdef::proto::Recipes::RecipeShapelessOrShulkerBoxOrShapelessChemistry &v2 = *obj.recipe_shapeless_or_shulker_box_or_shapeless_chemistry; /*8.4*/
+         obj.recipe_shapeless_or_shulker_box_or_shapeless_chemistry.reset(new pdef::proto::Recipes::RecipeShapelessOrShulkerBoxOrShapelessChemistry{}); pdef::proto::Recipes::RecipeShapelessOrShulkerBoxOrShapelessChemistry &v2 = *obj.recipe_shapeless_or_shulker_box_or_shapeless_chemistry; /*8.4*/
           int recipe_id_strlen; READ_OR_BAIL(readUnsignedVarInt, recipe_id_strlen);
           if (!stream.readString(v2.recipe_id, recipe_id_strlen)) return false; /*recipe_id: pstring*/ /*4.3*/
           int input_len; READ_OR_BAIL(readUnsignedVarInt, input_len); /*1.5*/
@@ -14851,7 +14868,7 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
         break;
       } /*8.7*/
       case pdef::proto::Recipes::Type::Shaped: { /*8.5*/
-         obj.recipe_shaped_or_shaped_chemistry = {}; pdef::proto::Recipes::RecipeShapedOrShapedChemistry &v2 = *obj.recipe_shaped_or_shaped_chemistry; /*8.4*/
+         obj.recipe_shaped_or_shaped_chemistry.reset(new pdef::proto::Recipes::RecipeShapedOrShapedChemistry{}); pdef::proto::Recipes::RecipeShapedOrShapedChemistry &v2 = *obj.recipe_shaped_or_shaped_chemistry; /*8.4*/
           int recipe_id_strlen; READ_OR_BAIL(readUnsignedVarInt, recipe_id_strlen);
           if (!stream.readString(v2.recipe_id, recipe_id_strlen)) return false; /*recipe_id: pstring*/ /*4.3*/
           READ_OR_BAIL(readZigZagVarInt, v2.width); /*0.5*/
@@ -14881,7 +14898,7 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
         break;
       } /*8.7*/
       case pdef::proto::Recipes::Type::ShapedChemistry: { /*8.5*/
-         obj.recipe_shaped_or_shaped_chemistry = {}; pdef::proto::Recipes::RecipeShapedOrShapedChemistry &v2 = *obj.recipe_shaped_or_shaped_chemistry; /*8.4*/
+         obj.recipe_shaped_or_shaped_chemistry.reset(new pdef::proto::Recipes::RecipeShapedOrShapedChemistry{}); pdef::proto::Recipes::RecipeShapedOrShapedChemistry &v2 = *obj.recipe_shaped_or_shaped_chemistry; /*8.4*/
           int recipe_id_strlen; READ_OR_BAIL(readUnsignedVarInt, recipe_id_strlen);
           if (!stream.readString(v2.recipe_id, recipe_id_strlen)) return false; /*recipe_id: pstring*/ /*4.3*/
           READ_OR_BAIL(readZigZagVarInt, v2.width); /*0.5*/
@@ -14911,7 +14928,7 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
         break;
       } /*8.7*/
       case pdef::proto::Recipes::Type::Furnace: { /*8.5*/
-         obj.recipe_furnace = {}; pdef::proto::Recipes::RecipeFurnace &v2 = *obj.recipe_furnace; /*8.4*/
+         obj.recipe_furnace.reset(new pdef::proto::Recipes::RecipeFurnace{}); pdef::proto::Recipes::RecipeFurnace &v2 = *obj.recipe_furnace; /*8.4*/
           READ_OR_BAIL(readZigZagVarInt, v2.input_id); /*0.5*/
           pdef::proto::decode::ItemLegacy(stream, v2.output); /*v2*/ /*4.6*/
           int block_strlen; READ_OR_BAIL(readUnsignedVarInt, block_strlen);
@@ -14919,7 +14936,7 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
         break;
       } /*8.7*/
       case pdef::proto::Recipes::Type::FurnaceWithMetadata: { /*8.5*/
-         obj.recipe_furnace_with_metadata = {}; pdef::proto::Recipes::RecipeFurnaceWithMetadata &v2 = *obj.recipe_furnace_with_metadata; /*8.4*/
+         obj.recipe_furnace_with_metadata.reset(new pdef::proto::Recipes::RecipeFurnaceWithMetadata{}); pdef::proto::Recipes::RecipeFurnaceWithMetadata &v2 = *obj.recipe_furnace_with_metadata; /*8.4*/
           READ_OR_BAIL(readZigZagVarInt, v2.input_id); /*0.5*/
           READ_OR_BAIL(readZigZagVarInt, v2.input_meta); /*0.5*/
           pdef::proto::decode::ItemLegacy(stream, v2.output); /*v2*/ /*4.6*/
@@ -14928,7 +14945,7 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
         break;
       } /*8.7*/
       case pdef::proto::Recipes::Type::Multi: { /*8.5*/
-         obj.recipe_multi = {}; pdef::proto::Recipes::RecipeMulti &v2 = *obj.recipe_multi; /*8.4*/
+         obj.recipe_multi.reset(new pdef::proto::Recipes::RecipeMulti{}); pdef::proto::Recipes::RecipeMulti &v2 = *obj.recipe_multi; /*8.4*/
           READ_OR_BAIL(readULongBE, v2.uuid); /*0.5*/
           READ_OR_BAIL(readUnsignedVarInt, v2.network_id); /*0.5*/
         break;
@@ -15016,7 +15033,7 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
     int &V_records_count = obj.records_count; /*0.6*/
     switch (V_type) { /*8.0*/
       case pdef::proto::PlayerRecords::Type::Add: { /*8.5*/
-         obj.records_add = {}; pdef::proto::PlayerRecords::RecordsAdd &v2 = *obj.records_add; /*8.4*/
+         obj.records_add.reset(new pdef::proto::PlayerRecords::RecordsAdd{}); pdef::proto::PlayerRecords::RecordsAdd &v2 = *obj.records_add; /*8.4*/
           READ_OR_BAIL(readULongBE, v2.uuid); /*0.5*/
           READ_OR_BAIL(readZigZagVarLong, v2.entity_unique_id); /*0.5*/
           int username_strlen; READ_OR_BAIL(readUnsignedVarInt, username_strlen);
@@ -15032,7 +15049,7 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
         break;
       } /*8.7*/
       case pdef::proto::PlayerRecords::Type::Remove: { /*8.5*/
-         obj.records_remove = {}; pdef::proto::PlayerRecords::RecordsRemove &v2 = *obj.records_remove; /*8.4*/
+         obj.records_remove.reset(new pdef::proto::PlayerRecords::RecordsRemove{}); pdef::proto::PlayerRecords::RecordsRemove &v2 = *obj.records_remove; /*8.4*/
           READ_OR_BAIL(readULongBE, v2.uuid); /*0.5*/
         break;
       } /*8.7*/
@@ -15099,35 +15116,35 @@ bool Recipes(pdef::Stream &stream, pdef::proto::Recipes &obj) {
       switch (V_type_id) { /*8.0*/
         case pdef::proto::ItemStackRequest::Actions::TypeId::Take: { /*8.5*/
             READ_OR_BAIL(readUByte, v2.count); /*0.5*/
-            v2.source = {}; pdef::proto::decode::StackRequestSlotInfo(stream, *v2.source); /*v2*/ /*4.6*/
-            v2.destination = {}; pdef::proto::decode::StackRequestSlotInfo(stream, *v2.destination); /*v2*/ /*4.6*/
+            v2.source.reset(new pdef::proto::StackRequestSlotInfo{}); pdef::proto::decode::StackRequestSlotInfo(stream, *v2.source); /*v2*/ /*4.6*/
+            v2.destination.reset(new pdef::proto::StackRequestSlotInfo{}); pdef::proto::decode::StackRequestSlotInfo(stream, *v2.destination); /*v2*/ /*4.6*/
           break;
         } /*8.7*/
         case pdef::proto::ItemStackRequest::Actions::TypeId::Place: { /*8.5*/
             READ_OR_BAIL(readUByte, v2.count); /*0.5*/
-            v2.source = {}; pdef::proto::decode::StackRequestSlotInfo(stream, *v2.source); /*v2*/ /*4.6*/
-            v2.destination = {}; pdef::proto::decode::StackRequestSlotInfo(stream, *v2.destination); /*v2*/ /*4.6*/
+            v2.source.reset(new pdef::proto::StackRequestSlotInfo{}); pdef::proto::decode::StackRequestSlotInfo(stream, *v2.source); /*v2*/ /*4.6*/
+            v2.destination.reset(new pdef::proto::StackRequestSlotInfo{}); pdef::proto::decode::StackRequestSlotInfo(stream, *v2.destination); /*v2*/ /*4.6*/
           break;
         } /*8.7*/
         case pdef::proto::ItemStackRequest::Actions::TypeId::Swap: { /*8.5*/
-            v2.source = {}; pdef::proto::decode::StackRequestSlotInfo(stream, *v2.source); /*v2*/ /*4.6*/
-            v2.destination = {}; pdef::proto::decode::StackRequestSlotInfo(stream, *v2.destination); /*v2*/ /*4.6*/
+            v2.source.reset(new pdef::proto::StackRequestSlotInfo{}); pdef::proto::decode::StackRequestSlotInfo(stream, *v2.source); /*v2*/ /*4.6*/
+            v2.destination.reset(new pdef::proto::StackRequestSlotInfo{}); pdef::proto::decode::StackRequestSlotInfo(stream, *v2.destination); /*v2*/ /*4.6*/
           break;
         } /*8.7*/
         case pdef::proto::ItemStackRequest::Actions::TypeId::Drop: { /*8.5*/
             READ_OR_BAIL(readUByte, v2.count); /*0.5*/
-            v2.source = {}; pdef::proto::decode::StackRequestSlotInfo(stream, *v2.source); /*v2*/ /*4.6*/
+            v2.source.reset(new pdef::proto::StackRequestSlotInfo{}); pdef::proto::decode::StackRequestSlotInfo(stream, *v2.source); /*v2*/ /*4.6*/
             READ_OR_BAIL(readBool, (bool&)v2.randomly); /*0.5*/
           break;
         } /*8.7*/
         case pdef::proto::ItemStackRequest::Actions::TypeId::Destroy: { /*8.5*/
             READ_OR_BAIL(readUByte, v2.count); /*0.5*/
-            v2.source = {}; pdef::proto::decode::StackRequestSlotInfo(stream, *v2.source); /*v2*/ /*4.6*/
+            v2.source.reset(new pdef::proto::StackRequestSlotInfo{}); pdef::proto::decode::StackRequestSlotInfo(stream, *v2.source); /*v2*/ /*4.6*/
           break;
         } /*8.7*/
         case pdef::proto::ItemStackRequest::Actions::TypeId::Consume: { /*8.5*/
             READ_OR_BAIL(readUByte, v2.count); /*0.5*/
-            v2.source = {}; pdef::proto::decode::StackRequestSlotInfo(stream, *v2.source); /*v2*/ /*4.6*/
+            v2.source.reset(new pdef::proto::StackRequestSlotInfo{}); pdef::proto::decode::StackRequestSlotInfo(stream, *v2.source); /*v2*/ /*4.6*/
           break;
         } /*8.7*/
         case pdef::proto::ItemStackRequest::Actions::TypeId::Create: { /*8.5*/
@@ -15241,12 +15258,12 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     if (!stream.readString(obj.request_id, request_id_strlen)) return false; /*request_id: pstring*/ /*4.3*/
     switch (V_type) { /*8.0*/
       case pdef::proto::CommandOrigin::Type::DevConsole: { /*8.5*/
-         obj.player_entity_id = {}; pdef::proto::CommandOrigin::PlayerEntityId &v2 = *obj.player_entity_id; /*8.4*/
+         obj.player_entity_id.reset(new pdef::proto::CommandOrigin::PlayerEntityId{}); pdef::proto::CommandOrigin::PlayerEntityId &v2 = *obj.player_entity_id; /*8.4*/
           READ_OR_BAIL(readZigZagVarLong, v2.player_entity_id); /*0.5*/
         break;
       } /*8.7*/
       case pdef::proto::CommandOrigin::Type::Test: { /*8.5*/
-         obj.player_entity_id = {}; pdef::proto::CommandOrigin::PlayerEntityId &v2 = *obj.player_entity_id; /*8.4*/
+         obj.player_entity_id.reset(new pdef::proto::CommandOrigin::PlayerEntityId{}); pdef::proto::CommandOrigin::PlayerEntityId &v2 = *obj.player_entity_id; /*8.4*/
           READ_OR_BAIL(readZigZagVarLong, v2.player_entity_id); /*0.5*/
         break;
       } /*8.7*/
@@ -15266,7 +15283,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     } /*8.8*/
     switch (V_type) { /*8.0*/
       case pdef::proto::TrackedObject::Type::Block: { /*8.5*/
-        obj.block_position = {}; pdef::proto::decode::BlockCoordinates(stream, *obj.block_position); /*obj*/ /*4.6*/
+        obj.block_position.reset(new pdef::proto::BlockCoordinates{}); pdef::proto::decode::BlockCoordinates(stream, *obj.block_position); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       default: break; /*avoid unhandled case warning*/
@@ -15325,7 +15342,11 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
   }
   bool MaterialReducer(pdef::Stream &stream, pdef::proto::MaterialReducer &obj) {
     READ_OR_BAIL(readZigZagVarInt, obj.mix); /*0.5*/
-    const pdef::proto::MaterialReducer::Items &v = obj.items = {}; /*["MaterialReducer"]*/ /*7.3*/
+    pdef::proto::MaterialReducer::Items &v_50 = obj.items = {}; /*["MaterialReducer"]*/ /*7.3*/
+    {
+      READ_OR_BAIL(readZigZagVarInt, v_50.network_id); /*0.5*/
+      READ_OR_BAIL(readZigZagVarInt, v_50.count); /*0.5*/
+    }
     return true;
   }
   bool packet_login(pdef::Stream &stream, pdef::proto::packet_login &obj) {
@@ -15697,7 +15718,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     READ_OR_BAIL(readUnsignedVarInt, obj.ridden_runtime_id); /*0.5*/
     switch (V_mode) { /*8.0*/
       case pdef::proto::packet_move_player::Mode::Teleport: { /*8.5*/
-         obj.teleport = {}; pdef::proto::packet_move_player::Teleport &v2 = *obj.teleport; /*8.4*/
+         obj.teleport.reset(new pdef::proto::packet_move_player::Teleport{}); pdef::proto::packet_move_player::Teleport &v2 = *obj.teleport; /*8.4*/
           READ_OR_BAIL(readIntLE, (int32_t&)v2.cause); /*7.2*/
           READ_OR_BAIL(readIntLE, (int32_t&)v2.source_entity_type); /*7.2*/
         break;
@@ -15809,11 +15830,11 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     READ_OR_BAIL(readUnsignedVarLong, obj.target_entity_id); /*0.5*/
     switch (V_action_id) { /*8.0*/
       case pdef::proto::packet_interact::ActionId::MouseOverEntity: { /*8.5*/
-        obj.position = {}; pdef::proto::decode::vec3f(stream, *obj.position); /*obj*/ /*4.6*/
+        obj.position.reset(new pdef::proto::vec3f{}); pdef::proto::decode::vec3f(stream, *obj.position); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::packet_interact::ActionId::LeaveVehicle: { /*8.5*/
-        obj.position = {}; pdef::proto::decode::vec3f(stream, *obj.position); /*obj*/ /*4.6*/
+        obj.position.reset(new pdef::proto::vec3f{}); pdef::proto::decode::vec3f(stream, *obj.position); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       default: break; /*avoid unhandled case warning*/
@@ -16039,7 +16060,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     READ_OR_BAIL(readBool, (bool&)obj.cache_enabled); /*0.5*/
     bool &V_cache_enabled = obj.cache_enabled; /*0.6*/
     if (V_cache_enabled == true) { /*8.1*/
-         obj.blobs = {}; pdef::proto::packet_level_chunk::Blobs &v2 = *obj.blobs; /*8.4*/
+         obj.blobs.reset(new pdef::proto::packet_level_chunk::Blobs{}); pdef::proto::packet_level_chunk::Blobs &v2 = *obj.blobs; /*8.4*/
         int hashes_len; READ_OR_BAIL(readUnsignedVarInt, hashes_len); /*1.5*/
         v2.hashes.resize(hashes_len); /*1.6*/
         for (int i = 0; i < hashes_len; i++) { /*3.3*/
@@ -16111,7 +16132,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
       READ_OR_BAIL(readUByte, obj.scale); /*0.5*/
     }
     if (V_update_flags.decoration == true) { /*8.2*/
-         obj.tracked = {}; pdef::proto::packet_clientbound_map_item_data::Tracked &v2 = *obj.tracked; /*8.4*/
+         obj.tracked.reset(new pdef::proto::packet_clientbound_map_item_data::Tracked{}); pdef::proto::packet_clientbound_map_item_data::Tracked &v2 = *obj.tracked; /*8.4*/
         int objects_len; READ_OR_BAIL(readUnsignedVarInt, objects_len); /*1.5*/
         v2.objects.resize(objects_len); /*1.6*/
         for (int i = 0; i < objects_len; i++) { /*3.3*/
@@ -16126,7 +16147,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
         }
     }
     if (V_update_flags.texture == true) { /*8.2*/
-         obj.texture = {}; pdef::proto::packet_clientbound_map_item_data::Texture &v2 = *obj.texture; /*8.4*/
+         obj.texture.reset(new pdef::proto::packet_clientbound_map_item_data::Texture{}); pdef::proto::packet_clientbound_map_item_data::Texture &v2 = *obj.texture; /*8.4*/
         READ_OR_BAIL(readZigZagVarInt, v2.width); /*0.5*/
         READ_OR_BAIL(readZigZagVarInt, v2.height); /*0.5*/
         READ_OR_BAIL(readZigZagVarInt, v2.x_offset); /*0.5*/
@@ -16332,7 +16353,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     READ_OR_BAIL(readBool, (bool&)obj.is_block); /*0.5*/
     bool &V_is_block = obj.is_block; /*0.6*/
     if (V_is_block == true) { /*8.1*/
-        obj.position = {}; pdef::proto::decode::BlockCoordinates(stream, *obj.position); /*obj*/ /*4.6*/
+        obj.position.reset(new pdef::proto::BlockCoordinates{}); pdef::proto::decode::BlockCoordinates(stream, *obj.position); /*obj*/ /*4.6*/
         READ_OR_BAIL(readUnsignedVarInt, (int&)obj.mode); /*7.2*/
         READ_OR_BAIL(readBool, (bool&)obj.needs_redstone); /*0.5*/
         READ_OR_BAIL(readBool, (bool&)obj.conditional); /*0.5*/
@@ -16923,7 +16944,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     READ_OR_BAIL(readBool, (bool&)obj.has_agent_capabilities); /*0.5*/
     bool &V_has_agent_capabilities = obj.has_agent_capabilities; /*0.6*/
     if (V_has_agent_capabilities == true) { /*8.1*/
-         obj.agent_capabilities = {}; pdef::proto::packet_education_settings::AgentCapabilities &v2 = *obj.agent_capabilities; /*8.4*/
+         obj.agent_capabilities.reset(new pdef::proto::packet_education_settings::AgentCapabilities{}); pdef::proto::packet_education_settings::AgentCapabilities &v2 = *obj.agent_capabilities; /*8.4*/
         READ_OR_BAIL(readBool, (bool&)v2.has); /*0.5*/
         READ_OR_BAIL(readBool, (bool&)v2.can_modify_blocks); /*0.5*/
     }
@@ -16937,7 +16958,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     READ_OR_BAIL(readBool, (bool&)obj.has_external_link_settings); /*0.5*/
     bool &V_has_external_link_settings = obj.has_external_link_settings; /*0.6*/
     if (V_has_external_link_settings == true) { /*8.1*/
-         obj.external_link_settings = {}; pdef::proto::packet_education_settings::ExternalLinkSettings &v2 = *obj.external_link_settings; /*8.4*/
+         obj.external_link_settings.reset(new pdef::proto::packet_education_settings::ExternalLinkSettings{}); pdef::proto::packet_education_settings::ExternalLinkSettings &v2 = *obj.external_link_settings; /*8.4*/
         READ_OR_BAIL(readBool, (bool&)v2.has); /*0.5*/
         int url_strlen; READ_OR_BAIL(readUnsignedVarInt, url_strlen);
         if (!stream.readString(v2.url, url_strlen)) return false; /*url: pstring*/ /*4.3*/
@@ -17029,7 +17050,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     READ_OR_BAIL(readZigZagVarInt, (int&)obj.interaction_model); /*7.2*/
     switch (V_play_mode) { /*8.0*/
       case pdef::proto::packet_player_auth_input::PlayMode::Reality: { /*8.5*/
-        obj.gaze_direction = {}; pdef::proto::decode::vec3f(stream, *obj.gaze_direction); /*obj*/ /*4.6*/
+        obj.gaze_direction.reset(new pdef::proto::vec3f{}); pdef::proto::decode::vec3f(stream, *obj.gaze_direction); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       default: break; /*avoid unhandled case warning*/
@@ -17037,7 +17058,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     READ_OR_BAIL(readUnsignedVarLong, obj.tick); /*0.5*/
     pdef::proto::decode::vec3f(stream, obj.delta); /*obj*/ /*4.6*/
     if (V_input_data.item_interact == true) { /*8.2*/
-         obj.transaction = {}; pdef::proto::packet_player_auth_input::Transaction &v2 = *obj.transaction; /*8.4*/
+         obj.transaction.reset(new pdef::proto::packet_player_auth_input::Transaction{}); pdef::proto::packet_player_auth_input::Transaction &v2 = *obj.transaction; /*8.4*/
         pdef::proto::decode::TransactionLegacy(stream, v2.legacy); /*v2*/ /*4.6*/
         int actions_len; /*2.3*/
         READ_OR_BAIL(readUnsignedVarInt, actions_len); /*2.6*/
@@ -17046,7 +17067,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
         pdef::proto::decode::TransactionUseItem(stream, v2.data); /*v2*/ /*4.6*/
     }
     if (V_input_data.item_stack_request == true) { /*8.2*/
-      obj.item_stack_request = {}; pdef::proto::decode::ItemStackRequest(stream, *obj.item_stack_request); /*obj*/ /*4.6*/
+      obj.item_stack_request.reset(new pdef::proto::ItemStackRequest{}); pdef::proto::decode::ItemStackRequest(stream, *obj.item_stack_request); /*obj*/ /*4.6*/
     }
     if (V_input_data.block_action == true) { /*8.2*/
       int block_action_len; READ_OR_BAIL(readZigZagVarInt, block_action_len); /*1.5*/
@@ -17056,23 +17077,23 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
         READ_OR_BAIL(readZigZagVarInt, (int&)v3.action); /*7.2*/
         const pdef::proto::packet_player_auth_input::BlockAction::Action &V_action = v3.action; /*0.7*/
         if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::StartBreak) { /*8.5*/
-            v3.position = {}; pdef::proto::decode::vec3i(stream, *v3.position); /*v3*/ /*4.6*/
+            v3.position.reset(new pdef::proto::vec3i{}); pdef::proto::decode::vec3i(stream, *v3.position); /*v3*/ /*4.6*/
             READ_OR_BAIL(readZigZagVarInt, v3.face); /*0.5*/
         }
         else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::AbortBreak) { /*8.5*/
-            v3.position = {}; pdef::proto::decode::vec3i(stream, *v3.position); /*v3*/ /*4.6*/
+            v3.position.reset(new pdef::proto::vec3i{}); pdef::proto::decode::vec3i(stream, *v3.position); /*v3*/ /*4.6*/
             READ_OR_BAIL(readZigZagVarInt, v3.face); /*0.5*/
         }
         else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::CrackBreak) { /*8.5*/
-            v3.position = {}; pdef::proto::decode::vec3i(stream, *v3.position); /*v3*/ /*4.6*/
+            v3.position.reset(new pdef::proto::vec3i{}); pdef::proto::decode::vec3i(stream, *v3.position); /*v3*/ /*4.6*/
             READ_OR_BAIL(readZigZagVarInt, v3.face); /*0.5*/
         }
         else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::PredictBreak) { /*8.5*/
-            v3.position = {}; pdef::proto::decode::vec3i(stream, *v3.position); /*v3*/ /*4.6*/
+            v3.position.reset(new pdef::proto::vec3i{}); pdef::proto::decode::vec3i(stream, *v3.position); /*v3*/ /*4.6*/
             READ_OR_BAIL(readZigZagVarInt, v3.face); /*0.5*/
         }
         else if (V_action == pdef::proto::packet_player_auth_input::BlockAction::Action::ContinueBreak) { /*8.5*/
-            v3.position = {}; pdef::proto::decode::vec3i(stream, *v3.position); /*v3*/ /*4.6*/
+            v3.position.reset(new pdef::proto::vec3i{}); pdef::proto::decode::vec3i(stream, *v3.position); /*v3*/ /*4.6*/
             READ_OR_BAIL(readZigZagVarInt, v3.face); /*0.5*/
         }
       }
@@ -17242,7 +17263,7 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
       case pdef::proto::packet_debug_renderer::Type::AddCube: { /*8.5*/
           int text_strlen; READ_OR_BAIL(readUnsignedVarInt, text_strlen);
           if (!stream.readString(obj.text, text_strlen)) return false; /*text: pstring*/ /*4.3*/
-          obj.position = {}; pdef::proto::decode::vec3f(stream, *obj.position); /*obj*/ /*4.6*/
+          obj.position.reset(new pdef::proto::vec3f{}); pdef::proto::decode::vec3f(stream, *obj.position); /*obj*/ /*4.6*/
           READ_OR_BAIL(readFloatLE, obj.red); /*0.5*/
           READ_OR_BAIL(readFloatLE, obj.green); /*0.5*/
           READ_OR_BAIL(readFloatLE, obj.blue); /*0.5*/
@@ -17265,7 +17286,11 @@ bool ItemComponentList(pdef::Stream &stream, pdef::proto::ItemComponentList &obj
     if (!stream.readString(obj.encoding_identifier, encoding_identifier_strlen)) return false; /*encoding_identifier: pstring*/ /*4.3*/
     int instance_name_strlen; READ_OR_BAIL(readUnsignedVarInt, instance_name_strlen);
     if (!stream.readString(obj.instance_name, instance_name_strlen)) return false; /*instance_name: pstring*/ /*4.3*/
-    const pdef::proto::packet_add_volume_entity::Bounds &v = obj.bounds = {}; /*["packet_add_volume_entity"]*/ /*7.3*/
+    pdef::proto::packet_add_volume_entity::Bounds &v_160 = obj.bounds = {}; /*["packet_add_volume_entity"]*/ /*7.3*/
+    {
+      pdef::proto::decode::BlockCoordinates(stream, v_160.min); /*v_160*/ /*4.6*/
+      pdef::proto::decode::BlockCoordinates(stream, v_160.max); /*v_160*/ /*4.6*/
+    }
     READ_OR_BAIL(readZigZagVarInt, obj.dimension); /*0.5*/
     int engine_version_strlen; READ_OR_BAIL(readUnsignedVarInt, engine_version_strlen);
     if (!stream.readString(obj.engine_version, engine_version_strlen)) return false; /*engine_version: pstring*/ /*4.3*/
@@ -17499,727 +17524,727 @@ bool SubChunkEntryWithCaching(pdef::Stream &stream, pdef::proto::SubChunkEntryWi
     const pdef::proto::mcpe_packet::Name &V_name = obj.name; /*0.7*/
     switch (V_name) { /*8.0*/
       case pdef::proto::mcpe_packet::Name::Login: { /*8.5*/
-        obj.params_packet_login = {}; pdef::proto::decode::packet_login(stream, *obj.params_packet_login); /*obj*/ /*4.6*/
+        obj.params_packet_login.reset(new pdef::proto::packet_login{}); pdef::proto::decode::packet_login(stream, *obj.params_packet_login); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PlayStatus: { /*8.5*/
-        obj.params_packet_play_status = {}; pdef::proto::decode::packet_play_status(stream, *obj.params_packet_play_status); /*obj*/ /*4.6*/
+        obj.params_packet_play_status.reset(new pdef::proto::packet_play_status{}); pdef::proto::decode::packet_play_status(stream, *obj.params_packet_play_status); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ServerToClientHandshake: { /*8.5*/
-        obj.params_packet_server_to_client_handshake = {}; pdef::proto::decode::packet_server_to_client_handshake(stream, *obj.params_packet_server_to_client_handshake); /*obj*/ /*4.6*/
+        obj.params_packet_server_to_client_handshake.reset(new pdef::proto::packet_server_to_client_handshake{}); pdef::proto::decode::packet_server_to_client_handshake(stream, *obj.params_packet_server_to_client_handshake); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ClientToServerHandshake: { /*8.5*/
-        obj.params_packet_client_to_server_handshake = {}; pdef::proto::decode::packet_client_to_server_handshake(stream, *obj.params_packet_client_to_server_handshake); /*obj*/ /*4.6*/
+        obj.params_packet_client_to_server_handshake.reset(new pdef::proto::packet_client_to_server_handshake{}); pdef::proto::decode::packet_client_to_server_handshake(stream, *obj.params_packet_client_to_server_handshake); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::Disconnect: { /*8.5*/
-        obj.params_packet_disconnect = {}; pdef::proto::decode::packet_disconnect(stream, *obj.params_packet_disconnect); /*obj*/ /*4.6*/
+        obj.params_packet_disconnect.reset(new pdef::proto::packet_disconnect{}); pdef::proto::decode::packet_disconnect(stream, *obj.params_packet_disconnect); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ResourcePacksInfo: { /*8.5*/
-        obj.params_packet_resource_packs_info = {}; pdef::proto::decode::packet_resource_packs_info(stream, *obj.params_packet_resource_packs_info); /*obj*/ /*4.6*/
+        obj.params_packet_resource_packs_info.reset(new pdef::proto::packet_resource_packs_info{}); pdef::proto::decode::packet_resource_packs_info(stream, *obj.params_packet_resource_packs_info); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ResourcePackStack: { /*8.5*/
-        obj.params_packet_resource_pack_stack = {}; pdef::proto::decode::packet_resource_pack_stack(stream, *obj.params_packet_resource_pack_stack); /*obj*/ /*4.6*/
+        obj.params_packet_resource_pack_stack.reset(new pdef::proto::packet_resource_pack_stack{}); pdef::proto::decode::packet_resource_pack_stack(stream, *obj.params_packet_resource_pack_stack); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ResourcePackClientResponse: { /*8.5*/
-        obj.params_packet_resource_pack_client_response = {}; pdef::proto::decode::packet_resource_pack_client_response(stream, *obj.params_packet_resource_pack_client_response); /*obj*/ /*4.6*/
+        obj.params_packet_resource_pack_client_response.reset(new pdef::proto::packet_resource_pack_client_response{}); pdef::proto::decode::packet_resource_pack_client_response(stream, *obj.params_packet_resource_pack_client_response); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::Text: { /*8.5*/
-        obj.params_packet_text = {}; pdef::proto::decode::packet_text(stream, *obj.params_packet_text); /*obj*/ /*4.6*/
+        obj.params_packet_text.reset(new pdef::proto::packet_text{}); pdef::proto::decode::packet_text(stream, *obj.params_packet_text); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetTime: { /*8.5*/
-        obj.params_packet_set_time = {}; pdef::proto::decode::packet_set_time(stream, *obj.params_packet_set_time); /*obj*/ /*4.6*/
+        obj.params_packet_set_time.reset(new pdef::proto::packet_set_time{}); pdef::proto::decode::packet_set_time(stream, *obj.params_packet_set_time); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::StartGame: { /*8.5*/
-        obj.params_packet_start_game = {}; pdef::proto::decode::packet_start_game(stream, *obj.params_packet_start_game); /*obj*/ /*4.6*/
+        obj.params_packet_start_game.reset(new pdef::proto::packet_start_game{}); pdef::proto::decode::packet_start_game(stream, *obj.params_packet_start_game); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AddPlayer: { /*8.5*/
-        obj.params_packet_add_player = {}; pdef::proto::decode::packet_add_player(stream, *obj.params_packet_add_player); /*obj*/ /*4.6*/
+        obj.params_packet_add_player.reset(new pdef::proto::packet_add_player{}); pdef::proto::decode::packet_add_player(stream, *obj.params_packet_add_player); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AddEntity: { /*8.5*/
-        obj.params_packet_add_entity = {}; pdef::proto::decode::packet_add_entity(stream, *obj.params_packet_add_entity); /*obj*/ /*4.6*/
+        obj.params_packet_add_entity.reset(new pdef::proto::packet_add_entity{}); pdef::proto::decode::packet_add_entity(stream, *obj.params_packet_add_entity); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::RemoveEntity: { /*8.5*/
-        obj.params_packet_remove_entity = {}; pdef::proto::decode::packet_remove_entity(stream, *obj.params_packet_remove_entity); /*obj*/ /*4.6*/
+        obj.params_packet_remove_entity.reset(new pdef::proto::packet_remove_entity{}); pdef::proto::decode::packet_remove_entity(stream, *obj.params_packet_remove_entity); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AddItemEntity: { /*8.5*/
-        obj.params_packet_add_item_entity = {}; pdef::proto::decode::packet_add_item_entity(stream, *obj.params_packet_add_item_entity); /*obj*/ /*4.6*/
+        obj.params_packet_add_item_entity.reset(new pdef::proto::packet_add_item_entity{}); pdef::proto::decode::packet_add_item_entity(stream, *obj.params_packet_add_item_entity); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::TakeItemEntity: { /*8.5*/
-        obj.params_packet_take_item_entity = {}; pdef::proto::decode::packet_take_item_entity(stream, *obj.params_packet_take_item_entity); /*obj*/ /*4.6*/
+        obj.params_packet_take_item_entity.reset(new pdef::proto::packet_take_item_entity{}); pdef::proto::decode::packet_take_item_entity(stream, *obj.params_packet_take_item_entity); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::MoveEntity: { /*8.5*/
-        obj.params_packet_move_entity = {}; pdef::proto::decode::packet_move_entity(stream, *obj.params_packet_move_entity); /*obj*/ /*4.6*/
+        obj.params_packet_move_entity.reset(new pdef::proto::packet_move_entity{}); pdef::proto::decode::packet_move_entity(stream, *obj.params_packet_move_entity); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::MovePlayer: { /*8.5*/
-        obj.params_packet_move_player = {}; pdef::proto::decode::packet_move_player(stream, *obj.params_packet_move_player); /*obj*/ /*4.6*/
+        obj.params_packet_move_player.reset(new pdef::proto::packet_move_player{}); pdef::proto::decode::packet_move_player(stream, *obj.params_packet_move_player); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::RiderJump: { /*8.5*/
-        obj.params_packet_rider_jump = {}; pdef::proto::decode::packet_rider_jump(stream, *obj.params_packet_rider_jump); /*obj*/ /*4.6*/
+        obj.params_packet_rider_jump.reset(new pdef::proto::packet_rider_jump{}); pdef::proto::decode::packet_rider_jump(stream, *obj.params_packet_rider_jump); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::UpdateBlock: { /*8.5*/
-        obj.params_packet_update_block = {}; pdef::proto::decode::packet_update_block(stream, *obj.params_packet_update_block); /*obj*/ /*4.6*/
+        obj.params_packet_update_block.reset(new pdef::proto::packet_update_block{}); pdef::proto::decode::packet_update_block(stream, *obj.params_packet_update_block); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AddPainting: { /*8.5*/
-        obj.params_packet_add_painting = {}; pdef::proto::decode::packet_add_painting(stream, *obj.params_packet_add_painting); /*obj*/ /*4.6*/
+        obj.params_packet_add_painting.reset(new pdef::proto::packet_add_painting{}); pdef::proto::decode::packet_add_painting(stream, *obj.params_packet_add_painting); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::TickSync: { /*8.5*/
-        obj.params_packet_tick_sync = {}; pdef::proto::decode::packet_tick_sync(stream, *obj.params_packet_tick_sync); /*obj*/ /*4.6*/
+        obj.params_packet_tick_sync.reset(new pdef::proto::packet_tick_sync{}); pdef::proto::decode::packet_tick_sync(stream, *obj.params_packet_tick_sync); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::LevelSoundEventOld: { /*8.5*/
-        obj.params_packet_level_sound_event_old = {}; pdef::proto::decode::packet_level_sound_event_old(stream, *obj.params_packet_level_sound_event_old); /*obj*/ /*4.6*/
+        obj.params_packet_level_sound_event_old.reset(new pdef::proto::packet_level_sound_event_old{}); pdef::proto::decode::packet_level_sound_event_old(stream, *obj.params_packet_level_sound_event_old); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::LevelEvent: { /*8.5*/
-        obj.params_packet_level_event = {}; pdef::proto::decode::packet_level_event(stream, *obj.params_packet_level_event); /*obj*/ /*4.6*/
+        obj.params_packet_level_event.reset(new pdef::proto::packet_level_event{}); pdef::proto::decode::packet_level_event(stream, *obj.params_packet_level_event); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::BlockEvent: { /*8.5*/
-        obj.params_packet_block_event = {}; pdef::proto::decode::packet_block_event(stream, *obj.params_packet_block_event); /*obj*/ /*4.6*/
+        obj.params_packet_block_event.reset(new pdef::proto::packet_block_event{}); pdef::proto::decode::packet_block_event(stream, *obj.params_packet_block_event); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::EntityEvent: { /*8.5*/
-        obj.params_packet_entity_event = {}; pdef::proto::decode::packet_entity_event(stream, *obj.params_packet_entity_event); /*obj*/ /*4.6*/
+        obj.params_packet_entity_event.reset(new pdef::proto::packet_entity_event{}); pdef::proto::decode::packet_entity_event(stream, *obj.params_packet_entity_event); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::MobEffect: { /*8.5*/
-        obj.params_packet_mob_effect = {}; pdef::proto::decode::packet_mob_effect(stream, *obj.params_packet_mob_effect); /*obj*/ /*4.6*/
+        obj.params_packet_mob_effect.reset(new pdef::proto::packet_mob_effect{}); pdef::proto::decode::packet_mob_effect(stream, *obj.params_packet_mob_effect); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::UpdateAttributes: { /*8.5*/
-        obj.params_packet_update_attributes = {}; pdef::proto::decode::packet_update_attributes(stream, *obj.params_packet_update_attributes); /*obj*/ /*4.6*/
+        obj.params_packet_update_attributes.reset(new pdef::proto::packet_update_attributes{}); pdef::proto::decode::packet_update_attributes(stream, *obj.params_packet_update_attributes); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::InventoryTransaction: { /*8.5*/
-        obj.params_packet_inventory_transaction = {}; pdef::proto::decode::packet_inventory_transaction(stream, *obj.params_packet_inventory_transaction); /*obj*/ /*4.6*/
+        obj.params_packet_inventory_transaction.reset(new pdef::proto::packet_inventory_transaction{}); pdef::proto::decode::packet_inventory_transaction(stream, *obj.params_packet_inventory_transaction); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::MobEquipment: { /*8.5*/
-        obj.params_packet_mob_equipment = {}; pdef::proto::decode::packet_mob_equipment(stream, *obj.params_packet_mob_equipment); /*obj*/ /*4.6*/
+        obj.params_packet_mob_equipment.reset(new pdef::proto::packet_mob_equipment{}); pdef::proto::decode::packet_mob_equipment(stream, *obj.params_packet_mob_equipment); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::MobArmorEquipment: { /*8.5*/
-        obj.params_packet_mob_armor_equipment = {}; pdef::proto::decode::packet_mob_armor_equipment(stream, *obj.params_packet_mob_armor_equipment); /*obj*/ /*4.6*/
+        obj.params_packet_mob_armor_equipment.reset(new pdef::proto::packet_mob_armor_equipment{}); pdef::proto::decode::packet_mob_armor_equipment(stream, *obj.params_packet_mob_armor_equipment); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::Interact: { /*8.5*/
-        obj.params_packet_interact = {}; pdef::proto::decode::packet_interact(stream, *obj.params_packet_interact); /*obj*/ /*4.6*/
+        obj.params_packet_interact.reset(new pdef::proto::packet_interact{}); pdef::proto::decode::packet_interact(stream, *obj.params_packet_interact); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::BlockPickRequest: { /*8.5*/
-        obj.params_packet_block_pick_request = {}; pdef::proto::decode::packet_block_pick_request(stream, *obj.params_packet_block_pick_request); /*obj*/ /*4.6*/
+        obj.params_packet_block_pick_request.reset(new pdef::proto::packet_block_pick_request{}); pdef::proto::decode::packet_block_pick_request(stream, *obj.params_packet_block_pick_request); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::EntityPickRequest: { /*8.5*/
-        obj.params_packet_entity_pick_request = {}; pdef::proto::decode::packet_entity_pick_request(stream, *obj.params_packet_entity_pick_request); /*obj*/ /*4.6*/
+        obj.params_packet_entity_pick_request.reset(new pdef::proto::packet_entity_pick_request{}); pdef::proto::decode::packet_entity_pick_request(stream, *obj.params_packet_entity_pick_request); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PlayerAction: { /*8.5*/
-        obj.params_packet_player_action = {}; pdef::proto::decode::packet_player_action(stream, *obj.params_packet_player_action); /*obj*/ /*4.6*/
+        obj.params_packet_player_action.reset(new pdef::proto::packet_player_action{}); pdef::proto::decode::packet_player_action(stream, *obj.params_packet_player_action); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::HurtArmor: { /*8.5*/
-        obj.params_packet_hurt_armor = {}; pdef::proto::decode::packet_hurt_armor(stream, *obj.params_packet_hurt_armor); /*obj*/ /*4.6*/
+        obj.params_packet_hurt_armor.reset(new pdef::proto::packet_hurt_armor{}); pdef::proto::decode::packet_hurt_armor(stream, *obj.params_packet_hurt_armor); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetEntityData: { /*8.5*/
-        obj.params_packet_set_entity_data = {}; pdef::proto::decode::packet_set_entity_data(stream, *obj.params_packet_set_entity_data); /*obj*/ /*4.6*/
+        obj.params_packet_set_entity_data.reset(new pdef::proto::packet_set_entity_data{}); pdef::proto::decode::packet_set_entity_data(stream, *obj.params_packet_set_entity_data); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetEntityMotion: { /*8.5*/
-        obj.params_packet_set_entity_motion = {}; pdef::proto::decode::packet_set_entity_motion(stream, *obj.params_packet_set_entity_motion); /*obj*/ /*4.6*/
+        obj.params_packet_set_entity_motion.reset(new pdef::proto::packet_set_entity_motion{}); pdef::proto::decode::packet_set_entity_motion(stream, *obj.params_packet_set_entity_motion); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetEntityLink: { /*8.5*/
-        obj.params_packet_set_entity_link = {}; pdef::proto::decode::packet_set_entity_link(stream, *obj.params_packet_set_entity_link); /*obj*/ /*4.6*/
+        obj.params_packet_set_entity_link.reset(new pdef::proto::packet_set_entity_link{}); pdef::proto::decode::packet_set_entity_link(stream, *obj.params_packet_set_entity_link); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetHealth: { /*8.5*/
-        obj.params_packet_set_health = {}; pdef::proto::decode::packet_set_health(stream, *obj.params_packet_set_health); /*obj*/ /*4.6*/
+        obj.params_packet_set_health.reset(new pdef::proto::packet_set_health{}); pdef::proto::decode::packet_set_health(stream, *obj.params_packet_set_health); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetSpawnPosition: { /*8.5*/
-        obj.params_packet_set_spawn_position = {}; pdef::proto::decode::packet_set_spawn_position(stream, *obj.params_packet_set_spawn_position); /*obj*/ /*4.6*/
+        obj.params_packet_set_spawn_position.reset(new pdef::proto::packet_set_spawn_position{}); pdef::proto::decode::packet_set_spawn_position(stream, *obj.params_packet_set_spawn_position); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::Animate: { /*8.5*/
-        obj.params_packet_animate = {}; pdef::proto::decode::packet_animate(stream, *obj.params_packet_animate); /*obj*/ /*4.6*/
+        obj.params_packet_animate.reset(new pdef::proto::packet_animate{}); pdef::proto::decode::packet_animate(stream, *obj.params_packet_animate); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::Respawn: { /*8.5*/
-        obj.params_packet_respawn = {}; pdef::proto::decode::packet_respawn(stream, *obj.params_packet_respawn); /*obj*/ /*4.6*/
+        obj.params_packet_respawn.reset(new pdef::proto::packet_respawn{}); pdef::proto::decode::packet_respawn(stream, *obj.params_packet_respawn); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ContainerOpen: { /*8.5*/
-        obj.params_packet_container_open = {}; pdef::proto::decode::packet_container_open(stream, *obj.params_packet_container_open); /*obj*/ /*4.6*/
+        obj.params_packet_container_open.reset(new pdef::proto::packet_container_open{}); pdef::proto::decode::packet_container_open(stream, *obj.params_packet_container_open); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ContainerClose: { /*8.5*/
-        obj.params_packet_container_close = {}; pdef::proto::decode::packet_container_close(stream, *obj.params_packet_container_close); /*obj*/ /*4.6*/
+        obj.params_packet_container_close.reset(new pdef::proto::packet_container_close{}); pdef::proto::decode::packet_container_close(stream, *obj.params_packet_container_close); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PlayerHotbar: { /*8.5*/
-        obj.params_packet_player_hotbar = {}; pdef::proto::decode::packet_player_hotbar(stream, *obj.params_packet_player_hotbar); /*obj*/ /*4.6*/
+        obj.params_packet_player_hotbar.reset(new pdef::proto::packet_player_hotbar{}); pdef::proto::decode::packet_player_hotbar(stream, *obj.params_packet_player_hotbar); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::InventoryContent: { /*8.5*/
-        obj.params_packet_inventory_content = {}; pdef::proto::decode::packet_inventory_content(stream, *obj.params_packet_inventory_content); /*obj*/ /*4.6*/
+        obj.params_packet_inventory_content.reset(new pdef::proto::packet_inventory_content{}); pdef::proto::decode::packet_inventory_content(stream, *obj.params_packet_inventory_content); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::InventorySlot: { /*8.5*/
-        obj.params_packet_inventory_slot = {}; pdef::proto::decode::packet_inventory_slot(stream, *obj.params_packet_inventory_slot); /*obj*/ /*4.6*/
+        obj.params_packet_inventory_slot.reset(new pdef::proto::packet_inventory_slot{}); pdef::proto::decode::packet_inventory_slot(stream, *obj.params_packet_inventory_slot); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ContainerSetData: { /*8.5*/
-        obj.params_packet_container_set_data = {}; pdef::proto::decode::packet_container_set_data(stream, *obj.params_packet_container_set_data); /*obj*/ /*4.6*/
+        obj.params_packet_container_set_data.reset(new pdef::proto::packet_container_set_data{}); pdef::proto::decode::packet_container_set_data(stream, *obj.params_packet_container_set_data); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::CraftingData: { /*8.5*/
-        obj.params_packet_crafting_data = {}; pdef::proto::decode::packet_crafting_data(stream, *obj.params_packet_crafting_data); /*obj*/ /*4.6*/
+        obj.params_packet_crafting_data.reset(new pdef::proto::packet_crafting_data{}); pdef::proto::decode::packet_crafting_data(stream, *obj.params_packet_crafting_data); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::CraftingEvent: { /*8.5*/
-        obj.params_packet_crafting_event = {}; pdef::proto::decode::packet_crafting_event(stream, *obj.params_packet_crafting_event); /*obj*/ /*4.6*/
+        obj.params_packet_crafting_event.reset(new pdef::proto::packet_crafting_event{}); pdef::proto::decode::packet_crafting_event(stream, *obj.params_packet_crafting_event); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::GuiDataPickItem: { /*8.5*/
-        obj.params_packet_gui_data_pick_item = {}; pdef::proto::decode::packet_gui_data_pick_item(stream, *obj.params_packet_gui_data_pick_item); /*obj*/ /*4.6*/
+        obj.params_packet_gui_data_pick_item.reset(new pdef::proto::packet_gui_data_pick_item{}); pdef::proto::decode::packet_gui_data_pick_item(stream, *obj.params_packet_gui_data_pick_item); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AdventureSettings: { /*8.5*/
-        obj.params_packet_adventure_settings = {}; pdef::proto::decode::packet_adventure_settings(stream, *obj.params_packet_adventure_settings); /*obj*/ /*4.6*/
+        obj.params_packet_adventure_settings.reset(new pdef::proto::packet_adventure_settings{}); pdef::proto::decode::packet_adventure_settings(stream, *obj.params_packet_adventure_settings); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::BlockEntityData: { /*8.5*/
-        obj.params_packet_block_entity_data = {}; pdef::proto::decode::packet_block_entity_data(stream, *obj.params_packet_block_entity_data); /*obj*/ /*4.6*/
+        obj.params_packet_block_entity_data.reset(new pdef::proto::packet_block_entity_data{}); pdef::proto::decode::packet_block_entity_data(stream, *obj.params_packet_block_entity_data); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PlayerInput: { /*8.5*/
-        obj.params_packet_player_input = {}; pdef::proto::decode::packet_player_input(stream, *obj.params_packet_player_input); /*obj*/ /*4.6*/
+        obj.params_packet_player_input.reset(new pdef::proto::packet_player_input{}); pdef::proto::decode::packet_player_input(stream, *obj.params_packet_player_input); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::LevelChunk: { /*8.5*/
-        obj.params_packet_level_chunk = {}; pdef::proto::decode::packet_level_chunk(stream, *obj.params_packet_level_chunk); /*obj*/ /*4.6*/
+        obj.params_packet_level_chunk.reset(new pdef::proto::packet_level_chunk{}); pdef::proto::decode::packet_level_chunk(stream, *obj.params_packet_level_chunk); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetCommandsEnabled: { /*8.5*/
-        obj.params_packet_set_commands_enabled = {}; pdef::proto::decode::packet_set_commands_enabled(stream, *obj.params_packet_set_commands_enabled); /*obj*/ /*4.6*/
+        obj.params_packet_set_commands_enabled.reset(new pdef::proto::packet_set_commands_enabled{}); pdef::proto::decode::packet_set_commands_enabled(stream, *obj.params_packet_set_commands_enabled); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetDifficulty: { /*8.5*/
-        obj.params_packet_set_difficulty = {}; pdef::proto::decode::packet_set_difficulty(stream, *obj.params_packet_set_difficulty); /*obj*/ /*4.6*/
+        obj.params_packet_set_difficulty.reset(new pdef::proto::packet_set_difficulty{}); pdef::proto::decode::packet_set_difficulty(stream, *obj.params_packet_set_difficulty); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ChangeDimension: { /*8.5*/
-        obj.params_packet_change_dimension = {}; pdef::proto::decode::packet_change_dimension(stream, *obj.params_packet_change_dimension); /*obj*/ /*4.6*/
+        obj.params_packet_change_dimension.reset(new pdef::proto::packet_change_dimension{}); pdef::proto::decode::packet_change_dimension(stream, *obj.params_packet_change_dimension); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetPlayerGameType: { /*8.5*/
-        obj.params_packet_set_player_game_type = {}; pdef::proto::decode::packet_set_player_game_type(stream, *obj.params_packet_set_player_game_type); /*obj*/ /*4.6*/
+        obj.params_packet_set_player_game_type.reset(new pdef::proto::packet_set_player_game_type{}); pdef::proto::decode::packet_set_player_game_type(stream, *obj.params_packet_set_player_game_type); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PlayerList: { /*8.5*/
-        obj.params_packet_player_list = {}; pdef::proto::decode::packet_player_list(stream, *obj.params_packet_player_list); /*obj*/ /*4.6*/
+        obj.params_packet_player_list.reset(new pdef::proto::packet_player_list{}); pdef::proto::decode::packet_player_list(stream, *obj.params_packet_player_list); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SimpleEvent: { /*8.5*/
-        obj.params_packet_simple_event = {}; pdef::proto::decode::packet_simple_event(stream, *obj.params_packet_simple_event); /*obj*/ /*4.6*/
+        obj.params_packet_simple_event.reset(new pdef::proto::packet_simple_event{}); pdef::proto::decode::packet_simple_event(stream, *obj.params_packet_simple_event); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::Event: { /*8.5*/
-        obj.params_packet_event = {}; pdef::proto::decode::packet_event(stream, *obj.params_packet_event); /*obj*/ /*4.6*/
+        obj.params_packet_event.reset(new pdef::proto::packet_event{}); pdef::proto::decode::packet_event(stream, *obj.params_packet_event); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SpawnExperienceOrb: { /*8.5*/
-        obj.params_packet_spawn_experience_orb = {}; pdef::proto::decode::packet_spawn_experience_orb(stream, *obj.params_packet_spawn_experience_orb); /*obj*/ /*4.6*/
+        obj.params_packet_spawn_experience_orb.reset(new pdef::proto::packet_spawn_experience_orb{}); pdef::proto::decode::packet_spawn_experience_orb(stream, *obj.params_packet_spawn_experience_orb); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ClientboundMapItemData: { /*8.5*/
-        obj.params_packet_clientbound_map_item_data = {}; pdef::proto::decode::packet_clientbound_map_item_data(stream, *obj.params_packet_clientbound_map_item_data); /*obj*/ /*4.6*/
+        obj.params_packet_clientbound_map_item_data.reset(new pdef::proto::packet_clientbound_map_item_data{}); pdef::proto::decode::packet_clientbound_map_item_data(stream, *obj.params_packet_clientbound_map_item_data); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::MapInfoRequest: { /*8.5*/
-        obj.params_packet_map_info_request = {}; pdef::proto::decode::packet_map_info_request(stream, *obj.params_packet_map_info_request); /*obj*/ /*4.6*/
+        obj.params_packet_map_info_request.reset(new pdef::proto::packet_map_info_request{}); pdef::proto::decode::packet_map_info_request(stream, *obj.params_packet_map_info_request); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::RequestChunkRadius: { /*8.5*/
-        obj.params_packet_request_chunk_radius = {}; pdef::proto::decode::packet_request_chunk_radius(stream, *obj.params_packet_request_chunk_radius); /*obj*/ /*4.6*/
+        obj.params_packet_request_chunk_radius.reset(new pdef::proto::packet_request_chunk_radius{}); pdef::proto::decode::packet_request_chunk_radius(stream, *obj.params_packet_request_chunk_radius); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ChunkRadiusUpdate: { /*8.5*/
-        obj.params_packet_chunk_radius_update = {}; pdef::proto::decode::packet_chunk_radius_update(stream, *obj.params_packet_chunk_radius_update); /*obj*/ /*4.6*/
+        obj.params_packet_chunk_radius_update.reset(new pdef::proto::packet_chunk_radius_update{}); pdef::proto::decode::packet_chunk_radius_update(stream, *obj.params_packet_chunk_radius_update); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ItemFrameDropItem: { /*8.5*/
-        obj.params_packet_item_frame_drop_item = {}; pdef::proto::decode::packet_item_frame_drop_item(stream, *obj.params_packet_item_frame_drop_item); /*obj*/ /*4.6*/
+        obj.params_packet_item_frame_drop_item.reset(new pdef::proto::packet_item_frame_drop_item{}); pdef::proto::decode::packet_item_frame_drop_item(stream, *obj.params_packet_item_frame_drop_item); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::GameRulesChanged: { /*8.5*/
-        obj.params_packet_game_rules_changed = {}; pdef::proto::decode::packet_game_rules_changed(stream, *obj.params_packet_game_rules_changed); /*obj*/ /*4.6*/
+        obj.params_packet_game_rules_changed.reset(new pdef::proto::packet_game_rules_changed{}); pdef::proto::decode::packet_game_rules_changed(stream, *obj.params_packet_game_rules_changed); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::Camera: { /*8.5*/
-        obj.params_packet_camera = {}; pdef::proto::decode::packet_camera(stream, *obj.params_packet_camera); /*obj*/ /*4.6*/
+        obj.params_packet_camera.reset(new pdef::proto::packet_camera{}); pdef::proto::decode::packet_camera(stream, *obj.params_packet_camera); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::BossEvent: { /*8.5*/
-        obj.params_packet_boss_event = {}; pdef::proto::decode::packet_boss_event(stream, *obj.params_packet_boss_event); /*obj*/ /*4.6*/
+        obj.params_packet_boss_event.reset(new pdef::proto::packet_boss_event{}); pdef::proto::decode::packet_boss_event(stream, *obj.params_packet_boss_event); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ShowCredits: { /*8.5*/
-        obj.params_packet_show_credits = {}; pdef::proto::decode::packet_show_credits(stream, *obj.params_packet_show_credits); /*obj*/ /*4.6*/
+        obj.params_packet_show_credits.reset(new pdef::proto::packet_show_credits{}); pdef::proto::decode::packet_show_credits(stream, *obj.params_packet_show_credits); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AvailableCommands: { /*8.5*/
-        obj.params_packet_available_commands = {}; pdef::proto::decode::packet_available_commands(stream, *obj.params_packet_available_commands); /*obj*/ /*4.6*/
+        obj.params_packet_available_commands.reset(new pdef::proto::packet_available_commands{}); pdef::proto::decode::packet_available_commands(stream, *obj.params_packet_available_commands); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::CommandRequest: { /*8.5*/
-        obj.params_packet_command_request = {}; pdef::proto::decode::packet_command_request(stream, *obj.params_packet_command_request); /*obj*/ /*4.6*/
+        obj.params_packet_command_request.reset(new pdef::proto::packet_command_request{}); pdef::proto::decode::packet_command_request(stream, *obj.params_packet_command_request); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::CommandBlockUpdate: { /*8.5*/
-        obj.params_packet_command_block_update = {}; pdef::proto::decode::packet_command_block_update(stream, *obj.params_packet_command_block_update); /*obj*/ /*4.6*/
+        obj.params_packet_command_block_update.reset(new pdef::proto::packet_command_block_update{}); pdef::proto::decode::packet_command_block_update(stream, *obj.params_packet_command_block_update); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::CommandOutput: { /*8.5*/
-        obj.params_packet_command_output = {}; pdef::proto::decode::packet_command_output(stream, *obj.params_packet_command_output); /*obj*/ /*4.6*/
+        obj.params_packet_command_output.reset(new pdef::proto::packet_command_output{}); pdef::proto::decode::packet_command_output(stream, *obj.params_packet_command_output); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::UpdateTrade: { /*8.5*/
-        obj.params_packet_update_trade = {}; pdef::proto::decode::packet_update_trade(stream, *obj.params_packet_update_trade); /*obj*/ /*4.6*/
+        obj.params_packet_update_trade.reset(new pdef::proto::packet_update_trade{}); pdef::proto::decode::packet_update_trade(stream, *obj.params_packet_update_trade); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::UpdateEquipment: { /*8.5*/
-        obj.params_packet_update_equipment = {}; pdef::proto::decode::packet_update_equipment(stream, *obj.params_packet_update_equipment); /*obj*/ /*4.6*/
+        obj.params_packet_update_equipment.reset(new pdef::proto::packet_update_equipment{}); pdef::proto::decode::packet_update_equipment(stream, *obj.params_packet_update_equipment); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ResourcePackDataInfo: { /*8.5*/
-        obj.params_packet_resource_pack_data_info = {}; pdef::proto::decode::packet_resource_pack_data_info(stream, *obj.params_packet_resource_pack_data_info); /*obj*/ /*4.6*/
+        obj.params_packet_resource_pack_data_info.reset(new pdef::proto::packet_resource_pack_data_info{}); pdef::proto::decode::packet_resource_pack_data_info(stream, *obj.params_packet_resource_pack_data_info); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ResourcePackChunkData: { /*8.5*/
-        obj.params_packet_resource_pack_chunk_data = {}; pdef::proto::decode::packet_resource_pack_chunk_data(stream, *obj.params_packet_resource_pack_chunk_data); /*obj*/ /*4.6*/
+        obj.params_packet_resource_pack_chunk_data.reset(new pdef::proto::packet_resource_pack_chunk_data{}); pdef::proto::decode::packet_resource_pack_chunk_data(stream, *obj.params_packet_resource_pack_chunk_data); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ResourcePackChunkRequest: { /*8.5*/
-        obj.params_packet_resource_pack_chunk_request = {}; pdef::proto::decode::packet_resource_pack_chunk_request(stream, *obj.params_packet_resource_pack_chunk_request); /*obj*/ /*4.6*/
+        obj.params_packet_resource_pack_chunk_request.reset(new pdef::proto::packet_resource_pack_chunk_request{}); pdef::proto::decode::packet_resource_pack_chunk_request(stream, *obj.params_packet_resource_pack_chunk_request); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::Transfer: { /*8.5*/
-        obj.params_packet_transfer = {}; pdef::proto::decode::packet_transfer(stream, *obj.params_packet_transfer); /*obj*/ /*4.6*/
+        obj.params_packet_transfer.reset(new pdef::proto::packet_transfer{}); pdef::proto::decode::packet_transfer(stream, *obj.params_packet_transfer); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PlaySound: { /*8.5*/
-        obj.params_packet_play_sound = {}; pdef::proto::decode::packet_play_sound(stream, *obj.params_packet_play_sound); /*obj*/ /*4.6*/
+        obj.params_packet_play_sound.reset(new pdef::proto::packet_play_sound{}); pdef::proto::decode::packet_play_sound(stream, *obj.params_packet_play_sound); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::StopSound: { /*8.5*/
-        obj.params_packet_stop_sound = {}; pdef::proto::decode::packet_stop_sound(stream, *obj.params_packet_stop_sound); /*obj*/ /*4.6*/
+        obj.params_packet_stop_sound.reset(new pdef::proto::packet_stop_sound{}); pdef::proto::decode::packet_stop_sound(stream, *obj.params_packet_stop_sound); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetTitle: { /*8.5*/
-        obj.params_packet_set_title = {}; pdef::proto::decode::packet_set_title(stream, *obj.params_packet_set_title); /*obj*/ /*4.6*/
+        obj.params_packet_set_title.reset(new pdef::proto::packet_set_title{}); pdef::proto::decode::packet_set_title(stream, *obj.params_packet_set_title); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AddBehaviorTree: { /*8.5*/
-        obj.params_packet_add_behavior_tree = {}; pdef::proto::decode::packet_add_behavior_tree(stream, *obj.params_packet_add_behavior_tree); /*obj*/ /*4.6*/
+        obj.params_packet_add_behavior_tree.reset(new pdef::proto::packet_add_behavior_tree{}); pdef::proto::decode::packet_add_behavior_tree(stream, *obj.params_packet_add_behavior_tree); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::StructureBlockUpdate: { /*8.5*/
-        obj.params_packet_structure_block_update = {}; pdef::proto::decode::packet_structure_block_update(stream, *obj.params_packet_structure_block_update); /*obj*/ /*4.6*/
+        obj.params_packet_structure_block_update.reset(new pdef::proto::packet_structure_block_update{}); pdef::proto::decode::packet_structure_block_update(stream, *obj.params_packet_structure_block_update); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ShowStoreOffer: { /*8.5*/
-        obj.params_packet_show_store_offer = {}; pdef::proto::decode::packet_show_store_offer(stream, *obj.params_packet_show_store_offer); /*obj*/ /*4.6*/
+        obj.params_packet_show_store_offer.reset(new pdef::proto::packet_show_store_offer{}); pdef::proto::decode::packet_show_store_offer(stream, *obj.params_packet_show_store_offer); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PurchaseReceipt: { /*8.5*/
-        obj.params_packet_purchase_receipt = {}; pdef::proto::decode::packet_purchase_receipt(stream, *obj.params_packet_purchase_receipt); /*obj*/ /*4.6*/
+        obj.params_packet_purchase_receipt.reset(new pdef::proto::packet_purchase_receipt{}); pdef::proto::decode::packet_purchase_receipt(stream, *obj.params_packet_purchase_receipt); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PlayerSkin: { /*8.5*/
-        obj.params_packet_player_skin = {}; pdef::proto::decode::packet_player_skin(stream, *obj.params_packet_player_skin); /*obj*/ /*4.6*/
+        obj.params_packet_player_skin.reset(new pdef::proto::packet_player_skin{}); pdef::proto::decode::packet_player_skin(stream, *obj.params_packet_player_skin); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SubClientLogin: { /*8.5*/
-        obj.params_packet_sub_client_login = {}; pdef::proto::decode::packet_sub_client_login(stream, *obj.params_packet_sub_client_login); /*obj*/ /*4.6*/
+        obj.params_packet_sub_client_login.reset(new pdef::proto::packet_sub_client_login{}); pdef::proto::decode::packet_sub_client_login(stream, *obj.params_packet_sub_client_login); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::InitiateWebSocketConnection: { /*8.5*/
-        obj.params_packet_initiate_web_socket_connection = {}; pdef::proto::decode::packet_initiate_web_socket_connection(stream, *obj.params_packet_initiate_web_socket_connection); /*obj*/ /*4.6*/
+        obj.params_packet_initiate_web_socket_connection.reset(new pdef::proto::packet_initiate_web_socket_connection{}); pdef::proto::decode::packet_initiate_web_socket_connection(stream, *obj.params_packet_initiate_web_socket_connection); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetLastHurtBy: { /*8.5*/
-        obj.params_packet_set_last_hurt_by = {}; pdef::proto::decode::packet_set_last_hurt_by(stream, *obj.params_packet_set_last_hurt_by); /*obj*/ /*4.6*/
+        obj.params_packet_set_last_hurt_by.reset(new pdef::proto::packet_set_last_hurt_by{}); pdef::proto::decode::packet_set_last_hurt_by(stream, *obj.params_packet_set_last_hurt_by); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::BookEdit: { /*8.5*/
-        obj.params_packet_book_edit = {}; pdef::proto::decode::packet_book_edit(stream, *obj.params_packet_book_edit); /*obj*/ /*4.6*/
+        obj.params_packet_book_edit.reset(new pdef::proto::packet_book_edit{}); pdef::proto::decode::packet_book_edit(stream, *obj.params_packet_book_edit); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::NpcRequest: { /*8.5*/
-        obj.params_packet_npc_request = {}; pdef::proto::decode::packet_npc_request(stream, *obj.params_packet_npc_request); /*obj*/ /*4.6*/
+        obj.params_packet_npc_request.reset(new pdef::proto::packet_npc_request{}); pdef::proto::decode::packet_npc_request(stream, *obj.params_packet_npc_request); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PhotoTransfer: { /*8.5*/
-        obj.params_packet_photo_transfer = {}; pdef::proto::decode::packet_photo_transfer(stream, *obj.params_packet_photo_transfer); /*obj*/ /*4.6*/
+        obj.params_packet_photo_transfer.reset(new pdef::proto::packet_photo_transfer{}); pdef::proto::decode::packet_photo_transfer(stream, *obj.params_packet_photo_transfer); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ModalFormRequest: { /*8.5*/
-        obj.params_packet_modal_form_request = {}; pdef::proto::decode::packet_modal_form_request(stream, *obj.params_packet_modal_form_request); /*obj*/ /*4.6*/
+        obj.params_packet_modal_form_request.reset(new pdef::proto::packet_modal_form_request{}); pdef::proto::decode::packet_modal_form_request(stream, *obj.params_packet_modal_form_request); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ModalFormResponse: { /*8.5*/
-        obj.params_packet_modal_form_response = {}; pdef::proto::decode::packet_modal_form_response(stream, *obj.params_packet_modal_form_response); /*obj*/ /*4.6*/
+        obj.params_packet_modal_form_response.reset(new pdef::proto::packet_modal_form_response{}); pdef::proto::decode::packet_modal_form_response(stream, *obj.params_packet_modal_form_response); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ServerSettingsRequest: { /*8.5*/
-        obj.params_packet_server_settings_request = {}; pdef::proto::decode::packet_server_settings_request(stream, *obj.params_packet_server_settings_request); /*obj*/ /*4.6*/
+        obj.params_packet_server_settings_request.reset(new pdef::proto::packet_server_settings_request{}); pdef::proto::decode::packet_server_settings_request(stream, *obj.params_packet_server_settings_request); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ServerSettingsResponse: { /*8.5*/
-        obj.params_packet_server_settings_response = {}; pdef::proto::decode::packet_server_settings_response(stream, *obj.params_packet_server_settings_response); /*obj*/ /*4.6*/
+        obj.params_packet_server_settings_response.reset(new pdef::proto::packet_server_settings_response{}); pdef::proto::decode::packet_server_settings_response(stream, *obj.params_packet_server_settings_response); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ShowProfile: { /*8.5*/
-        obj.params_packet_show_profile = {}; pdef::proto::decode::packet_show_profile(stream, *obj.params_packet_show_profile); /*obj*/ /*4.6*/
+        obj.params_packet_show_profile.reset(new pdef::proto::packet_show_profile{}); pdef::proto::decode::packet_show_profile(stream, *obj.params_packet_show_profile); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetDefaultGameType: { /*8.5*/
-        obj.params_packet_set_default_game_type = {}; pdef::proto::decode::packet_set_default_game_type(stream, *obj.params_packet_set_default_game_type); /*obj*/ /*4.6*/
+        obj.params_packet_set_default_game_type.reset(new pdef::proto::packet_set_default_game_type{}); pdef::proto::decode::packet_set_default_game_type(stream, *obj.params_packet_set_default_game_type); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::RemoveObjective: { /*8.5*/
-        obj.params_packet_remove_objective = {}; pdef::proto::decode::packet_remove_objective(stream, *obj.params_packet_remove_objective); /*obj*/ /*4.6*/
+        obj.params_packet_remove_objective.reset(new pdef::proto::packet_remove_objective{}); pdef::proto::decode::packet_remove_objective(stream, *obj.params_packet_remove_objective); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetDisplayObjective: { /*8.5*/
-        obj.params_packet_set_display_objective = {}; pdef::proto::decode::packet_set_display_objective(stream, *obj.params_packet_set_display_objective); /*obj*/ /*4.6*/
+        obj.params_packet_set_display_objective.reset(new pdef::proto::packet_set_display_objective{}); pdef::proto::decode::packet_set_display_objective(stream, *obj.params_packet_set_display_objective); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetScore: { /*8.5*/
-        obj.params_packet_set_score = {}; pdef::proto::decode::packet_set_score(stream, *obj.params_packet_set_score); /*obj*/ /*4.6*/
+        obj.params_packet_set_score.reset(new pdef::proto::packet_set_score{}); pdef::proto::decode::packet_set_score(stream, *obj.params_packet_set_score); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::LabTable: { /*8.5*/
-        obj.params_packet_lab_table = {}; pdef::proto::decode::packet_lab_table(stream, *obj.params_packet_lab_table); /*obj*/ /*4.6*/
+        obj.params_packet_lab_table.reset(new pdef::proto::packet_lab_table{}); pdef::proto::decode::packet_lab_table(stream, *obj.params_packet_lab_table); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::UpdateBlockSynced: { /*8.5*/
-        obj.params_packet_update_block_synced = {}; pdef::proto::decode::packet_update_block_synced(stream, *obj.params_packet_update_block_synced); /*obj*/ /*4.6*/
+        obj.params_packet_update_block_synced.reset(new pdef::proto::packet_update_block_synced{}); pdef::proto::decode::packet_update_block_synced(stream, *obj.params_packet_update_block_synced); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::MoveEntityDelta: { /*8.5*/
-        obj.params_packet_move_entity_delta = {}; pdef::proto::decode::packet_move_entity_delta(stream, *obj.params_packet_move_entity_delta); /*obj*/ /*4.6*/
+        obj.params_packet_move_entity_delta.reset(new pdef::proto::packet_move_entity_delta{}); pdef::proto::decode::packet_move_entity_delta(stream, *obj.params_packet_move_entity_delta); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetScoreboardIdentity: { /*8.5*/
-        obj.params_packet_set_scoreboard_identity = {}; pdef::proto::decode::packet_set_scoreboard_identity(stream, *obj.params_packet_set_scoreboard_identity); /*obj*/ /*4.6*/
+        obj.params_packet_set_scoreboard_identity.reset(new pdef::proto::packet_set_scoreboard_identity{}); pdef::proto::decode::packet_set_scoreboard_identity(stream, *obj.params_packet_set_scoreboard_identity); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SetLocalPlayerAsInitialized: { /*8.5*/
-        obj.params_packet_set_local_player_as_initialized = {}; pdef::proto::decode::packet_set_local_player_as_initialized(stream, *obj.params_packet_set_local_player_as_initialized); /*obj*/ /*4.6*/
+        obj.params_packet_set_local_player_as_initialized.reset(new pdef::proto::packet_set_local_player_as_initialized{}); pdef::proto::decode::packet_set_local_player_as_initialized(stream, *obj.params_packet_set_local_player_as_initialized); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::UpdateSoftEnum: { /*8.5*/
-        obj.params_packet_update_soft_enum = {}; pdef::proto::decode::packet_update_soft_enum(stream, *obj.params_packet_update_soft_enum); /*obj*/ /*4.6*/
+        obj.params_packet_update_soft_enum.reset(new pdef::proto::packet_update_soft_enum{}); pdef::proto::decode::packet_update_soft_enum(stream, *obj.params_packet_update_soft_enum); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::NetworkStackLatency: { /*8.5*/
-        obj.params_packet_network_stack_latency = {}; pdef::proto::decode::packet_network_stack_latency(stream, *obj.params_packet_network_stack_latency); /*obj*/ /*4.6*/
+        obj.params_packet_network_stack_latency.reset(new pdef::proto::packet_network_stack_latency{}); pdef::proto::decode::packet_network_stack_latency(stream, *obj.params_packet_network_stack_latency); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ScriptCustomEvent: { /*8.5*/
-        obj.params_packet_script_custom_event = {}; pdef::proto::decode::packet_script_custom_event(stream, *obj.params_packet_script_custom_event); /*obj*/ /*4.6*/
+        obj.params_packet_script_custom_event.reset(new pdef::proto::packet_script_custom_event{}); pdef::proto::decode::packet_script_custom_event(stream, *obj.params_packet_script_custom_event); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SpawnParticleEffect: { /*8.5*/
-        obj.params_packet_spawn_particle_effect = {}; pdef::proto::decode::packet_spawn_particle_effect(stream, *obj.params_packet_spawn_particle_effect); /*obj*/ /*4.6*/
+        obj.params_packet_spawn_particle_effect.reset(new pdef::proto::packet_spawn_particle_effect{}); pdef::proto::decode::packet_spawn_particle_effect(stream, *obj.params_packet_spawn_particle_effect); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AvailableEntityIdentifiers: { /*8.5*/
-        obj.params_packet_available_entity_identifiers = {}; pdef::proto::decode::packet_available_entity_identifiers(stream, *obj.params_packet_available_entity_identifiers); /*obj*/ /*4.6*/
+        obj.params_packet_available_entity_identifiers.reset(new pdef::proto::packet_available_entity_identifiers{}); pdef::proto::decode::packet_available_entity_identifiers(stream, *obj.params_packet_available_entity_identifiers); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::LevelSoundEventV2: { /*8.5*/
-        obj.params_packet_level_sound_event_v2 = {}; pdef::proto::decode::packet_level_sound_event_v2(stream, *obj.params_packet_level_sound_event_v2); /*obj*/ /*4.6*/
+        obj.params_packet_level_sound_event_v2.reset(new pdef::proto::packet_level_sound_event_v2{}); pdef::proto::decode::packet_level_sound_event_v2(stream, *obj.params_packet_level_sound_event_v2); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::NetworkChunkPublisherUpdate: { /*8.5*/
-        obj.params_packet_network_chunk_publisher_update = {}; pdef::proto::decode::packet_network_chunk_publisher_update(stream, *obj.params_packet_network_chunk_publisher_update); /*obj*/ /*4.6*/
+        obj.params_packet_network_chunk_publisher_update.reset(new pdef::proto::packet_network_chunk_publisher_update{}); pdef::proto::decode::packet_network_chunk_publisher_update(stream, *obj.params_packet_network_chunk_publisher_update); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::BiomeDefinitionList: { /*8.5*/
-        obj.params_packet_biome_definition_list = {}; pdef::proto::decode::packet_biome_definition_list(stream, *obj.params_packet_biome_definition_list); /*obj*/ /*4.6*/
+        obj.params_packet_biome_definition_list.reset(new pdef::proto::packet_biome_definition_list{}); pdef::proto::decode::packet_biome_definition_list(stream, *obj.params_packet_biome_definition_list); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::LevelSoundEvent: { /*8.5*/
-        obj.params_packet_level_sound_event = {}; pdef::proto::decode::packet_level_sound_event(stream, *obj.params_packet_level_sound_event); /*obj*/ /*4.6*/
+        obj.params_packet_level_sound_event.reset(new pdef::proto::packet_level_sound_event{}); pdef::proto::decode::packet_level_sound_event(stream, *obj.params_packet_level_sound_event); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::LevelEventGeneric: { /*8.5*/
-        obj.params_packet_level_event_generic = {}; pdef::proto::decode::packet_level_event_generic(stream, *obj.params_packet_level_event_generic); /*obj*/ /*4.6*/
+        obj.params_packet_level_event_generic.reset(new pdef::proto::packet_level_event_generic{}); pdef::proto::decode::packet_level_event_generic(stream, *obj.params_packet_level_event_generic); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::LecternUpdate: { /*8.5*/
-        obj.params_packet_lectern_update = {}; pdef::proto::decode::packet_lectern_update(stream, *obj.params_packet_lectern_update); /*obj*/ /*4.6*/
+        obj.params_packet_lectern_update.reset(new pdef::proto::packet_lectern_update{}); pdef::proto::decode::packet_lectern_update(stream, *obj.params_packet_lectern_update); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::VideoStreamConnect: { /*8.5*/
-        obj.params_packet_video_stream_connect = {}; pdef::proto::decode::packet_video_stream_connect(stream, *obj.params_packet_video_stream_connect); /*obj*/ /*4.6*/
+        obj.params_packet_video_stream_connect.reset(new pdef::proto::packet_video_stream_connect{}); pdef::proto::decode::packet_video_stream_connect(stream, *obj.params_packet_video_stream_connect); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AddEcsEntity: { /*8.5*/
-        obj.params_packet_add_ecs_entity = {}; pdef::proto::decode::packet_add_ecs_entity(stream, *obj.params_packet_add_ecs_entity); /*obj*/ /*4.6*/
+        obj.params_packet_add_ecs_entity.reset(new pdef::proto::packet_add_ecs_entity{}); pdef::proto::decode::packet_add_ecs_entity(stream, *obj.params_packet_add_ecs_entity); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::RemoveEcsEntity: { /*8.5*/
-        obj.params_packet_remove_ecs_entity = {}; pdef::proto::decode::packet_remove_ecs_entity(stream, *obj.params_packet_remove_ecs_entity); /*obj*/ /*4.6*/
+        obj.params_packet_remove_ecs_entity.reset(new pdef::proto::packet_remove_ecs_entity{}); pdef::proto::decode::packet_remove_ecs_entity(stream, *obj.params_packet_remove_ecs_entity); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ClientCacheStatus: { /*8.5*/
-        obj.params_packet_client_cache_status = {}; pdef::proto::decode::packet_client_cache_status(stream, *obj.params_packet_client_cache_status); /*obj*/ /*4.6*/
+        obj.params_packet_client_cache_status.reset(new pdef::proto::packet_client_cache_status{}); pdef::proto::decode::packet_client_cache_status(stream, *obj.params_packet_client_cache_status); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::OnScreenTextureAnimation: { /*8.5*/
-        obj.params_packet_on_screen_texture_animation = {}; pdef::proto::decode::packet_on_screen_texture_animation(stream, *obj.params_packet_on_screen_texture_animation); /*obj*/ /*4.6*/
+        obj.params_packet_on_screen_texture_animation.reset(new pdef::proto::packet_on_screen_texture_animation{}); pdef::proto::decode::packet_on_screen_texture_animation(stream, *obj.params_packet_on_screen_texture_animation); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::MapCreateLockedCopy: { /*8.5*/
-        obj.params_packet_map_create_locked_copy = {}; pdef::proto::decode::packet_map_create_locked_copy(stream, *obj.params_packet_map_create_locked_copy); /*obj*/ /*4.6*/
+        obj.params_packet_map_create_locked_copy.reset(new pdef::proto::packet_map_create_locked_copy{}); pdef::proto::decode::packet_map_create_locked_copy(stream, *obj.params_packet_map_create_locked_copy); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::StructureTemplateDataExportRequest: { /*8.5*/
-        obj.params_packet_structure_template_data_export_request = {}; pdef::proto::decode::packet_structure_template_data_export_request(stream, *obj.params_packet_structure_template_data_export_request); /*obj*/ /*4.6*/
+        obj.params_packet_structure_template_data_export_request.reset(new pdef::proto::packet_structure_template_data_export_request{}); pdef::proto::decode::packet_structure_template_data_export_request(stream, *obj.params_packet_structure_template_data_export_request); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::StructureTemplateDataExportResponse: { /*8.5*/
-        obj.params_packet_structure_template_data_export_response = {}; pdef::proto::decode::packet_structure_template_data_export_response(stream, *obj.params_packet_structure_template_data_export_response); /*obj*/ /*4.6*/
+        obj.params_packet_structure_template_data_export_response.reset(new pdef::proto::packet_structure_template_data_export_response{}); pdef::proto::decode::packet_structure_template_data_export_response(stream, *obj.params_packet_structure_template_data_export_response); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::UpdateBlockProperties: { /*8.5*/
-        obj.params_packet_update_block_properties = {}; pdef::proto::decode::packet_update_block_properties(stream, *obj.params_packet_update_block_properties); /*obj*/ /*4.6*/
+        obj.params_packet_update_block_properties.reset(new pdef::proto::packet_update_block_properties{}); pdef::proto::decode::packet_update_block_properties(stream, *obj.params_packet_update_block_properties); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ClientCacheBlobStatus: { /*8.5*/
-        obj.params_packet_client_cache_blob_status = {}; pdef::proto::decode::packet_client_cache_blob_status(stream, *obj.params_packet_client_cache_blob_status); /*obj*/ /*4.6*/
+        obj.params_packet_client_cache_blob_status.reset(new pdef::proto::packet_client_cache_blob_status{}); pdef::proto::decode::packet_client_cache_blob_status(stream, *obj.params_packet_client_cache_blob_status); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ClientCacheMissResponse: { /*8.5*/
-        obj.params_packet_client_cache_miss_response = {}; pdef::proto::decode::packet_client_cache_miss_response(stream, *obj.params_packet_client_cache_miss_response); /*obj*/ /*4.6*/
+        obj.params_packet_client_cache_miss_response.reset(new pdef::proto::packet_client_cache_miss_response{}); pdef::proto::decode::packet_client_cache_miss_response(stream, *obj.params_packet_client_cache_miss_response); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::EducationSettings: { /*8.5*/
-        obj.params_packet_education_settings = {}; pdef::proto::decode::packet_education_settings(stream, *obj.params_packet_education_settings); /*obj*/ /*4.6*/
+        obj.params_packet_education_settings.reset(new pdef::proto::packet_education_settings{}); pdef::proto::decode::packet_education_settings(stream, *obj.params_packet_education_settings); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::Emote: { /*8.5*/
-        obj.params_packet_emote = {}; pdef::proto::decode::packet_emote(stream, *obj.params_packet_emote); /*obj*/ /*4.6*/
+        obj.params_packet_emote.reset(new pdef::proto::packet_emote{}); pdef::proto::decode::packet_emote(stream, *obj.params_packet_emote); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::MultiplayerSettings: { /*8.5*/
-        obj.params_packet_multiplayer_settings = {}; pdef::proto::decode::packet_multiplayer_settings(stream, *obj.params_packet_multiplayer_settings); /*obj*/ /*4.6*/
+        obj.params_packet_multiplayer_settings.reset(new pdef::proto::packet_multiplayer_settings{}); pdef::proto::decode::packet_multiplayer_settings(stream, *obj.params_packet_multiplayer_settings); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SettingsCommand: { /*8.5*/
-        obj.params_packet_settings_command = {}; pdef::proto::decode::packet_settings_command(stream, *obj.params_packet_settings_command); /*obj*/ /*4.6*/
+        obj.params_packet_settings_command.reset(new pdef::proto::packet_settings_command{}); pdef::proto::decode::packet_settings_command(stream, *obj.params_packet_settings_command); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AnvilDamage: { /*8.5*/
-        obj.params_packet_anvil_damage = {}; pdef::proto::decode::packet_anvil_damage(stream, *obj.params_packet_anvil_damage); /*obj*/ /*4.6*/
+        obj.params_packet_anvil_damage.reset(new pdef::proto::packet_anvil_damage{}); pdef::proto::decode::packet_anvil_damage(stream, *obj.params_packet_anvil_damage); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::CompletedUsingItem: { /*8.5*/
-        obj.params_packet_completed_using_item = {}; pdef::proto::decode::packet_completed_using_item(stream, *obj.params_packet_completed_using_item); /*obj*/ /*4.6*/
+        obj.params_packet_completed_using_item.reset(new pdef::proto::packet_completed_using_item{}); pdef::proto::decode::packet_completed_using_item(stream, *obj.params_packet_completed_using_item); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::NetworkSettings: { /*8.5*/
-        obj.params_packet_network_settings = {}; pdef::proto::decode::packet_network_settings(stream, *obj.params_packet_network_settings); /*obj*/ /*4.6*/
+        obj.params_packet_network_settings.reset(new pdef::proto::packet_network_settings{}); pdef::proto::decode::packet_network_settings(stream, *obj.params_packet_network_settings); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PlayerAuthInput: { /*8.5*/
-        obj.params_packet_player_auth_input = {}; pdef::proto::decode::packet_player_auth_input(stream, *obj.params_packet_player_auth_input); /*obj*/ /*4.6*/
+        obj.params_packet_player_auth_input.reset(new pdef::proto::packet_player_auth_input{}); pdef::proto::decode::packet_player_auth_input(stream, *obj.params_packet_player_auth_input); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::CreativeContent: { /*8.5*/
-        obj.params_packet_creative_content = {}; pdef::proto::decode::packet_creative_content(stream, *obj.params_packet_creative_content); /*obj*/ /*4.6*/
+        obj.params_packet_creative_content.reset(new pdef::proto::packet_creative_content{}); pdef::proto::decode::packet_creative_content(stream, *obj.params_packet_creative_content); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PlayerEnchantOptions: { /*8.5*/
-        obj.params_packet_player_enchant_options = {}; pdef::proto::decode::packet_player_enchant_options(stream, *obj.params_packet_player_enchant_options); /*obj*/ /*4.6*/
+        obj.params_packet_player_enchant_options.reset(new pdef::proto::packet_player_enchant_options{}); pdef::proto::decode::packet_player_enchant_options(stream, *obj.params_packet_player_enchant_options); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ItemStackRequest: { /*8.5*/
-        obj.params_packet_item_stack_request = {}; pdef::proto::decode::packet_item_stack_request(stream, *obj.params_packet_item_stack_request); /*obj*/ /*4.6*/
+        obj.params_packet_item_stack_request.reset(new pdef::proto::packet_item_stack_request{}); pdef::proto::decode::packet_item_stack_request(stream, *obj.params_packet_item_stack_request); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ItemStackResponse: { /*8.5*/
-        obj.params_packet_item_stack_response = {}; pdef::proto::decode::packet_item_stack_response(stream, *obj.params_packet_item_stack_response); /*obj*/ /*4.6*/
+        obj.params_packet_item_stack_response.reset(new pdef::proto::packet_item_stack_response{}); pdef::proto::decode::packet_item_stack_response(stream, *obj.params_packet_item_stack_response); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PlayerArmorDamage: { /*8.5*/
-        obj.params_packet_player_armor_damage = {}; pdef::proto::decode::packet_player_armor_damage(stream, *obj.params_packet_player_armor_damage); /*obj*/ /*4.6*/
+        obj.params_packet_player_armor_damage.reset(new pdef::proto::packet_player_armor_damage{}); pdef::proto::decode::packet_player_armor_damage(stream, *obj.params_packet_player_armor_damage); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::UpdatePlayerGameType: { /*8.5*/
-        obj.params_packet_update_player_game_type = {}; pdef::proto::decode::packet_update_player_game_type(stream, *obj.params_packet_update_player_game_type); /*obj*/ /*4.6*/
+        obj.params_packet_update_player_game_type.reset(new pdef::proto::packet_update_player_game_type{}); pdef::proto::decode::packet_update_player_game_type(stream, *obj.params_packet_update_player_game_type); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::EmoteList: { /*8.5*/
-        obj.params_packet_emote_list = {}; pdef::proto::decode::packet_emote_list(stream, *obj.params_packet_emote_list); /*obj*/ /*4.6*/
+        obj.params_packet_emote_list.reset(new pdef::proto::packet_emote_list{}); pdef::proto::decode::packet_emote_list(stream, *obj.params_packet_emote_list); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PositionTrackingDbRequest: { /*8.5*/
-        obj.params_packet_position_tracking_db_request = {}; pdef::proto::decode::packet_position_tracking_db_request(stream, *obj.params_packet_position_tracking_db_request); /*obj*/ /*4.6*/
+        obj.params_packet_position_tracking_db_request.reset(new pdef::proto::packet_position_tracking_db_request{}); pdef::proto::decode::packet_position_tracking_db_request(stream, *obj.params_packet_position_tracking_db_request); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PositionTrackingDbBroadcast: { /*8.5*/
-        obj.params_packet_position_tracking_db_broadcast = {}; pdef::proto::decode::packet_position_tracking_db_broadcast(stream, *obj.params_packet_position_tracking_db_broadcast); /*obj*/ /*4.6*/
+        obj.params_packet_position_tracking_db_broadcast.reset(new pdef::proto::packet_position_tracking_db_broadcast{}); pdef::proto::decode::packet_position_tracking_db_broadcast(stream, *obj.params_packet_position_tracking_db_broadcast); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PacketViolationWarning: { /*8.5*/
-        obj.params_packet_packet_violation_warning = {}; pdef::proto::decode::packet_packet_violation_warning(stream, *obj.params_packet_packet_violation_warning); /*obj*/ /*4.6*/
+        obj.params_packet_packet_violation_warning.reset(new pdef::proto::packet_packet_violation_warning{}); pdef::proto::decode::packet_packet_violation_warning(stream, *obj.params_packet_packet_violation_warning); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::MotionPredictionHints: { /*8.5*/
-        obj.params_packet_motion_prediction_hints = {}; pdef::proto::decode::packet_motion_prediction_hints(stream, *obj.params_packet_motion_prediction_hints); /*obj*/ /*4.6*/
+        obj.params_packet_motion_prediction_hints.reset(new pdef::proto::packet_motion_prediction_hints{}); pdef::proto::decode::packet_motion_prediction_hints(stream, *obj.params_packet_motion_prediction_hints); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AnimateEntity: { /*8.5*/
-        obj.params_packet_animate_entity = {}; pdef::proto::decode::packet_animate_entity(stream, *obj.params_packet_animate_entity); /*obj*/ /*4.6*/
+        obj.params_packet_animate_entity.reset(new pdef::proto::packet_animate_entity{}); pdef::proto::decode::packet_animate_entity(stream, *obj.params_packet_animate_entity); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::CameraShake: { /*8.5*/
-        obj.params_packet_camera_shake = {}; pdef::proto::decode::packet_camera_shake(stream, *obj.params_packet_camera_shake); /*obj*/ /*4.6*/
+        obj.params_packet_camera_shake.reset(new pdef::proto::packet_camera_shake{}); pdef::proto::decode::packet_camera_shake(stream, *obj.params_packet_camera_shake); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PlayerFog: { /*8.5*/
-        obj.params_packet_player_fog = {}; pdef::proto::decode::packet_player_fog(stream, *obj.params_packet_player_fog); /*obj*/ /*4.6*/
+        obj.params_packet_player_fog.reset(new pdef::proto::packet_player_fog{}); pdef::proto::decode::packet_player_fog(stream, *obj.params_packet_player_fog); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::CorrectPlayerMovePrediction: { /*8.5*/
-        obj.params_packet_correct_player_move_prediction = {}; pdef::proto::decode::packet_correct_player_move_prediction(stream, *obj.params_packet_correct_player_move_prediction); /*obj*/ /*4.6*/
+        obj.params_packet_correct_player_move_prediction.reset(new pdef::proto::packet_correct_player_move_prediction{}); pdef::proto::decode::packet_correct_player_move_prediction(stream, *obj.params_packet_correct_player_move_prediction); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ItemComponent: { /*8.5*/
-        obj.params_packet_item_component = {}; pdef::proto::decode::packet_item_component(stream, *obj.params_packet_item_component); /*obj*/ /*4.6*/
+        obj.params_packet_item_component.reset(new pdef::proto::packet_item_component{}); pdef::proto::decode::packet_item_component(stream, *obj.params_packet_item_component); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::FilterTextPacket: { /*8.5*/
-        obj.params_packet_filter_text_packet = {}; pdef::proto::decode::packet_filter_text_packet(stream, *obj.params_packet_filter_text_packet); /*obj*/ /*4.6*/
+        obj.params_packet_filter_text_packet.reset(new pdef::proto::packet_filter_text_packet{}); pdef::proto::decode::packet_filter_text_packet(stream, *obj.params_packet_filter_text_packet); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::DebugRenderer: { /*8.5*/
-        obj.params_packet_debug_renderer = {}; pdef::proto::decode::packet_debug_renderer(stream, *obj.params_packet_debug_renderer); /*obj*/ /*4.6*/
+        obj.params_packet_debug_renderer.reset(new pdef::proto::packet_debug_renderer{}); pdef::proto::decode::packet_debug_renderer(stream, *obj.params_packet_debug_renderer); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SyncEntityProperty: { /*8.5*/
-        obj.params_packet_sync_entity_property = {}; pdef::proto::decode::packet_sync_entity_property(stream, *obj.params_packet_sync_entity_property); /*obj*/ /*4.6*/
+        obj.params_packet_sync_entity_property.reset(new pdef::proto::packet_sync_entity_property{}); pdef::proto::decode::packet_sync_entity_property(stream, *obj.params_packet_sync_entity_property); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AddVolumeEntity: { /*8.5*/
-        obj.params_packet_add_volume_entity = {}; pdef::proto::decode::packet_add_volume_entity(stream, *obj.params_packet_add_volume_entity); /*obj*/ /*4.6*/
+        obj.params_packet_add_volume_entity.reset(new pdef::proto::packet_add_volume_entity{}); pdef::proto::decode::packet_add_volume_entity(stream, *obj.params_packet_add_volume_entity); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::RemoveVolumeEntity: { /*8.5*/
-        obj.params_packet_remove_volume_entity = {}; pdef::proto::decode::packet_remove_volume_entity(stream, *obj.params_packet_remove_volume_entity); /*obj*/ /*4.6*/
+        obj.params_packet_remove_volume_entity.reset(new pdef::proto::packet_remove_volume_entity{}); pdef::proto::decode::packet_remove_volume_entity(stream, *obj.params_packet_remove_volume_entity); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SimulationType: { /*8.5*/
-        obj.params_packet_simulation_type = {}; pdef::proto::decode::packet_simulation_type(stream, *obj.params_packet_simulation_type); /*obj*/ /*4.6*/
+        obj.params_packet_simulation_type.reset(new pdef::proto::packet_simulation_type{}); pdef::proto::decode::packet_simulation_type(stream, *obj.params_packet_simulation_type); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::NpcDialogue: { /*8.5*/
-        obj.params_packet_npc_dialogue = {}; pdef::proto::decode::packet_npc_dialogue(stream, *obj.params_packet_npc_dialogue); /*obj*/ /*4.6*/
+        obj.params_packet_npc_dialogue.reset(new pdef::proto::packet_npc_dialogue{}); pdef::proto::decode::packet_npc_dialogue(stream, *obj.params_packet_npc_dialogue); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::EduUriResourcePacket: { /*8.5*/
-        obj.params_packet_edu_uri_resource_packet = {}; pdef::proto::decode::packet_edu_uri_resource_packet(stream, *obj.params_packet_edu_uri_resource_packet); /*obj*/ /*4.6*/
+        obj.params_packet_edu_uri_resource_packet.reset(new pdef::proto::packet_edu_uri_resource_packet{}); pdef::proto::decode::packet_edu_uri_resource_packet(stream, *obj.params_packet_edu_uri_resource_packet); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::CreatePhoto: { /*8.5*/
-        obj.params_packet_create_photo = {}; pdef::proto::decode::packet_create_photo(stream, *obj.params_packet_create_photo); /*obj*/ /*4.6*/
+        obj.params_packet_create_photo.reset(new pdef::proto::packet_create_photo{}); pdef::proto::decode::packet_create_photo(stream, *obj.params_packet_create_photo); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::UpdateSubchunkBlocks: { /*8.5*/
-        obj.params_packet_update_subchunk_blocks = {}; pdef::proto::decode::packet_update_subchunk_blocks(stream, *obj.params_packet_update_subchunk_blocks); /*obj*/ /*4.6*/
+        obj.params_packet_update_subchunk_blocks.reset(new pdef::proto::packet_update_subchunk_blocks{}); pdef::proto::decode::packet_update_subchunk_blocks(stream, *obj.params_packet_update_subchunk_blocks); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::PhotoInfoRequest: { /*8.5*/
-        obj.params_packet_photo_info_request = {}; pdef::proto::decode::packet_photo_info_request(stream, *obj.params_packet_photo_info_request); /*obj*/ /*4.6*/
+        obj.params_packet_photo_info_request.reset(new pdef::proto::packet_photo_info_request{}); pdef::proto::decode::packet_photo_info_request(stream, *obj.params_packet_photo_info_request); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::Subchunk: { /*8.5*/
-        obj.params_packet_subchunk = {}; pdef::proto::decode::packet_subchunk(stream, *obj.params_packet_subchunk); /*obj*/ /*4.6*/
+        obj.params_packet_subchunk.reset(new pdef::proto::packet_subchunk{}); pdef::proto::decode::packet_subchunk(stream, *obj.params_packet_subchunk); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::SubchunkRequest: { /*8.5*/
-        obj.params_packet_subchunk_request = {}; pdef::proto::decode::packet_subchunk_request(stream, *obj.params_packet_subchunk_request); /*obj*/ /*4.6*/
+        obj.params_packet_subchunk_request.reset(new pdef::proto::packet_subchunk_request{}); pdef::proto::decode::packet_subchunk_request(stream, *obj.params_packet_subchunk_request); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ClientStartItemCooldown: { /*8.5*/
-        obj.params_packet_client_start_item_cooldown = {}; pdef::proto::decode::packet_client_start_item_cooldown(stream, *obj.params_packet_client_start_item_cooldown); /*obj*/ /*4.6*/
+        obj.params_packet_client_start_item_cooldown.reset(new pdef::proto::packet_client_start_item_cooldown{}); pdef::proto::decode::packet_client_start_item_cooldown(stream, *obj.params_packet_client_start_item_cooldown); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ScriptMessage: { /*8.5*/
-        obj.params_packet_script_message = {}; pdef::proto::decode::packet_script_message(stream, *obj.params_packet_script_message); /*obj*/ /*4.6*/
+        obj.params_packet_script_message.reset(new pdef::proto::packet_script_message{}); pdef::proto::decode::packet_script_message(stream, *obj.params_packet_script_message); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::CodeBuilderSource: { /*8.5*/
-        obj.params_packet_code_builder_source = {}; pdef::proto::decode::packet_code_builder_source(stream, *obj.params_packet_code_builder_source); /*obj*/ /*4.6*/
+        obj.params_packet_code_builder_source.reset(new pdef::proto::packet_code_builder_source{}); pdef::proto::decode::packet_code_builder_source(stream, *obj.params_packet_code_builder_source); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::TickingAreasLoadStatus: { /*8.5*/
-        obj.params_packet_ticking_areas_load_status = {}; pdef::proto::decode::packet_ticking_areas_load_status(stream, *obj.params_packet_ticking_areas_load_status); /*obj*/ /*4.6*/
+        obj.params_packet_ticking_areas_load_status.reset(new pdef::proto::packet_ticking_areas_load_status{}); pdef::proto::decode::packet_ticking_areas_load_status(stream, *obj.params_packet_ticking_areas_load_status); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::DimensionData: { /*8.5*/
-        obj.params_packet_dimension_data = {}; pdef::proto::decode::packet_dimension_data(stream, *obj.params_packet_dimension_data); /*obj*/ /*4.6*/
+        obj.params_packet_dimension_data.reset(new pdef::proto::packet_dimension_data{}); pdef::proto::decode::packet_dimension_data(stream, *obj.params_packet_dimension_data); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::AgentAction: { /*8.5*/
-        obj.params_packet_agent_action = {}; pdef::proto::decode::packet_agent_action(stream, *obj.params_packet_agent_action); /*obj*/ /*4.6*/
+        obj.params_packet_agent_action.reset(new pdef::proto::packet_agent_action{}); pdef::proto::decode::packet_agent_action(stream, *obj.params_packet_agent_action); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ChangeMobProperty: { /*8.5*/
-        obj.params_packet_change_mob_property = {}; pdef::proto::decode::packet_change_mob_property(stream, *obj.params_packet_change_mob_property); /*obj*/ /*4.6*/
+        obj.params_packet_change_mob_property.reset(new pdef::proto::packet_change_mob_property{}); pdef::proto::decode::packet_change_mob_property(stream, *obj.params_packet_change_mob_property); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::LessonProgress: { /*8.5*/
-        obj.params_packet_lesson_progress = {}; pdef::proto::decode::packet_lesson_progress(stream, *obj.params_packet_lesson_progress); /*obj*/ /*4.6*/
+        obj.params_packet_lesson_progress.reset(new pdef::proto::packet_lesson_progress{}); pdef::proto::decode::packet_lesson_progress(stream, *obj.params_packet_lesson_progress); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::RequestAbility: { /*8.5*/
-        obj.params_packet_request_ability = {}; pdef::proto::decode::packet_request_ability(stream, *obj.params_packet_request_ability); /*obj*/ /*4.6*/
+        obj.params_packet_request_ability.reset(new pdef::proto::packet_request_ability{}); pdef::proto::decode::packet_request_ability(stream, *obj.params_packet_request_ability); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::RequestPermissions: { /*8.5*/
-        obj.params_packet_request_permissions = {}; pdef::proto::decode::packet_request_permissions(stream, *obj.params_packet_request_permissions); /*obj*/ /*4.6*/
+        obj.params_packet_request_permissions.reset(new pdef::proto::packet_request_permissions{}); pdef::proto::decode::packet_request_permissions(stream, *obj.params_packet_request_permissions); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       case pdef::proto::mcpe_packet::Name::ToastRequest: { /*8.5*/
-        obj.params_packet_toast_request = {}; pdef::proto::decode::packet_toast_request(stream, *obj.params_packet_toast_request); /*obj*/ /*4.6*/
+        obj.params_packet_toast_request.reset(new pdef::proto::packet_toast_request{}); pdef::proto::decode::packet_toast_request(stream, *obj.params_packet_toast_request); /*obj*/ /*4.6*/
         break;
       } /*8.7*/
       default: break; /*avoid unhandled case warning*/
@@ -19274,7 +19299,11 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
   bool MaterialReducer(pdef::Stream &stream, const pdef::proto::MaterialReducer &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     PDEF_JSON_putNumber_OR_BAIL(mix, (int64_t)obj.mix); /*J0.4*/
-    const pdef::proto::MaterialReducer::Items &v = obj.items; /*["MaterialReducer"]*/ /*7.4*/
+    const pdef::proto::MaterialReducer::Items &v_50 = obj.items; /*["MaterialReducer"]*/ /*7.4*/
+    {
+      PDEF_JSON_putNumber_OR_BAIL(network_id, (int64_t)v_50.network_id); /*J0.4*/
+      PDEF_JSON_putNumber_OR_BAIL(count, (int64_t)v_50.count); /*J0.4*/
+    }
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_login(pdef::Stream &stream, const pdef::proto::packet_login &obj) {
@@ -21188,7 +21217,11 @@ bool ItemComponentList(pdef::Stream &stream, const pdef::proto::ItemComponentLis
     PDEF_JSON_putNumber_OR_BAIL(nbt, (int64_t)obj.nbt); /*J0.4*/
     PDEF_JSON_putString_OR_BAIL(encoding_identifier, obj.encoding_identifier) /*encoding_identifier: pstring*/ /*J4.9*/
     PDEF_JSON_putString_OR_BAIL(instance_name, obj.instance_name) /*instance_name: pstring*/ /*J4.9*/
-    const pdef::proto::packet_add_volume_entity::Bounds &v = obj.bounds; /*["packet_add_volume_entity"]*/ /*7.4*/
+    const pdef::proto::packet_add_volume_entity::Bounds &v_160 = obj.bounds; /*["packet_add_volume_entity"]*/ /*7.4*/
+    {
+      pdef::proto::toJSON::BlockCoordinates(stream, v_160.min); /*BlockCoordinates*/ /*4.5*/
+      pdef::proto::toJSON::BlockCoordinates(stream, v_160.max); /*BlockCoordinates*/ /*4.5*/
+    }
     PDEF_JSON_putNumber_OR_BAIL(dimension, (int64_t)obj.dimension); /*J0.4*/
     PDEF_JSON_putString_OR_BAIL(engine_version, obj.engine_version) /*engine_version: pstring*/ /*J4.9*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
