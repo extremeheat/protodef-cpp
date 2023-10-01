@@ -68,23 +68,6 @@ function preprocess (schema, logging) {
         log('Inlined root switch', JSON.stringify(type))
       }
 
-      // console.log('*', varName, type[0], scope)
-      // Convert array of switch into switch-array
-
-      // if (type[0] === 'array') {
-      //   const innerType = type[1].type
-      //   console.log('Inner ', innerType)
-      //   if (innerType[0] === 'switch') {
-      //     console.log('Converted array of switch into switch-array')
-      //     const next = { ...innerType }
-      //     for (const field in next.fields) {
-      //       next.fields[field] = ['array', { countType: type[1].countType, count: type[1].count, type: next.fields[field] }]
-      //     }
-      //     type[0] = 'switch'
-      //     type[1] = next
-      //   }
-      // }
-
       const [name, args] = type
       if (name === 'container') {
         visitContainer(args, parent, anon)
@@ -123,9 +106,6 @@ function preprocess (schema, logging) {
                 next.fields[field] = ['array', { ...parentArray, type: next.fields[field] }]
               }
             }
-            // type[0] = 'switch'
-            // type[1] = next
-            // scope.name = 'array'
             scope.type = ['switch', next]
             log('Converted switch into switch-array', JSON.stringify(type))
           }
@@ -520,7 +500,6 @@ function processSchema (oldSchema, logging) {
           addToScope(newName, ['array', args.countType, count, [args.type]])
         } else {
           if (args.type[0] === 'switch') {
-            // handleSwitch(newName, args.type[1], false, simplified)
             throw new Error('Nested array-switch not supported, please rewrite schema')
           } else {
             const children = new Scope()
