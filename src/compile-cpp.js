@@ -740,7 +740,7 @@ function visitRoot (root, mode, customTypes, specialVars, logging) {
           pushToJSON(`  PDEF_JSON_putStartArr_OR_BAIL(${n}); /*J1.7*/`)
           pushSizeEncodeJSON(`  for (const auto &${vName} : ${dotJoin(objName, n)}) { /*5.20*/`)
           if (lengthVar) {
-            pushDecode(`  for (int i = 0; i < ${lengthVar[0]}; i++) { /*5.21*/`)
+            pushDecode(`  for (int i = 0; i < V_${lengthVar[0]}; i++) { /*5.21*/`)
             pushDecode(`    ${typePropName} &${vName} = ${dotJoin(objName, n)}[i]; /*5.22*/`)
           } else {
             pushDecode(`  for (int i = 0; i < ${n}_len; i++) { /*5*/`)

@@ -132,3 +132,10 @@ int main () {
 ```
 
 See [examples/](https://github.com/extremeheat/protodef-cpp/tree/master/examples) for more examples.
+
+### Deviations from ProtoDef spec
+
+protodef-cpp does not support root level switches, or $ variables. Some 
+preprocessing is done to inline root level switches, but for $ variables,
+some complex use-cases may not work. Please update the schema to not use $ 
+variables if you encounter any issues.
