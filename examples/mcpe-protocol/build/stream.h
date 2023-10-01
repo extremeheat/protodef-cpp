@@ -393,8 +393,8 @@ struct BinaryStream {
   }
   // write a integer as a string of ascii character digits
   bool writeUnsignedLongInAsciiDigits(uint64_t value) {
-    CHECK_BOUNDS(writeIndex + 8);
-    char buf[64];
+    CHECK_BOUNDS(writeIndex + 30);
+    char buf[32];
     int i = 0;
     do {
       buf[i++] = value % 10 + '0';
@@ -472,7 +472,7 @@ struct BinaryStream {
   bool writeDoubleInAsciiDigits(double num, int precision = 4) {
     CHECK_BOUNDS(writeIndex + 24);
     // Allocate memory for the temporary string
-    char str[64];
+    char str[26];
     // Handle negative numbers
     int sign = num < 0 ? -1 : 1;
     num = num * sign;
@@ -504,6 +504,14 @@ struct BinaryStream {
       }
       str[0] = '-';
       i++;
+    }
+    // Remove trailing zeroes
+    while (str[i - 1] == '0') {
+      i--;
+    }
+    // If the last character is a decimal point, remove it
+    if (str[i - 1] == '.') {
+      i--;
     }
     // Write the string to the buffer
     memcpy(buffer + writeIndex, str, i);

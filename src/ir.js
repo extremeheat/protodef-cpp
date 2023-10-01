@@ -1,5 +1,7 @@
 /* eslint-disable no-return-assign, no-sequences, no-unused-vars */
 const fs = require('fs')
+// TODO: Require Node 18
+const clone = x => globalThis.structuredClone?.(x) ?? JSON.parse(JSON.stringify(x))
 
 // Resolve switch statements' compareTo's
 function preprocess (schema, logging) {
@@ -54,7 +56,7 @@ function preprocess (schema, logging) {
       if (schema[type[0]] && (schema[type[0]][0] === 'switch')) {
         log('Inlining root switch', type[0])
         const rootSwitch = schema[type[0]][1]
-        const next = { ...rootSwitch, ...type[1] }
+        const next = { ...clone(rootSwitch), c: 1, ...type[1] }
         // next={compareTo: "$type", fields: {}, type: "bob" } -> {compareTo: "bob", fields: {}, type: "bob" }
         for (const [k, v] of Object.entries(next)) {
           if (typeof v === 'string' && v.startsWith('$')) {
