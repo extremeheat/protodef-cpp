@@ -13,10 +13,10 @@
 #define EXPECT_OR_BAIL(val) if (!val) { DBG_PRINT("%s:%d: bad assert %s\n", __func__, __LINE__, #val); return false; }
 #define PDEF_SIZE_DBG DBG_PRINT("%s: sized at %lld\n", __func__, len);
 #define PDEF_JSON_putString_OR_BAIL(J, V) stream.writeString("\"" #J "\":\""); stream.writeString(V); EXPECT_OR_BAIL(stream.writeString("\","));
-#define PDEF_JSON_putNumber_OR_BAIL(J, V) stream.writeString("\"" #J "\":"); stream.writeSignedLongInAsciiDigitsBE(V); EXPECT_OR_BAIL(stream.writeString(","));
+#define PDEF_JSON_putNumber_OR_BAIL(J, V) stream.writeString("\"" #J "\":"); stream.writeDoubleInAsciiDigits((double)V); EXPECT_OR_BAIL(stream.writeString(","));
 #define PDEF_JSON_putBuffer_OR_BAIL(J, V) stream.writeString("\"" #J "\":\""); stream.writeBuffer(V); EXPECT_OR_BAIL(stream.writeString("\","));
 #define PDEF_JSON_putStringAnon_OR_BAIL(V) stream.writeUByte('"'); stream.writeString(V); EXPECT_OR_BAIL(stream.writeString("\","));
-#define PDEF_JSON_putNumberAnon_OR_BAIL(V) stream.writeSignedLongInAsciiDigitsBE(V); EXPECT_OR_BAIL(stream.writeString(","));
+#define PDEF_JSON_putNumberAnon_OR_BAIL(V) stream.writeDoubleInAsciiDigits(V); EXPECT_OR_BAIL(stream.writeString(","));
 #define PDEF_JSON_putBufferAnon_OR_BAIL(V) stream.writeUByte('"'); stream.writeBuffer(V); EXPECT_OR_BAIL(stream.writeString("\","));
 #define PDEF_JSON_putStartArr_OR_BAIL(J) EXPECT_OR_BAIL(stream.writeString("\"" #J "\":["));
 #define PDEF_JSON_putEndArr_OR_BAIL stream.jsonPopIfWroteTrailingComma(); EXPECT_OR_BAIL(stream.writeString("],"));
@@ -3489,7 +3489,61 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toServer::tags &obj) {
 }
 
 namespace pdef::pc1_18_play_toServer::toJSON {
-/*FWD_DECLS*/
+bool slot(pdef::Stream &stream, const pdef::pc1_18_play_toServer::slot &obj);
+bool particle(pdef::Stream &stream, const pdef::pc1_18_play_toServer::particle &obj);
+bool minecraft_smelting_format(pdef::Stream &stream, const pdef::pc1_18_play_toServer::minecraft_smelting_format &obj);
+bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toServer::tags &obj);
+bool chunkBlockEntity(pdef::Stream &stream, const pdef::pc1_18_play_toServer::chunkBlockEntity &obj);
+bool command_node(pdef::Stream &stream, const pdef::pc1_18_play_toServer::command_node &obj);
+bool packet_teleport_confirm(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_teleport_confirm &obj);
+bool packet_query_block_nbt(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_query_block_nbt &obj);
+bool packet_set_difficulty(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_set_difficulty &obj);
+bool packet_edit_book(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_edit_book &obj);
+bool packet_query_entity_nbt(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_query_entity_nbt &obj);
+bool packet_pick_item(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_pick_item &obj);
+bool packet_name_item(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_name_item &obj);
+bool packet_select_trade(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_select_trade &obj);
+bool packet_set_beacon_effect(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_set_beacon_effect &obj);
+bool packet_update_command_block(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_update_command_block &obj);
+bool packet_update_command_block_minecart(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_update_command_block_minecart &obj);
+bool packet_update_structure_block(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_update_structure_block &obj);
+bool packet_tab_complete(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_tab_complete &obj);
+bool packet_chat(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_chat &obj);
+bool packet_client_command(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_client_command &obj);
+bool packet_settings(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_settings &obj);
+bool packet_enchant_item(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_enchant_item &obj);
+bool packet_window_click(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_window_click &obj);
+bool packet_close_window(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_close_window &obj);
+bool packet_custom_payload(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_custom_payload &obj);
+bool packet_use_entity(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_use_entity &obj);
+bool packet_generate_structure(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_generate_structure &obj);
+bool packet_keep_alive(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_keep_alive &obj);
+bool packet_lock_difficulty(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_lock_difficulty &obj);
+bool packet_position(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_position &obj);
+bool packet_position_look(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_position_look &obj);
+bool packet_look(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_look &obj);
+bool packet_flying(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_flying &obj);
+bool packet_vehicle_move(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_vehicle_move &obj);
+bool packet_steer_boat(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_steer_boat &obj);
+bool packet_craft_recipe_request(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_craft_recipe_request &obj);
+bool packet_abilities(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_abilities &obj);
+bool packet_block_dig(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_block_dig &obj);
+bool packet_entity_action(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_entity_action &obj);
+bool packet_steer_vehicle(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_steer_vehicle &obj);
+bool packet_displayed_recipe(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_displayed_recipe &obj);
+bool packet_recipe_book(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_recipe_book &obj);
+bool packet_resource_pack_receive(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_resource_pack_receive &obj);
+bool packet_held_item_slot(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_held_item_slot &obj);
+bool packet_set_creative_slot(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_set_creative_slot &obj);
+bool packet_update_jigsaw_block(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_update_jigsaw_block &obj);
+bool packet_update_sign(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_update_sign &obj);
+bool packet_arm_animation(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_arm_animation &obj);
+bool packet_spectate(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_spectate &obj);
+bool packet_block_place(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_block_place &obj);
+bool packet_use_item(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_use_item &obj);
+bool packet_advancement_tab(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_advancement_tab &obj);
+bool packet_pong(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_pong &obj);
+bool packet(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet &obj);
   bool slot(pdef::Stream &stream, const pdef::pc1_18_play_toServer::slot &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     const bool &V_present = obj.present; /*0.1*/

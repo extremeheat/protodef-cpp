@@ -13,10 +13,10 @@
 #define EXPECT_OR_BAIL(val) if (!val) { DBG_PRINT("%s:%d: bad assert %s\n", __func__, __LINE__, #val); return false; }
 #define PDEF_SIZE_DBG DBG_PRINT("%s: sized at %lld\n", __func__, len);
 #define PDEF_JSON_putString_OR_BAIL(J, V) stream.writeString("\"" #J "\":\""); stream.writeString(V); EXPECT_OR_BAIL(stream.writeString("\","));
-#define PDEF_JSON_putNumber_OR_BAIL(J, V) stream.writeString("\"" #J "\":"); stream.writeSignedLongInAsciiDigitsBE(V); EXPECT_OR_BAIL(stream.writeString(","));
+#define PDEF_JSON_putNumber_OR_BAIL(J, V) stream.writeString("\"" #J "\":"); stream.writeDoubleInAsciiDigits((double)V); EXPECT_OR_BAIL(stream.writeString(","));
 #define PDEF_JSON_putBuffer_OR_BAIL(J, V) stream.writeString("\"" #J "\":\""); stream.writeBuffer(V); EXPECT_OR_BAIL(stream.writeString("\","));
 #define PDEF_JSON_putStringAnon_OR_BAIL(V) stream.writeUByte('"'); stream.writeString(V); EXPECT_OR_BAIL(stream.writeString("\","));
-#define PDEF_JSON_putNumberAnon_OR_BAIL(V) stream.writeSignedLongInAsciiDigitsBE(V); EXPECT_OR_BAIL(stream.writeString(","));
+#define PDEF_JSON_putNumberAnon_OR_BAIL(V) stream.writeDoubleInAsciiDigits(V); EXPECT_OR_BAIL(stream.writeString(","));
 #define PDEF_JSON_putBufferAnon_OR_BAIL(V) stream.writeUByte('"'); stream.writeBuffer(V); EXPECT_OR_BAIL(stream.writeString("\","));
 #define PDEF_JSON_putStartArr_OR_BAIL(J) EXPECT_OR_BAIL(stream.writeString("\"" #J "\":["));
 #define PDEF_JSON_putEndArr_OR_BAIL stream.jsonPopIfWroteTrailingComma(); EXPECT_OR_BAIL(stream.writeString("],"));
@@ -1321,7 +1321,16 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_login_toServer::tags &obj) {
 }
 
 namespace pdef::pc1_18_login_toServer::toJSON {
-/*FWD_DECLS*/
+bool slot(pdef::Stream &stream, const pdef::pc1_18_login_toServer::slot &obj);
+bool particle(pdef::Stream &stream, const pdef::pc1_18_login_toServer::particle &obj);
+bool minecraft_smelting_format(pdef::Stream &stream, const pdef::pc1_18_login_toServer::minecraft_smelting_format &obj);
+bool tags(pdef::Stream &stream, const pdef::pc1_18_login_toServer::tags &obj);
+bool chunkBlockEntity(pdef::Stream &stream, const pdef::pc1_18_login_toServer::chunkBlockEntity &obj);
+bool command_node(pdef::Stream &stream, const pdef::pc1_18_login_toServer::command_node &obj);
+bool packet_login_start(pdef::Stream &stream, const pdef::pc1_18_login_toServer::packet_login_start &obj);
+bool packet_encryption_begin(pdef::Stream &stream, const pdef::pc1_18_login_toServer::packet_encryption_begin &obj);
+bool packet_login_plugin_response(pdef::Stream &stream, const pdef::pc1_18_login_toServer::packet_login_plugin_response &obj);
+bool packet(pdef::Stream &stream, const pdef::pc1_18_login_toServer::packet &obj);
   bool slot(pdef::Stream &stream, const pdef::pc1_18_login_toServer::slot &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     const bool &V_present = obj.present; /*0.1*/
