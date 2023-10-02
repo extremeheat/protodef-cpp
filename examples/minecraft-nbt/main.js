@@ -3,7 +3,6 @@ const protodefCpp = require('protodef-cpp')
 protodefCpp.compile({
   inputJSON: require('./nbt.json'),
   outputFolder: './build/',
-  // Some stubs as this is only a proof of concept
   typeAliases: [
     ['nbtTagName', 'shortString']
   ],
