@@ -9,16 +9,16 @@
 #define CHECK_BOUNDS(index) if (index > this->length) { return false; }
 namespace pdef {
 struct BinaryStream {
-  char *buffer;
+  unsigned char *buffer;
   int length;
   int writeIndex = 0;
   int readIndex = 0;
 
   BinaryStream(int length) : length(length) {
-    this->buffer = new char[length];
+    this->buffer = new unsigned char[length];
   }
 
-  BinaryStream(char *buffer, int length) : buffer(buffer), length(length) { }
+  BinaryStream(void *buffer, int length) : buffer((unsigned char*)buffer), length(length) { }
 
   ~BinaryStream() {
     delete[] this->buffer;
@@ -27,7 +27,7 @@ struct BinaryStream {
   void reserve(int length) {
     if (length > this->length) {
       delete[] this->buffer;
-      this->buffer = new char[length];
+      this->buffer = new unsigned char[length];
       this->length = length;
     }
   }
@@ -256,13 +256,13 @@ struct BinaryStream {
   bool readZigZagVarInt(int32_t &value) {
     uint32_t temp;
     if (!readUnsignedVarInt(temp)) return false;
-    value = (temp >> 1) ^ -(temp & 1);
+    value = (temp >> 1) ^ -((int32_t)temp & 1);
     return true;
   }
   bool readZigZagVarLong(int64_t &value) {
     uint64_t temp;
     if (!readUnsignedVarLong(temp)) return false;
-    value = (temp >> 1) ^ -(temp & 1);
+    value = (temp >> 1) ^ -((int64_t)temp & 1);
     return true;
   }
   bool readByte(int8_t &value) {
@@ -383,7 +383,7 @@ struct BinaryStream {
   }
 
   // ASCII
-  int sizeOfUnsignedLongInAsciiDigitsBE(uint64_t value) {
+  int sizeOfUnsignedLongInAsciiDigits(uint64_t value) {
     int i = 0;
     do {
       value /= 10;
@@ -392,9 +392,9 @@ struct BinaryStream {
     return i;
   }
   // write a integer as a string of ascii character digits
-  bool writeUnsignedLongInAsciiDigitsBE(uint64_t value) {
-    CHECK_BOUNDS(writeIndex + 8);
-    char buf[8];
+  bool writeUnsignedLongInAsciiDigits(uint64_t value) {
+    CHECK_BOUNDS(writeIndex + 30);
+    char buf[32];
     int i = 0;
     do {
       buf[i++] = value % 10 + '0';
@@ -406,7 +406,7 @@ struct BinaryStream {
     return true;
   }
   // read an integer from a string of ascii character digits
-  bool readUnsignedLongInAsciiDigitsBE(char *str, int len, uint64_t &value) {
+  bool readUnsignedLongInAsciiDigits(char *str, int len, uint64_t &value) {
     value = 0;
     for (int i = 0; i < len; i++) {
       if (str[i] < '0' || str[i] > '9') return false;
@@ -415,7 +415,7 @@ struct BinaryStream {
     return true;
   }
   // This has to account for the sign!
-  int sizeOfSignedLongInAsciiDigitsBE(int64_t value) {
+  int sizeOfSignedLongInAsciiDigits(int64_t value) {
     int i = 0;
     bool negative = value < 0;
     if (negative) value = -value;
@@ -427,9 +427,9 @@ struct BinaryStream {
     return i;
   }
   // This has to write the sign!
-  bool writeSignedLongInAsciiDigitsBE(int64_t value) {
-    CHECK_BOUNDS(writeIndex + sizeOfSignedLongInAsciiDigitsBE(value));
-    char buf[9];
+  bool writeSignedLongInAsciiDigits(int64_t value) {
+    CHECK_BOUNDS(writeIndex + sizeOfSignedLongInAsciiDigits(value));
+    char buf[64];
     int i = 0;
     bool negative = value < 0;
     if (negative) value = -value;
@@ -444,7 +444,7 @@ struct BinaryStream {
     return true;
   }
   // This has to read the sign!
-  bool readSignedLongInAsciiDigitsBE(char *str, int len, int64_t &value) {
+  bool readSignedLongInAsciiDigits(char *str, int len, int64_t &value) {
     value = 0;
     bool negative = false;
     for (int i = 0; i < len; i++) {
@@ -458,26 +458,115 @@ struct BinaryStream {
     if (negative) value = -value;
     return true;
   }
-  bool writeDoubleInAsciiDigitsBE(double value) {
-    CHECK_BOUNDS(writeIndex + 24);
-    char buf[24];
-    int i = 0;
-    do {
-      buf[i++] = (int) value % 10 + '0';
-      value /= 10;
-    } while (value != 0);
-    while (i > 0) {
-      buffer[writeIndex++] = buf[--i];
+  inline void _reverse(char *str, int len) {
+    int i = 0, j = len - 1;
+    char temp;
+    while (i < j) {
+      temp = str[i];
+      str[i] = str[j];
+      str[j] = temp;
+      i++;
+      j--;
     }
+  }
+  bool writeDoubleInAsciiDigits(double num, int precision = 4) {
+    CHECK_BOUNDS(writeIndex + 24);
+    // Allocate memory for the temporary string
+    char str[26];
+    // Handle negative numbers
+    int sign = num < 0 ? -1 : 1;
+    num = num * sign;
+    // Initialize the index and the size of the string
+    int i = 0;
+    // Convert the integer part of the number
+    long long int_part = (long long)num;
+    do {
+      str[i++] = (int_part % 10) + '0';
+      int_part /= 10;
+    } while (int_part > 0);
+    // Reverse the integer part of the string
+    _reverse(str, i);
+    // Add the decimal point if needed
+    if (precision > 0) {
+      str[i++] = '.';
+    }
+    // Convert the fractional part of the number
+    double frac_part = num - (long long)num;
+    for (int j = 0; j < precision; j++) {
+      frac_part *= 10;
+      str[i++] = ((long long)frac_part % 10) + '0';
+      frac_part -= (long long)frac_part;
+    }
+    // Add the sign if needed
+    if (sign == -1) {
+      for (int j = i; j >= 0; j--) {
+        str[j + 1] = str[j];
+      }
+      str[0] = '-';
+      i++;
+    }
+    // Remove trailing zeroes
+    while (str[i - 1] == '0') {
+      i--;
+    }
+    // If the last character is a decimal point, remove it
+    if (str[i - 1] == '.') {
+      i--;
+    }
+    // Write the string to the buffer
+    memcpy(buffer + writeIndex, str, i);
+    writeIndex += i;
     return true;
   }
-  bool readDoubleInAsciiDigitsBE(char *str, int len, double &value) {
-    value = 0;
-    for (int i = 0; i < len; i++) {
-      if (str[i] < '0' || str[i] > '9') return false;
-      value = value * 10 + str[i] - '0';
+  // A function to check if a character is a digit
+  inline bool _is_digit(char c) {
+    return c >= '0' && c <= '9';
+  }
+  // A function to convert a string to a double
+  bool readDoubleInAsciiDigits(double &value) {
+    // Initialize the result, the sign, the exponent and the decimal point flag
+    double result = 0.0;
+    int sign = 1, exp = 0;
+    bool decimal = false;
+    // Skip any leading whitespace
+    while (buffer[readIndex] == ' ' || buffer[readIndex] == '\t' || buffer[readIndex] == '\n') {
+      readIndex++;
     }
-    return true;
+    // Handle the sign if present
+    if (buffer[readIndex] == '-') {
+      sign = -1;
+      readIndex++;
+    } else if (buffer[readIndex] == '+') {
+      readIndex++;
+    }
+    // Convert the string to a double
+    while (buffer[readIndex] != '\0') {
+      // If the character is a digit, add it to the result
+      if (_is_digit(buffer[readIndex])) {
+        result = result * 10 + (buffer[readIndex] - '0');
+        if (decimal) {
+          exp++; // If the decimal point flag is set, increase the exponent
+        }
+      } else if (buffer[readIndex] == '.') {
+        // If the character is a decimal point, set the flag
+        if (decimal) {
+          return 0.0; // Invalid input, return zero
+        } else {
+          decimal = true;
+        }
+      } else {
+        break; // If the character is anything else, break the loop
+      }
+      readIndex++;
+    }
+    // Divide the result by 10^exp to get the fractional part
+    while (exp > 0) {
+      result /= 10;
+      exp--;
+    }
+    // Multiply the result by the sign to get the correct sign
+    result *= sign;
+    return result;
   }
   // This is just a helper when writing JSON ; remove a trailing comma if we wrote one
   bool jsonPopIfWroteTrailingComma() {

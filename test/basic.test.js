@@ -14,6 +14,16 @@ describe('c++ compile tests', () => {
     })
   }).timeout(30000)
 
+  it('minecraft nbt decode', () => {
+    const newWd = join(__dirname, '../examples/minecraft-nbt/')
+    process.chdir(newWd)
+    require('../examples/minecraft-nbt/main.js')
+    console.log('WD', newWd)
+    cp.execSync('clang++ app.cpp -std=c++20 -ferror-limit=9999 -o app.exe', {
+      cwd: newWd
+    })
+  }).timeout(30000)
+
   it('minecraft java protocol', () => {
     const newWd = join(__dirname, '../examples/mcpc-protocol/')
     process.chdir(newWd)

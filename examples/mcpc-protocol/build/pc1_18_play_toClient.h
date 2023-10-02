@@ -13,16 +13,20 @@
 #define EXPECT_OR_BAIL(val) if (!val) { DBG_PRINT("%s:%d: bad assert %s\n", __func__, __LINE__, #val); return false; }
 #define PDEF_SIZE_DBG DBG_PRINT("%s: sized at %lld\n", __func__, len);
 #define PDEF_JSON_putString_OR_BAIL(J, V) stream.writeString("\"" #J "\":\""); stream.writeString(V); EXPECT_OR_BAIL(stream.writeString("\","));
-#define PDEF_JSON_putNumber_OR_BAIL(J, V) stream.writeString("\"" #J "\":"); stream.writeSignedLongInAsciiDigitsBE(V); EXPECT_OR_BAIL(stream.writeString(","));
+#define PDEF_JSON_putNumber_OR_BAIL(J, V) stream.writeString("\"" #J "\":"); stream.writeDoubleInAsciiDigits((double)V); EXPECT_OR_BAIL(stream.writeString(","));
+#define PDEF_JSON_putUInt_OR_BAIL(J, V) stream.writeString("\"" #J "\":"); stream.writeUnsignedLongInAsciiDigits((uint64_t)V); EXPECT_OR_BAIL(stream.writeString(","));
+#define PDEF_JSON_putInt_OR_BAIL(J, V) stream.writeString("\"" #J "\":"); stream.writeSignedLongInAsciiDigits((int64_t)V); EXPECT_OR_BAIL(stream.writeString(","));
 #define PDEF_JSON_putBuffer_OR_BAIL(J, V) stream.writeString("\"" #J "\":\""); stream.writeBuffer(V); EXPECT_OR_BAIL(stream.writeString("\","));
 #define PDEF_JSON_putStringAnon_OR_BAIL(V) stream.writeUByte('"'); stream.writeString(V); EXPECT_OR_BAIL(stream.writeString("\","));
-#define PDEF_JSON_putNumberAnon_OR_BAIL(V) stream.writeSignedLongInAsciiDigitsBE(V); EXPECT_OR_BAIL(stream.writeString(","));
+#define PDEF_JSON_putNumberAnon_OR_BAIL(V) stream.writeDoubleInAsciiDigits(V); EXPECT_OR_BAIL(stream.writeString(","));
+#define PDEF_JSON_putIntAnon_OR_BAIL(V) stream.writeSignedLongInAsciiDigits(V); EXPECT_OR_BAIL(stream.writeString(","));
 #define PDEF_JSON_putBufferAnon_OR_BAIL(V) stream.writeUByte('"'); stream.writeBuffer(V); EXPECT_OR_BAIL(stream.writeString("\","));
 #define PDEF_JSON_putStartArr_OR_BAIL(J) EXPECT_OR_BAIL(stream.writeString("\"" #J "\":["));
 #define PDEF_JSON_putEndArr_OR_BAIL stream.jsonPopIfWroteTrailingComma(); EXPECT_OR_BAIL(stream.writeString("],"));
 #define PDEF_JSON_putStartObj_OR_BAIL(J) EXPECT_OR_BAIL(stream.writeString("\"" #J "\":{"));
 #define PDEF_JSON_putEndObj_OR_BAIL stream.jsonPopIfWroteTrailingComma(); EXPECT_OR_BAIL(stream.writeString("},"));
 #define PDEF_JSON_putToken_OR_BAIL(V) EXPECT_OR_BAIL(stream.writeString(V)); 
+#define PDEF_JSON_putField_OR_BAIL(J) EXPECT_OR_BAIL(stream.writeString("\"" #J "\":"));
 #define PDEF_JSON_FINISH_WRITING stream.jsonPopIfWroteTrailingComma();
 namespace pdef::pc1_18_play_toClient {
 
@@ -8354,77 +8358,187 @@ bool tags(pdef::Stream &stream, pdef::pc1_18_play_toClient::tags &obj) {
 }
 
 namespace pdef::pc1_18_play_toClient::toJSON {
-/*FWD_DECLS*/
+bool slot(pdef::Stream &stream, const pdef::pc1_18_play_toClient::slot &obj);
+bool particle(pdef::Stream &stream, const pdef::pc1_18_play_toClient::particle &obj);
+bool minecraft_smelting_format(pdef::Stream &stream, const pdef::pc1_18_play_toClient::minecraft_smelting_format &obj);
+bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj);
+bool chunkBlockEntity(pdef::Stream &stream, const pdef::pc1_18_play_toClient::chunkBlockEntity &obj);
+bool command_node(pdef::Stream &stream, const pdef::pc1_18_play_toClient::command_node &obj);
+bool packet_spawn_entity(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_spawn_entity &obj);
+bool packet_spawn_entity_experience_orb(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_spawn_entity_experience_orb &obj);
+bool packet_spawn_entity_living(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_spawn_entity_living &obj);
+bool packet_spawn_entity_painting(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_spawn_entity_painting &obj);
+bool packet_named_entity_spawn(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_named_entity_spawn &obj);
+bool packet_animation(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_animation &obj);
+bool packet_statistics(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_statistics &obj);
+bool packet_advancements(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_advancements &obj);
+bool packet_block_break_animation(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_block_break_animation &obj);
+bool packet_tile_entity_data(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_tile_entity_data &obj);
+bool packet_block_action(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_block_action &obj);
+bool packet_block_change(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_block_change &obj);
+bool packet_boss_bar(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_boss_bar &obj);
+bool packet_difficulty(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_difficulty &obj);
+bool packet_tab_complete(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_tab_complete &obj);
+bool packet_declare_commands(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_declare_commands &obj);
+bool packet_face_player(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_face_player &obj);
+bool packet_nbt_query_response(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_nbt_query_response &obj);
+bool packet_chat(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_chat &obj);
+bool packet_multi_block_change(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_multi_block_change &obj);
+bool packet_close_window(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_close_window &obj);
+bool packet_open_window(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_open_window &obj);
+bool packet_window_items(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_window_items &obj);
+bool packet_craft_progress_bar(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_craft_progress_bar &obj);
+bool packet_set_slot(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_set_slot &obj);
+bool packet_set_cooldown(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_set_cooldown &obj);
+bool packet_custom_payload(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_custom_payload &obj);
+bool packet_named_sound_effect(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_named_sound_effect &obj);
+bool packet_kick_disconnect(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_kick_disconnect &obj);
+bool packet_entity_status(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_status &obj);
+bool packet_explosion(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_explosion &obj);
+bool packet_unload_chunk(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_unload_chunk &obj);
+bool packet_game_state_change(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_game_state_change &obj);
+bool packet_open_horse_window(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_open_horse_window &obj);
+bool packet_keep_alive(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_keep_alive &obj);
+bool packet_map_chunk(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_map_chunk &obj);
+bool packet_world_event(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_world_event &obj);
+bool packet_world_particles(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_world_particles &obj);
+bool packet_update_light(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_update_light &obj);
+bool packet_login(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_login &obj);
+bool packet_map(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_map &obj);
+bool packet_trade_list(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_trade_list &obj);
+bool packet_rel_entity_move(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_rel_entity_move &obj);
+bool packet_entity_move_look(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_move_look &obj);
+bool packet_entity_look(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_look &obj);
+bool packet_vehicle_move(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_vehicle_move &obj);
+bool packet_open_book(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_open_book &obj);
+bool packet_open_sign_entity(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_open_sign_entity &obj);
+bool packet_craft_recipe_response(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_craft_recipe_response &obj);
+bool packet_abilities(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_abilities &obj);
+bool packet_end_combat_event(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_end_combat_event &obj);
+bool packet_enter_combat_event(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_enter_combat_event &obj);
+bool packet_death_combat_event(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_death_combat_event &obj);
+bool packet_player_info(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_player_info &obj);
+bool packet_position(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_position &obj);
+bool packet_unlock_recipes(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_unlock_recipes &obj);
+bool packet_entity_destroy(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_destroy &obj);
+bool packet_remove_entity_effect(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_remove_entity_effect &obj);
+bool packet_resource_pack_send(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_resource_pack_send &obj);
+bool packet_respawn(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_respawn &obj);
+bool packet_entity_head_rotation(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_head_rotation &obj);
+bool packet_camera(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_camera &obj);
+bool packet_held_item_slot(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_held_item_slot &obj);
+bool packet_update_view_position(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_update_view_position &obj);
+bool packet_update_view_distance(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_update_view_distance &obj);
+bool packet_scoreboard_display_objective(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_scoreboard_display_objective &obj);
+bool packet_entity_metadata(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_metadata &obj);
+bool packet_attach_entity(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_attach_entity &obj);
+bool packet_entity_velocity(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_velocity &obj);
+bool packet_entity_equipment(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_equipment &obj);
+bool packet_experience(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_experience &obj);
+bool packet_update_health(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_update_health &obj);
+bool packet_scoreboard_objective(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_scoreboard_objective &obj);
+bool packet_set_passengers(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_set_passengers &obj);
+bool packet_teams(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_teams &obj);
+bool packet_scoreboard_score(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_scoreboard_score &obj);
+bool packet_spawn_position(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_spawn_position &obj);
+bool packet_update_time(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_update_time &obj);
+bool packet_entity_sound_effect(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_sound_effect &obj);
+bool packet_stop_sound(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_stop_sound &obj);
+bool packet_sound_effect(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_sound_effect &obj);
+bool packet_playerlist_header(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_playerlist_header &obj);
+bool packet_collect(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_collect &obj);
+bool packet_entity_teleport(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_teleport &obj);
+bool packet_entity_update_attributes(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_update_attributes &obj);
+bool packet_entity_effect(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_effect &obj);
+bool packet_select_advancement_tab(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_select_advancement_tab &obj);
+bool packet_declare_recipes(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_declare_recipes &obj);
+bool packet_tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_tags &obj);
+bool packet_acknowledge_player_digging(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_acknowledge_player_digging &obj);
+bool packet_sculk_vibration_signal(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_sculk_vibration_signal &obj);
+bool packet_clear_titles(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_clear_titles &obj);
+bool packet_initialize_world_border(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_initialize_world_border &obj);
+bool packet_action_bar(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_action_bar &obj);
+bool packet_world_border_center(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_world_border_center &obj);
+bool packet_world_border_lerp_size(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_world_border_lerp_size &obj);
+bool packet_world_border_size(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_world_border_size &obj);
+bool packet_world_border_warning_delay(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_world_border_warning_delay &obj);
+bool packet_world_border_warning_reach(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_world_border_warning_reach &obj);
+bool packet_ping(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_ping &obj);
+bool packet_set_title_subtitle(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_set_title_subtitle &obj);
+bool packet_set_title_text(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_set_title_text &obj);
+bool packet_set_title_time(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_set_title_time &obj);
+bool packet_simulation_distance(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_simulation_distance &obj);
+bool packet(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet &obj);
   bool slot(pdef::Stream &stream, const pdef::pc1_18_play_toClient::slot &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     const bool &V_present = obj.present; /*0.1*/
-    PDEF_JSON_putNumber_OR_BAIL(present, (int64_t)obj.present); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(present, (int64_t)obj.present); /*J0.4*/
     if (V_present == false) { /*8.1*/
     }
     else if (V_present == true) { /*8.1*/
-        PDEF_JSON_putNumber_OR_BAIL(itemId, (int64_t)obj.itemId); /*J0.4*/
-        PDEF_JSON_putNumber_OR_BAIL(itemCount, (int64_t)obj.itemCount); /*J0.4*/
-        PDEF_JSON_putNumber_OR_BAIL(nbtData, (int64_t)obj.nbtData); /*J0.4*/
+        PDEF_JSON_putInt_OR_BAIL(itemId, (int64_t)obj.itemId); /*J0.4*/
+        PDEF_JSON_putInt_OR_BAIL(itemCount, (int64_t)obj.itemCount); /*J0.4*/
+        PDEF_JSON_putInt_OR_BAIL(nbtData, (int64_t)obj.nbtData); /*J0.4*/
     }
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool particle(pdef::Stream &stream, const pdef::pc1_18_play_toClient::particle &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     const int &V_particleId = obj.particleId; /*0.1*/
-    PDEF_JSON_putNumber_OR_BAIL(particleId, (int64_t)obj.particleId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(particleId, (int64_t)obj.particleId); /*J0.4*/
     if (V_particleId == 2) { /*8.2*/
         const pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.5*/
-        PDEF_JSON_putNumber_OR_BAIL(blockState, (int64_t)v2.blockState); /*J0.4*/
+        PDEF_JSON_putInt_OR_BAIL(blockState, (int64_t)v2.blockState); /*J0.4*/
     }
     else if (V_particleId == 3) { /*8.2*/
         const pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.5*/
-        PDEF_JSON_putNumber_OR_BAIL(blockState, (int64_t)v2.blockState); /*J0.4*/
+        PDEF_JSON_putInt_OR_BAIL(blockState, (int64_t)v2.blockState); /*J0.4*/
     }
     else if (V_particleId == 14) { /*8.2*/
         const pdef::pc1_18_play_toClient::particle::Data14 &v2 = *obj.data_14; /*8.5*/
-        PDEF_JSON_putNumber_OR_BAIL(red, (int64_t)v2.red); /*J0.4*/
-        PDEF_JSON_putNumber_OR_BAIL(green, (int64_t)v2.green); /*J0.4*/
-        PDEF_JSON_putNumber_OR_BAIL(blue, (int64_t)v2.blue); /*J0.4*/
-        PDEF_JSON_putNumber_OR_BAIL(scale, (int64_t)v2.scale); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(red, (double)v2.red); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(green, (double)v2.green); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(blue, (double)v2.blue); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(scale, (double)v2.scale); /*J0.4*/
     }
     else if (V_particleId == 15) { /*8.2*/
         const pdef::pc1_18_play_toClient::particle::Data15 &v2 = *obj.data_15; /*8.5*/
-        PDEF_JSON_putNumber_OR_BAIL(fromRed, (int64_t)v2.fromRed); /*J0.4*/
-        PDEF_JSON_putNumber_OR_BAIL(fromGreen, (int64_t)v2.fromGreen); /*J0.4*/
-        PDEF_JSON_putNumber_OR_BAIL(fromBlue, (int64_t)v2.fromBlue); /*J0.4*/
-        PDEF_JSON_putNumber_OR_BAIL(scale, (int64_t)v2.scale); /*J0.4*/
-        PDEF_JSON_putNumber_OR_BAIL(toRed, (int64_t)v2.toRed); /*J0.4*/
-        PDEF_JSON_putNumber_OR_BAIL(toGreen, (int64_t)v2.toGreen); /*J0.4*/
-        PDEF_JSON_putNumber_OR_BAIL(toBlue, (int64_t)v2.toBlue); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(fromRed, (double)v2.fromRed); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(fromGreen, (double)v2.fromGreen); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(fromBlue, (double)v2.fromBlue); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(scale, (double)v2.scale); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(toRed, (double)v2.toRed); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(toGreen, (double)v2.toGreen); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(toBlue, (double)v2.toBlue); /*J0.4*/
     }
     else if (V_particleId == 24) { /*8.2*/
         const pdef::pc1_18_play_toClient::particle::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.5*/
-        PDEF_JSON_putNumber_OR_BAIL(blockState, (int64_t)v2.blockState); /*J0.4*/
+        PDEF_JSON_putInt_OR_BAIL(blockState, (int64_t)v2.blockState); /*J0.4*/
     }
     else if (V_particleId == 35) { /*8.2*/
         const pdef::pc1_18_play_toClient::particle::Data35 &v2 = *obj.data_35; /*8.5*/
-        PDEF_JSON_putNumber_OR_BAIL(item, (int64_t)v2.item); /*J0.4*/
+        PDEF_JSON_putInt_OR_BAIL(item, (int64_t)v2.item); /*J0.4*/
     }
     else if (V_particleId == 36) { /*8.2*/
         const pdef::pc1_18_play_toClient::particle::Data36 &v2 = *obj.data_36; /*8.5*/
         PDEF_JSON_putStartObj_OR_BAIL(origin);
-        PDEF_JSON_putNumber_OR_BAIL(x, v2.origin.x);
-        PDEF_JSON_putNumber_OR_BAIL(z, v2.origin.z);
-        PDEF_JSON_putNumber_OR_BAIL(y, v2.origin.y);
+        PDEF_JSON_putUInt_OR_BAIL(x, v2.origin.x);
+        PDEF_JSON_putUInt_OR_BAIL(z, v2.origin.z);
+        PDEF_JSON_putUInt_OR_BAIL(y, v2.origin.y);
         PDEF_JSON_putEndObj_OR_BAIL /*origin: bitfield*/ /*J4.9*/
         PDEF_JSON_putString_OR_BAIL(positionType, v2.positionType) /*positionType: pstring*/ /*J4.9*/
         const std::string &V_positionType = v2.positionType; /*4.7*/
         if (V_positionType == "minecraft:block") { /*8.0*/
           PDEF_JSON_putStartObj_OR_BAIL(destination_position);
-          PDEF_JSON_putNumber_OR_BAIL(x, v2.destination_position.x);
-          PDEF_JSON_putNumber_OR_BAIL(z, v2.destination_position.z);
-          PDEF_JSON_putNumber_OR_BAIL(y, v2.destination_position.y);
+          PDEF_JSON_putUInt_OR_BAIL(x, v2.destination_position.x);
+          PDEF_JSON_putUInt_OR_BAIL(z, v2.destination_position.z);
+          PDEF_JSON_putUInt_OR_BAIL(y, v2.destination_position.y);
           PDEF_JSON_putEndObj_OR_BAIL /*destination_position: bitfield*/ /*J4.9*/
         }
         else if (V_positionType == "minecraft:entity") { /*8.0*/
-          PDEF_JSON_putNumber_OR_BAIL(destination_varint, (int64_t)v2.destination_varint); /*J0.4*/
+          PDEF_JSON_putInt_OR_BAIL(destination_varint, (int64_t)v2.destination_varint); /*J0.4*/
         }
-        PDEF_JSON_putNumber_OR_BAIL(ticks, (int64_t)v2.ticks); /*J0.4*/
+        PDEF_JSON_putInt_OR_BAIL(ticks, (int64_t)v2.ticks); /*J0.4*/
     }
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
@@ -8433,12 +8547,12 @@ namespace pdef::pc1_18_play_toClient::toJSON {
     PDEF_JSON_putString_OR_BAIL(group, obj.group) /*group: pstring*/ /*J4.9*/
     PDEF_JSON_putStartArr_OR_BAIL(ingredient); /*J3.1*/
     for (const auto &v2 : obj.ingredient) { /*3.1*/
-      PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v2); /*J0.4*/
+      PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v2); /*J0.4*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
-    PDEF_JSON_putNumber_OR_BAIL(result, (int64_t)obj.result); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(experience, (int64_t)obj.experience); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(cookTime, (int64_t)obj.cookTime); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(result, (int64_t)obj.result); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(experience, (double)obj.experience); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(cookTime, (int64_t)obj.cookTime); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
 bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
@@ -8446,7 +8560,7 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     PDEF_JSON_putString_OR_BAIL(tagName, obj.tagName) /*tagName: pstring*/ /*J4.9*/
     PDEF_JSON_putStartArr_OR_BAIL(entries); /*J3.1*/
     for (const auto &v2 : obj.entries) { /*3.1*/
-      PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v2); /*J0.4*/
+      PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v2); /*J0.4*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
   PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
@@ -8454,31 +8568,31 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   bool chunkBlockEntity(pdef::Stream &stream, const pdef::pc1_18_play_toClient::chunkBlockEntity &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     PDEF_JSON_putStartObj_OR_BAIL(_3);
-    PDEF_JSON_putNumber_OR_BAIL(x, obj._3.x);
-    PDEF_JSON_putNumber_OR_BAIL(z, obj._3.z);
+    PDEF_JSON_putUInt_OR_BAIL(x, obj._3.x);
+    PDEF_JSON_putUInt_OR_BAIL(z, obj._3.z);
     PDEF_JSON_putEndObj_OR_BAIL /*_3: bitfield*/ /*J4.9*/
-    PDEF_JSON_putNumber_OR_BAIL(y, (int64_t)obj.y); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(type, (int64_t)obj.type); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(nbtData, (int64_t)obj.nbtData); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(y, (int64_t)obj.y); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(type, (int64_t)obj.type); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(nbtData, (int64_t)obj.nbtData); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool command_node(pdef::Stream &stream, const pdef::pc1_18_play_toClient::command_node &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     PDEF_JSON_putStartObj_OR_BAIL(flags);
-    PDEF_JSON_putNumber_OR_BAIL(unused, obj.flags.unused);
-    PDEF_JSON_putNumber_OR_BAIL(has_custom_suggestions, obj.flags.has_custom_suggestions);
-    PDEF_JSON_putNumber_OR_BAIL(has_redirect_node, obj.flags.has_redirect_node);
-    PDEF_JSON_putNumber_OR_BAIL(has_command, obj.flags.has_command);
-    PDEF_JSON_putNumber_OR_BAIL(command_node_type, obj.flags.command_node_type);
+    PDEF_JSON_putUInt_OR_BAIL(unused, obj.flags.unused);
+    PDEF_JSON_putUInt_OR_BAIL(has_custom_suggestions, obj.flags.has_custom_suggestions);
+    PDEF_JSON_putUInt_OR_BAIL(has_redirect_node, obj.flags.has_redirect_node);
+    PDEF_JSON_putUInt_OR_BAIL(has_command, obj.flags.has_command);
+    PDEF_JSON_putUInt_OR_BAIL(command_node_type, obj.flags.command_node_type);
     PDEF_JSON_putEndObj_OR_BAIL /*flags: bitfield*/ /*J4.9*/
     const pdef::pc1_18_play_toClient::command_node::flags_t &V_flags = obj.flags; /*4.7*/
     PDEF_JSON_putStartArr_OR_BAIL(children); /*J3.1*/
     for (const auto &v2 : obj.children) { /*3.1*/
-      PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v2); /*J0.4*/
+      PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v2); /*J0.4*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
     if (V_flags.has_redirect_node == 1) { /*8.2*/
-      PDEF_JSON_putNumber_OR_BAIL(redirectNode, (int64_t)obj.redirectNode); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(redirectNode, (int64_t)obj.redirectNode); /*J0.4*/
     }
     if (V_flags.command_node_type == 0) { /*8.2*/
     }
@@ -8496,70 +8610,70 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
         else if (V_parser == "brigadier:float") { /*8.0*/
             const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat &v4 = *v2.properties_brigadier_float; /*8.5*/
             PDEF_JSON_putStartObj_OR_BAIL(flags);
-            PDEF_JSON_putNumber_OR_BAIL(unused, v4.flags.unused);
-            PDEF_JSON_putNumber_OR_BAIL(max_present, v4.flags.max_present);
-            PDEF_JSON_putNumber_OR_BAIL(min_present, v4.flags.min_present);
+            PDEF_JSON_putUInt_OR_BAIL(unused, v4.flags.unused);
+            PDEF_JSON_putUInt_OR_BAIL(max_present, v4.flags.max_present);
+            PDEF_JSON_putUInt_OR_BAIL(min_present, v4.flags.min_present);
             PDEF_JSON_putEndObj_OR_BAIL /*flags: bitfield*/ /*J4.9*/
             const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierFloat::flags_t &V_flags = v4.flags; /*4.7*/
             if (V_flags.min_present == 1) { /*8.2*/
-              PDEF_JSON_putNumber_OR_BAIL(min, (int64_t)v4.min); /*J0.4*/
+              PDEF_JSON_putNumber_OR_BAIL(min, (double)v4.min); /*J0.4*/
             }
             if (V_flags.max_present == 1) { /*8.2*/
-              PDEF_JSON_putNumber_OR_BAIL(max, (int64_t)v4.max); /*J0.4*/
+              PDEF_JSON_putNumber_OR_BAIL(max, (double)v4.max); /*J0.4*/
             }
         }
         else if (V_parser == "brigadier:double") { /*8.0*/
             const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble &v4 = *v2.properties_brigadier_double; /*8.5*/
             PDEF_JSON_putStartObj_OR_BAIL(flags);
-            PDEF_JSON_putNumber_OR_BAIL(unused, v4.flags.unused);
-            PDEF_JSON_putNumber_OR_BAIL(max_present, v4.flags.max_present);
-            PDEF_JSON_putNumber_OR_BAIL(min_present, v4.flags.min_present);
+            PDEF_JSON_putUInt_OR_BAIL(unused, v4.flags.unused);
+            PDEF_JSON_putUInt_OR_BAIL(max_present, v4.flags.max_present);
+            PDEF_JSON_putUInt_OR_BAIL(min_present, v4.flags.min_present);
             PDEF_JSON_putEndObj_OR_BAIL /*flags: bitfield*/ /*J4.9*/
             const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierDouble::flags_t &V_flags = v4.flags; /*4.7*/
             if (V_flags.min_present == 1) { /*8.2*/
-              PDEF_JSON_putNumber_OR_BAIL(min, (int64_t)v4.min); /*J0.4*/
+              PDEF_JSON_putNumber_OR_BAIL(min, (double)v4.min); /*J0.4*/
             }
             if (V_flags.max_present == 1) { /*8.2*/
-              PDEF_JSON_putNumber_OR_BAIL(max, (int64_t)v4.max); /*J0.4*/
+              PDEF_JSON_putNumber_OR_BAIL(max, (double)v4.max); /*J0.4*/
             }
         }
         else if (V_parser == "brigadier:integer") { /*8.0*/
             const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger &v4 = *v2.properties_brigadier_integer; /*8.5*/
             PDEF_JSON_putStartObj_OR_BAIL(flags);
-            PDEF_JSON_putNumber_OR_BAIL(unused, v4.flags.unused);
-            PDEF_JSON_putNumber_OR_BAIL(max_present, v4.flags.max_present);
-            PDEF_JSON_putNumber_OR_BAIL(min_present, v4.flags.min_present);
+            PDEF_JSON_putUInt_OR_BAIL(unused, v4.flags.unused);
+            PDEF_JSON_putUInt_OR_BAIL(max_present, v4.flags.max_present);
+            PDEF_JSON_putUInt_OR_BAIL(min_present, v4.flags.min_present);
             PDEF_JSON_putEndObj_OR_BAIL /*flags: bitfield*/ /*J4.9*/
             const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierInteger::flags_t &V_flags = v4.flags; /*4.7*/
             if (V_flags.min_present == 1) { /*8.2*/
-              PDEF_JSON_putNumber_OR_BAIL(min, (int64_t)v4.min); /*J0.4*/
+              PDEF_JSON_putInt_OR_BAIL(min, (int64_t)v4.min); /*J0.4*/
             }
             if (V_flags.max_present == 1) { /*8.2*/
-              PDEF_JSON_putNumber_OR_BAIL(max, (int64_t)v4.max); /*J0.4*/
+              PDEF_JSON_putInt_OR_BAIL(max, (int64_t)v4.max); /*J0.4*/
             }
         }
         else if (V_parser == "brigadier:long") { /*8.0*/
             const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong &v4 = *v2.properties_brigadier_long; /*8.5*/
             PDEF_JSON_putStartObj_OR_BAIL(flags);
-            PDEF_JSON_putNumber_OR_BAIL(unused, v4.flags.unused);
-            PDEF_JSON_putNumber_OR_BAIL(max_present, v4.flags.max_present);
-            PDEF_JSON_putNumber_OR_BAIL(min_present, v4.flags.min_present);
+            PDEF_JSON_putUInt_OR_BAIL(unused, v4.flags.unused);
+            PDEF_JSON_putUInt_OR_BAIL(max_present, v4.flags.max_present);
+            PDEF_JSON_putUInt_OR_BAIL(min_present, v4.flags.min_present);
             PDEF_JSON_putEndObj_OR_BAIL /*flags: bitfield*/ /*J4.9*/
             const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesBrigadierLong::flags_t &V_flags = v4.flags; /*4.7*/
             if (V_flags.min_present == 1) { /*8.2*/
-              PDEF_JSON_putNumber_OR_BAIL(min, (int64_t)v4.min); /*J0.4*/
+              PDEF_JSON_putInt_OR_BAIL(min, (int64_t)v4.min); /*J0.4*/
             }
             if (V_flags.max_present == 1) { /*8.2*/
-              PDEF_JSON_putNumber_OR_BAIL(max, (int64_t)v4.max); /*J0.4*/
+              PDEF_JSON_putInt_OR_BAIL(max, (int64_t)v4.max); /*J0.4*/
             }
         }
         else if (V_parser == "brigadier:string") { /*8.0*/
         }
         else if (V_parser == "minecraft:entity") { /*8.0*/
           PDEF_JSON_putStartObj_OR_BAIL(properties_minecraft_entity);
-          PDEF_JSON_putNumber_OR_BAIL(unused, v2.properties_minecraft_entity.unused);
-          PDEF_JSON_putNumber_OR_BAIL(onlyAllowPlayers, v2.properties_minecraft_entity.onlyAllowPlayers);
-          PDEF_JSON_putNumber_OR_BAIL(onlyAllowEntities, v2.properties_minecraft_entity.onlyAllowEntities);
+          PDEF_JSON_putUInt_OR_BAIL(unused, v2.properties_minecraft_entity.unused);
+          PDEF_JSON_putUInt_OR_BAIL(onlyAllowPlayers, v2.properties_minecraft_entity.onlyAllowPlayers);
+          PDEF_JSON_putUInt_OR_BAIL(onlyAllowEntities, v2.properties_minecraft_entity.onlyAllowEntities);
           PDEF_JSON_putEndObj_OR_BAIL /*properties_minecraft_entity: bitfield*/ /*J4.9*/
         }
         else if (V_parser == "minecraft:game_profile") { /*8.0*/
@@ -8606,8 +8720,8 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
         }
         else if (V_parser == "minecraft:score_holder") { /*8.0*/
           PDEF_JSON_putStartObj_OR_BAIL(properties_minecraft_score_holder);
-          PDEF_JSON_putNumber_OR_BAIL(unused, v2.properties_minecraft_score_holder.unused);
-          PDEF_JSON_putNumber_OR_BAIL(allowMultiple, v2.properties_minecraft_score_holder.allowMultiple);
+          PDEF_JSON_putUInt_OR_BAIL(unused, v2.properties_minecraft_score_holder.unused);
+          PDEF_JSON_putUInt_OR_BAIL(allowMultiple, v2.properties_minecraft_score_holder.allowMultiple);
           PDEF_JSON_putEndObj_OR_BAIL /*properties_minecraft_score_holder: bitfield*/ /*J4.9*/
         }
         else if (V_parser == "minecraft:swizzle") { /*8.0*/
@@ -8626,7 +8740,7 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
         }
         else if (V_parser == "minecraft:range") { /*8.0*/
             const pdef::pc1_18_play_toClient::command_node::ExtraNodeData2::PropertiesMinecraftRange &v4 = *v2.properties_minecraft_range; /*8.5*/
-            PDEF_JSON_putNumber_OR_BAIL(allowDecimals, (int64_t)v4.allowDecimals); /*J0.4*/
+            PDEF_JSON_putInt_OR_BAIL(allowDecimals, (int64_t)v4.allowDecimals); /*J0.4*/
         }
         else if (V_parser == "minecraft:int_range") { /*8.0*/
         }
@@ -8660,89 +8774,89 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   bool packet_spawn_entity(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_spawn_entity &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(objectUUID, (int64_t)obj.objectUUID); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(type, (int64_t)obj.type); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(x, (int64_t)obj.x); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(y, (int64_t)obj.y); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(z, (int64_t)obj.z); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(pitch, (int64_t)obj.pitch); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(yaw, (int64_t)obj.yaw); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(objectData, (int64_t)obj.objectData); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(velocityX, (int64_t)obj.velocityX); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(velocityY, (int64_t)obj.velocityY); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(velocityZ, (int64_t)obj.velocityZ); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(objectUUID, (int64_t)obj.objectUUID); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(type, (int64_t)obj.type); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(x, (double)obj.x); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(y, (double)obj.y); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(z, (double)obj.z); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(pitch, (int64_t)obj.pitch); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(yaw, (int64_t)obj.yaw); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(objectData, (int64_t)obj.objectData); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(velocityX, (int64_t)obj.velocityX); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(velocityY, (int64_t)obj.velocityY); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(velocityZ, (int64_t)obj.velocityZ); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_spawn_entity_experience_orb(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_spawn_entity_experience_orb &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(x, (int64_t)obj.x); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(y, (int64_t)obj.y); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(z, (int64_t)obj.z); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(count, (int64_t)obj.count); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(x, (double)obj.x); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(y, (double)obj.y); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(z, (double)obj.z); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(count, (int64_t)obj.count); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_spawn_entity_living(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_spawn_entity_living &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(entityUUID, (int64_t)obj.entityUUID); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(type, (int64_t)obj.type); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(x, (int64_t)obj.x); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(y, (int64_t)obj.y); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(z, (int64_t)obj.z); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(yaw, (int64_t)obj.yaw); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(pitch, (int64_t)obj.pitch); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(headPitch, (int64_t)obj.headPitch); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(velocityX, (int64_t)obj.velocityX); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(velocityY, (int64_t)obj.velocityY); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(velocityZ, (int64_t)obj.velocityZ); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityUUID, (int64_t)obj.entityUUID); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(type, (int64_t)obj.type); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(x, (double)obj.x); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(y, (double)obj.y); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(z, (double)obj.z); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(yaw, (int64_t)obj.yaw); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(pitch, (int64_t)obj.pitch); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(headPitch, (int64_t)obj.headPitch); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(velocityX, (int64_t)obj.velocityX); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(velocityY, (int64_t)obj.velocityY); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(velocityZ, (int64_t)obj.velocityZ); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_spawn_entity_painting(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_spawn_entity_painting &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(entityUUID, (int64_t)obj.entityUUID); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(title, (int64_t)obj.title); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityUUID, (int64_t)obj.entityUUID); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(title, (int64_t)obj.title); /*J0.4*/
     PDEF_JSON_putStartObj_OR_BAIL(location);
-    PDEF_JSON_putNumber_OR_BAIL(x, obj.location.x);
-    PDEF_JSON_putNumber_OR_BAIL(z, obj.location.z);
-    PDEF_JSON_putNumber_OR_BAIL(y, obj.location.y);
+    PDEF_JSON_putUInt_OR_BAIL(x, obj.location.x);
+    PDEF_JSON_putUInt_OR_BAIL(z, obj.location.z);
+    PDEF_JSON_putUInt_OR_BAIL(y, obj.location.y);
     PDEF_JSON_putEndObj_OR_BAIL /*location: bitfield*/ /*J4.9*/
-    PDEF_JSON_putNumber_OR_BAIL(direction, (int64_t)obj.direction); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(direction, (int64_t)obj.direction); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_named_entity_spawn(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_named_entity_spawn &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(playerUUID, (int64_t)obj.playerUUID); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(x, (int64_t)obj.x); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(y, (int64_t)obj.y); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(z, (int64_t)obj.z); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(yaw, (int64_t)obj.yaw); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(pitch, (int64_t)obj.pitch); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(playerUUID, (int64_t)obj.playerUUID); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(x, (double)obj.x); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(y, (double)obj.y); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(z, (double)obj.z); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(yaw, (int64_t)obj.yaw); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(pitch, (int64_t)obj.pitch); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_animation(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_animation &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(animation, (int64_t)obj.animation); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(animation, (int64_t)obj.animation); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_statistics(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_statistics &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     PDEF_JSON_putStartArr_OR_BAIL(entries); /*J1.7*/
     for (const auto &v2 : obj.entries) { /*5.20*/
-      PDEF_JSON_putNumber_OR_BAIL(categoryId, (int64_t)v2.categoryId); /*J0.4*/
-      PDEF_JSON_putNumber_OR_BAIL(statisticId, (int64_t)v2.statisticId); /*J0.4*/
-      PDEF_JSON_putNumber_OR_BAIL(value, (int64_t)v2.value); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(categoryId, (int64_t)v2.categoryId); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(statisticId, (int64_t)v2.statisticId); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(value, (int64_t)v2.value); /*J0.4*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J5.24*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_advancements(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_advancements &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(reset, (int64_t)obj.reset); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(reset, (int64_t)obj.reset); /*J0.4*/
     PDEF_JSON_putStartArr_OR_BAIL(advancementMapping); /*J1.7*/
     for (const auto &v2 : obj.advancementMapping) { /*5.20*/
       PDEF_JSON_putString_OR_BAIL(key, v2.key) /*key: pstring*/ /*J4.9*/
@@ -8751,7 +8865,7 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
         const pdef::pc1_18_play_toClient::packet_advancements::AdvancementMapping::Value::ParentId &v_1 = v_0.parentId; /*["packet_advancements","AdvancementMapping","Value"]*/ /*7.4*/
         {
           const bool &V_has = v_1.has; /*0.1*/
-          PDEF_JSON_putNumber_OR_BAIL(has, (int64_t)v_1.has); /*J0.4*/
+          PDEF_JSON_putInt_OR_BAIL(has, (int64_t)v_1.has); /*J0.4*/
           if (V_has == true) { /*8.1*/
             PDEF_JSON_putString_OR_BAIL(value, v_1.value) /*value: pstring*/ /*J4.9*/
           }
@@ -8759,25 +8873,25 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
         const pdef::pc1_18_play_toClient::packet_advancements::AdvancementMapping::Value::DisplayData &v_2 = v_0.displayData; /*["packet_advancements","AdvancementMapping","Value"]*/ /*7.4*/
         {
           const bool &V_has = v_2.has; /*0.1*/
-          PDEF_JSON_putNumber_OR_BAIL(has, (int64_t)v_2.has); /*J0.4*/
+          PDEF_JSON_putInt_OR_BAIL(has, (int64_t)v_2.has); /*J0.4*/
           if (V_has == true) { /*8.1*/
               const pdef::pc1_18_play_toClient::packet_advancements::AdvancementMapping::Value::DisplayData::Value &v5 = *v_2.value; /*8.5*/
               PDEF_JSON_putString_OR_BAIL(title, v5.title) /*title: pstring*/ /*J4.9*/
               PDEF_JSON_putString_OR_BAIL(description, v5.description) /*description: pstring*/ /*J4.9*/
-              PDEF_JSON_putNumber_OR_BAIL(icon, (int64_t)v5.icon); /*J0.4*/
-              PDEF_JSON_putNumber_OR_BAIL(frameType, (int64_t)v5.frameType); /*J0.4*/
+              PDEF_JSON_putInt_OR_BAIL(icon, (int64_t)v5.icon); /*J0.4*/
+              PDEF_JSON_putInt_OR_BAIL(frameType, (int64_t)v5.frameType); /*J0.4*/
               PDEF_JSON_putStartObj_OR_BAIL(flags);
-              PDEF_JSON_putNumber_OR_BAIL(_unused, v5.flags._unused);
-              PDEF_JSON_putNumber_OR_BAIL(hidden, v5.flags.hidden);
-              PDEF_JSON_putNumber_OR_BAIL(show_toast, v5.flags.show_toast);
-              PDEF_JSON_putNumber_OR_BAIL(has_background_texture, v5.flags.has_background_texture);
+              PDEF_JSON_putUInt_OR_BAIL(_unused, v5.flags._unused);
+              PDEF_JSON_putUInt_OR_BAIL(hidden, v5.flags.hidden);
+              PDEF_JSON_putUInt_OR_BAIL(show_toast, v5.flags.show_toast);
+              PDEF_JSON_putUInt_OR_BAIL(has_background_texture, v5.flags.has_background_texture);
               PDEF_JSON_putEndObj_OR_BAIL /*flags: bitfield*/ /*J4.9*/
               const pdef::pc1_18_play_toClient::packet_advancements::AdvancementMapping::Value::DisplayData::Value::flags_t &V_flags = v5.flags; /*4.7*/
               if (V_flags.has_background_texture == 1) { /*8.2*/
                 PDEF_JSON_putString_OR_BAIL(backgroundTexture, v5.backgroundTexture) /*backgroundTexture: pstring*/ /*J4.9*/
               }
-              PDEF_JSON_putNumber_OR_BAIL(xCord, (int64_t)v5.xCord); /*J0.4*/
-              PDEF_JSON_putNumber_OR_BAIL(yCord, (int64_t)v5.yCord); /*J0.4*/
+              PDEF_JSON_putNumber_OR_BAIL(xCord, (double)v5.xCord); /*J0.4*/
+              PDEF_JSON_putNumber_OR_BAIL(yCord, (double)v5.yCord); /*J0.4*/
           }
         }
         PDEF_JSON_putStartArr_OR_BAIL(criteria); /*J1.7*/
@@ -8787,7 +8901,7 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
         PDEF_JSON_putEndArr_OR_BAIL; /*J5.24*/
         PDEF_JSON_putStartArr_OR_BAIL(requirements); /*J1.7*/
         for (const auto &v : v_0.requirements) { /*5.1*/
-          PDEF_JSON_putNumber_OR_BAIL(size(), (int64_t)v_0.requirements.size()); /*5.7*/
+          PDEF_JSON_putInt_OR_BAIL(size(), (int64_t)v_0.requirements.size()); /*5.7*/
           PDEF_JSON_putToken_OR_BAIL("["); /*J5.11*/
           for (const auto &v : v) { /*5.10*/
             PDEF_JSON_putStringAnon_OR_BAIL(v) /*: pstring*/ /*J4.9*/
@@ -8812,9 +8926,9 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
         const pdef::pc1_18_play_toClient::packet_advancements::ProgressMapping::Value::CriterionProgress &v_3 = v3.criterionProgress; /*["packet_advancements","ProgressMapping","Value"]*/ /*7.4*/
         {
           const bool &V_has = v_3.has; /*0.1*/
-          PDEF_JSON_putNumber_OR_BAIL(has, (int64_t)v_3.has); /*J0.4*/
+          PDEF_JSON_putInt_OR_BAIL(has, (int64_t)v_3.has); /*J0.4*/
           if (V_has == true) { /*8.1*/
-            PDEF_JSON_putNumber_OR_BAIL(value, (int64_t)v_3.value); /*J0.4*/
+            PDEF_JSON_putInt_OR_BAIL(value, (int64_t)v_3.value); /*J0.4*/
           }
         }
       }
@@ -8825,53 +8939,53 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   bool packet_block_break_animation(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_block_break_animation &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
     PDEF_JSON_putStartObj_OR_BAIL(location);
-    PDEF_JSON_putNumber_OR_BAIL(x, obj.location.x);
-    PDEF_JSON_putNumber_OR_BAIL(z, obj.location.z);
-    PDEF_JSON_putNumber_OR_BAIL(y, obj.location.y);
+    PDEF_JSON_putUInt_OR_BAIL(x, obj.location.x);
+    PDEF_JSON_putUInt_OR_BAIL(z, obj.location.z);
+    PDEF_JSON_putUInt_OR_BAIL(y, obj.location.y);
     PDEF_JSON_putEndObj_OR_BAIL /*location: bitfield*/ /*J4.9*/
-    PDEF_JSON_putNumber_OR_BAIL(destroyStage, (int64_t)obj.destroyStage); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(destroyStage, (int64_t)obj.destroyStage); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_tile_entity_data(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_tile_entity_data &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     PDEF_JSON_putStartObj_OR_BAIL(location);
-    PDEF_JSON_putNumber_OR_BAIL(x, obj.location.x);
-    PDEF_JSON_putNumber_OR_BAIL(z, obj.location.z);
-    PDEF_JSON_putNumber_OR_BAIL(y, obj.location.y);
+    PDEF_JSON_putUInt_OR_BAIL(x, obj.location.x);
+    PDEF_JSON_putUInt_OR_BAIL(z, obj.location.z);
+    PDEF_JSON_putUInt_OR_BAIL(y, obj.location.y);
     PDEF_JSON_putEndObj_OR_BAIL /*location: bitfield*/ /*J4.9*/
-    PDEF_JSON_putNumber_OR_BAIL(action, (int64_t)obj.action); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(nbtData, (int64_t)obj.nbtData); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(action, (int64_t)obj.action); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(nbtData, (int64_t)obj.nbtData); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_block_action(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_block_action &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     PDEF_JSON_putStartObj_OR_BAIL(location);
-    PDEF_JSON_putNumber_OR_BAIL(x, obj.location.x);
-    PDEF_JSON_putNumber_OR_BAIL(z, obj.location.z);
-    PDEF_JSON_putNumber_OR_BAIL(y, obj.location.y);
+    PDEF_JSON_putUInt_OR_BAIL(x, obj.location.x);
+    PDEF_JSON_putUInt_OR_BAIL(z, obj.location.z);
+    PDEF_JSON_putUInt_OR_BAIL(y, obj.location.y);
     PDEF_JSON_putEndObj_OR_BAIL /*location: bitfield*/ /*J4.9*/
-    PDEF_JSON_putNumber_OR_BAIL(byte1, (int64_t)obj.byte1); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(byte2, (int64_t)obj.byte2); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(blockId, (int64_t)obj.blockId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(byte1, (int64_t)obj.byte1); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(byte2, (int64_t)obj.byte2); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(blockId, (int64_t)obj.blockId); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_block_change(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_block_change &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     PDEF_JSON_putStartObj_OR_BAIL(location);
-    PDEF_JSON_putNumber_OR_BAIL(x, obj.location.x);
-    PDEF_JSON_putNumber_OR_BAIL(z, obj.location.z);
-    PDEF_JSON_putNumber_OR_BAIL(y, obj.location.y);
+    PDEF_JSON_putUInt_OR_BAIL(x, obj.location.x);
+    PDEF_JSON_putUInt_OR_BAIL(z, obj.location.z);
+    PDEF_JSON_putUInt_OR_BAIL(y, obj.location.y);
     PDEF_JSON_putEndObj_OR_BAIL /*location: bitfield*/ /*J4.9*/
-    PDEF_JSON_putNumber_OR_BAIL(type, (int64_t)obj.type); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(type, (int64_t)obj.type); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_boss_bar(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_boss_bar &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityUUID, (int64_t)obj.entityUUID); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityUUID, (int64_t)obj.entityUUID); /*J0.4*/
     const int &V_action = obj.action; /*0.1*/
-    PDEF_JSON_putNumber_OR_BAIL(action, (int64_t)obj.action); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(action, (int64_t)obj.action); /*J0.4*/
     if (V_action == 0) { /*8.2*/
       PDEF_JSON_putString_OR_BAIL(title, obj.title) /*title: pstring*/ /*J4.9*/
     }
@@ -8879,49 +8993,49 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
       PDEF_JSON_putString_OR_BAIL(title, obj.title) /*title: pstring*/ /*J4.9*/
     }
     if (V_action == 0) { /*8.2*/
-      PDEF_JSON_putNumber_OR_BAIL(health, (int64_t)obj.health); /*J0.4*/
+      PDEF_JSON_putNumber_OR_BAIL(health, (double)obj.health); /*J0.4*/
     }
     else if (V_action == 2) { /*8.2*/
-      PDEF_JSON_putNumber_OR_BAIL(health, (int64_t)obj.health); /*J0.4*/
+      PDEF_JSON_putNumber_OR_BAIL(health, (double)obj.health); /*J0.4*/
     }
     if (V_action == 0) { /*8.2*/
-      PDEF_JSON_putNumber_OR_BAIL(color, (int64_t)obj.color); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(color, (int64_t)obj.color); /*J0.4*/
     }
     else if (V_action == 4) { /*8.2*/
-      PDEF_JSON_putNumber_OR_BAIL(color, (int64_t)obj.color); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(color, (int64_t)obj.color); /*J0.4*/
     }
     if (V_action == 0) { /*8.2*/
-      PDEF_JSON_putNumber_OR_BAIL(dividers, (int64_t)obj.dividers); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(dividers, (int64_t)obj.dividers); /*J0.4*/
     }
     else if (V_action == 4) { /*8.2*/
-      PDEF_JSON_putNumber_OR_BAIL(dividers, (int64_t)obj.dividers); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(dividers, (int64_t)obj.dividers); /*J0.4*/
     }
     if (V_action == 0) { /*8.2*/
-      PDEF_JSON_putNumber_OR_BAIL(flags, (int64_t)obj.flags); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(flags, (int64_t)obj.flags); /*J0.4*/
     }
     else if (V_action == 5) { /*8.2*/
-      PDEF_JSON_putNumber_OR_BAIL(flags, (int64_t)obj.flags); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(flags, (int64_t)obj.flags); /*J0.4*/
     }
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_difficulty(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_difficulty &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(difficulty, (int64_t)obj.difficulty); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(difficultyLocked, (int64_t)obj.difficultyLocked); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(difficulty, (int64_t)obj.difficulty); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(difficultyLocked, (int64_t)obj.difficultyLocked); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_tab_complete(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_tab_complete &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(transactionId, (int64_t)obj.transactionId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(start, (int64_t)obj.start); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(length, (int64_t)obj.length); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(transactionId, (int64_t)obj.transactionId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(start, (int64_t)obj.start); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(length, (int64_t)obj.length); /*J0.4*/
     PDEF_JSON_putStartArr_OR_BAIL(matches); /*J1.7*/
     for (const auto &v2 : obj.matches) { /*5.20*/
       PDEF_JSON_putString_OR_BAIL(match, v2.match) /*match: pstring*/ /*J4.9*/
       const pdef::pc1_18_play_toClient::packet_tab_complete::Matches::Tooltip &v_4 = v2.tooltip; /*["packet_tab_complete","Matches"]*/ /*7.4*/
       {
         const bool &V_has = v_4.has; /*0.1*/
-        PDEF_JSON_putNumber_OR_BAIL(has, (int64_t)v_4.has); /*J0.4*/
+        PDEF_JSON_putInt_OR_BAIL(has, (int64_t)v_4.has); /*J0.4*/
         if (V_has == true) { /*8.1*/
           PDEF_JSON_putString_OR_BAIL(value, v_4.value) /*value: pstring*/ /*J4.9*/
         }
@@ -8934,22 +9048,22 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     PDEF_JSON_putStartArr_OR_BAIL(nodes); /*J3.1*/
     for (const auto &v2 : obj.nodes) { /*3.1*/
-      pdef::pc1_18_play_toClient::toJSON::command_node(stream, v2); /*command_node*/ /*4.5*/
+    PDEF_JSON_putToken_OR_BAIL("[");  pdef::pc1_18_play_toClient::toJSON::command_node(stream, v2); PDEF_JSON_putToken_OR_BAIL(","); /*command_node*/ /*4.5*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
-    PDEF_JSON_putNumber_OR_BAIL(rootIndex, (int64_t)obj.rootIndex); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(rootIndex, (int64_t)obj.rootIndex); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_face_player(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_face_player &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(feet_eyes, (int64_t)obj.feet_eyes); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(x, (int64_t)obj.x); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(y, (int64_t)obj.y); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(z, (int64_t)obj.z); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(feet_eyes, (int64_t)obj.feet_eyes); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(x, (double)obj.x); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(y, (double)obj.y); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(z, (double)obj.z); /*J0.4*/
     const bool &V_isEntity = obj.isEntity; /*0.1*/
-    PDEF_JSON_putNumber_OR_BAIL(isEntity, (int64_t)obj.isEntity); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(isEntity, (int64_t)obj.isEntity); /*J0.4*/
     if (V_isEntity == true) { /*8.1*/
-      PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
     }
     if (V_isEntity == true) { /*8.1*/
       PDEF_JSON_putString_OR_BAIL(entity_feet_eyes, obj.entity_feet_eyes) /*entity_feet_eyes: pstring*/ /*J4.9*/
@@ -8958,92 +9072,92 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   bool packet_nbt_query_response(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_nbt_query_response &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(transactionId, (int64_t)obj.transactionId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(nbt, (int64_t)obj.nbt); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(transactionId, (int64_t)obj.transactionId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(nbt, (int64_t)obj.nbt); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_chat(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_chat &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     PDEF_JSON_putString_OR_BAIL(message, obj.message) /*message: pstring*/ /*J4.9*/
-    PDEF_JSON_putNumber_OR_BAIL(position, (int64_t)obj.position); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(sender, (int64_t)obj.sender); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(position, (int64_t)obj.position); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(sender, (int64_t)obj.sender); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_multi_block_change(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_multi_block_change &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     PDEF_JSON_putStartObj_OR_BAIL(chunkCoordinates);
-    PDEF_JSON_putNumber_OR_BAIL(x, obj.chunkCoordinates.x);
-    PDEF_JSON_putNumber_OR_BAIL(z, obj.chunkCoordinates.z);
-    PDEF_JSON_putNumber_OR_BAIL(y, obj.chunkCoordinates.y);
+    PDEF_JSON_putUInt_OR_BAIL(x, obj.chunkCoordinates.x);
+    PDEF_JSON_putUInt_OR_BAIL(z, obj.chunkCoordinates.z);
+    PDEF_JSON_putUInt_OR_BAIL(y, obj.chunkCoordinates.y);
     PDEF_JSON_putEndObj_OR_BAIL /*chunkCoordinates: bitfield*/ /*J4.9*/
-    PDEF_JSON_putNumber_OR_BAIL(notTrustEdges, (int64_t)obj.notTrustEdges); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(notTrustEdges, (int64_t)obj.notTrustEdges); /*J0.4*/
     PDEF_JSON_putStartArr_OR_BAIL(records); /*J3.1*/
     for (const auto &v2 : obj.records) { /*3.1*/
-      PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v2); /*J0.4*/
+      PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v2); /*J0.4*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_close_window(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_close_window &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(windowId, (int64_t)obj.windowId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(windowId, (int64_t)obj.windowId); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_open_window(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_open_window &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(windowId, (int64_t)obj.windowId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(inventoryType, (int64_t)obj.inventoryType); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(windowId, (int64_t)obj.windowId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(inventoryType, (int64_t)obj.inventoryType); /*J0.4*/
     PDEF_JSON_putString_OR_BAIL(windowTitle, obj.windowTitle) /*windowTitle: pstring*/ /*J4.9*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_window_items(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_window_items &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(windowId, (int64_t)obj.windowId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(stateId, (int64_t)obj.stateId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(windowId, (int64_t)obj.windowId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(stateId, (int64_t)obj.stateId); /*J0.4*/
     PDEF_JSON_putStartArr_OR_BAIL(items); /*J3.1*/
     for (const auto &v2 : obj.items) { /*3.1*/
-      PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v2); /*J0.4*/
+      PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v2); /*J0.4*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
-    PDEF_JSON_putNumber_OR_BAIL(carriedItem, (int64_t)obj.carriedItem); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(carriedItem, (int64_t)obj.carriedItem); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_craft_progress_bar(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_craft_progress_bar &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(windowId, (int64_t)obj.windowId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(property, (int64_t)obj.property); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(value, (int64_t)obj.value); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(windowId, (int64_t)obj.windowId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(property, (int64_t)obj.property); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(value, (int64_t)obj.value); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_set_slot(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_set_slot &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(windowId, (int64_t)obj.windowId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(stateId, (int64_t)obj.stateId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(slot, (int64_t)obj.slot); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(item, (int64_t)obj.item); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(windowId, (int64_t)obj.windowId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(stateId, (int64_t)obj.stateId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(slot, (int64_t)obj.slot); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(item, (int64_t)obj.item); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_set_cooldown(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_set_cooldown &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(itemID, (int64_t)obj.itemID); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(cooldownTicks, (int64_t)obj.cooldownTicks); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(itemID, (int64_t)obj.itemID); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(cooldownTicks, (int64_t)obj.cooldownTicks); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_custom_payload(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_custom_payload &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     PDEF_JSON_putString_OR_BAIL(channel, obj.channel) /*channel: pstring*/ /*J4.9*/
-    PDEF_JSON_putNumber_OR_BAIL(data, (int64_t)obj.data); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(data, (int64_t)obj.data); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_named_sound_effect(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_named_sound_effect &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     PDEF_JSON_putString_OR_BAIL(soundName, obj.soundName) /*soundName: pstring*/ /*J4.9*/
-    PDEF_JSON_putNumber_OR_BAIL(soundCategory, (int64_t)obj.soundCategory); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(x, (int64_t)obj.x); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(y, (int64_t)obj.y); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(z, (int64_t)obj.z); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(volume, (int64_t)obj.volume); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(pitch, (int64_t)obj.pitch); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(soundCategory, (int64_t)obj.soundCategory); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(x, (int64_t)obj.x); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(y, (int64_t)obj.y); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(z, (int64_t)obj.z); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(volume, (double)obj.volume); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(pitch, (double)obj.pitch); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_kick_disconnect(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_kick_disconnect &obj) {
@@ -9053,100 +9167,100 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   bool packet_entity_status(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_status &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(entityStatus, (int64_t)obj.entityStatus); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityStatus, (int64_t)obj.entityStatus); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_explosion(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_explosion &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(x, (int64_t)obj.x); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(y, (int64_t)obj.y); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(z, (int64_t)obj.z); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(radius, (int64_t)obj.radius); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(x, (double)obj.x); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(y, (double)obj.y); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(z, (double)obj.z); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(radius, (double)obj.radius); /*J0.4*/
     PDEF_JSON_putStartArr_OR_BAIL(affectedBlockOffsets); /*J1.7*/
     for (const auto &v2 : obj.affectedBlockOffsets) { /*5.20*/
-      PDEF_JSON_putNumber_OR_BAIL(x, (int64_t)v2.x); /*J0.4*/
-      PDEF_JSON_putNumber_OR_BAIL(y, (int64_t)v2.y); /*J0.4*/
-      PDEF_JSON_putNumber_OR_BAIL(z, (int64_t)v2.z); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(x, (int64_t)v2.x); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(y, (int64_t)v2.y); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(z, (int64_t)v2.z); /*J0.4*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J5.24*/
-    PDEF_JSON_putNumber_OR_BAIL(playerMotionX, (int64_t)obj.playerMotionX); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(playerMotionY, (int64_t)obj.playerMotionY); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(playerMotionZ, (int64_t)obj.playerMotionZ); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(playerMotionX, (double)obj.playerMotionX); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(playerMotionY, (double)obj.playerMotionY); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(playerMotionZ, (double)obj.playerMotionZ); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_unload_chunk(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_unload_chunk &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(chunkX, (int64_t)obj.chunkX); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(chunkZ, (int64_t)obj.chunkZ); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(chunkX, (int64_t)obj.chunkX); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(chunkZ, (int64_t)obj.chunkZ); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_game_state_change(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_game_state_change &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(reason, (int64_t)obj.reason); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(gameMode, (int64_t)obj.gameMode); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(reason, (int64_t)obj.reason); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(gameMode, (double)obj.gameMode); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_open_horse_window(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_open_horse_window &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(windowId, (int64_t)obj.windowId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(nbSlots, (int64_t)obj.nbSlots); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(windowId, (int64_t)obj.windowId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(nbSlots, (int64_t)obj.nbSlots); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_keep_alive(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_keep_alive &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(keepAliveId, (int64_t)obj.keepAliveId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(keepAliveId, (int64_t)obj.keepAliveId); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_map_chunk(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_map_chunk &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(x, (int64_t)obj.x); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(z, (int64_t)obj.z); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(heightmaps, (int64_t)obj.heightmaps); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(x, (int64_t)obj.x); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(z, (int64_t)obj.z); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(heightmaps, (int64_t)obj.heightmaps); /*J0.4*/
     PDEF_JSON_putBuffer_OR_BAIL(chunkData, obj.chunkData) /*chunkData: buffer*/ /*J4.9*/
     PDEF_JSON_putStartArr_OR_BAIL(blockEntities); /*J3.1*/
     for (const auto &v2 : obj.blockEntities) { /*3.1*/
-      pdef::pc1_18_play_toClient::toJSON::chunkBlockEntity(stream, v2); /*chunkBlockEntity*/ /*4.5*/
+    PDEF_JSON_putToken_OR_BAIL("[");  pdef::pc1_18_play_toClient::toJSON::chunkBlockEntity(stream, v2); PDEF_JSON_putToken_OR_BAIL(","); /*chunkBlockEntity*/ /*4.5*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
-    PDEF_JSON_putNumber_OR_BAIL(trustEdges, (int64_t)obj.trustEdges); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(trustEdges, (int64_t)obj.trustEdges); /*J0.4*/
     PDEF_JSON_putStartArr_OR_BAIL(skyLightMask); /*J3.1*/
     for (const auto &v2 : obj.skyLightMask) { /*3.1*/
-      PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v2); /*J0.4*/
+      PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v2); /*J0.4*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
     PDEF_JSON_putStartArr_OR_BAIL(blockLightMask); /*J3.1*/
     for (const auto &v2 : obj.blockLightMask) { /*3.1*/
-      PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v2); /*J0.4*/
+      PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v2); /*J0.4*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
     PDEF_JSON_putStartArr_OR_BAIL(emptySkyLightMask); /*J3.1*/
     for (const auto &v2 : obj.emptySkyLightMask) { /*3.1*/
-      PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v2); /*J0.4*/
+      PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v2); /*J0.4*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
     PDEF_JSON_putStartArr_OR_BAIL(emptyBlockLightMask); /*J3.1*/
     for (const auto &v2 : obj.emptyBlockLightMask) { /*3.1*/
-      PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v2); /*J0.4*/
+      PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v2); /*J0.4*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
     PDEF_JSON_putStartArr_OR_BAIL(skyLight); /*J1.7*/
     for (const auto &v : obj.skyLight) { /*5.1*/
-      PDEF_JSON_putNumber_OR_BAIL(size(), (int64_t)obj.skyLight.size()); /*5.7*/
+      PDEF_JSON_putInt_OR_BAIL(size(), (int64_t)obj.skyLight.size()); /*5.7*/
       PDEF_JSON_putToken_OR_BAIL("["); /*J5.11*/
       for (const auto &v : v) { /*5.10*/
-        PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v); /*J0.4*/
+        PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v); /*J0.4*/
       }
       PDEF_JSON_putEndArr_OR_BAIL; /*J5.16*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J5.17*/
     PDEF_JSON_putStartArr_OR_BAIL(blockLight); /*J1.7*/
     for (const auto &v : obj.blockLight) { /*5.1*/
-      PDEF_JSON_putNumber_OR_BAIL(size(), (int64_t)obj.blockLight.size()); /*5.7*/
+      PDEF_JSON_putInt_OR_BAIL(size(), (int64_t)obj.blockLight.size()); /*5.7*/
       PDEF_JSON_putToken_OR_BAIL("["); /*J5.11*/
       for (const auto &v : v) { /*5.10*/
-        PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v); /*J0.4*/
+        PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v); /*J0.4*/
       }
       PDEF_JSON_putEndArr_OR_BAIL; /*J5.16*/
     }
@@ -9155,126 +9269,126 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   bool packet_world_event(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_world_event &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(effectId, (int64_t)obj.effectId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(effectId, (int64_t)obj.effectId); /*J0.4*/
     PDEF_JSON_putStartObj_OR_BAIL(location);
-    PDEF_JSON_putNumber_OR_BAIL(x, obj.location.x);
-    PDEF_JSON_putNumber_OR_BAIL(z, obj.location.z);
-    PDEF_JSON_putNumber_OR_BAIL(y, obj.location.y);
+    PDEF_JSON_putUInt_OR_BAIL(x, obj.location.x);
+    PDEF_JSON_putUInt_OR_BAIL(z, obj.location.z);
+    PDEF_JSON_putUInt_OR_BAIL(y, obj.location.y);
     PDEF_JSON_putEndObj_OR_BAIL /*location: bitfield*/ /*J4.9*/
-    PDEF_JSON_putNumber_OR_BAIL(data, (int64_t)obj.data); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(global, (int64_t)obj.global); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(data, (int64_t)obj.data); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(global, (int64_t)obj.global); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_world_particles(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_world_particles &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     const int32_t &V_particleId = obj.particleId; /*0.1*/
-    PDEF_JSON_putNumber_OR_BAIL(particleId, (int64_t)obj.particleId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(longDistance, (int64_t)obj.longDistance); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(x, (int64_t)obj.x); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(y, (int64_t)obj.y); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(z, (int64_t)obj.z); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(offsetX, (int64_t)obj.offsetX); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(offsetY, (int64_t)obj.offsetY); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(offsetZ, (int64_t)obj.offsetZ); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(particleData, (int64_t)obj.particleData); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(particles, (int64_t)obj.particles); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(particleId, (int64_t)obj.particleId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(longDistance, (int64_t)obj.longDistance); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(x, (double)obj.x); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(y, (double)obj.y); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(z, (double)obj.z); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(offsetX, (double)obj.offsetX); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(offsetY, (double)obj.offsetY); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(offsetZ, (double)obj.offsetZ); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(particleData, (double)obj.particleData); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(particles, (int64_t)obj.particles); /*J0.4*/
     if (V_particleId == 2) { /*8.2*/
         const pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.5*/
-        PDEF_JSON_putNumber_OR_BAIL(blockState, (int64_t)v2.blockState); /*J0.4*/
+        PDEF_JSON_putInt_OR_BAIL(blockState, (int64_t)v2.blockState); /*J0.4*/
     }
     else if (V_particleId == 3) { /*8.2*/
         const pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.5*/
-        PDEF_JSON_putNumber_OR_BAIL(blockState, (int64_t)v2.blockState); /*J0.4*/
+        PDEF_JSON_putInt_OR_BAIL(blockState, (int64_t)v2.blockState); /*J0.4*/
     }
     else if (V_particleId == 14) { /*8.2*/
         const pdef::pc1_18_play_toClient::packet_world_particles::Data14 &v2 = *obj.data_14; /*8.5*/
-        PDEF_JSON_putNumber_OR_BAIL(red, (int64_t)v2.red); /*J0.4*/
-        PDEF_JSON_putNumber_OR_BAIL(green, (int64_t)v2.green); /*J0.4*/
-        PDEF_JSON_putNumber_OR_BAIL(blue, (int64_t)v2.blue); /*J0.4*/
-        PDEF_JSON_putNumber_OR_BAIL(scale, (int64_t)v2.scale); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(red, (double)v2.red); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(green, (double)v2.green); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(blue, (double)v2.blue); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(scale, (double)v2.scale); /*J0.4*/
     }
     else if (V_particleId == 15) { /*8.2*/
         const pdef::pc1_18_play_toClient::packet_world_particles::Data15 &v2 = *obj.data_15; /*8.5*/
-        PDEF_JSON_putNumber_OR_BAIL(fromRed, (int64_t)v2.fromRed); /*J0.4*/
-        PDEF_JSON_putNumber_OR_BAIL(fromGreen, (int64_t)v2.fromGreen); /*J0.4*/
-        PDEF_JSON_putNumber_OR_BAIL(fromBlue, (int64_t)v2.fromBlue); /*J0.4*/
-        PDEF_JSON_putNumber_OR_BAIL(scale, (int64_t)v2.scale); /*J0.4*/
-        PDEF_JSON_putNumber_OR_BAIL(toRed, (int64_t)v2.toRed); /*J0.4*/
-        PDEF_JSON_putNumber_OR_BAIL(toGreen, (int64_t)v2.toGreen); /*J0.4*/
-        PDEF_JSON_putNumber_OR_BAIL(toBlue, (int64_t)v2.toBlue); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(fromRed, (double)v2.fromRed); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(fromGreen, (double)v2.fromGreen); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(fromBlue, (double)v2.fromBlue); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(scale, (double)v2.scale); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(toRed, (double)v2.toRed); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(toGreen, (double)v2.toGreen); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(toBlue, (double)v2.toBlue); /*J0.4*/
     }
     else if (V_particleId == 24) { /*8.2*/
         const pdef::pc1_18_play_toClient::packet_world_particles::Data2Or3Or24 &v2 = *obj.data_2_or_3_or_24; /*8.5*/
-        PDEF_JSON_putNumber_OR_BAIL(blockState, (int64_t)v2.blockState); /*J0.4*/
+        PDEF_JSON_putInt_OR_BAIL(blockState, (int64_t)v2.blockState); /*J0.4*/
     }
     else if (V_particleId == 35) { /*8.2*/
         const pdef::pc1_18_play_toClient::packet_world_particles::Data35 &v2 = *obj.data_35; /*8.5*/
-        PDEF_JSON_putNumber_OR_BAIL(item, (int64_t)v2.item); /*J0.4*/
+        PDEF_JSON_putInt_OR_BAIL(item, (int64_t)v2.item); /*J0.4*/
     }
     else if (V_particleId == 36) { /*8.2*/
         const pdef::pc1_18_play_toClient::packet_world_particles::Data36 &v2 = *obj.data_36; /*8.5*/
         PDEF_JSON_putStartObj_OR_BAIL(origin);
-        PDEF_JSON_putNumber_OR_BAIL(x, v2.origin.x);
-        PDEF_JSON_putNumber_OR_BAIL(z, v2.origin.z);
-        PDEF_JSON_putNumber_OR_BAIL(y, v2.origin.y);
+        PDEF_JSON_putUInt_OR_BAIL(x, v2.origin.x);
+        PDEF_JSON_putUInt_OR_BAIL(z, v2.origin.z);
+        PDEF_JSON_putUInt_OR_BAIL(y, v2.origin.y);
         PDEF_JSON_putEndObj_OR_BAIL /*origin: bitfield*/ /*J4.9*/
         PDEF_JSON_putString_OR_BAIL(positionType, v2.positionType) /*positionType: pstring*/ /*J4.9*/
         const std::string &V_positionType = v2.positionType; /*4.7*/
         if (V_positionType == "minecraft:block") { /*8.0*/
           PDEF_JSON_putStartObj_OR_BAIL(destination_position);
-          PDEF_JSON_putNumber_OR_BAIL(x, v2.destination_position.x);
-          PDEF_JSON_putNumber_OR_BAIL(z, v2.destination_position.z);
-          PDEF_JSON_putNumber_OR_BAIL(y, v2.destination_position.y);
+          PDEF_JSON_putUInt_OR_BAIL(x, v2.destination_position.x);
+          PDEF_JSON_putUInt_OR_BAIL(z, v2.destination_position.z);
+          PDEF_JSON_putUInt_OR_BAIL(y, v2.destination_position.y);
           PDEF_JSON_putEndObj_OR_BAIL /*destination_position: bitfield*/ /*J4.9*/
         }
         else if (V_positionType == "minecraft:entity") { /*8.0*/
-          PDEF_JSON_putNumber_OR_BAIL(destination_varint, (int64_t)v2.destination_varint); /*J0.4*/
+          PDEF_JSON_putInt_OR_BAIL(destination_varint, (int64_t)v2.destination_varint); /*J0.4*/
         }
-        PDEF_JSON_putNumber_OR_BAIL(ticks, (int64_t)v2.ticks); /*J0.4*/
+        PDEF_JSON_putInt_OR_BAIL(ticks, (int64_t)v2.ticks); /*J0.4*/
     }
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_update_light(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_update_light &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(chunkX, (int64_t)obj.chunkX); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(chunkZ, (int64_t)obj.chunkZ); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(trustEdges, (int64_t)obj.trustEdges); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(chunkX, (int64_t)obj.chunkX); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(chunkZ, (int64_t)obj.chunkZ); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(trustEdges, (int64_t)obj.trustEdges); /*J0.4*/
     PDEF_JSON_putStartArr_OR_BAIL(skyLightMask); /*J3.1*/
     for (const auto &v2 : obj.skyLightMask) { /*3.1*/
-      PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v2); /*J0.4*/
+      PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v2); /*J0.4*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
     PDEF_JSON_putStartArr_OR_BAIL(blockLightMask); /*J3.1*/
     for (const auto &v2 : obj.blockLightMask) { /*3.1*/
-      PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v2); /*J0.4*/
+      PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v2); /*J0.4*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
     PDEF_JSON_putStartArr_OR_BAIL(emptySkyLightMask); /*J3.1*/
     for (const auto &v2 : obj.emptySkyLightMask) { /*3.1*/
-      PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v2); /*J0.4*/
+      PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v2); /*J0.4*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
     PDEF_JSON_putStartArr_OR_BAIL(emptyBlockLightMask); /*J3.1*/
     for (const auto &v2 : obj.emptyBlockLightMask) { /*3.1*/
-      PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v2); /*J0.4*/
+      PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v2); /*J0.4*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
     PDEF_JSON_putStartArr_OR_BAIL(skyLight); /*J1.7*/
     for (const auto &v : obj.skyLight) { /*5.1*/
-      PDEF_JSON_putNumber_OR_BAIL(size(), (int64_t)obj.skyLight.size()); /*5.7*/
+      PDEF_JSON_putInt_OR_BAIL(size(), (int64_t)obj.skyLight.size()); /*5.7*/
       PDEF_JSON_putToken_OR_BAIL("["); /*J5.11*/
       for (const auto &v : v) { /*5.10*/
-        PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v); /*J0.4*/
+        PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v); /*J0.4*/
       }
       PDEF_JSON_putEndArr_OR_BAIL; /*J5.16*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J5.17*/
     PDEF_JSON_putStartArr_OR_BAIL(blockLight); /*J1.7*/
     for (const auto &v : obj.blockLight) { /*5.1*/
-      PDEF_JSON_putNumber_OR_BAIL(size(), (int64_t)obj.blockLight.size()); /*5.7*/
+      PDEF_JSON_putInt_OR_BAIL(size(), (int64_t)obj.blockLight.size()); /*5.7*/
       PDEF_JSON_putToken_OR_BAIL("["); /*J5.11*/
       for (const auto &v : v) { /*5.10*/
-        PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v); /*J0.4*/
+        PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v); /*J0.4*/
       }
       PDEF_JSON_putEndArr_OR_BAIL; /*J5.16*/
     }
@@ -9283,48 +9397,48 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   bool packet_login(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_login &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(isHardcore, (int64_t)obj.isHardcore); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(gameMode, (int64_t)obj.gameMode); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(previousGameMode, (int64_t)obj.previousGameMode); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(isHardcore, (int64_t)obj.isHardcore); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(gameMode, (int64_t)obj.gameMode); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(previousGameMode, (int64_t)obj.previousGameMode); /*J0.4*/
     PDEF_JSON_putStartArr_OR_BAIL(worldNames); /*J3.1*/
     for (const auto &v2 : obj.worldNames) { /*3.1*/
       PDEF_JSON_putStringAnon_OR_BAIL(v2) /*: pstring*/ /*J4.9*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
-    PDEF_JSON_putNumber_OR_BAIL(dimensionCodec, (int64_t)obj.dimensionCodec); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(dimension, (int64_t)obj.dimension); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(dimensionCodec, (int64_t)obj.dimensionCodec); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(dimension, (int64_t)obj.dimension); /*J0.4*/
     PDEF_JSON_putString_OR_BAIL(worldName, obj.worldName) /*worldName: pstring*/ /*J4.9*/
-    PDEF_JSON_putNumber_OR_BAIL(hashedSeed, (int64_t)obj.hashedSeed); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(maxPlayers, (int64_t)obj.maxPlayers); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(viewDistance, (int64_t)obj.viewDistance); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(simulationDistance, (int64_t)obj.simulationDistance); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(reducedDebugInfo, (int64_t)obj.reducedDebugInfo); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(enableRespawnScreen, (int64_t)obj.enableRespawnScreen); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(isDebug, (int64_t)obj.isDebug); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(isFlat, (int64_t)obj.isFlat); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(hashedSeed, (int64_t)obj.hashedSeed); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(maxPlayers, (int64_t)obj.maxPlayers); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(viewDistance, (int64_t)obj.viewDistance); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(simulationDistance, (int64_t)obj.simulationDistance); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(reducedDebugInfo, (int64_t)obj.reducedDebugInfo); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(enableRespawnScreen, (int64_t)obj.enableRespawnScreen); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(isDebug, (int64_t)obj.isDebug); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(isFlat, (int64_t)obj.isFlat); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_map(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_map &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(itemDamage, (int64_t)obj.itemDamage); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(scale, (int64_t)obj.scale); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(locked, (int64_t)obj.locked); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(itemDamage, (int64_t)obj.itemDamage); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(scale, (int64_t)obj.scale); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(locked, (int64_t)obj.locked); /*J0.4*/
     const pdef::pc1_18_play_toClient::packet_map::Icons &v_7 = obj.icons; /*["packet_map"]*/ /*7.4*/
     {
       const bool &V_has = v_7.has; /*0.1*/
-      PDEF_JSON_putNumber_OR_BAIL(has, (int64_t)v_7.has); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(has, (int64_t)v_7.has); /*J0.4*/
       if (V_has == true) { /*8.1*/
         PDEF_JSON_putStartArr_OR_BAIL(value); /*J1.7*/
         for (const auto &v4 : v_7.value) { /*5.20*/
-          PDEF_JSON_putNumber_OR_BAIL(type, (int64_t)v4.type); /*J0.4*/
-          PDEF_JSON_putNumber_OR_BAIL(x, (int64_t)v4.x); /*J0.4*/
-          PDEF_JSON_putNumber_OR_BAIL(z, (int64_t)v4.z); /*J0.4*/
-          PDEF_JSON_putNumber_OR_BAIL(direction, (int64_t)v4.direction); /*J0.4*/
+          PDEF_JSON_putInt_OR_BAIL(type, (int64_t)v4.type); /*J0.4*/
+          PDEF_JSON_putInt_OR_BAIL(x, (int64_t)v4.x); /*J0.4*/
+          PDEF_JSON_putInt_OR_BAIL(z, (int64_t)v4.z); /*J0.4*/
+          PDEF_JSON_putInt_OR_BAIL(direction, (int64_t)v4.direction); /*J0.4*/
           const pdef::pc1_18_play_toClient::packet_map::Icons::Value::DisplayName &v_8 = v4.displayName; /*["packet_map","Icons","Value"]*/ /*7.4*/
           {
             const bool &V_has = v_8.has; /*0.1*/
-            PDEF_JSON_putNumber_OR_BAIL(has, (int64_t)v_8.has); /*J0.4*/
+            PDEF_JSON_putInt_OR_BAIL(has, (int64_t)v_8.has); /*J0.4*/
             if (V_has == true) { /*8.1*/
               PDEF_JSON_putString_OR_BAIL(value, v_8.value) /*value: pstring*/ /*J4.9*/
             }
@@ -9334,21 +9448,21 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
       }
     }
     const uint8_t &V_columns = obj.columns; /*0.1*/
-    PDEF_JSON_putNumber_OR_BAIL(columns, (int64_t)obj.columns); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(columns, (int64_t)obj.columns); /*J0.4*/
     if (V_columns == 0) { /*8.2*/
     }
     else {
-      PDEF_JSON_putNumber_OR_BAIL(rows, (int64_t)obj.rows); /*J0.4*/
-    }
-    if (V_columns == 0) { /*8.2*/
-    }
-    else {
-      PDEF_JSON_putNumber_OR_BAIL(x, (int64_t)obj.x); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(rows, (int64_t)obj.rows); /*J0.4*/
     }
     if (V_columns == 0) { /*8.2*/
     }
     else {
-      PDEF_JSON_putNumber_OR_BAIL(y, (int64_t)obj.y); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(x, (int64_t)obj.x); /*J0.4*/
+    }
+    if (V_columns == 0) { /*8.2*/
+    }
+    else {
+      PDEF_JSON_putInt_OR_BAIL(y, (int64_t)obj.y); /*J0.4*/
     }
     if (V_columns == 0) { /*8.2*/
     }
@@ -9359,102 +9473,102 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   bool packet_trade_list(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_trade_list &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(windowId, (int64_t)obj.windowId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(windowId, (int64_t)obj.windowId); /*J0.4*/
     PDEF_JSON_putStartArr_OR_BAIL(trades); /*J1.7*/
     for (const auto &v2 : obj.trades) { /*5.20*/
-      PDEF_JSON_putNumber_OR_BAIL(inputItem1, (int64_t)v2.inputItem1); /*J0.4*/
-      PDEF_JSON_putNumber_OR_BAIL(outputItem, (int64_t)v2.outputItem); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(inputItem1, (int64_t)v2.inputItem1); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(outputItem, (int64_t)v2.outputItem); /*J0.4*/
       const pdef::pc1_18_play_toClient::packet_trade_list::Trades::InputItem2 &v_9 = v2.inputItem2; /*["packet_trade_list","Trades"]*/ /*7.4*/
       {
         const bool &V_has = v_9.has; /*0.1*/
-        PDEF_JSON_putNumber_OR_BAIL(has, (int64_t)v_9.has); /*J0.4*/
+        PDEF_JSON_putInt_OR_BAIL(has, (int64_t)v_9.has); /*J0.4*/
         if (V_has == true) { /*8.1*/
-          PDEF_JSON_putNumber_OR_BAIL(value, (int64_t)v_9.value); /*J0.4*/
+          PDEF_JSON_putInt_OR_BAIL(value, (int64_t)v_9.value); /*J0.4*/
         }
       }
-      PDEF_JSON_putNumber_OR_BAIL(tradeDisabled, (int64_t)v2.tradeDisabled); /*J0.4*/
-      PDEF_JSON_putNumber_OR_BAIL(nbTradeUses, (int64_t)v2.nbTradeUses); /*J0.4*/
-      PDEF_JSON_putNumber_OR_BAIL(maximumNbTradeUses, (int64_t)v2.maximumNbTradeUses); /*J0.4*/
-      PDEF_JSON_putNumber_OR_BAIL(xp, (int64_t)v2.xp); /*J0.4*/
-      PDEF_JSON_putNumber_OR_BAIL(specialPrice, (int64_t)v2.specialPrice); /*J0.4*/
-      PDEF_JSON_putNumber_OR_BAIL(priceMultiplier, (int64_t)v2.priceMultiplier); /*J0.4*/
-      PDEF_JSON_putNumber_OR_BAIL(demand, (int64_t)v2.demand); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(tradeDisabled, (int64_t)v2.tradeDisabled); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(nbTradeUses, (int64_t)v2.nbTradeUses); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(maximumNbTradeUses, (int64_t)v2.maximumNbTradeUses); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(xp, (int64_t)v2.xp); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(specialPrice, (int64_t)v2.specialPrice); /*J0.4*/
+      PDEF_JSON_putNumber_OR_BAIL(priceMultiplier, (double)v2.priceMultiplier); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(demand, (int64_t)v2.demand); /*J0.4*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J5.24*/
-    PDEF_JSON_putNumber_OR_BAIL(villagerLevel, (int64_t)obj.villagerLevel); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(experience, (int64_t)obj.experience); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(isRegularVillager, (int64_t)obj.isRegularVillager); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(canRestock, (int64_t)obj.canRestock); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(villagerLevel, (int64_t)obj.villagerLevel); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(experience, (int64_t)obj.experience); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(isRegularVillager, (int64_t)obj.isRegularVillager); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(canRestock, (int64_t)obj.canRestock); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_rel_entity_move(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_rel_entity_move &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(dX, (int64_t)obj.dX); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(dY, (int64_t)obj.dY); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(dZ, (int64_t)obj.dZ); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(onGround, (int64_t)obj.onGround); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(dX, (int64_t)obj.dX); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(dY, (int64_t)obj.dY); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(dZ, (int64_t)obj.dZ); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(onGround, (int64_t)obj.onGround); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_entity_move_look(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_move_look &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(dX, (int64_t)obj.dX); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(dY, (int64_t)obj.dY); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(dZ, (int64_t)obj.dZ); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(yaw, (int64_t)obj.yaw); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(pitch, (int64_t)obj.pitch); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(onGround, (int64_t)obj.onGround); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(dX, (int64_t)obj.dX); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(dY, (int64_t)obj.dY); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(dZ, (int64_t)obj.dZ); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(yaw, (int64_t)obj.yaw); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(pitch, (int64_t)obj.pitch); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(onGround, (int64_t)obj.onGround); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_entity_look(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_look &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(yaw, (int64_t)obj.yaw); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(pitch, (int64_t)obj.pitch); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(onGround, (int64_t)obj.onGround); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(yaw, (int64_t)obj.yaw); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(pitch, (int64_t)obj.pitch); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(onGround, (int64_t)obj.onGround); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_vehicle_move(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_vehicle_move &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(x, (int64_t)obj.x); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(y, (int64_t)obj.y); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(z, (int64_t)obj.z); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(yaw, (int64_t)obj.yaw); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(pitch, (int64_t)obj.pitch); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(x, (double)obj.x); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(y, (double)obj.y); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(z, (double)obj.z); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(yaw, (double)obj.yaw); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(pitch, (double)obj.pitch); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_open_book(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_open_book &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(hand, (int64_t)obj.hand); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(hand, (int64_t)obj.hand); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_open_sign_entity(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_open_sign_entity &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     PDEF_JSON_putStartObj_OR_BAIL(location);
-    PDEF_JSON_putNumber_OR_BAIL(x, obj.location.x);
-    PDEF_JSON_putNumber_OR_BAIL(z, obj.location.z);
-    PDEF_JSON_putNumber_OR_BAIL(y, obj.location.y);
+    PDEF_JSON_putUInt_OR_BAIL(x, obj.location.x);
+    PDEF_JSON_putUInt_OR_BAIL(z, obj.location.z);
+    PDEF_JSON_putUInt_OR_BAIL(y, obj.location.y);
     PDEF_JSON_putEndObj_OR_BAIL /*location: bitfield*/ /*J4.9*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_craft_recipe_response(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_craft_recipe_response &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(windowId, (int64_t)obj.windowId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(windowId, (int64_t)obj.windowId); /*J0.4*/
     PDEF_JSON_putString_OR_BAIL(recipe, obj.recipe) /*recipe: pstring*/ /*J4.9*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_abilities(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_abilities &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(flags, (int64_t)obj.flags); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(flyingSpeed, (int64_t)obj.flyingSpeed); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(walkingSpeed, (int64_t)obj.walkingSpeed); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(flags, (int64_t)obj.flags); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(flyingSpeed, (double)obj.flyingSpeed); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(walkingSpeed, (double)obj.walkingSpeed); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_end_combat_event(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_end_combat_event &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(duration, (int64_t)obj.duration); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(duration, (int64_t)obj.duration); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_enter_combat_event(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_enter_combat_event &obj) {
@@ -9463,18 +9577,18 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   bool packet_death_combat_event(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_death_combat_event &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(playerId, (int64_t)obj.playerId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(playerId, (int64_t)obj.playerId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
     PDEF_JSON_putString_OR_BAIL(message, obj.message) /*message: pstring*/ /*J4.9*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_player_info(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_player_info &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     const int &V_action = obj.action; /*0.1*/
-    PDEF_JSON_putNumber_OR_BAIL(action, (int64_t)obj.action); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(action, (int64_t)obj.action); /*J0.4*/
     PDEF_JSON_putStartArr_OR_BAIL(data); /*J1.7*/
     for (const auto &v2 : obj.data) { /*5.20*/
-      PDEF_JSON_putNumber_OR_BAIL(UUID, (int64_t)v2.UUID); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(UUID, (int64_t)v2.UUID); /*J0.4*/
       if (V_action == 0) { /*8.2*/
         PDEF_JSON_putString_OR_BAIL(name, v2.name) /*name: pstring*/ /*J4.9*/
       }
@@ -9486,7 +9600,7 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
           const pdef::pc1_18_play_toClient::packet_player_info::Data::Properties::Signature &v_10 = v4.signature; /*["packet_player_info","Data","Properties"]*/ /*7.4*/
           {
             const bool &V_has = v_10.has; /*0.1*/
-            PDEF_JSON_putNumber_OR_BAIL(has, (int64_t)v_10.has); /*J0.4*/
+            PDEF_JSON_putInt_OR_BAIL(has, (int64_t)v_10.has); /*J0.4*/
             if (V_has == true) { /*8.1*/
               PDEF_JSON_putString_OR_BAIL(value, v_10.value) /*value: pstring*/ /*J4.9*/
             }
@@ -9495,21 +9609,21 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
         PDEF_JSON_putEndArr_OR_BAIL; /*J5.24*/
       }
       if (V_action == 0) { /*8.2*/
-        PDEF_JSON_putNumber_OR_BAIL(gamemode, (int64_t)v2.gamemode); /*J0.4*/
+        PDEF_JSON_putInt_OR_BAIL(gamemode, (int64_t)v2.gamemode); /*J0.4*/
       }
       else if (V_action == 1) { /*8.2*/
-        PDEF_JSON_putNumber_OR_BAIL(gamemode, (int64_t)v2.gamemode); /*J0.4*/
+        PDEF_JSON_putInt_OR_BAIL(gamemode, (int64_t)v2.gamemode); /*J0.4*/
       }
       if (V_action == 0) { /*8.2*/
-        PDEF_JSON_putNumber_OR_BAIL(ping, (int64_t)v2.ping); /*J0.4*/
+        PDEF_JSON_putInt_OR_BAIL(ping, (int64_t)v2.ping); /*J0.4*/
       }
       else if (V_action == 2) { /*8.2*/
-        PDEF_JSON_putNumber_OR_BAIL(ping, (int64_t)v2.ping); /*J0.4*/
+        PDEF_JSON_putInt_OR_BAIL(ping, (int64_t)v2.ping); /*J0.4*/
       }
       if (V_action == 0) { /*8.2*/
           const pdef::pc1_18_play_toClient::packet_player_info::Data::DisplayName &v3 = *v2.displayName; /*8.5*/
           const bool &V_has = v3.has; /*0.1*/
-          PDEF_JSON_putNumber_OR_BAIL(has, (int64_t)v3.has); /*J0.4*/
+          PDEF_JSON_putInt_OR_BAIL(has, (int64_t)v3.has); /*J0.4*/
           if (V_has == true) { /*8.1*/
             PDEF_JSON_putString_OR_BAIL(value, v3.value) /*value: pstring*/ /*J4.9*/
           }
@@ -9517,7 +9631,7 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
       else if (V_action == 3) { /*8.2*/
           const pdef::pc1_18_play_toClient::packet_player_info::Data::DisplayName &v3 = *v2.displayName; /*8.5*/
           const bool &V_has = v3.has; /*0.1*/
-          PDEF_JSON_putNumber_OR_BAIL(has, (int64_t)v3.has); /*J0.4*/
+          PDEF_JSON_putInt_OR_BAIL(has, (int64_t)v3.has); /*J0.4*/
           if (V_has == true) { /*8.1*/
             PDEF_JSON_putString_OR_BAIL(value, v3.value) /*value: pstring*/ /*J4.9*/
           }
@@ -9528,28 +9642,28 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   bool packet_position(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_position &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(x, (int64_t)obj.x); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(y, (int64_t)obj.y); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(z, (int64_t)obj.z); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(yaw, (int64_t)obj.yaw); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(pitch, (int64_t)obj.pitch); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(flags, (int64_t)obj.flags); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(teleportId, (int64_t)obj.teleportId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(dismountVehicle, (int64_t)obj.dismountVehicle); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(x, (double)obj.x); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(y, (double)obj.y); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(z, (double)obj.z); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(yaw, (double)obj.yaw); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(pitch, (double)obj.pitch); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(flags, (int64_t)obj.flags); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(teleportId, (int64_t)obj.teleportId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(dismountVehicle, (int64_t)obj.dismountVehicle); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_unlock_recipes(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_unlock_recipes &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     const int &V_action = obj.action; /*0.1*/
-    PDEF_JSON_putNumber_OR_BAIL(action, (int64_t)obj.action); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(craftingBookOpen, (int64_t)obj.craftingBookOpen); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(filteringCraftable, (int64_t)obj.filteringCraftable); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(smeltingBookOpen, (int64_t)obj.smeltingBookOpen); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(filteringSmeltable, (int64_t)obj.filteringSmeltable); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(blastFurnaceOpen, (int64_t)obj.blastFurnaceOpen); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(filteringBlastFurnace, (int64_t)obj.filteringBlastFurnace); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(smokerBookOpen, (int64_t)obj.smokerBookOpen); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(filteringSmoker, (int64_t)obj.filteringSmoker); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(action, (int64_t)obj.action); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(craftingBookOpen, (int64_t)obj.craftingBookOpen); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(filteringCraftable, (int64_t)obj.filteringCraftable); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(smeltingBookOpen, (int64_t)obj.smeltingBookOpen); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(filteringSmeltable, (int64_t)obj.filteringSmeltable); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(blastFurnaceOpen, (int64_t)obj.blastFurnaceOpen); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(filteringBlastFurnace, (int64_t)obj.filteringBlastFurnace); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(smokerBookOpen, (int64_t)obj.smokerBookOpen); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(filteringSmoker, (int64_t)obj.filteringSmoker); /*J0.4*/
     PDEF_JSON_putStartArr_OR_BAIL(recipes1); /*J3.1*/
     for (const auto &v2 : obj.recipes1) { /*3.1*/
       PDEF_JSON_putStringAnon_OR_BAIL(v2) /*: pstring*/ /*J4.9*/
@@ -9568,26 +9682,26 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     PDEF_JSON_putStartArr_OR_BAIL(entityIds); /*J3.1*/
     for (const auto &v2 : obj.entityIds) { /*3.1*/
-      PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v2); /*J0.4*/
+      PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v2); /*J0.4*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_remove_entity_effect(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_remove_entity_effect &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(effectId, (int64_t)obj.effectId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(effectId, (int64_t)obj.effectId); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_resource_pack_send(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_resource_pack_send &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     PDEF_JSON_putString_OR_BAIL(url, obj.url) /*url: pstring*/ /*J4.9*/
     PDEF_JSON_putString_OR_BAIL(hash, obj.hash) /*hash: pstring*/ /*J4.9*/
-    PDEF_JSON_putNumber_OR_BAIL(forced, (int64_t)obj.forced); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(forced, (int64_t)obj.forced); /*J0.4*/
     const pdef::pc1_18_play_toClient::packet_resource_pack_send::PromptMessage &v_11 = obj.promptMessage; /*["packet_resource_pack_send"]*/ /*7.4*/
     {
       const bool &V_has = v_11.has; /*0.1*/
-      PDEF_JSON_putNumber_OR_BAIL(has, (int64_t)v_11.has); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(has, (int64_t)v_11.has); /*J0.4*/
       if (V_has == true) { /*8.1*/
         PDEF_JSON_putString_OR_BAIL(value, v_11.value) /*value: pstring*/ /*J4.9*/
       }
@@ -9596,94 +9710,94 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   bool packet_respawn(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_respawn &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(dimension, (int64_t)obj.dimension); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(dimension, (int64_t)obj.dimension); /*J0.4*/
     PDEF_JSON_putString_OR_BAIL(worldName, obj.worldName) /*worldName: pstring*/ /*J4.9*/
-    PDEF_JSON_putNumber_OR_BAIL(hashedSeed, (int64_t)obj.hashedSeed); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(gamemode, (int64_t)obj.gamemode); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(previousGamemode, (int64_t)obj.previousGamemode); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(isDebug, (int64_t)obj.isDebug); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(isFlat, (int64_t)obj.isFlat); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(copyMetadata, (int64_t)obj.copyMetadata); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(hashedSeed, (int64_t)obj.hashedSeed); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(gamemode, (int64_t)obj.gamemode); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(previousGamemode, (int64_t)obj.previousGamemode); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(isDebug, (int64_t)obj.isDebug); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(isFlat, (int64_t)obj.isFlat); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(copyMetadata, (int64_t)obj.copyMetadata); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_entity_head_rotation(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_head_rotation &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(headYaw, (int64_t)obj.headYaw); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(headYaw, (int64_t)obj.headYaw); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_camera(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_camera &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(cameraId, (int64_t)obj.cameraId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(cameraId, (int64_t)obj.cameraId); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_held_item_slot(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_held_item_slot &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(slot, (int64_t)obj.slot); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(slot, (int64_t)obj.slot); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_update_view_position(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_update_view_position &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(chunkX, (int64_t)obj.chunkX); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(chunkZ, (int64_t)obj.chunkZ); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(chunkX, (int64_t)obj.chunkX); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(chunkZ, (int64_t)obj.chunkZ); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_update_view_distance(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_update_view_distance &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(viewDistance, (int64_t)obj.viewDistance); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(viewDistance, (int64_t)obj.viewDistance); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_scoreboard_display_objective(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_scoreboard_display_objective &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(position, (int64_t)obj.position); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(position, (int64_t)obj.position); /*J0.4*/
     PDEF_JSON_putString_OR_BAIL(name, obj.name) /*name: pstring*/ /*J4.9*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_entity_metadata(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_metadata &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(metadata, (int64_t)obj.metadata); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(metadata, (int64_t)obj.metadata); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_attach_entity(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_attach_entity &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(vehicleId, (int64_t)obj.vehicleId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(vehicleId, (int64_t)obj.vehicleId); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_entity_velocity(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_velocity &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(velocityX, (int64_t)obj.velocityX); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(velocityY, (int64_t)obj.velocityY); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(velocityZ, (int64_t)obj.velocityZ); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(velocityX, (int64_t)obj.velocityX); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(velocityY, (int64_t)obj.velocityY); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(velocityZ, (int64_t)obj.velocityZ); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_entity_equipment(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_equipment &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(equipments, (int64_t)obj.equipments); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(equipments, (int64_t)obj.equipments); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_experience(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_experience &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(experienceBar, (int64_t)obj.experienceBar); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(level, (int64_t)obj.level); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(totalExperience, (int64_t)obj.totalExperience); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(experienceBar, (double)obj.experienceBar); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(level, (int64_t)obj.level); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(totalExperience, (int64_t)obj.totalExperience); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_update_health(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_update_health &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(health, (int64_t)obj.health); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(food, (int64_t)obj.food); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(foodSaturation, (int64_t)obj.foodSaturation); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(health, (double)obj.health); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(food, (int64_t)obj.food); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(foodSaturation, (double)obj.foodSaturation); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_scoreboard_objective(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_scoreboard_objective &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     PDEF_JSON_putString_OR_BAIL(name, obj.name) /*name: pstring*/ /*J4.9*/
     const int8_t &V_action = obj.action; /*0.1*/
-    PDEF_JSON_putNumber_OR_BAIL(action, (int64_t)obj.action); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(action, (int64_t)obj.action); /*J0.4*/
     if (V_action == 0) { /*8.2*/
       PDEF_JSON_putString_OR_BAIL(displayText, obj.displayText) /*displayText: pstring*/ /*J4.9*/
     }
@@ -9691,19 +9805,19 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
       PDEF_JSON_putString_OR_BAIL(displayText, obj.displayText) /*displayText: pstring*/ /*J4.9*/
     }
     if (V_action == 0) { /*8.2*/
-      PDEF_JSON_putNumber_OR_BAIL(type, (int64_t)obj.type); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(type, (int64_t)obj.type); /*J0.4*/
     }
     else if (V_action == 2) { /*8.2*/
-      PDEF_JSON_putNumber_OR_BAIL(type, (int64_t)obj.type); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(type, (int64_t)obj.type); /*J0.4*/
     }
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_set_passengers(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_set_passengers &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
     PDEF_JSON_putStartArr_OR_BAIL(passengers); /*J3.1*/
     for (const auto &v2 : obj.passengers) { /*3.1*/
-      PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v2); /*J0.4*/
+      PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v2); /*J0.4*/
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
@@ -9712,7 +9826,7 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     PDEF_JSON_putString_OR_BAIL(team, obj.team) /*team: pstring*/ /*J4.9*/
     const int8_t &V_mode = obj.mode; /*0.1*/
-    PDEF_JSON_putNumber_OR_BAIL(mode, (int64_t)obj.mode); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(mode, (int64_t)obj.mode); /*J0.4*/
     if (V_mode == 0) { /*8.2*/
       PDEF_JSON_putString_OR_BAIL(name, obj.name) /*name: pstring*/ /*J4.9*/
     }
@@ -9720,10 +9834,10 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
       PDEF_JSON_putString_OR_BAIL(name, obj.name) /*name: pstring*/ /*J4.9*/
     }
     if (V_mode == 0) { /*8.2*/
-      PDEF_JSON_putNumber_OR_BAIL(friendlyFire, (int64_t)obj.friendlyFire); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(friendlyFire, (int64_t)obj.friendlyFire); /*J0.4*/
     }
     else if (V_mode == 2) { /*8.2*/
-      PDEF_JSON_putNumber_OR_BAIL(friendlyFire, (int64_t)obj.friendlyFire); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(friendlyFire, (int64_t)obj.friendlyFire); /*J0.4*/
     }
     if (V_mode == 0) { /*8.2*/
       PDEF_JSON_putString_OR_BAIL(nameTagVisibility, obj.nameTagVisibility) /*nameTagVisibility: pstring*/ /*J4.9*/
@@ -9738,10 +9852,10 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
       PDEF_JSON_putString_OR_BAIL(collisionRule, obj.collisionRule) /*collisionRule: pstring*/ /*J4.9*/
     }
     if (V_mode == 0) { /*8.2*/
-      PDEF_JSON_putNumber_OR_BAIL(formatting, (int64_t)obj.formatting); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(formatting, (int64_t)obj.formatting); /*J0.4*/
     }
     else if (V_mode == 2) { /*8.2*/
-      PDEF_JSON_putNumber_OR_BAIL(formatting, (int64_t)obj.formatting); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(formatting, (int64_t)obj.formatting); /*J0.4*/
     }
     if (V_mode == 0) { /*8.2*/
       PDEF_JSON_putString_OR_BAIL(prefix, obj.prefix) /*prefix: pstring*/ /*J4.9*/
@@ -9782,49 +9896,49 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     PDEF_JSON_putString_OR_BAIL(itemName, obj.itemName) /*itemName: pstring*/ /*J4.9*/
     const int &V_action = obj.action; /*0.1*/
-    PDEF_JSON_putNumber_OR_BAIL(action, (int64_t)obj.action); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(action, (int64_t)obj.action); /*J0.4*/
     PDEF_JSON_putString_OR_BAIL(scoreName, obj.scoreName) /*scoreName: pstring*/ /*J4.9*/
     if (V_action == 1) { /*8.2*/
     }
     else {
-      PDEF_JSON_putNumber_OR_BAIL(value, (int64_t)obj.value); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(value, (int64_t)obj.value); /*J0.4*/
     }
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_spawn_position(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_spawn_position &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     PDEF_JSON_putStartObj_OR_BAIL(location);
-    PDEF_JSON_putNumber_OR_BAIL(x, obj.location.x);
-    PDEF_JSON_putNumber_OR_BAIL(z, obj.location.z);
-    PDEF_JSON_putNumber_OR_BAIL(y, obj.location.y);
+    PDEF_JSON_putUInt_OR_BAIL(x, obj.location.x);
+    PDEF_JSON_putUInt_OR_BAIL(z, obj.location.z);
+    PDEF_JSON_putUInt_OR_BAIL(y, obj.location.y);
     PDEF_JSON_putEndObj_OR_BAIL /*location: bitfield*/ /*J4.9*/
-    PDEF_JSON_putNumber_OR_BAIL(angle, (int64_t)obj.angle); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(angle, (double)obj.angle); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_update_time(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_update_time &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(age, (int64_t)obj.age); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(time, (int64_t)obj.time); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(age, (int64_t)obj.age); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(time, (int64_t)obj.time); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_entity_sound_effect(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_sound_effect &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(soundId, (int64_t)obj.soundId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(soundCategory, (int64_t)obj.soundCategory); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(volume, (int64_t)obj.volume); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(pitch, (int64_t)obj.pitch); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(soundId, (int64_t)obj.soundId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(soundCategory, (int64_t)obj.soundCategory); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(volume, (double)obj.volume); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(pitch, (double)obj.pitch); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_stop_sound(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_stop_sound &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     const int8_t &V_flags = obj.flags; /*0.1*/
-    PDEF_JSON_putNumber_OR_BAIL(flags, (int64_t)obj.flags); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(flags, (int64_t)obj.flags); /*J0.4*/
     if (V_flags == 1) { /*8.2*/
-      PDEF_JSON_putNumber_OR_BAIL(source, (int64_t)obj.source); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(source, (int64_t)obj.source); /*J0.4*/
     }
     else if (V_flags == 3) { /*8.2*/
-      PDEF_JSON_putNumber_OR_BAIL(source, (int64_t)obj.source); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(source, (int64_t)obj.source); /*J0.4*/
     }
     if (V_flags == 2) { /*8.2*/
       PDEF_JSON_putString_OR_BAIL(sound, obj.sound) /*sound: pstring*/ /*J4.9*/
@@ -9836,13 +9950,13 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   bool packet_sound_effect(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_sound_effect &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(soundId, (int64_t)obj.soundId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(soundCategory, (int64_t)obj.soundCategory); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(x, (int64_t)obj.x); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(y, (int64_t)obj.y); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(z, (int64_t)obj.z); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(volume, (int64_t)obj.volume); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(pitch, (int64_t)obj.pitch); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(soundId, (int64_t)obj.soundId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(soundCategory, (int64_t)obj.soundCategory); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(x, (int64_t)obj.x); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(y, (int64_t)obj.y); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(z, (int64_t)obj.z); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(volume, (double)obj.volume); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(pitch, (double)obj.pitch); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_playerlist_header(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_playerlist_header &obj) {
@@ -9853,34 +9967,34 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   bool packet_collect(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_collect &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(collectedEntityId, (int64_t)obj.collectedEntityId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(collectorEntityId, (int64_t)obj.collectorEntityId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(pickupItemCount, (int64_t)obj.pickupItemCount); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(collectedEntityId, (int64_t)obj.collectedEntityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(collectorEntityId, (int64_t)obj.collectorEntityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(pickupItemCount, (int64_t)obj.pickupItemCount); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_entity_teleport(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_teleport &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(x, (int64_t)obj.x); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(y, (int64_t)obj.y); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(z, (int64_t)obj.z); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(yaw, (int64_t)obj.yaw); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(pitch, (int64_t)obj.pitch); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(onGround, (int64_t)obj.onGround); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(x, (double)obj.x); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(y, (double)obj.y); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(z, (double)obj.z); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(yaw, (int64_t)obj.yaw); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(pitch, (int64_t)obj.pitch); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(onGround, (int64_t)obj.onGround); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_entity_update_attributes(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_update_attributes &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
     PDEF_JSON_putStartArr_OR_BAIL(properties); /*J1.7*/
     for (const auto &v2 : obj.properties) { /*5.20*/
       PDEF_JSON_putString_OR_BAIL(key, v2.key) /*key: pstring*/ /*J4.9*/
-      PDEF_JSON_putNumber_OR_BAIL(value, (int64_t)v2.value); /*J0.4*/
+      PDEF_JSON_putNumber_OR_BAIL(value, (double)v2.value); /*J0.4*/
       PDEF_JSON_putStartArr_OR_BAIL(modifiers); /*J1.7*/
       for (const auto &v3 : v2.modifiers) { /*5.20*/
-        PDEF_JSON_putNumber_OR_BAIL(uuid, (int64_t)v3.uuid); /*J0.4*/
-        PDEF_JSON_putNumber_OR_BAIL(amount, (int64_t)v3.amount); /*J0.4*/
-        PDEF_JSON_putNumber_OR_BAIL(operation, (int64_t)v3.operation); /*J0.4*/
+        PDEF_JSON_putInt_OR_BAIL(uuid, (int64_t)v3.uuid); /*J0.4*/
+        PDEF_JSON_putNumber_OR_BAIL(amount, (double)v3.amount); /*J0.4*/
+        PDEF_JSON_putInt_OR_BAIL(operation, (int64_t)v3.operation); /*J0.4*/
       }
       PDEF_JSON_putEndArr_OR_BAIL; /*J5.24*/
     }
@@ -9889,11 +10003,11 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   bool packet_entity_effect(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_entity_effect &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(effectId, (int64_t)obj.effectId); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(amplifier, (int64_t)obj.amplifier); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(duration, (int64_t)obj.duration); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(hideParticles, (int64_t)obj.hideParticles); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(entityId, (int64_t)obj.entityId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(effectId, (int64_t)obj.effectId); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(amplifier, (int64_t)obj.amplifier); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(duration, (int64_t)obj.duration); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(hideParticles, (int64_t)obj.hideParticles); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_select_advancement_tab(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_select_advancement_tab &obj) {
@@ -9901,7 +10015,7 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     const pdef::pc1_18_play_toClient::packet_select_advancement_tab::Id &v_12 = obj.id; /*["packet_select_advancement_tab"]*/ /*7.4*/
     {
       const bool &V_has = v_12.has; /*0.1*/
-      PDEF_JSON_putNumber_OR_BAIL(has, (int64_t)v_12.has); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(has, (int64_t)v_12.has); /*J0.4*/
       if (V_has == true) { /*8.1*/
         PDEF_JSON_putString_OR_BAIL(value, v_12.value) /*value: pstring*/ /*J4.9*/
       }
@@ -9920,37 +10034,37 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
           PDEF_JSON_putString_OR_BAIL(group, v3.group) /*group: pstring*/ /*J4.9*/
           PDEF_JSON_putStartArr_OR_BAIL(ingredients); /*J3.1*/
           for (const auto &v5 : v3.ingredients) { /*3.1*/
-            PDEF_JSON_putStartArr_OR_BAIL(); /*J3.1*/
+            PDEF_JSON_putToken_OR_BAIL("["); /*J3.1*/
             for (const auto &v6 : v5) { /*3.1*/
-              PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v6); /*J0.4*/
+              PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v6); /*J0.4*/
             }
             PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
           }
           PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
-          PDEF_JSON_putNumber_OR_BAIL(result, (int64_t)v3.result); /*J0.4*/
+          PDEF_JSON_putInt_OR_BAIL(result, (int64_t)v3.result); /*J0.4*/
       }
       else if (V_type == "minecraft:crafting_shaped") { /*8.0*/
           const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftCraftingShaped &v3 = *v2.data_minecraft_crafting_shaped; /*8.5*/
           const int &V_width = v3.width; /*0.1*/
-          PDEF_JSON_putNumber_OR_BAIL(width, (int64_t)v3.width); /*J0.4*/
+          PDEF_JSON_putInt_OR_BAIL(width, (int64_t)v3.width); /*J0.4*/
           const int &V_height = v3.height; /*0.1*/
-          PDEF_JSON_putNumber_OR_BAIL(height, (int64_t)v3.height); /*J0.4*/
+          PDEF_JSON_putInt_OR_BAIL(height, (int64_t)v3.height); /*J0.4*/
           PDEF_JSON_putString_OR_BAIL(group, v3.group) /*group: pstring*/ /*J4.9*/
           PDEF_JSON_putStartArr_OR_BAIL(ingredients); /*J1.7*/
           for (const auto &v : v3.ingredients) { /*5.1*/
-            PDEF_JSON_putNumber_OR_BAIL(V_height, (int64_t)V_height); /*5.4*/
+            PDEF_JSON_putInt_OR_BAIL(V_height, (int64_t)V_height); /*5.4*/
             PDEF_JSON_putToken_OR_BAIL("["); /*J5.11*/
             for (const auto &v : v) { /*5.10*/
-              PDEF_JSON_putStartArr_OR_BAIL(); /*J3.1*/
+              PDEF_JSON_putToken_OR_BAIL("["); /*J3.1*/
               for (const auto &v7 : v) { /*3.1*/
-                PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v7); /*J0.4*/
+                PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v7); /*J0.4*/
               }
               PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
             }
             PDEF_JSON_putEndArr_OR_BAIL; /*J5.16*/
           }
           PDEF_JSON_putEndArr_OR_BAIL; /*J5.17*/
-          PDEF_JSON_putNumber_OR_BAIL(result, (int64_t)v3.result); /*J0.4*/
+          PDEF_JSON_putInt_OR_BAIL(result, (int64_t)v3.result); /*J0.4*/
       }
       else if (V_type == "minecraft:crafting_special_armordye") { /*8.0*/
       }
@@ -9981,40 +10095,40 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
       else if (V_type == "minecraft:crafting_special_suspiciousstew") { /*8.0*/
       }
       else if (V_type == "minecraft:smelting") { /*8.0*/
-        pdef::pc1_18_play_toClient::toJSON::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); /*minecraft_smelting_format*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(data_minecraft_smelting_format);  pdef::pc1_18_play_toClient::toJSON::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); PDEF_JSON_putToken_OR_BAIL(","); /*minecraft_smelting_format*/ /*4.5*/
       }
       else if (V_type == "minecraft:blasting") { /*8.0*/
-        pdef::pc1_18_play_toClient::toJSON::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); /*minecraft_smelting_format*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(data_minecraft_smelting_format);  pdef::pc1_18_play_toClient::toJSON::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); PDEF_JSON_putToken_OR_BAIL(","); /*minecraft_smelting_format*/ /*4.5*/
       }
       else if (V_type == "minecraft:smoking") { /*8.0*/
-        pdef::pc1_18_play_toClient::toJSON::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); /*minecraft_smelting_format*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(data_minecraft_smelting_format);  pdef::pc1_18_play_toClient::toJSON::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); PDEF_JSON_putToken_OR_BAIL(","); /*minecraft_smelting_format*/ /*4.5*/
       }
       else if (V_type == "minecraft:campfire_cooking") { /*8.0*/
-        pdef::pc1_18_play_toClient::toJSON::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); /*minecraft_smelting_format*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(data_minecraft_smelting_format);  pdef::pc1_18_play_toClient::toJSON::minecraft_smelting_format(stream, *v2.data_minecraft_smelting_format); PDEF_JSON_putToken_OR_BAIL(","); /*minecraft_smelting_format*/ /*4.5*/
       }
       else if (V_type == "minecraft:stonecutting") { /*8.0*/
           const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftStonecutting &v3 = *v2.data_minecraft_stonecutting; /*8.5*/
           PDEF_JSON_putString_OR_BAIL(group, v3.group) /*group: pstring*/ /*J4.9*/
           PDEF_JSON_putStartArr_OR_BAIL(ingredient); /*J3.1*/
           for (const auto &v5 : v3.ingredient) { /*3.1*/
-            PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v5); /*J0.4*/
+            PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v5); /*J0.4*/
           }
           PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
-          PDEF_JSON_putNumber_OR_BAIL(result, (int64_t)v3.result); /*J0.4*/
+          PDEF_JSON_putInt_OR_BAIL(result, (int64_t)v3.result); /*J0.4*/
       }
       else if (V_type == "minecraft:smithing") { /*8.0*/
           const pdef::pc1_18_play_toClient::packet_declare_recipes::Recipes::DataMinecraftSmithing &v3 = *v2.data_minecraft_smithing; /*8.5*/
           PDEF_JSON_putStartArr_OR_BAIL(base); /*J3.1*/
           for (const auto &v5 : v3.base) { /*3.1*/
-            PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v5); /*J0.4*/
+            PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v5); /*J0.4*/
           }
           PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
           PDEF_JSON_putStartArr_OR_BAIL(addition); /*J3.1*/
           for (const auto &v5 : v3.addition) { /*3.1*/
-            PDEF_JSON_putNumberAnon_OR_BAIL((int64_t)v5); /*J0.4*/
+            PDEF_JSON_putIntAnon_OR_BAIL((int64_t)v5); /*J0.4*/
           }
           PDEF_JSON_putEndArr_OR_BAIL; /*J3.5*/
-          PDEF_JSON_putNumber_OR_BAIL(result, (int64_t)v3.result); /*J0.4*/
+          PDEF_JSON_putInt_OR_BAIL(result, (int64_t)v3.result); /*J0.4*/
       }
     }
     PDEF_JSON_putEndArr_OR_BAIL; /*J5.24*/
@@ -10035,52 +10149,52 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   bool packet_acknowledge_player_digging(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_acknowledge_player_digging &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     PDEF_JSON_putStartObj_OR_BAIL(location);
-    PDEF_JSON_putNumber_OR_BAIL(x, obj.location.x);
-    PDEF_JSON_putNumber_OR_BAIL(z, obj.location.z);
-    PDEF_JSON_putNumber_OR_BAIL(y, obj.location.y);
+    PDEF_JSON_putUInt_OR_BAIL(x, obj.location.x);
+    PDEF_JSON_putUInt_OR_BAIL(z, obj.location.z);
+    PDEF_JSON_putUInt_OR_BAIL(y, obj.location.y);
     PDEF_JSON_putEndObj_OR_BAIL /*location: bitfield*/ /*J4.9*/
-    PDEF_JSON_putNumber_OR_BAIL(block, (int64_t)obj.block); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(status, (int64_t)obj.status); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(successful, (int64_t)obj.successful); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(block, (int64_t)obj.block); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(status, (int64_t)obj.status); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(successful, (int64_t)obj.successful); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_sculk_vibration_signal(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_sculk_vibration_signal &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     PDEF_JSON_putStartObj_OR_BAIL(sourcePosition);
-    PDEF_JSON_putNumber_OR_BAIL(x, obj.sourcePosition.x);
-    PDEF_JSON_putNumber_OR_BAIL(z, obj.sourcePosition.z);
-    PDEF_JSON_putNumber_OR_BAIL(y, obj.sourcePosition.y);
+    PDEF_JSON_putUInt_OR_BAIL(x, obj.sourcePosition.x);
+    PDEF_JSON_putUInt_OR_BAIL(z, obj.sourcePosition.z);
+    PDEF_JSON_putUInt_OR_BAIL(y, obj.sourcePosition.y);
     PDEF_JSON_putEndObj_OR_BAIL /*sourcePosition: bitfield*/ /*J4.9*/
     PDEF_JSON_putString_OR_BAIL(destinationIdentifier, obj.destinationIdentifier) /*destinationIdentifier: pstring*/ /*J4.9*/
     const std::string &V_destinationIdentifier = obj.destinationIdentifier; /*4.7*/
     if (V_destinationIdentifier == "block") { /*8.0*/
       PDEF_JSON_putStartObj_OR_BAIL(destination_position);
-      PDEF_JSON_putNumber_OR_BAIL(x, obj.destination_position.x);
-      PDEF_JSON_putNumber_OR_BAIL(z, obj.destination_position.z);
-      PDEF_JSON_putNumber_OR_BAIL(y, obj.destination_position.y);
+      PDEF_JSON_putUInt_OR_BAIL(x, obj.destination_position.x);
+      PDEF_JSON_putUInt_OR_BAIL(z, obj.destination_position.z);
+      PDEF_JSON_putUInt_OR_BAIL(y, obj.destination_position.y);
       PDEF_JSON_putEndObj_OR_BAIL /*destination_position: bitfield*/ /*J4.9*/
     }
     else if (V_destinationIdentifier == "entityId") { /*8.0*/
-      PDEF_JSON_putNumber_OR_BAIL(destination_varint, (int64_t)obj.destination_varint); /*J0.4*/
+      PDEF_JSON_putInt_OR_BAIL(destination_varint, (int64_t)obj.destination_varint); /*J0.4*/
     }
-    PDEF_JSON_putNumber_OR_BAIL(arrivalTicks, (int64_t)obj.arrivalTicks); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(arrivalTicks, (int64_t)obj.arrivalTicks); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_clear_titles(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_clear_titles &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(reset, (int64_t)obj.reset); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(reset, (int64_t)obj.reset); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_initialize_world_border(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_initialize_world_border &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(x, (int64_t)obj.x); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(z, (int64_t)obj.z); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(oldDiameter, (int64_t)obj.oldDiameter); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(newDiameter, (int64_t)obj.newDiameter); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(speed, (int64_t)obj.speed); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(portalTeleportBoundary, (int64_t)obj.portalTeleportBoundary); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(warningBlocks, (int64_t)obj.warningBlocks); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(warningTime, (int64_t)obj.warningTime); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(x, (double)obj.x); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(z, (double)obj.z); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(oldDiameter, (double)obj.oldDiameter); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(newDiameter, (double)obj.newDiameter); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(speed, (int64_t)obj.speed); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(portalTeleportBoundary, (int64_t)obj.portalTeleportBoundary); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(warningBlocks, (int64_t)obj.warningBlocks); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(warningTime, (int64_t)obj.warningTime); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_action_bar(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_action_bar &obj) {
@@ -10090,35 +10204,35 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   bool packet_world_border_center(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_world_border_center &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(x, (int64_t)obj.x); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(z, (int64_t)obj.z); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(x, (double)obj.x); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(z, (double)obj.z); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_world_border_lerp_size(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_world_border_lerp_size &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(oldDiameter, (int64_t)obj.oldDiameter); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(newDiameter, (int64_t)obj.newDiameter); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(speed, (int64_t)obj.speed); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(oldDiameter, (double)obj.oldDiameter); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(newDiameter, (double)obj.newDiameter); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(speed, (int64_t)obj.speed); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_world_border_size(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_world_border_size &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(diameter, (int64_t)obj.diameter); /*J0.4*/
+    PDEF_JSON_putNumber_OR_BAIL(diameter, (double)obj.diameter); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_world_border_warning_delay(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_world_border_warning_delay &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(warningTime, (int64_t)obj.warningTime); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(warningTime, (int64_t)obj.warningTime); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_world_border_warning_reach(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_world_border_warning_reach &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(warningBlocks, (int64_t)obj.warningBlocks); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(warningBlocks, (int64_t)obj.warningBlocks); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_ping(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_ping &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(id, (int64_t)obj.id); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(id, (int64_t)obj.id); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_set_title_subtitle(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_set_title_subtitle &obj) {
@@ -10133,435 +10247,435 @@ bool tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   bool packet_set_title_time(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_set_title_time &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(fadeIn, (int64_t)obj.fadeIn); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(stay, (int64_t)obj.stay); /*J0.4*/
-    PDEF_JSON_putNumber_OR_BAIL(fadeOut, (int64_t)obj.fadeOut); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(fadeIn, (int64_t)obj.fadeIn); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(stay, (int64_t)obj.stay); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(fadeOut, (int64_t)obj.fadeOut); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet_simulation_distance(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_simulation_distance &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
-    PDEF_JSON_putNumber_OR_BAIL(distance, (int64_t)obj.distance); /*J0.4*/
+    PDEF_JSON_putInt_OR_BAIL(distance, (int64_t)obj.distance); /*J0.4*/
     PDEF_JSON_putEndObj_OR_BAIL; PDEF_JSON_FINISH_WRITING; return true;
   }
   bool packet(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet &obj) {
     PDEF_JSON_putToken_OR_BAIL("{");
     const pdef::pc1_18_play_toClient::packet::Name &V_name = obj.name; /*0.3*/
-    PDEF_JSON_putNumber_OR_BAIL(name, (int64_t)(int&)obj.name); /*J7.1*/
+    PDEF_JSON_putInt_OR_BAIL(name, (int64_t)(int&)obj.name); /*J7.1*/
     switch (V_name) { /*8.0*/
       case pdef::pc1_18_play_toClient::packet::Name::SpawnEntity: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_spawn_entity(stream, *obj.params_packet_spawn_entity); /*packet_spawn_entity*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_spawn_entity);  pdef::pc1_18_play_toClient::toJSON::packet_spawn_entity(stream, *obj.params_packet_spawn_entity); PDEF_JSON_putToken_OR_BAIL(","); /*packet_spawn_entity*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SpawnEntityExperienceOrb: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_spawn_entity_experience_orb(stream, *obj.params_packet_spawn_entity_experience_orb); /*packet_spawn_entity_experience_orb*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_spawn_entity_experience_orb);  pdef::pc1_18_play_toClient::toJSON::packet_spawn_entity_experience_orb(stream, *obj.params_packet_spawn_entity_experience_orb); PDEF_JSON_putToken_OR_BAIL(","); /*packet_spawn_entity_experience_orb*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SpawnEntityLiving: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_spawn_entity_living(stream, *obj.params_packet_spawn_entity_living); /*packet_spawn_entity_living*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_spawn_entity_living);  pdef::pc1_18_play_toClient::toJSON::packet_spawn_entity_living(stream, *obj.params_packet_spawn_entity_living); PDEF_JSON_putToken_OR_BAIL(","); /*packet_spawn_entity_living*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SpawnEntityPainting: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_spawn_entity_painting(stream, *obj.params_packet_spawn_entity_painting); /*packet_spawn_entity_painting*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_spawn_entity_painting);  pdef::pc1_18_play_toClient::toJSON::packet_spawn_entity_painting(stream, *obj.params_packet_spawn_entity_painting); PDEF_JSON_putToken_OR_BAIL(","); /*packet_spawn_entity_painting*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::NamedEntitySpawn: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_named_entity_spawn(stream, *obj.params_packet_named_entity_spawn); /*packet_named_entity_spawn*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_named_entity_spawn);  pdef::pc1_18_play_toClient::toJSON::packet_named_entity_spawn(stream, *obj.params_packet_named_entity_spawn); PDEF_JSON_putToken_OR_BAIL(","); /*packet_named_entity_spawn*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Animation: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_animation(stream, *obj.params_packet_animation); /*packet_animation*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_animation);  pdef::pc1_18_play_toClient::toJSON::packet_animation(stream, *obj.params_packet_animation); PDEF_JSON_putToken_OR_BAIL(","); /*packet_animation*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Statistics: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_statistics(stream, *obj.params_packet_statistics); /*packet_statistics*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_statistics);  pdef::pc1_18_play_toClient::toJSON::packet_statistics(stream, *obj.params_packet_statistics); PDEF_JSON_putToken_OR_BAIL(","); /*packet_statistics*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Advancements: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_advancements(stream, *obj.params_packet_advancements); /*packet_advancements*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_advancements);  pdef::pc1_18_play_toClient::toJSON::packet_advancements(stream, *obj.params_packet_advancements); PDEF_JSON_putToken_OR_BAIL(","); /*packet_advancements*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::BlockBreakAnimation: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_block_break_animation(stream, *obj.params_packet_block_break_animation); /*packet_block_break_animation*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_block_break_animation);  pdef::pc1_18_play_toClient::toJSON::packet_block_break_animation(stream, *obj.params_packet_block_break_animation); PDEF_JSON_putToken_OR_BAIL(","); /*packet_block_break_animation*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::TileEntityData: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_tile_entity_data(stream, *obj.params_packet_tile_entity_data); /*packet_tile_entity_data*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_tile_entity_data);  pdef::pc1_18_play_toClient::toJSON::packet_tile_entity_data(stream, *obj.params_packet_tile_entity_data); PDEF_JSON_putToken_OR_BAIL(","); /*packet_tile_entity_data*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::BlockAction: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_block_action(stream, *obj.params_packet_block_action); /*packet_block_action*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_block_action);  pdef::pc1_18_play_toClient::toJSON::packet_block_action(stream, *obj.params_packet_block_action); PDEF_JSON_putToken_OR_BAIL(","); /*packet_block_action*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::BlockChange: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_block_change(stream, *obj.params_packet_block_change); /*packet_block_change*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_block_change);  pdef::pc1_18_play_toClient::toJSON::packet_block_change(stream, *obj.params_packet_block_change); PDEF_JSON_putToken_OR_BAIL(","); /*packet_block_change*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::BossBar: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_boss_bar(stream, *obj.params_packet_boss_bar); /*packet_boss_bar*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_boss_bar);  pdef::pc1_18_play_toClient::toJSON::packet_boss_bar(stream, *obj.params_packet_boss_bar); PDEF_JSON_putToken_OR_BAIL(","); /*packet_boss_bar*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Difficulty: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_difficulty(stream, *obj.params_packet_difficulty); /*packet_difficulty*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_difficulty);  pdef::pc1_18_play_toClient::toJSON::packet_difficulty(stream, *obj.params_packet_difficulty); PDEF_JSON_putToken_OR_BAIL(","); /*packet_difficulty*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::TabComplete: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_tab_complete(stream, *obj.params_packet_tab_complete); /*packet_tab_complete*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_tab_complete);  pdef::pc1_18_play_toClient::toJSON::packet_tab_complete(stream, *obj.params_packet_tab_complete); PDEF_JSON_putToken_OR_BAIL(","); /*packet_tab_complete*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::DeclareCommands: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_declare_commands(stream, *obj.params_packet_declare_commands); /*packet_declare_commands*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_declare_commands);  pdef::pc1_18_play_toClient::toJSON::packet_declare_commands(stream, *obj.params_packet_declare_commands); PDEF_JSON_putToken_OR_BAIL(","); /*packet_declare_commands*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::FacePlayer: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_face_player(stream, *obj.params_packet_face_player); /*packet_face_player*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_face_player);  pdef::pc1_18_play_toClient::toJSON::packet_face_player(stream, *obj.params_packet_face_player); PDEF_JSON_putToken_OR_BAIL(","); /*packet_face_player*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::NbtQueryResponse: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_nbt_query_response(stream, *obj.params_packet_nbt_query_response); /*packet_nbt_query_response*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_nbt_query_response);  pdef::pc1_18_play_toClient::toJSON::packet_nbt_query_response(stream, *obj.params_packet_nbt_query_response); PDEF_JSON_putToken_OR_BAIL(","); /*packet_nbt_query_response*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Chat: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_chat(stream, *obj.params_packet_chat); /*packet_chat*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_chat);  pdef::pc1_18_play_toClient::toJSON::packet_chat(stream, *obj.params_packet_chat); PDEF_JSON_putToken_OR_BAIL(","); /*packet_chat*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::MultiBlockChange: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_multi_block_change(stream, *obj.params_packet_multi_block_change); /*packet_multi_block_change*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_multi_block_change);  pdef::pc1_18_play_toClient::toJSON::packet_multi_block_change(stream, *obj.params_packet_multi_block_change); PDEF_JSON_putToken_OR_BAIL(","); /*packet_multi_block_change*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::CloseWindow: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_close_window(stream, *obj.params_packet_close_window); /*packet_close_window*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_close_window);  pdef::pc1_18_play_toClient::toJSON::packet_close_window(stream, *obj.params_packet_close_window); PDEF_JSON_putToken_OR_BAIL(","); /*packet_close_window*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::OpenWindow: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_open_window(stream, *obj.params_packet_open_window); /*packet_open_window*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_open_window);  pdef::pc1_18_play_toClient::toJSON::packet_open_window(stream, *obj.params_packet_open_window); PDEF_JSON_putToken_OR_BAIL(","); /*packet_open_window*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::WindowItems: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_window_items(stream, *obj.params_packet_window_items); /*packet_window_items*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_window_items);  pdef::pc1_18_play_toClient::toJSON::packet_window_items(stream, *obj.params_packet_window_items); PDEF_JSON_putToken_OR_BAIL(","); /*packet_window_items*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::CraftProgressBar: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_craft_progress_bar(stream, *obj.params_packet_craft_progress_bar); /*packet_craft_progress_bar*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_craft_progress_bar);  pdef::pc1_18_play_toClient::toJSON::packet_craft_progress_bar(stream, *obj.params_packet_craft_progress_bar); PDEF_JSON_putToken_OR_BAIL(","); /*packet_craft_progress_bar*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SetSlot: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_set_slot(stream, *obj.params_packet_set_slot); /*packet_set_slot*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_set_slot);  pdef::pc1_18_play_toClient::toJSON::packet_set_slot(stream, *obj.params_packet_set_slot); PDEF_JSON_putToken_OR_BAIL(","); /*packet_set_slot*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SetCooldown: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_set_cooldown(stream, *obj.params_packet_set_cooldown); /*packet_set_cooldown*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_set_cooldown);  pdef::pc1_18_play_toClient::toJSON::packet_set_cooldown(stream, *obj.params_packet_set_cooldown); PDEF_JSON_putToken_OR_BAIL(","); /*packet_set_cooldown*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::CustomPayload: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_custom_payload(stream, *obj.params_packet_custom_payload); /*packet_custom_payload*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_custom_payload);  pdef::pc1_18_play_toClient::toJSON::packet_custom_payload(stream, *obj.params_packet_custom_payload); PDEF_JSON_putToken_OR_BAIL(","); /*packet_custom_payload*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::NamedSoundEffect: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_named_sound_effect(stream, *obj.params_packet_named_sound_effect); /*packet_named_sound_effect*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_named_sound_effect);  pdef::pc1_18_play_toClient::toJSON::packet_named_sound_effect(stream, *obj.params_packet_named_sound_effect); PDEF_JSON_putToken_OR_BAIL(","); /*packet_named_sound_effect*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::KickDisconnect: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_kick_disconnect(stream, *obj.params_packet_kick_disconnect); /*packet_kick_disconnect*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_kick_disconnect);  pdef::pc1_18_play_toClient::toJSON::packet_kick_disconnect(stream, *obj.params_packet_kick_disconnect); PDEF_JSON_putToken_OR_BAIL(","); /*packet_kick_disconnect*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntityStatus: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_entity_status(stream, *obj.params_packet_entity_status); /*packet_entity_status*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_entity_status);  pdef::pc1_18_play_toClient::toJSON::packet_entity_status(stream, *obj.params_packet_entity_status); PDEF_JSON_putToken_OR_BAIL(","); /*packet_entity_status*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Explosion: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_explosion(stream, *obj.params_packet_explosion); /*packet_explosion*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_explosion);  pdef::pc1_18_play_toClient::toJSON::packet_explosion(stream, *obj.params_packet_explosion); PDEF_JSON_putToken_OR_BAIL(","); /*packet_explosion*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::UnloadChunk: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_unload_chunk(stream, *obj.params_packet_unload_chunk); /*packet_unload_chunk*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_unload_chunk);  pdef::pc1_18_play_toClient::toJSON::packet_unload_chunk(stream, *obj.params_packet_unload_chunk); PDEF_JSON_putToken_OR_BAIL(","); /*packet_unload_chunk*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::GameStateChange: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_game_state_change(stream, *obj.params_packet_game_state_change); /*packet_game_state_change*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_game_state_change);  pdef::pc1_18_play_toClient::toJSON::packet_game_state_change(stream, *obj.params_packet_game_state_change); PDEF_JSON_putToken_OR_BAIL(","); /*packet_game_state_change*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::OpenHorseWindow: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_open_horse_window(stream, *obj.params_packet_open_horse_window); /*packet_open_horse_window*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_open_horse_window);  pdef::pc1_18_play_toClient::toJSON::packet_open_horse_window(stream, *obj.params_packet_open_horse_window); PDEF_JSON_putToken_OR_BAIL(","); /*packet_open_horse_window*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::KeepAlive: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_keep_alive(stream, *obj.params_packet_keep_alive); /*packet_keep_alive*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_keep_alive);  pdef::pc1_18_play_toClient::toJSON::packet_keep_alive(stream, *obj.params_packet_keep_alive); PDEF_JSON_putToken_OR_BAIL(","); /*packet_keep_alive*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::MapChunk: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_map_chunk(stream, *obj.params_packet_map_chunk); /*packet_map_chunk*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_map_chunk);  pdef::pc1_18_play_toClient::toJSON::packet_map_chunk(stream, *obj.params_packet_map_chunk); PDEF_JSON_putToken_OR_BAIL(","); /*packet_map_chunk*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::WorldEvent: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_world_event(stream, *obj.params_packet_world_event); /*packet_world_event*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_world_event);  pdef::pc1_18_play_toClient::toJSON::packet_world_event(stream, *obj.params_packet_world_event); PDEF_JSON_putToken_OR_BAIL(","); /*packet_world_event*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::WorldParticles: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_world_particles(stream, *obj.params_packet_world_particles); /*packet_world_particles*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_world_particles);  pdef::pc1_18_play_toClient::toJSON::packet_world_particles(stream, *obj.params_packet_world_particles); PDEF_JSON_putToken_OR_BAIL(","); /*packet_world_particles*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::UpdateLight: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_update_light(stream, *obj.params_packet_update_light); /*packet_update_light*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_update_light);  pdef::pc1_18_play_toClient::toJSON::packet_update_light(stream, *obj.params_packet_update_light); PDEF_JSON_putToken_OR_BAIL(","); /*packet_update_light*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Login: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_login(stream, *obj.params_packet_login); /*packet_login*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_login);  pdef::pc1_18_play_toClient::toJSON::packet_login(stream, *obj.params_packet_login); PDEF_JSON_putToken_OR_BAIL(","); /*packet_login*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Map: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_map(stream, *obj.params_packet_map); /*packet_map*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_map);  pdef::pc1_18_play_toClient::toJSON::packet_map(stream, *obj.params_packet_map); PDEF_JSON_putToken_OR_BAIL(","); /*packet_map*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::TradeList: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_trade_list(stream, *obj.params_packet_trade_list); /*packet_trade_list*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_trade_list);  pdef::pc1_18_play_toClient::toJSON::packet_trade_list(stream, *obj.params_packet_trade_list); PDEF_JSON_putToken_OR_BAIL(","); /*packet_trade_list*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::RelEntityMove: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_rel_entity_move(stream, *obj.params_packet_rel_entity_move); /*packet_rel_entity_move*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_rel_entity_move);  pdef::pc1_18_play_toClient::toJSON::packet_rel_entity_move(stream, *obj.params_packet_rel_entity_move); PDEF_JSON_putToken_OR_BAIL(","); /*packet_rel_entity_move*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntityMoveLook: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_entity_move_look(stream, *obj.params_packet_entity_move_look); /*packet_entity_move_look*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_entity_move_look);  pdef::pc1_18_play_toClient::toJSON::packet_entity_move_look(stream, *obj.params_packet_entity_move_look); PDEF_JSON_putToken_OR_BAIL(","); /*packet_entity_move_look*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntityLook: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_entity_look(stream, *obj.params_packet_entity_look); /*packet_entity_look*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_entity_look);  pdef::pc1_18_play_toClient::toJSON::packet_entity_look(stream, *obj.params_packet_entity_look); PDEF_JSON_putToken_OR_BAIL(","); /*packet_entity_look*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::VehicleMove: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_vehicle_move(stream, *obj.params_packet_vehicle_move); /*packet_vehicle_move*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_vehicle_move);  pdef::pc1_18_play_toClient::toJSON::packet_vehicle_move(stream, *obj.params_packet_vehicle_move); PDEF_JSON_putToken_OR_BAIL(","); /*packet_vehicle_move*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::OpenBook: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_open_book(stream, *obj.params_packet_open_book); /*packet_open_book*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_open_book);  pdef::pc1_18_play_toClient::toJSON::packet_open_book(stream, *obj.params_packet_open_book); PDEF_JSON_putToken_OR_BAIL(","); /*packet_open_book*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::OpenSignEntity: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_open_sign_entity(stream, *obj.params_packet_open_sign_entity); /*packet_open_sign_entity*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_open_sign_entity);  pdef::pc1_18_play_toClient::toJSON::packet_open_sign_entity(stream, *obj.params_packet_open_sign_entity); PDEF_JSON_putToken_OR_BAIL(","); /*packet_open_sign_entity*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::CraftRecipeResponse: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_craft_recipe_response(stream, *obj.params_packet_craft_recipe_response); /*packet_craft_recipe_response*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_craft_recipe_response);  pdef::pc1_18_play_toClient::toJSON::packet_craft_recipe_response(stream, *obj.params_packet_craft_recipe_response); PDEF_JSON_putToken_OR_BAIL(","); /*packet_craft_recipe_response*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Abilities: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_abilities(stream, *obj.params_packet_abilities); /*packet_abilities*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_abilities);  pdef::pc1_18_play_toClient::toJSON::packet_abilities(stream, *obj.params_packet_abilities); PDEF_JSON_putToken_OR_BAIL(","); /*packet_abilities*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EndCombatEvent: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_end_combat_event(stream, *obj.params_packet_end_combat_event); /*packet_end_combat_event*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_end_combat_event);  pdef::pc1_18_play_toClient::toJSON::packet_end_combat_event(stream, *obj.params_packet_end_combat_event); PDEF_JSON_putToken_OR_BAIL(","); /*packet_end_combat_event*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EnterCombatEvent: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_enter_combat_event(stream, *obj.params_packet_enter_combat_event); /*packet_enter_combat_event*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_enter_combat_event);  pdef::pc1_18_play_toClient::toJSON::packet_enter_combat_event(stream, *obj.params_packet_enter_combat_event); PDEF_JSON_putToken_OR_BAIL(","); /*packet_enter_combat_event*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::DeathCombatEvent: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_death_combat_event(stream, *obj.params_packet_death_combat_event); /*packet_death_combat_event*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_death_combat_event);  pdef::pc1_18_play_toClient::toJSON::packet_death_combat_event(stream, *obj.params_packet_death_combat_event); PDEF_JSON_putToken_OR_BAIL(","); /*packet_death_combat_event*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::PlayerInfo: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_player_info(stream, *obj.params_packet_player_info); /*packet_player_info*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_player_info);  pdef::pc1_18_play_toClient::toJSON::packet_player_info(stream, *obj.params_packet_player_info); PDEF_JSON_putToken_OR_BAIL(","); /*packet_player_info*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Position: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_position(stream, *obj.params_packet_position); /*packet_position*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_position);  pdef::pc1_18_play_toClient::toJSON::packet_position(stream, *obj.params_packet_position); PDEF_JSON_putToken_OR_BAIL(","); /*packet_position*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::UnlockRecipes: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_unlock_recipes(stream, *obj.params_packet_unlock_recipes); /*packet_unlock_recipes*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_unlock_recipes);  pdef::pc1_18_play_toClient::toJSON::packet_unlock_recipes(stream, *obj.params_packet_unlock_recipes); PDEF_JSON_putToken_OR_BAIL(","); /*packet_unlock_recipes*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntityDestroy: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_entity_destroy(stream, *obj.params_packet_entity_destroy); /*packet_entity_destroy*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_entity_destroy);  pdef::pc1_18_play_toClient::toJSON::packet_entity_destroy(stream, *obj.params_packet_entity_destroy); PDEF_JSON_putToken_OR_BAIL(","); /*packet_entity_destroy*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::RemoveEntityEffect: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_remove_entity_effect(stream, *obj.params_packet_remove_entity_effect); /*packet_remove_entity_effect*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_remove_entity_effect);  pdef::pc1_18_play_toClient::toJSON::packet_remove_entity_effect(stream, *obj.params_packet_remove_entity_effect); PDEF_JSON_putToken_OR_BAIL(","); /*packet_remove_entity_effect*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::ResourcePackSend: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_resource_pack_send(stream, *obj.params_packet_resource_pack_send); /*packet_resource_pack_send*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_resource_pack_send);  pdef::pc1_18_play_toClient::toJSON::packet_resource_pack_send(stream, *obj.params_packet_resource_pack_send); PDEF_JSON_putToken_OR_BAIL(","); /*packet_resource_pack_send*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Respawn: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_respawn(stream, *obj.params_packet_respawn); /*packet_respawn*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_respawn);  pdef::pc1_18_play_toClient::toJSON::packet_respawn(stream, *obj.params_packet_respawn); PDEF_JSON_putToken_OR_BAIL(","); /*packet_respawn*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntityUpdateAttributes: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_entity_update_attributes(stream, *obj.params_packet_entity_update_attributes); /*packet_entity_update_attributes*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_entity_update_attributes);  pdef::pc1_18_play_toClient::toJSON::packet_entity_update_attributes(stream, *obj.params_packet_entity_update_attributes); PDEF_JSON_putToken_OR_BAIL(","); /*packet_entity_update_attributes*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Camera: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_camera(stream, *obj.params_packet_camera); /*packet_camera*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_camera);  pdef::pc1_18_play_toClient::toJSON::packet_camera(stream, *obj.params_packet_camera); PDEF_JSON_putToken_OR_BAIL(","); /*packet_camera*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::HeldItemSlot: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_held_item_slot(stream, *obj.params_packet_held_item_slot); /*packet_held_item_slot*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_held_item_slot);  pdef::pc1_18_play_toClient::toJSON::packet_held_item_slot(stream, *obj.params_packet_held_item_slot); PDEF_JSON_putToken_OR_BAIL(","); /*packet_held_item_slot*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::UpdateViewPosition: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_update_view_position(stream, *obj.params_packet_update_view_position); /*packet_update_view_position*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_update_view_position);  pdef::pc1_18_play_toClient::toJSON::packet_update_view_position(stream, *obj.params_packet_update_view_position); PDEF_JSON_putToken_OR_BAIL(","); /*packet_update_view_position*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::UpdateViewDistance: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_update_view_distance(stream, *obj.params_packet_update_view_distance); /*packet_update_view_distance*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_update_view_distance);  pdef::pc1_18_play_toClient::toJSON::packet_update_view_distance(stream, *obj.params_packet_update_view_distance); PDEF_JSON_putToken_OR_BAIL(","); /*packet_update_view_distance*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::ScoreboardDisplayObjective: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_scoreboard_display_objective(stream, *obj.params_packet_scoreboard_display_objective); /*packet_scoreboard_display_objective*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_scoreboard_display_objective);  pdef::pc1_18_play_toClient::toJSON::packet_scoreboard_display_objective(stream, *obj.params_packet_scoreboard_display_objective); PDEF_JSON_putToken_OR_BAIL(","); /*packet_scoreboard_display_objective*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntityMetadata: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_entity_metadata(stream, *obj.params_packet_entity_metadata); /*packet_entity_metadata*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_entity_metadata);  pdef::pc1_18_play_toClient::toJSON::packet_entity_metadata(stream, *obj.params_packet_entity_metadata); PDEF_JSON_putToken_OR_BAIL(","); /*packet_entity_metadata*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::AttachEntity: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_attach_entity(stream, *obj.params_packet_attach_entity); /*packet_attach_entity*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_attach_entity);  pdef::pc1_18_play_toClient::toJSON::packet_attach_entity(stream, *obj.params_packet_attach_entity); PDEF_JSON_putToken_OR_BAIL(","); /*packet_attach_entity*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntityVelocity: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_entity_velocity(stream, *obj.params_packet_entity_velocity); /*packet_entity_velocity*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_entity_velocity);  pdef::pc1_18_play_toClient::toJSON::packet_entity_velocity(stream, *obj.params_packet_entity_velocity); PDEF_JSON_putToken_OR_BAIL(","); /*packet_entity_velocity*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntityEquipment: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_entity_equipment(stream, *obj.params_packet_entity_equipment); /*packet_entity_equipment*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_entity_equipment);  pdef::pc1_18_play_toClient::toJSON::packet_entity_equipment(stream, *obj.params_packet_entity_equipment); PDEF_JSON_putToken_OR_BAIL(","); /*packet_entity_equipment*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Experience: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_experience(stream, *obj.params_packet_experience); /*packet_experience*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_experience);  pdef::pc1_18_play_toClient::toJSON::packet_experience(stream, *obj.params_packet_experience); PDEF_JSON_putToken_OR_BAIL(","); /*packet_experience*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::UpdateHealth: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_update_health(stream, *obj.params_packet_update_health); /*packet_update_health*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_update_health);  pdef::pc1_18_play_toClient::toJSON::packet_update_health(stream, *obj.params_packet_update_health); PDEF_JSON_putToken_OR_BAIL(","); /*packet_update_health*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::ScoreboardObjective: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_scoreboard_objective(stream, *obj.params_packet_scoreboard_objective); /*packet_scoreboard_objective*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_scoreboard_objective);  pdef::pc1_18_play_toClient::toJSON::packet_scoreboard_objective(stream, *obj.params_packet_scoreboard_objective); PDEF_JSON_putToken_OR_BAIL(","); /*packet_scoreboard_objective*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SetPassengers: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_set_passengers(stream, *obj.params_packet_set_passengers); /*packet_set_passengers*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_set_passengers);  pdef::pc1_18_play_toClient::toJSON::packet_set_passengers(stream, *obj.params_packet_set_passengers); PDEF_JSON_putToken_OR_BAIL(","); /*packet_set_passengers*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Teams: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_teams(stream, *obj.params_packet_teams); /*packet_teams*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_teams);  pdef::pc1_18_play_toClient::toJSON::packet_teams(stream, *obj.params_packet_teams); PDEF_JSON_putToken_OR_BAIL(","); /*packet_teams*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::ScoreboardScore: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_scoreboard_score(stream, *obj.params_packet_scoreboard_score); /*packet_scoreboard_score*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_scoreboard_score);  pdef::pc1_18_play_toClient::toJSON::packet_scoreboard_score(stream, *obj.params_packet_scoreboard_score); PDEF_JSON_putToken_OR_BAIL(","); /*packet_scoreboard_score*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SimulationDistance: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_simulation_distance(stream, *obj.params_packet_simulation_distance); /*packet_simulation_distance*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_simulation_distance);  pdef::pc1_18_play_toClient::toJSON::packet_simulation_distance(stream, *obj.params_packet_simulation_distance); PDEF_JSON_putToken_OR_BAIL(","); /*packet_simulation_distance*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SpawnPosition: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_spawn_position(stream, *obj.params_packet_spawn_position); /*packet_spawn_position*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_spawn_position);  pdef::pc1_18_play_toClient::toJSON::packet_spawn_position(stream, *obj.params_packet_spawn_position); PDEF_JSON_putToken_OR_BAIL(","); /*packet_spawn_position*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::UpdateTime: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_update_time(stream, *obj.params_packet_update_time); /*packet_update_time*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_update_time);  pdef::pc1_18_play_toClient::toJSON::packet_update_time(stream, *obj.params_packet_update_time); PDEF_JSON_putToken_OR_BAIL(","); /*packet_update_time*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntitySoundEffect: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_entity_sound_effect(stream, *obj.params_packet_entity_sound_effect); /*packet_entity_sound_effect*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_entity_sound_effect);  pdef::pc1_18_play_toClient::toJSON::packet_entity_sound_effect(stream, *obj.params_packet_entity_sound_effect); PDEF_JSON_putToken_OR_BAIL(","); /*packet_entity_sound_effect*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::StopSound: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_stop_sound(stream, *obj.params_packet_stop_sound); /*packet_stop_sound*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_stop_sound);  pdef::pc1_18_play_toClient::toJSON::packet_stop_sound(stream, *obj.params_packet_stop_sound); PDEF_JSON_putToken_OR_BAIL(","); /*packet_stop_sound*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SoundEffect: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_sound_effect(stream, *obj.params_packet_sound_effect); /*packet_sound_effect*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_sound_effect);  pdef::pc1_18_play_toClient::toJSON::packet_sound_effect(stream, *obj.params_packet_sound_effect); PDEF_JSON_putToken_OR_BAIL(","); /*packet_sound_effect*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::PlayerlistHeader: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_playerlist_header(stream, *obj.params_packet_playerlist_header); /*packet_playerlist_header*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_playerlist_header);  pdef::pc1_18_play_toClient::toJSON::packet_playerlist_header(stream, *obj.params_packet_playerlist_header); PDEF_JSON_putToken_OR_BAIL(","); /*packet_playerlist_header*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Collect: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_collect(stream, *obj.params_packet_collect); /*packet_collect*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_collect);  pdef::pc1_18_play_toClient::toJSON::packet_collect(stream, *obj.params_packet_collect); PDEF_JSON_putToken_OR_BAIL(","); /*packet_collect*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntityTeleport: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_entity_teleport(stream, *obj.params_packet_entity_teleport); /*packet_entity_teleport*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_entity_teleport);  pdef::pc1_18_play_toClient::toJSON::packet_entity_teleport(stream, *obj.params_packet_entity_teleport); PDEF_JSON_putToken_OR_BAIL(","); /*packet_entity_teleport*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntityHeadRotation: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_entity_head_rotation(stream, *obj.params_packet_entity_head_rotation); /*packet_entity_head_rotation*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_entity_head_rotation);  pdef::pc1_18_play_toClient::toJSON::packet_entity_head_rotation(stream, *obj.params_packet_entity_head_rotation); PDEF_JSON_putToken_OR_BAIL(","); /*packet_entity_head_rotation*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::EntityEffect: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_entity_effect(stream, *obj.params_packet_entity_effect); /*packet_entity_effect*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_entity_effect);  pdef::pc1_18_play_toClient::toJSON::packet_entity_effect(stream, *obj.params_packet_entity_effect); PDEF_JSON_putToken_OR_BAIL(","); /*packet_entity_effect*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SelectAdvancementTab: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_select_advancement_tab(stream, *obj.params_packet_select_advancement_tab); /*packet_select_advancement_tab*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_select_advancement_tab);  pdef::pc1_18_play_toClient::toJSON::packet_select_advancement_tab(stream, *obj.params_packet_select_advancement_tab); PDEF_JSON_putToken_OR_BAIL(","); /*packet_select_advancement_tab*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::DeclareRecipes: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_declare_recipes(stream, *obj.params_packet_declare_recipes); /*packet_declare_recipes*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_declare_recipes);  pdef::pc1_18_play_toClient::toJSON::packet_declare_recipes(stream, *obj.params_packet_declare_recipes); PDEF_JSON_putToken_OR_BAIL(","); /*packet_declare_recipes*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Tags: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_tags(stream, *obj.params_packet_tags); /*packet_tags*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_tags);  pdef::pc1_18_play_toClient::toJSON::packet_tags(stream, *obj.params_packet_tags); PDEF_JSON_putToken_OR_BAIL(","); /*packet_tags*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::AcknowledgePlayerDigging: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_acknowledge_player_digging(stream, *obj.params_packet_acknowledge_player_digging); /*packet_acknowledge_player_digging*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_acknowledge_player_digging);  pdef::pc1_18_play_toClient::toJSON::packet_acknowledge_player_digging(stream, *obj.params_packet_acknowledge_player_digging); PDEF_JSON_putToken_OR_BAIL(","); /*packet_acknowledge_player_digging*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SculkVibrationSignal: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_sculk_vibration_signal(stream, *obj.params_packet_sculk_vibration_signal); /*packet_sculk_vibration_signal*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_sculk_vibration_signal);  pdef::pc1_18_play_toClient::toJSON::packet_sculk_vibration_signal(stream, *obj.params_packet_sculk_vibration_signal); PDEF_JSON_putToken_OR_BAIL(","); /*packet_sculk_vibration_signal*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::ClearTitles: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_clear_titles(stream, *obj.params_packet_clear_titles); /*packet_clear_titles*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_clear_titles);  pdef::pc1_18_play_toClient::toJSON::packet_clear_titles(stream, *obj.params_packet_clear_titles); PDEF_JSON_putToken_OR_BAIL(","); /*packet_clear_titles*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::InitializeWorldBorder: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_initialize_world_border(stream, *obj.params_packet_initialize_world_border); /*packet_initialize_world_border*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_initialize_world_border);  pdef::pc1_18_play_toClient::toJSON::packet_initialize_world_border(stream, *obj.params_packet_initialize_world_border); PDEF_JSON_putToken_OR_BAIL(","); /*packet_initialize_world_border*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::ActionBar: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_action_bar(stream, *obj.params_packet_action_bar); /*packet_action_bar*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_action_bar);  pdef::pc1_18_play_toClient::toJSON::packet_action_bar(stream, *obj.params_packet_action_bar); PDEF_JSON_putToken_OR_BAIL(","); /*packet_action_bar*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::WorldBorderCenter: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_world_border_center(stream, *obj.params_packet_world_border_center); /*packet_world_border_center*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_world_border_center);  pdef::pc1_18_play_toClient::toJSON::packet_world_border_center(stream, *obj.params_packet_world_border_center); PDEF_JSON_putToken_OR_BAIL(","); /*packet_world_border_center*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::WorldBorderLerpSize: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_world_border_lerp_size(stream, *obj.params_packet_world_border_lerp_size); /*packet_world_border_lerp_size*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_world_border_lerp_size);  pdef::pc1_18_play_toClient::toJSON::packet_world_border_lerp_size(stream, *obj.params_packet_world_border_lerp_size); PDEF_JSON_putToken_OR_BAIL(","); /*packet_world_border_lerp_size*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::WorldBorderSize: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_world_border_size(stream, *obj.params_packet_world_border_size); /*packet_world_border_size*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_world_border_size);  pdef::pc1_18_play_toClient::toJSON::packet_world_border_size(stream, *obj.params_packet_world_border_size); PDEF_JSON_putToken_OR_BAIL(","); /*packet_world_border_size*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::WorldBorderWarningDelay: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_world_border_warning_delay(stream, *obj.params_packet_world_border_warning_delay); /*packet_world_border_warning_delay*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_world_border_warning_delay);  pdef::pc1_18_play_toClient::toJSON::packet_world_border_warning_delay(stream, *obj.params_packet_world_border_warning_delay); PDEF_JSON_putToken_OR_BAIL(","); /*packet_world_border_warning_delay*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::WorldBorderWarningReach: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_world_border_warning_reach(stream, *obj.params_packet_world_border_warning_reach); /*packet_world_border_warning_reach*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_world_border_warning_reach);  pdef::pc1_18_play_toClient::toJSON::packet_world_border_warning_reach(stream, *obj.params_packet_world_border_warning_reach); PDEF_JSON_putToken_OR_BAIL(","); /*packet_world_border_warning_reach*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::Ping: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_ping(stream, *obj.params_packet_ping); /*packet_ping*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_ping);  pdef::pc1_18_play_toClient::toJSON::packet_ping(stream, *obj.params_packet_ping); PDEF_JSON_putToken_OR_BAIL(","); /*packet_ping*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SetTitleSubtitle: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_set_title_subtitle(stream, *obj.params_packet_set_title_subtitle); /*packet_set_title_subtitle*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_set_title_subtitle);  pdef::pc1_18_play_toClient::toJSON::packet_set_title_subtitle(stream, *obj.params_packet_set_title_subtitle); PDEF_JSON_putToken_OR_BAIL(","); /*packet_set_title_subtitle*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SetTitleText: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_set_title_text(stream, *obj.params_packet_set_title_text); /*packet_set_title_text*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_set_title_text);  pdef::pc1_18_play_toClient::toJSON::packet_set_title_text(stream, *obj.params_packet_set_title_text); PDEF_JSON_putToken_OR_BAIL(","); /*packet_set_title_text*/ /*4.5*/
         break;
       } /*8.7*/
       case pdef::pc1_18_play_toClient::packet::Name::SetTitleTime: { /*8.5*/
-        pdef::pc1_18_play_toClient::toJSON::packet_set_title_time(stream, *obj.params_packet_set_title_time); /*packet_set_title_time*/ /*4.5*/
+      PDEF_JSON_putField_OR_BAIL(params_packet_set_title_time);  pdef::pc1_18_play_toClient::toJSON::packet_set_title_time(stream, *obj.params_packet_set_title_time); PDEF_JSON_putToken_OR_BAIL(","); /*packet_set_title_time*/ /*4.5*/
         break;
       } /*8.7*/
       default: break; /*avoid unhandled case warning*/

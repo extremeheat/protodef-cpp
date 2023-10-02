@@ -1,5 +1,7 @@
 /* eslint-disable no-return-assign, no-sequences, no-unused-vars */
 const fs = require('fs')
+// TODO: Require Node 18
+const clone = x => globalThis.structuredClone?.(x) ?? JSON.parse(JSON.stringify(x))
 
 // Resolve switch statements' compareTo's
 function preprocess (schema, logging) {
@@ -37,12 +39,13 @@ function preprocess (schema, logging) {
   function visitContainer (container, parent, anon) {
     container.scopeIsAnon = !!anon
     container.parent = parent
-    for (const { name, type, anon } of container) {
-      visitType(type, container, anon)
+    for (const scope of container) {
+      const { name, type, anon } = scope
+      visitType(type, container, anon, name, scope)
     }
   }
 
-  function visitType (type, parent, anon) {
+  function visitType (type, parent, anon, varName, scope) {
     const isCurrentInRoot = parent === schema
     if (typeof type === 'string') {
       // pass
@@ -53,7 +56,7 @@ function preprocess (schema, logging) {
       if (schema[type[0]] && (schema[type[0]][0] === 'switch')) {
         log('Inlining root switch', type[0])
         const rootSwitch = schema[type[0]][1]
-        const next = { ...rootSwitch, ...type[1] }
+        const next = { ...clone(rootSwitch), c: 1, ...type[1] }
         // next={compareTo: "$type", fields: {}, type: "bob" } -> {compareTo: "bob", fields: {}, type: "bob" }
         for (const [k, v] of Object.entries(next)) {
           if (typeof v === 'string' && v.startsWith('$')) {
@@ -65,16 +68,16 @@ function preprocess (schema, logging) {
         log('Inlined root switch', JSON.stringify(type))
       }
 
-      const [name, ...args] = type
+      const [name, args] = type
       if (name === 'container') {
-        visitContainer(args[0], parent, anon)
+        visitContainer(args, parent, anon)
       } else if (name === 'switch' && !isCurrentInRoot) {
-        const cases = args[0].fields
-        cases.default = args[0].default
-        const [compareTo, shouldReplace] = fixCompareToType(args[0].compareTo)
+        const cases = args.fields
+        cases.default = args.default
+        const [compareTo, shouldReplace] = fixCompareToType(args.compareTo)
         if (shouldReplace) {
-          log('Replacing compareTo', args[0].compareTo, '->', shouldReplace)
-          args[0].compareTo = shouldReplace
+          log('Replacing compareTo', args.compareTo, '->', shouldReplace)
+          args.compareTo = shouldReplace
         }
         if (compareTo.startsWith('/')) {
           // Root variables, these are specially defined by the user
@@ -83,24 +86,42 @@ function preprocess (schema, logging) {
           const injectedObj = walkBackwardAndInject(compareTo, parent, { comparedTo: true })
           if (injectedObj) {
             // TODO: handle more than just mapper
-            if (injectedObj.type[0] === 'mapper') args[0].compareToType = 'mapper'
-            else args[0].compareToType = injectedObj.type
-            if (!args[0].compareToType) throw Error('Could not find compareTo ' + compareTo)
+            if (injectedObj.type[0] === 'mapper') args.compareToType = 'mapper'
+            else args.compareToType = injectedObj.type
+            if (!args.compareToType) throw Error('Could not find compareTo ' + compareTo)
             // else console.log('Found compareTo', compareTo, '->', args[0].compareToType)
-            args[0].compareToType = '../'.repeat(injectedObj.usedLevelsDown) + '' + args[0].compareToType
+            args.compareToType = '../'.repeat(injectedObj.usedLevelsDown) + '' + args.compareToType
           } else throw Error('Could not find compareTo ' + compareTo)
         }
+
+        if (type[0] === 'switch') {
+          if (scope.type[0] === 'array') {
+            log('Converting switch into switch-array')
+            const parentArray = scope.type[1]
+            const next = args// { ...type[1] }
+            for (const field in next.fields) {
+              if (next.fields[field] === 'void') {
+                next.fields[field] = ['void']
+              } else {
+                next.fields[field] = ['array', { ...parentArray, type: next.fields[field] }]
+              }
+            }
+            scope.type = ['switch', next]
+            log('Converted switch into switch-array', JSON.stringify(type))
+          }
+        }
         for (const [caseName, caseType] of Object.entries(cases)) {
-          visitType(caseType, parent, anon)
+          visitType(caseType, parent, anon, caseName, scope)
         }
+        delete cases.default
       } else if (name === 'array') {
-        if (typeof args[0].count === 'string') {
-          const injectedObj = walkBackwardAndInject(args[0].count, parent, { counted: true })
+        if (typeof args.count === 'string') {
+          const injectedObj = walkBackwardAndInject(args.count, parent, { counted: true })
           if (injectedObj) {
-            args[0].countVarType = injectedObj.type
-          } else throw Error('Could not find count variable: ' + args[0].count)
+            args.countVarType = injectedObj.type
+          } else throw Error('Could not find count variable: ' + args.count)
         }
-        visitType(args[0].type, parent)
+        visitType(args.type, parent, anon, varName, scope)
       } else if (name === 'option') {
         // TODO: proper backend support for option
         // turn this into a switch
@@ -110,14 +131,14 @@ function preprocess (schema, logging) {
             name: 'value',
             type: [
               'switch',
-              { compareTo: 'has', compareToType: 'bool', fields: { true: args[0] } }
+              { compareTo: 'has', compareToType: 'bool', fields: { true: args } }
             ]
           }
         ]
         type[0] = 'container'
         type[1] = nextContainer
         // Now visit the new container
-        visitContainer(nextContainer, parent, anon)
+        visitContainer(nextContainer, parent, anon, varName, scope)
       }
     }
   }
@@ -420,7 +441,7 @@ function processSchema (oldSchema, logging) {
             const count = _args.count ? [_args.count, _args.countVarType] : null
             if (typeof _args.type === 'string') {
               next.add(field, ['array', _args.countType, count, [_args.type]])
-              sharedScope.add('array', ['array', _args.countType, count, [_args.type]])
+              sharedScope.add(_args.type + '_array', ['array', _args.countType, count, [_args.type]])
             } else {
               if (_args.type[0] === 'switch') {
                 throw new Error('Nested switch-array-switch not supported, please rewrite schema')
@@ -433,7 +454,7 @@ function processSchema (oldSchema, logging) {
                 handleType(field, _args.type, false, children)
                 const unwrap = children.get(field)
                 next.add(field, ['array', _args.countType, count, unwrap])
-                sharedScope.add('array', ['array', _args.countType, count, unwrap])
+                sharedScope.add(field, ['array', _args.countType, count, unwrap])
               }
               children.finish()
             }
@@ -479,7 +500,7 @@ function processSchema (oldSchema, logging) {
           addToScope(newName, ['array', args.countType, count, [args.type]])
         } else {
           if (args.type[0] === 'switch') {
-            handleSwitch(newName, args.type[1], anon, simplified)
+            throw new Error('Nested array-switch not supported, please rewrite schema')
           } else {
             const children = new Scope()
             handleType('array', args.type, false, children)
@@ -644,10 +665,13 @@ function postprocess (schema) {
 module.exports = {
   generate (schema, namespace) {
     const pp = preprocess(schema)
+    // fs.writeFileSync(namespace + '.ir0.json', JSON.stringify(pp, null, 2))
     const from = processSchema(pp)
+    // fs.writeFileSync(namespace + '.ir1.json', JSON.stringify(from, null, 2))
     const cloned = JSON.parse(JSON.stringify(from))
-    // fs.writeFileSync(namespace + '.ir.json', JSON.stringify(cloned, null, 2))
+    // fs.writeFileSync(namespace + '.ir2.json', JSON.stringify(cloned, null, 2))
     const final = postprocess(cloned)
+    // fs.writeFileSync(namespace + '.ir.json', JSON.stringify(final, null, 2))
     return final
   }
 }
