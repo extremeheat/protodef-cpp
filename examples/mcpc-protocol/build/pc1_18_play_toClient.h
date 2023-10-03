@@ -1607,12 +1607,12 @@ size_t packet(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet &ob
     }
     else if (V_particleId == 36) { /*8.2*/
         EXPECT_OR_BAIL(obj.data_36); const pdef::pc1_18_play_toClient::particle::Data36 &v2 = *obj.data_36; /*8.6*/
-        len += 1; /*origin: bitfield*/ /*4.1*/
+        len += 8; /*origin: bitfield*/ /*4.1*/
         len += stream.sizeOfVarInt(v2.positionType.length());
         len += v2.positionType.length(); /*positionType^: pstring*/ /*4.1*/
         const std::string &V_positionType = v2.positionType; /*4.7*/
         if (V_positionType == "minecraft:block") { /*8.0*/
-          len += 1; /*destination: bitfield*/ /*4.1*/
+          len += 8; /*destination: bitfield*/ /*4.1*/
         }
         else if (V_positionType == "minecraft:entity") { /*8.0*/
           len += stream.sizeOfVarInt(v2.destination_varint); /*0.2*/
@@ -1870,7 +1870,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     len += stream.sizeOfVarInt(obj.entityId); /*0.2*/
     len += 8; /*0.2*/
     len += stream.sizeOfVarInt(obj.title); /*0.2*/
-    len += 1; /*location: bitfield*/ /*4.1*/
+    len += 8; /*location: bitfield*/ /*4.1*/
     len += 1; /*0.2*/
     PDEF_SIZE_DBG; return len;
   }
@@ -1929,7 +1929,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
               len += v5.description.length(); /*description: pstring*/ /*4.1*/
               len += 1; /*0.2*/
               len += stream.sizeOfVarInt(v5.frameType); /*0.2*/
-              len += 1; /*flags^: bitfield*/ /*4.1*/
+              len += 4; /*flags^: bitfield*/ /*4.1*/
               const pdef::pc1_18_play_toClient::packet_advancements::AdvancementMapping::Value::DisplayData::Value::flags_t &V_flags = v5.flags; /*4.7*/
               if (V_flags.has_background_texture == 1) { /*8.2*/
                 len += stream.sizeOfVarInt(v5.backgroundTexture.length());
@@ -1981,20 +1981,20 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   size_t packet_block_break_animation(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_block_break_animation &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.entityId); /*0.2*/
-    len += 1; /*location: bitfield*/ /*4.1*/
+    len += 8; /*location: bitfield*/ /*4.1*/
     len += 1; /*0.2*/
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_tile_entity_data(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_tile_entity_data &obj) {
     size_t len = 0;
-    len += 1; /*location: bitfield*/ /*4.1*/
+    len += 8; /*location: bitfield*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.action); /*0.2*/
     len += 1; /*0.2*/
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_block_action(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_block_action &obj) {
     size_t len = 0;
-    len += 1; /*location: bitfield*/ /*4.1*/
+    len += 8; /*location: bitfield*/ /*4.1*/
     len += 1; /*0.2*/
     len += 1; /*0.2*/
     len += stream.sizeOfVarInt(obj.blockId); /*0.2*/
@@ -2002,7 +2002,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   size_t packet_block_change(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_block_change &obj) {
     size_t len = 0;
-    len += 1; /*location: bitfield*/ /*4.1*/
+    len += 8; /*location: bitfield*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.type); /*0.2*/
     PDEF_SIZE_DBG; return len;
   }
@@ -2111,7 +2111,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   size_t packet_multi_block_change(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_multi_block_change &obj) {
     size_t len = 0;
-    len += 1; /*chunkCoordinates: bitfield*/ /*4.1*/
+    len += 8; /*chunkCoordinates: bitfield*/ /*4.1*/
     len += 1; /*0.2*/
     len += stream.sizeOfVarInt(obj.records.size()); /*1.3*/
     for (const auto &v2 : obj.records) { /*3.2*/
@@ -2283,7 +2283,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   size_t packet_world_event(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_world_event &obj) {
     size_t len = 0;
     len += 4; /*0.2*/
-    len += 1; /*location: bitfield*/ /*4.1*/
+    len += 8; /*location: bitfield*/ /*4.1*/
     len += 4; /*0.2*/
     len += 1; /*0.2*/
     PDEF_SIZE_DBG; return len;
@@ -2335,12 +2335,12 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
     }
     else if (V_particleId == 36) { /*8.2*/
         EXPECT_OR_BAIL(obj.data_36); const pdef::pc1_18_play_toClient::packet_world_particles::Data36 &v2 = *obj.data_36; /*8.6*/
-        len += 1; /*origin: bitfield*/ /*4.1*/
+        len += 8; /*origin: bitfield*/ /*4.1*/
         len += stream.sizeOfVarInt(v2.positionType.length());
         len += v2.positionType.length(); /*positionType^: pstring*/ /*4.1*/
         const std::string &V_positionType = v2.positionType; /*4.7*/
         if (V_positionType == "minecraft:block") { /*8.0*/
-          len += 1; /*destination: bitfield*/ /*4.1*/
+          len += 8; /*destination: bitfield*/ /*4.1*/
         }
         else if (V_positionType == "minecraft:entity") { /*8.0*/
           len += stream.sizeOfVarInt(v2.destination_varint); /*0.2*/
@@ -2533,7 +2533,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   size_t packet_open_sign_entity(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_open_sign_entity &obj) {
     size_t len = 0;
-    len += 1; /*location: bitfield*/ /*4.1*/
+    len += 8; /*location: bitfield*/ /*4.1*/
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_craft_recipe_response(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_craft_recipe_response &obj) {
@@ -2907,7 +2907,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   size_t packet_spawn_position(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_spawn_position &obj) {
     size_t len = 0;
-    len += 1; /*location: bitfield*/ /*4.1*/
+    len += 8; /*location: bitfield*/ /*4.1*/
     len += 4; /*0.2*/
     PDEF_SIZE_DBG; return len;
   }
@@ -3138,7 +3138,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   size_t packet_acknowledge_player_digging(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_acknowledge_player_digging &obj) {
     size_t len = 0;
-    len += 1; /*location: bitfield*/ /*4.1*/
+    len += 8; /*location: bitfield*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.block); /*0.2*/
     len += stream.sizeOfVarInt(obj.status); /*0.2*/
     len += 1; /*0.2*/
@@ -3146,12 +3146,12 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toClient::tags &obj) {
   }
   size_t packet_sculk_vibration_signal(pdef::Stream &stream, const pdef::pc1_18_play_toClient::packet_sculk_vibration_signal &obj) {
     size_t len = 0;
-    len += 1; /*sourcePosition: bitfield*/ /*4.1*/
+    len += 8; /*sourcePosition: bitfield*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.destinationIdentifier.length());
     len += obj.destinationIdentifier.length(); /*destinationIdentifier^: pstring*/ /*4.1*/
     const std::string &V_destinationIdentifier = obj.destinationIdentifier; /*4.7*/
     if (V_destinationIdentifier == "block") { /*8.0*/
-      len += 1; /*destination: bitfield*/ /*4.1*/
+      len += 8; /*destination: bitfield*/ /*4.1*/
     }
     else if (V_destinationIdentifier == "entityId") { /*8.0*/
       len += stream.sizeOfVarInt(obj.destination_varint); /*0.2*/

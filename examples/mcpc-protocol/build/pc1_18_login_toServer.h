@@ -324,12 +324,12 @@ size_t packet(pdef::Stream &stream, const pdef::pc1_18_login_toServer::packet &o
     }
     else if (V_particleId == 36) { /*8.2*/
         EXPECT_OR_BAIL(obj.data_36); const pdef::pc1_18_login_toServer::particle::Data36 &v2 = *obj.data_36; /*8.6*/
-        len += 1; /*origin: bitfield*/ /*4.1*/
+        len += 8; /*origin: bitfield*/ /*4.1*/
         len += stream.sizeOfVarInt(v2.positionType.length());
         len += v2.positionType.length(); /*positionType^: pstring*/ /*4.1*/
         const std::string &V_positionType = v2.positionType; /*4.7*/
         if (V_positionType == "minecraft:block") { /*8.0*/
-          len += 1; /*destination: bitfield*/ /*4.1*/
+          len += 8; /*destination: bitfield*/ /*4.1*/
         }
         else if (V_positionType == "minecraft:entity") { /*8.0*/
           len += stream.sizeOfVarInt(v2.destination_varint); /*0.2*/
