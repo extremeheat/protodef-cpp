@@ -765,12 +765,12 @@ size_t packet(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet &ob
     }
     else if (V_particleId == 36) { /*8.2*/
         EXPECT_OR_BAIL(obj.data_36); const pdef::pc1_18_play_toServer::particle::Data36 &v2 = *obj.data_36; /*8.6*/
-        len += 1; /*origin: bitfield*/ /*4.1*/
+        len += 8; /*origin: bitfield*/ /*4.1*/
         len += stream.sizeOfVarInt(v2.positionType.length());
         len += v2.positionType.length(); /*positionType^: pstring*/ /*4.1*/
         const std::string &V_positionType = v2.positionType; /*4.7*/
         if (V_positionType == "minecraft:block") { /*8.0*/
-          len += 1; /*destination: bitfield*/ /*4.1*/
+          len += 8; /*destination: bitfield*/ /*4.1*/
         }
         else if (V_positionType == "minecraft:entity") { /*8.0*/
           len += stream.sizeOfVarInt(v2.destination_varint); /*0.2*/
@@ -990,7 +990,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toServer::tags &obj) {
   size_t packet_query_block_nbt(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_query_block_nbt &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.transactionId); /*0.2*/
-    len += 1; /*location: bitfield*/ /*4.1*/
+    len += 8; /*location: bitfield*/ /*4.1*/
     PDEF_SIZE_DBG; return len;
   }
   size_t packet_set_difficulty(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_set_difficulty &obj) {
@@ -1046,7 +1046,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toServer::tags &obj) {
   }
   size_t packet_update_command_block(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_update_command_block &obj) {
     size_t len = 0;
-    len += 1; /*location: bitfield*/ /*4.1*/
+    len += 8; /*location: bitfield*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.command.length());
     len += obj.command.length(); /*command: pstring*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.mode); /*0.2*/
@@ -1063,7 +1063,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toServer::tags &obj) {
   }
   size_t packet_update_structure_block(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_update_structure_block &obj) {
     size_t len = 0;
-    len += 1; /*location: bitfield*/ /*4.1*/
+    len += 8; /*location: bitfield*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.action); /*0.2*/
     len += stream.sizeOfVarInt(obj.mode); /*0.2*/
     len += stream.sizeOfVarInt(obj.name.length());
@@ -1171,7 +1171,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toServer::tags &obj) {
   }
   size_t packet_generate_structure(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_generate_structure &obj) {
     size_t len = 0;
-    len += 1; /*location: bitfield*/ /*4.1*/
+    len += 8; /*location: bitfield*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.levels); /*0.2*/
     len += 1; /*0.2*/
     PDEF_SIZE_DBG; return len;
@@ -1247,7 +1247,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toServer::tags &obj) {
   size_t packet_block_dig(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_block_dig &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.status); /*0.2*/
-    len += 1; /*location: bitfield*/ /*4.1*/
+    len += 8; /*location: bitfield*/ /*4.1*/
     len += 1; /*0.2*/
     PDEF_SIZE_DBG; return len;
   }
@@ -1296,7 +1296,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toServer::tags &obj) {
   }
   size_t packet_update_jigsaw_block(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_update_jigsaw_block &obj) {
     size_t len = 0;
-    len += 1; /*location: bitfield*/ /*4.1*/
+    len += 8; /*location: bitfield*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.name.length());
     len += obj.name.length(); /*name: pstring*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.target.length());
@@ -1311,7 +1311,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toServer::tags &obj) {
   }
   size_t packet_update_sign(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_update_sign &obj) {
     size_t len = 0;
-    len += 1; /*location: bitfield*/ /*4.1*/
+    len += 8; /*location: bitfield*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.text1.length());
     len += obj.text1.length(); /*text1: pstring*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.text2.length());
@@ -1335,7 +1335,7 @@ size_t tags(pdef::Stream &stream, const pdef::pc1_18_play_toServer::tags &obj) {
   size_t packet_block_place(pdef::Stream &stream, const pdef::pc1_18_play_toServer::packet_block_place &obj) {
     size_t len = 0;
     len += stream.sizeOfVarInt(obj.hand); /*0.2*/
-    len += 1; /*location: bitfield*/ /*4.1*/
+    len += 8; /*location: bitfield*/ /*4.1*/
     len += stream.sizeOfVarInt(obj.direction); /*0.2*/
     len += 4; /*0.2*/
     len += 4; /*0.2*/

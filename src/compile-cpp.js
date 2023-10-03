@@ -1,5 +1,5 @@
 /* eslint-disable no-return-assign, no-sequences, no-unused-vars */
-const fs = require('fs')
+const { CppOpsGroup } = require('./customTypes')
 
 const protodefTypeToCpp = {
   u8: 'uint8_t',
@@ -93,47 +93,49 @@ const specialVars = {
 // Or call both .type() and .struct() in .struct() and use the .type() return value for the inner level and .struct() return value for the top level?
 const customTypes = {
   pstring: {
-    type () {
-      return 'std::string'
+    type (_a, _b, ops) {
+      ops.pushType('std::string')
     },
-    struct (args, name, makeCallingCode) {
+    struct (args, name, makeCallingCode, inline) {
       return makeCallingCode('std::string', name)
     },
-    read (args, [name, refName], makeCallingCode) {
-      if (args.count) return `if (!stream.readString(${refName}, ${args.count})) return false;`
-      const primitiveType = protodefTypeToCpp[args.countType]
-      return `
-${primitiveType} ${name}_strlen; ${makeCallingCode(args.countType, `${name}_strlen`)};
-if (!stream.readString(${refName}, ${name}_strlen)) return false;
-`.trim()
+    read (args, [name, refName], makeCallingCode, ops) {
+      if (args.count) {
+        ops.pushStreamReadOrBail('readString', refName, args.count)
+      } else {
+        ops.pushTempVariable(`${name}_strlen`, args.countType, { shouldResetCursor: false })
+        ops.pushRead(args.countType, `${name}_strlen`, { padWith: ' ' })
+        ops.pushStreamReadOrBail('readString', refName, `${name}_strlen`)
+      }
     },
-    write (args, [name, refName], makeCallingCode) {
-      if (args.count) return `WRITE_OR_BAIL(writeString, ${refName});`
-      return `
-${makeCallingCode(args.countType, [refName, 'length()'])};
-WRITE_OR_BAIL(writeString, ${refName});
-`.trim()
+    write (args, [name, refName], makeCallingCode, ops) {
+      if (args.count) {
+        ops.pushWrite('writeString', refName, args.count)
+      } else {
+        ops.pushWrite(args.countType, [refName, 'length()'])
+        ops.pushWrite('writeString', refName)
+      }
     },
-    size (args, [name, refName], makeCallingCode) {
-      if (args.count) return `len += ${args.count};`
-      return `
-${makeCallingCode(args.countType, [refName, 'length()'])};
-len += ${refName}.length();
-`.trim()
+    size (args, [name, refName], makeCallingCode, ops) {
+      if (args.count) {
+        ops.pushSizeIncrementConst(args.count)
+      } else {
+        ops.pushSizeIncrementByLengthOfString(args.countType, refName)
+      }
     },
-    json (args, [name, refName], makeCallingCode) {
+    json (args, [name, refName], makeCallingCode, ops) {
       return name ? `PDEF_JSON_putString_OR_BAIL(${name}, ${refName})` : `PDEF_JSON_putStringAnon_OR_BAIL(${refName})`
     }
   },
   buffer: {
-    type () {
-      return 'std::vector<uint8_t>'
+    type (_a, _b, ops) {
+      ops.pushType('std::vector<uint8_t>')
     },
-    struct (args, name, makeCallingCode) {
+    struct (args, name, makeCallingCode, ops) {
       return makeCallingCode('std::vector<uint8_t>', name)
     },
-    read (args, [name, refName], makeCallingCode) {
-      const typeStr = protodefTypeToCpp[args.countType] || 'int'
+    read (args, [name, refName], makeCallingCode, ops) {
+      const typeStr = ops.primitivesMap[args.countType] || 'int'
       let lines = ''
       if (args.count) {
         lines += `if (!stream.readBuffer(${refName}, ${args.count})) return false;`
@@ -150,20 +152,20 @@ ${makeCallingCode(args.countType, [refName, 'size()'])};
 WRITE_OR_BAIL(writeBuffer, ${refName});
 `.trim()
     },
-    size (args, [name, refName], makeCallingCode) {
-      if (args.count) return `len += ${args.count};`
-      return `
-${makeCallingCode(args.countType, [refName, 'size()'], false)};
-len += ${refName}.size();
-`.trim()
+    size (args, [name, refName], makeCallingCode, ops) {
+      if (args.count) {
+        ops.pushSizeIncrementConst(args.count)
+      } else {
+        ops.pushSizeIncrementByLengthOfBuffer(args.countType, refName)
+      }
     },
     json (args, [name, refName], makeCallingCode) {
       return name ? `PDEF_JSON_putBuffer_OR_BAIL(${name}, ${refName})` : `PDEF_JSON_putBufferAnon_OR_BAIL(${refName})`
     }
   },
   bitflags: {
-    type (args, name, makeCallingCode) {
-      return `${name}_t`
+    type (args, name, ops) {
+      ops.pushType(`${name}_t`)
     },
     struct (args, name, makeCallingCode) {
       const flags = Array.isArray(args.flags)
@@ -178,8 +180,8 @@ len += ${refName}.size();
       s += `} ${name};`
       return s
     },
-    read (args, [name, refName], makeCallingCode) {
-      const primitiveType = protodefTypeToCpp[args.type]
+    read (args, [name, refName], makeCallingCode, ops) {
+      const primitiveType = ops.primitivesMap[args.type]
       let s = `${primitiveType} ${name}_val;\n`
       s += makeCallingCode(args.type, `${name}_val`) + ';\n'
       if (Array.isArray(args.flags)) {
@@ -196,8 +198,8 @@ len += ${refName}.size();
       }
       return s
     },
-    write (args, [name, refName], makeCallingCode) {
-      const primitiveType = protodefTypeToCpp[args.type]
+    write (args, [name, refName], makeCallingCode, ops) {
+      const primitiveType = ops.primitivesMap[args.type]
       let s = `${primitiveType} ${name}_val = 0;\n`
       if (Array.isArray(args.flags)) {
         const flags = args.flags.map(toSafeVar)
@@ -214,23 +216,23 @@ len += ${refName}.size();
       s += makeCallingCode(args.type, `${name}_val`)
       return s
     },
-    size (args, [name, refName], makeCallingCode) {
-      const primitiveType = protodefTypeToCpp[args.type]
-      let s = `${primitiveType} ${name}_val = 0; /*X*/\n`
+    size (args, [name, refName], makeCallingCode, ops) {
+      ops.pushAssignment(`${name}_val`, 0, args.type, { marker: 'X' })
       if (Array.isArray(args.flags)) {
         const flags = args.flags.map(toSafeVar)
         for (let i = 0; i < flags.length; i++) {
           const flag = flags[i]
           if (!flag) continue
-          s += `${name}_val |= (${primitiveType})${refName}.${flag} << ${i};\n`
+          ops.pushORAssignment(`${name}_val`, `(${ops.resolveType(args.type)})${ops.joinVarNameIfNeeded([refName, flag])} << ${i}`)
         }
       } else {
         for (const [flag, bit] of Object.entries(args.flags)) {
-          s += `if (${refName}.${toSafeVar(flag)}) ${name}_val |= ${bit};\n`
+          ops.pushPropIfBooleanStatement(refName, toSafeVar(flag))
+          ops.pushORAssignment(`${name}_val`, bit)
+          ops.pushEndIf()
         }
       }
-      s += makeCallingCode(args.type, `${name}_val`) + ';\n'
-      return s
+      ops.pushSizeIncrementByType(args.type, `${name}_val`)
     },
     json (args, [name, refName], makeCallingCode) {
       const flags = Array.isArray(args.flags)
@@ -252,8 +254,8 @@ len += ${refName}.size();
   // "bitfield", [ { "name": "unused", "size": 1, "signed": false }, { "name": "collapse_enum", "size": 1, "signed": false }, { "name": "has_semantic_constraint", "size": 1, "signed": false }, { "name": "as_chained_command", "size": 1, "signed": false }, { "name": "unknown2", "size": 4, "signed": false } ] ],
   // TODO: support signed field
   bitfield: {
-    type (args, name) {
-      return `${name}_t`
+    type (args, name, ops) {
+      ops.pushType(`${name}_t`)
     },
     struct (args, name, makeCallingCode) {
       const fields = args.fields
@@ -264,11 +266,11 @@ len += ${refName}.size();
       s += `} ${name};`
       return s
     },
-    read (args, [name, refName], makeCallingCode) {
+    read (args, [name, refName], makeCallingCode, ops) {
       const fields = args.fields
-      const primitiveType = protodefTypeToCpp[args.type]
+      const primitiveType = ops.primitivesMap[args.type]
       let s = `${primitiveType} ${name}_val;\n`
-      s += `READ_OR_BAIL(${protodefTypeToCppDecode[args.type]}, ${name}_val);\n`
+      s += `READ_OR_BAIL(${ops.decoderMap[args.type]}, ${name}_val);\n`
       let bitOffset = 0
       for (const v of fields) {
         s += `${refName}.${v.name} = ${name}_val >> ${bitOffset} & ${v.size};\n`
@@ -276,20 +278,20 @@ len += ${refName}.size();
       }
       return s
     },
-    write (args, [name, refName], makeCallingCode) {
+    write (args, [name, refName], makeCallingCode, ops) {
       const fields = args.fields
-      const primitiveType = protodefTypeToCpp[args.type]
+      const primitiveType = ops.primitivesMap[args.type]
       let s = `${primitiveType} ${name}_val = 0;\n`
       let bitOffset = 0
       for (const v of fields) {
         s += `${name}_val |= (${primitiveType})${refName}.${v.name} << ${bitOffset};\n`
         bitOffset += v.size
       }
-      s += `WRITE_OR_BAIL(${protodefTypeToCppEncode[args.type]}, ${name}_val);\n`
+      s += `WRITE_OR_BAIL(${ops.encoderMap[args.type]}, ${name}_val);\n`
       return s
     },
-    size (args, [name], makeCallingCode) {
-      return 'len += 1;'
+    size (args, [name], makeCallingCode, ops) {
+      ops.pushSizeIncrementConst(args.type)
     },
     json (args, [name, refName], makeCallingCode) {
       const fields = args.fields
@@ -432,6 +434,9 @@ const footer = `
 `
 
 function visitRoot (root, mode, customTypes, specialVars, logging) {
+  // const {protodefTypeToCpp, protodefTypeToCppEncode, protodefTypeToCppDecode, customTypes}
+  const makeOpGroup = () => new CppOpsGroup(protodefTypeToCpp, protodefTypeSizes, protodefTypeToCppEncode, protodefTypeToCppDecode, toSafeVar, dotJoin)
+
   const log = logging ? console.log : () => {}
   let variableLines = ''
   for (const varName in specialVars) {
@@ -937,12 +942,17 @@ function visitRoot (root, mode, customTypes, specialVars, logging) {
           const actualType = fieldType[0]
           if (customTypes[actualType]) {
             const typeImpl = customTypes[actualType]
-            structVarType = typeImpl.type?.(fieldType[1], n)
-            const structVarRef = `${objName}`
-            const sizeCode = typeImpl.size(fieldType[1], [n, structPropName], (type, args, anon) => makeSizeStr(type, args, anon ?? isAnon)).split('\n').map(e => pad('  ' + e.trim())).join('\n').trim()
-            const encodeCode = typeImpl.write(fieldType[1], [n, structPropName], (type, args, anon) => makeEncodeStr(type, args, anon ?? isAnon)).split('\n').map(e => pad('  ' + e.trim())).join('\n').trim()
-            const decodeCode = typeImpl.read(fieldType[1], [n, structPropName], (type, args, anon) => makeDecodeStr(type, args, anon ?? isAnon)).split('\n').map(e => pad('  ' + e.trim())).join('\n').trim()
-            const toJSONCode = typeImpl.json(fieldType[1], [n, structPropName], (type, args, anon) => makeToJSONStr(type, args, anon ?? isAnon)).split('\n').map(e => pad('  ' + e.trim())).join('\n').trim()
+            if (typeImpl.type) {
+              const opsGroup = makeOpGroup()
+              typeImpl.type(fieldType[1], n, opsGroup)
+              structVarType = opsGroup.encode(structPaddingLevel + 1)[0]
+            }
+            // const structVarRef = `${objName}`
+            const sizeOps = makeOpGroup(); const encodeOps = makeOpGroup(); const decodeOps = makeOpGroup(); const toJSONOps = makeOpGroup()
+            const sizeCode = typeImpl.size(fieldType[1], [n, structPropName], (type, args, anon) => makeSizeStr(type, args, anon ?? isAnon), sizeOps)?.split('\n').map(e => pad('  ' + e.trim())).join('\n').trim() ?? sizeOps.encode(structPaddingLevel + 1)[0]
+            const encodeCode = typeImpl.write(fieldType[1], [n, structPropName], (type, args, anon) => makeEncodeStr(type, args, anon ?? isAnon), encodeOps)?.split('\n').map(e => pad('  ' + e.trim())).join('\n').trim() ?? encodeOps.encode(structPaddingLevel + 1)[0]
+            const decodeCode = typeImpl.read(fieldType[1], [n, structPropName], (type, args, anon) => makeDecodeStr(type, args, anon ?? isAnon), decodeOps)?.split('\n').map(e => pad('  ' + e.trim())).join('\n').trim() ?? decodeOps.encode(structPaddingLevel + 1)[0]
+            const toJSONCode = typeImpl.json(fieldType[1], [n, structPropName], (type, args, anon) => makeToJSONStr(type, args, anon ?? isAnon), toJSONOps)?.split('\n').map(e => pad('  ' + e.trim())).join('\n').trim() ?? toJSONOps.encode(structPaddingLevel + 1)[0]
             pushSize(`  ${sizeCode} /*${fieldName}: ${actualType}*/ /*4.1*/`)
             pushEncode(`  ${encodeCode} /*${n}: ${actualType}*/ /*4.2*/`)
             pushDecode(`  ${decodeCode} /*${n}: ${actualType}*/ /*4.3*/`)
