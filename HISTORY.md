@@ -1,5 +1,9 @@
 ## History
 
+### 1.2.0
+* [Add doc for minecraft nbt usage](https://github.com/extremeheat/protodef-cpp/commit/67ab51cc59a4c4e1162dab16bdf666d05274c7fb) (thanks @extremeheat)
+* [Add NBT example, various fixes to IR and compiler (#11)](https://github.com/extremeheat/protodef-cpp/commit/5dfb3cebf6668ee4501603533cdfdb195ed3e3bc) (thanks @extremeheat)
+
 ### 1.1.0
 * [Replace std::optional with internal one, fix containers (#9)](https://github.com/extremeheat/protodef-cpp/commit/ab4f65932d97576fa64143f7bfbebecbb7ed9e1b) (thanks @extremeheat)
 * [JSON encoding support (#7)](https://github.com/extremeheat/protodef-cpp/commit/7a6ee7d2f8e23e077a2db34ca2cdda7601ae7570) (thanks @extremeheat)
