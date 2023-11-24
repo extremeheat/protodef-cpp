@@ -83,12 +83,12 @@ struct BinaryStream {
   int sizeOfString(std::string &value) { return value.length(); }
   
   bool writeByte(int8_t value) {
-    CHECK_BOUNDS(writeIndex);
+    CHECK_BOUNDS(writeIndex + 1);
     buffer[writeIndex++] = value;
     return true;
   }
   bool writeUByte(uint8_t value) {
-    CHECK_BOUNDS(writeIndex);
+    CHECK_BOUNDS(writeIndex + 1);
     buffer[writeIndex++] = value;
     return true;
   }

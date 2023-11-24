@@ -518,8 +518,9 @@ function visitRoot (root, mode, customTypes, specialVars, logging) {
     if (typeName === 'void') return // TODO: remove this in the IR
     else if (protodefTypeToCpp[typeName]) push(`  ${typeStrForType(protodefTypeToCpp[typeName], n, 0, true, false)} /*0.0*/`)
     else if (typeName === 'container' || typeName === 'array' || typeName === 'mapper') {
-      // We need 2 separate fields in the struct for this.
+      // We need 2 separate fields in the struct for this
       // One for the enum, and one for the actual value.
+      // So we do visitType() to write struct, then assign struct to a variable.
       // For example when writing:
       // stream->color = Color::red;
       // We can either use PascalCase for the enum, or add a _t suffix.

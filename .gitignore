@@ -4,4 +4,4 @@ package-lock.json
 **/__*
 examples/cli/*.h
 *.gch
-*.ir.json
+*.ir*.json
